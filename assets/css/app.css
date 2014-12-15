@@ -1,3 +1,75 @@
-.bb-omnibar .bar {
+body {
   background: #f3f3f4;
+}
+
+.nav-wrap {
+  background: #2f4050;
+  padding: 15px 10px;
+  margin-bottom: 20px;
+}
+
+.nav-wrap ul {
+  margin: 0;
+  padding: 0;
+}
+
+.nav-items {
+  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #A7B1C2;
+}
+
+.nav-items li {
+  cursor: pointer;
+  display: inline;
+  list-style: none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.nav-items li a {
+  color: #a7b1c2;
+  font-weight: 600;
+  padding: 15px;
+  text-decoration: none;
+}
+
+.nav-items li:hover a,
+.nav-items li.selected a {
+  background-color: #293846;
+  border-bottom: solid 4px #1AB394;
+  color: #FFF;
+  padding-bottom: 11px;
+}
+
+.ibox-content {
+  background-color: #FFF;
+  color: inherit;
+  border-top: solid 1px #E7EAEC;
+  padding: 0 10px 10px 10px;
+}
+
+.footer {
+  padding: 50px 0;
+  margin: 20px 0 50px;
+}
+
+/* LIGHT FOOTER */
+.footer {
+  background: #FFF;
+}
+
+/* DARK FOOTER
+.footer {
+  background: #2f4050;
+  color: #EFEFEF;
+}
+
+.footer a {
+  color: #1AB394;
+}
+*/
+
+.feedback {
+  background: url(../img/octocat-small.png) no-repeat left center;
+  padding-left: 80px;
 }

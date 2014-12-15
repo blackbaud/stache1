@@ -1,5 +1,6 @@
 ;(function($, window, document, undefined) {
   
+  // Initialize the Omnibar
   BBAUTH.Omnibar.load(document.getElementById("omnibar"), {
     enableSearch: true,
     serviceName: 'Developer',
