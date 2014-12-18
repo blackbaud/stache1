@@ -1,0 +1,108 @@
+@import "_mixins.scss";
+
+.tile {
+    .ibox-title {
+        cursor: pointer;
+        padding: 0;
+        -ms-touch-action: none;
+        touch-action: none;
+
+        .tile-header {
+            font-family: $font-family-narrow;
+            font-size: 22px;
+            font-weight: 100;
+            margin: 9px $tile-header-tool-padding;
+        }
+    }
+
+    .ibox-tools {
+        margin-top: $tile-header-tool-padding - 1;
+    }
+
+    .no-records {
+        padding-top: $padding-triple;
+        padding-bottom: $padding-triple;
+    }
+
+    .row-container {
+        border-bottom: 1px dotted $container-border;
+    }
+
+    .row-header {
+        color: $gray-light;
+        padding-top: $padding-half;
+    }
+
+    .row-column {
+        padding-left: 0.8 * $padding;
+    }
+
+    .row-text {
+        overflow: hidden;
+        overflow-wrap: break-word;
+        padding: $padding-half 0;
+
+        p {
+            margin: 0;
+        }
+    }
+
+    .row-edit-button {
+        display: inline;
+        float: right;
+        padding-top: $padding-half;
+        font-size: $font-size-h4;
+        padding-bottom: $padding-half;
+        border: none;
+        background-color: transparent;
+    }
+}
+
+/*NOTE -  This section is intentionally outside of the .tile wrapper above.  It defines how
+tiles behave within a column of tiles.*/
+.page-content-tile-column .tile {
+    //When columns are stacked in a tile, there is special behavior on extra small devices
+    @media (max-width: $screen-xs-max) {
+        padding-bottom: 0;
+
+        > div {
+            @include shadow($blur: 0);
+        }
+        //Create line above the tile
+        &:before {
+            content: "";
+            display: block;
+        }
+    }
+}
+
+.toolbar {
+    &.tile-toolbar {
+        border: 1px solid $border-color;
+        border-right: none;
+        border-left: none;
+        border-top: none;
+    }
+}
+
+.tile-chevron {
+    color: #D1DADE;
+    float: left;
+    margin: 1px 0;
+    padding-right: 0;
+}
+
+.tile-content-section {
+    padding: 15px;
+}
+
+.tile-grab-handle {
+    color: #E7EAEC;
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    display: inline;
+    font-size: 15px;
+    padding: $tile-header-tool-padding;
+    margin-top: $tile-header-tool-padding;
+}
