@@ -2,7 +2,7 @@
   
   // Initialize the Omnibar
   BBAUTH.Omnibar.load(document.getElementById("omnibar"), {
-    enableSearch: true,
+    enableSearch: false,
     serviceName: 'Developer',
     signInRedirectUrl: document.location.href,
     signOutRedirectUrl: '',

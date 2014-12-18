@@ -5,7 +5,6 @@ body {
 .nav-wrap {
   background: #2f4050;
   padding: 15px 10px;
-  margin-bottom: 20px;
 }
 
 .nav-wrap ul {
@@ -48,28 +47,25 @@ body {
   padding: 0 10px 10px 10px;
 }
 
-.footer {
-  padding: 50px 0;
-  margin: 20px 0 50px;
-}
-
-/* LIGHT FOOTER */
-.footer {
+.meat {
   background: #FFF;
 }
 
-/* DARK FOOTER
-.footer {
-  background: #2f4050;
-  color: #EFEFEF;
-}
-
-.footer a {
-  color: #1AB394;
-}
-*/
-
 .feedback {
-  background: url(../img/octocat-small.png) no-repeat left center;
-  padding-left: 80px;
+  background: #FFF;
+}
+
+.feedback-content {
+  background: url(../img/octocat-small.png) no-repeat left 50px;
+  border-top: solid 1px #EFEFEF;
+  margin: 50px 0;
+  padding: 50px 0 0 80px;
+}
+
+.feedback-content h3 {
+  margin-top: 0;
+}
+
+.comments {
+  padding: 50px 0;
 }
