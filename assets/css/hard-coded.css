@@ -1,3 +1,4 @@
+/*
 body {
   background: #f3f3f4;
 }
@@ -46,9 +47,41 @@ body {
   border-top: solid 1px #E7EAEC;
   padding: 0 10px 10px 10px;
 }
+*/
 
-.meat {
+/*
+I know we're not supposed to do this, but I absolutely hated seeing the page jump down when the omnibar finally loads.
+I'm risking setting that height here.  Worst case is you would see the page jump slightly if they ever change the height of the omnibar.
+*/
+.bb-omnibar-height-padding {
+  padding-top: 50px;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
   background: #FFF;
+}
+
+.welcome {
+  display: table;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: url(../img/bridge-sunset.jpg) no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+.text-vertical-center {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .feedback {
@@ -60,6 +93,13 @@ body {
   border-top: solid 1px #EFEFEF;
   margin: 50px 0;
   padding: 50px 0 0 80px;
+}
+
+.text-vertical-center h1 {
+  font-size: 4.5em;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
 }
 
 .feedback-content h3 {
