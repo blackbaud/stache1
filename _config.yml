@@ -1,14 +1,54 @@
-# Site settings
-title: Your awesome title
-email: your-email@domain.com
-description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-baseurl: "/developer.blackbaud.com-renxt" # the subpath of your site, e.g. /blog/
-url: "http://yourdomain.com" # the base hostname & protocol for your site
-twitter_username: jekyllrb
-github_username:  jekyll
+title: RENXT Developer Portal - Prototype
+baseurl: /developer.blackbaud.com-renxt
+url: http://developer.blackbaud.com
 
-# Build settings
-markdown: kramdown
+links:
+  - name: Getting Started
+    url: getting-started/
+    
+  - name: Partners
+    url: partners/
+    
+  - name: Tutorials
+    url: tutorials
+    links:
+    
+      - name: Getting Started
+        url: getting-started/
+        
+      - name: Authentication (Use Case 1)
+      - name: Searching for a Constituent (Use Case 2)
+      - name: Updating Constituent Address (Use Case 3)
+      - name: Another Common Tutorial (Use Case ...)
+      
+  - name: Developer Guide
+    links:
+    
+      - name: Schema
+      - name: Parameters
+      - name: Version
+      - name: Pagination
+      - name: Rate Limiting
+      - name: Quota
+      - name: Endpoints (Create blended content from azure management API & authored content, with links back to azure technical reference)
+      - name: ...
+      
+  - name: Resources
+    links:
+    
+      - name: Developer Portal
+      - name: Issues (Option 1 SWL, Option 2 Jekyll)
+      - name: Developer Blog (Option 1 SWL, Option 2 Jekyll)
+      - name: Keep In Touch
+      - name: Code Samples
+      - name: Libraries
+      - name: Release Notes
+      
+  - name: Support
+    links:
+    
+      - name: FAQ
+      - name: Forum
+      - name: API Status
+      - name: Report an Issue (Option 1 Azure, Option 2 Contact Us with subject prefilled)
+      - name: Issues Blog (Option 1 SWL, Option 2 Jekyll)

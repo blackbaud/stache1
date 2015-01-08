@@ -7,10 +7,10 @@
     signInRedirectUrl: document.location.href,
     signOutRedirectUrl: '',
     afterLoad: function() {
-      console.log('Omnibar Loaded');
+      
     },
     userLoaded: function(user) {
-      console.log(user);
+      
     }
   });
   
