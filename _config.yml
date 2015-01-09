@@ -9,6 +9,9 @@ defaults:
       layout: "default"
 
 links:
+  - name: Home
+    url: /
+    
   - name: Getting Started
     url: getting-started/
     
@@ -28,6 +31,7 @@ links:
       - name: Another Common Tutorial (Use Case ...)
       
   - name: Developer Guide
+    url: Version.html
     links:
     
       - name: Schema
@@ -49,6 +53,7 @@ links:
       - name: Code Samples
       - name: Libraries
       - name: Release Notes
+        url: CHANGELOG.html
       
   - name: Support
     links:

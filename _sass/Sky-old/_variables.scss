@@ -1,0 +1,203 @@
+@import "Inspinia/variables";
+
+// begin _variables
+
+// Stash some Inspinia colors that are overwritten later.
+$gray-bg: $gray;
+
+// begin colors
+$gray-darker: lighten(#000, 13.5%); // #222
+$gray-dark: lighten(#000, 20%); // #333
+$gray: lighten(#000, 40%); // #666
+$gray-light: lighten(#000, 60%); // #999
+$gray-lighter: lighten(#000, 80%); // #ccc
+$gray-lightest: lighten(#000, 93.5%); // #eee
+
+$blue-gray: #565661;
+
+$white: #fff;
+
+$blue-light: #D5E3EA;
+
+$brand-primary: $yellow;
+$brand-primary-hover: lighten($brand-primary, 55%);
+$brand-primary-text: #D7F0D8;
+
+$brand-alternate: #006699;
+$brand-alternate-light: lighten($brand-alternate, 10%); //#1a80b3
+$brand-alternate-lighter: lighten($brand-alternate, 20%); //#3399cc
+
+$link-color: $brand-alternate;
+$selected-text-color: $white;
+$selected-row-color: #f6f6f6;
+
+$error-color: #CA2A2A;
+$yellow-button-color: #FFECD9;
+$yellow-button-border: #FC6;
+
+$link-color: $brand-alternate-light;
+
+$gray-dark-text: #ddd;
+$container-border: #ddd;
+// end colors
+
+// begin fonts
+$font-family-sans-serif: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-narrow: 'Oswald', sans-serif;
+$font-family-serif: BenchNine, Trebuchet, serif;
+$font-family-base: $font-family-sans-serif;
+$font-family-alternate: $font-family-sans-serif;
+
+$font-size-base: 13px;
+
+$font-size-xxxl: floor(($font-size-base * 3.5)); // ~42px
+$font-size-xxl: floor(($font-size-base * 2.5)); // ~30px
+$font-size-xl: floor(($font-size-base * 1.333)); // ~16px
+$font-size-lg: ceil(($font-size-base * 1.07)); // ~14px
+$font-size-sm: ceil(($font-size-base * 0.833)); // ~10px
+
+$alternate-font-size-xxxl: floor(($font-size-base * 4)); // ~48px
+$alternate-font-size-xxl: floor(($font-size-base * 3.5)); // ~42px
+$alternate-font-size-xl: floor(($font-size-base * 2.333)); // ~28px
+$alternate-font-size-lg: ceil(($font-size-base * 2)); // ~24px
+$alternate-font-size-base: ceil(($font-size-base * 1.833)); // ~22px
+$alternate-font-size-sm: ceil(($font-size-base * 1.667)); // ~20px
+
+$font-size-h1: $alternate-font-size-xxxl;
+$font-size-h2: $alternate-font-size-xxl;
+$font-size-h3: $alternate-font-size-xl;
+$font-size-h4: $font-size-lg;
+$font-size-h5: $font-size-base;
+$font-size-h6: $font-size-sm;
+
+$bbsky-char-add: "\e600";
+$bbsky-char-add-fill: "\e601";
+$bbsky-char-add-nostroke: "\e602";
+$bbsky-char-delete: "\e603";
+$bbsky-char-close: "\e604";
+$bbsky-char-check: "\e605";
+$bbsky-char-check-nostroke: "\e606";
+$bbsky-char-arrow: "\e607";
+$bbsky-char-arrow-angle: "\e608";
+$bbsky-char-arrow-bub: "\e609";
+$bbsky-char-back: "\e60a";
+$bbsky-char-search: "\e60b";
+$bbsky-char-edit: "\e60c";
+$bbsky-char-save: "\e60d";
+$bbsky-char-print: "\e60e";
+$bbsky-char-folder: "\e60f";
+$bbsky-char-warning: "\e610";
+$bbsky-char-gear: "\e611";
+$bbsky-char-gear-fill: "\e612";
+$bbsky-char-columns: "\e613";
+$bbsky-char-filter: "\e614";
+$bbsky-char-note: "\e615";
+$bbsky-char-message-bub: "\e616";
+$bbsky-char-export: "\e617";
+$bbsky-char-user: "\e618";
+$bbsky-char-user-face: "\e619";
+$bbsky-char-present: "\e61a";
+$bbsky-char-phone: "\e61b";
+$bbsky-char-calendar: "\e61c";
+$bbsky-char-new-donor: "\e61d";
+$bbsky-char-globe: "\e61e";
+$bbsky-char-cloud: "\e61f";
+$bbsky-char-key: "\e620";
+$bbsky-char-key-angle: "\e621";
+$bbsky-char-share: "\e622";
+$bbsky-char-lock: "\e623";
+$bbsky-char-unlock: "\e624";
+$bbsky-char-copy: "\e625";
+$bbsky-char-cake: "\e626";
+$bbsky-char-help: "\e627";
+$bbsky-char-community: "\e628";
+$bbsky-char-facebook: "\e629";
+$bbsky-char-twitter: "\e62a";
+$bbsky-char-linkedin: "\e62b";
+$bbsky-char-googleplus: "\e62c";
+$bbsky-char-youtube: "\e62d";
+$bbsky-char-arrow-sharp: "\e62e";
+$bbsky-char-pdf: "\e62f";
+$bbsky-char-facebook-plain: "\e630";
+$bbsky-char-twitter-plain: "\e631";
+$bbsky-char-linkedin-plain: "\e632";
+$bbsky-char-googleplus-plain: "\e633";
+$bbsky-char-youtube-plain: "\e634";
+$bbsky-char-envelope: "\e635";
+$bbsky-char-envelope-plain: "\e636";
+$bbsky-char-loading: "\e637";
+$bbsky-char-trash: "\e638";
+$bbsky-char-stamp: "\e639";
+$bbsky-char-bb-icon: "\e63a";
+$bbsky-char-bb-icon-small: "\e63b";
+$bbsky-char-cloud-key: "\e63c";
+$bbsky-char-info: "\e63d";
+$bbsky-char-adjustment: "\e63e";
+$bbsky-char-expand: "\e63f";
+$bbsky-char-collapse: "\e640";
+$bbsky-char-refresh: "\e641";
+$bbsky-char-tasks: "\e642";
+$bbsky-char-nxt: "\e643";
+$bbsky-char-re: "\e644";
+$bbsky-char-fe: "\e645";
+$bbsky-char-multi-action: "\e646";
+$bbsky-char-database: "\e647";
+$bbsky-char-rim: "\e900";
+// end fonts
+
+// begin margin & padding
+$base-margin: 10px;
+$base-padding: 10px;
+
+$margin-half: floor(($base-margin * 0.5));
+$margin-3_4: floor(($base-margin * 0.75));
+$margin: $base-margin;
+$margin-plus-half: ceil(($base-margin * 1.5));
+$margin-double: ceil(($base-margin * 2));
+$margin-triple: ceil(($base-margin * 3));
+
+$padding-half: floor(($base-padding * 0.5));
+$padding-3_4: floor(($base-padding * 0.75));
+$padding: $base-padding;
+$padding-plus-half: ceil(($base-padding * 1.5));
+$padding-double: ceil(($base-padding * 2));
+$padding-triple: ceil(($base-padding * 3));
+// end margin & padding
+
+// begin toolbar 
+$toolbar-button-color: #2B7DBA;
+$toolbar-button-fontsize: $font-size-lg;
+$toolbar-background-color: #fff;
+// end toolbar
+
+// begin form
+$form-gray-light: #DDDDDD;
+$form-background: #F2F2F2;
+$form-border-color: #D9D9D9;
+$form-header-color: #333333;
+$form-textarea-color: $form-gray-light;
+$form-cancelbutton-color: $brand-alternate;
+$form-select-border-color: $form-gray-light;
+$form-button-color: $white;
+$form-button-border: #CCCCCC;
+$form-button-gradient-light: #666666;
+$form-button-gradient-dark: #444444;
+$invalid-field-color: #b94a48;
+// end form
+
+//begin dialog
+$z-index-flyout: 1000;
+$z-index-dialog: 2000;
+$z-index-control: 10000;
+//end dialog
+
+//begin tile
+$tile-header-tool-padding: 15px;
+//end tile
+
+// begin omnibar/help widget
+$omnibar-height: 50px !default;
+$omnibar-height-small: 30px !default;
+//end omnibar/help widget
+
+// end _variables

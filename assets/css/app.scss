@@ -3,5 +3,52 @@
 
 $icon-font-path: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/';
 $fa-font-path: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts/';
+$screen-lg-min: '1200px';
 
 @import 'Sky/_sky.scss';
+
+/*
+//Import Bootstrap
+@import "Sky/Bootstrap/bootstrap.scss";
+
+// Import Font Awesome
+@import "Sky/FontAwesome/font-awesome.scss";
+
+// Google Fonts
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amplang=en");
+
+// Variables, Mixins
+@import "Sky/Inspinia/variables";
+@import "Sky/Inspinia/mixins";
+
+// INSPINIA Theme Elements
+@import "Sky/Inspinia/typography";
+@import "Sky/Inspinia/navigation";
+@import "Sky/Inspinia/buttons";
+@import "Sky/Inspinia/badgets_labels";
+@import "Sky/Inspinia/elements";
+@import "Sky/Inspinia/sidebar";
+@import "Sky/Inspinia/base";
+@import "Sky/Inspinia/pages";
+
+// Media query style
+@import "Sky/Inspinia/media";
+
+
+//Load Sky styles
+@import "Sky/_tables.scss";
+@import "Sky/_spinning.scss";
+@import "Sky/_imports.scss";
+@import "Sky/_navigation.scss";
+@import "Sky/_pagination.scss";
+@import "Sky/_tile.scss";
+@import "Sky/_toolbars.scss";
+@import "Sky/_forms.scss";
+@import "Sky/_modals.scss";
+@import "Sky/_viewkeeper.scss";
+@import "Sky/_responsivetabs.scss";
+@import "Sky/_omnibar.scss";
+
+// Default Sky Theme
+@import "Sky/_theme.scss";
+*/

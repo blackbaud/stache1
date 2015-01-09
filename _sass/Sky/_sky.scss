@@ -30,6 +30,9 @@
 @import "Inspinia/media";
 
 //Load Sky styles
+@import '_jqgrid.scss';
+@import '_checklist.scss';
+@import '_grid.scss';
 @import "_tables.scss";
 @import "_spinning.scss";
 @import "_imports.scss";
@@ -41,7 +44,9 @@
 @import "_modals.scss";
 @import "_viewkeeper.scss";
 @import "_responsivetabs.scss";
+@import "_charts.scss";
 @import "_omnibar.scss";
+@import "_helpbutton.scss";
 
 // Default Sky Theme
 @import "_theme.scss";

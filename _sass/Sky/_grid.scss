@@ -1,0 +1,169 @@
+﻿@import '_mixins.scss';
+
+$filterWidth: 240px;
+
+.grid-filters {
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    z-index: $z-index-flyout;
+    right: -$padding-double;
+
+    @media (max-width: $screen-xs-max) {
+        right: 0;
+    }
+}
+
+.grid-filters-fixed-top {
+    @extend .grid-filters;
+    position: fixed;
+    right: 0;
+    bottom: auto;
+}
+
+.grid-filters-fixed-bottom {
+    @extend .grid-filters;
+    position: fixed;
+    right: 0;
+    top: auto;
+    bottom: 0;
+}
+
+body:not(.viewkeeper-ignore-fixed) {
+    .grid-filters.viewkeeper-fixed {
+        left: auto !important;
+        right: 0;
+        z-index: $z-index-flyout;
+    }
+}
+
+.grid-filters-box {
+    position: relative;
+}
+
+.grid-filters-icon {
+    @include border-left-radius(20px);
+    background: #1ab394;
+    float: left;
+    padding: 7px 10px 7px 13px;
+    font-size: 16px;
+    width: 40px;
+    color: #fff;
+    cursor: pointer;
+
+    &:before {
+        content: $bbsky-char-filter;
+        font-family: BBSKY;
+    }
+
+    @media (max-width: $screen-xs-max) {
+        display: none;
+    }
+}
+
+.grid-filters-container {
+    width: $filterWidth;
+    margin-left: 40px;
+    background: #f3f3f4;
+    border: 1px solid $gray-lighter;
+}
+
+.grid-filters-header {
+    background: #efefef;
+    text-align: center;
+    text-transform: uppercase;
+    padding: $padding $padding-plus-half;
+    cursor: pointer;
+}
+
+.grid-filters-body, .grid-filters-footer {
+    padding: $padding;
+}
+
+.checkboxlist-modal-body {
+    @media (max-width: $screen-xs-max) {
+        padding: 0;
+    }
+}
+
+.grid-column-picker-wrapper {
+    height: 400px;
+
+    @media (max-width: $screen-xs-max) {
+        height: 320px;
+    }
+}
+
+.grid-column-picker-table {
+    .name-column {
+        width: 160px;
+    }
+
+    .description-column {
+        width: 420px;
+    }
+}
+
+.grid-filter-summary-item:not(:last-child):after {
+    content: " \2022";
+}
+
+.modal-header {
+    min-height: 40px;
+}
+
+.dialogHeader {
+    float: left;
+}
+
+.grid-action-bar {
+    min-height: 50px;
+    background-color: $gray-lightest;
+    width: 100%;
+    z-index: 100;
+}
+
+.grid-action-bar-buttons {
+    display: inline-block;
+    padding: $padding;
+}
+
+.grid-action-bar-clear-selection {
+    background: none repeat scroll 0 0 transparent;
+    color: $blue;
+    font-family: "open sans", "Helvetica Neue", Arial, Helvetica, sans-serif, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 2;
+}
+
+.grid-action-bar-and-back-to-top {
+    bottom: 0;
+    margin-top: 5px;
+    width: 98%;
+
+    .table-backtotop {
+        margin-top: 0;
+    }
+}
+
+.grid-action-bar-mobile-buttons {
+    background-color: $white;
+    -moz-box-shadow: 0 -1px 6px 0 $gray-lighter;
+    -webkit-box-shadow: 0 -1px 6px 0 $gray-lighter;
+    box-shadow: 0 -1px 6px 0 $gray-lighter;
+}
+
+.grid-action-bar-mobile-btn {
+    margin-bottom: $margin;
+    padding-left: $padding;
+    text-align: left;
+}
+
+.grid-action-bar-btn-container {
+    border-bottom: 1px solid $gray-lightest;
+    padding: 15px 15px;
+}
+
+.grid-action-bar-mobile-cancel {
+    padding-left: 15px;
+}

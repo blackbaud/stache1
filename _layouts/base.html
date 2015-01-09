@@ -7,12 +7,26 @@
     <title>RENXT Prototype</title>
     
     <!--
+    OPTION 1
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ 'assets/css/hard-coded.css' | prepend: site.baseurl }}">
+    -->
+    
+    <!--
+    OPTION 2
     -->
     <link rel="stylesheet" href="{{ 'assets/css/app.css' | prepend: site.baseurl }}">
     <link rel="stylesheet" href="{{ 'assets/css/hard-coded.css' | prepend: site.baseurl }}">
+    
+    <!--
+    OPTION 3
+    <link rel="stylesheet" href="{{ 'Trip/startbootstrap-stylish/css/bootstrap.min.css' | prepend: site.baseurl }}">
+    <link rel="stylesheet" href="{{ 'Trip/startbootstrap-stylish/font-awesome/css/font-awesome.min.css' | prepend: site.baseurl }}">
+    <link rel="stylesheet" href="{{ 'Trip/startbootstrap-stylish/css/stylish-portfolio.css' | prepend: site.baseurl }}">
+    <link rel="stylesheet" href="{{ 'assets/css/hard-coded.css' | prepend: site.baseurl }}">
+    --->
     
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -33,11 +47,11 @@
     </div>
     
     {% if page.notes %}
-      <button type="button" class="btn btn-primary btn-lg btn-notes" data-toggle="modal" data-target="#modal-notes">
+      <button type="button" class="hide btn btn-primary btn-lg btn-notes" data-toggle="modal" data-target="#modal-notes">
         <i class="fa fa-lg fa-comments-o"></i>
       </button>
     
-      <div class="modal fade" id="modal-notes">
+      <div class="hide modal fade" id="modal-notes">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -69,7 +83,11 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/easyXDM/2.4.17.1/easyXDM.min.js"></script>
     <script src="//signin.blackbaud.com/omnibar.js"></script>
+    
+    {% if page.comments %}
     <script src="//blackbauddeveloperrenxtprototype.disqus.com/embed.js"></script>
+    {% endif %}
+    
     <script src="{{ 'assets/js/app.js' | prepend: site.baseurl }}"></script>
     
   </body>
