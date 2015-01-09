@@ -1,20 +1,66 @@
-<!DOCTYPE html>
-<html>
+---
+layout: base
+---
 
-  {% include head.html %}
+<div class="nav-wrap">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <ul class="nav-items">
+          {% for item in site.links %}
+            <li>
+              <a href="{{ item.url }}">{{ item.name }}</a>
+            </li>
+          {% endfor %}
+        </ul>  <!-- .nav-items -->
+      </div>  <!-- .col-sm-12 -->
+    </div>  <!-- .row -->
+  </div>  <!-- .container -->
+</div>  <!-- .nav-wrap -->
 
-  <body>
+<div class="meat">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
 
-    {% include header.html %}
-
-    <div class="page-content">
-      <div class="wrapper">
         {{ content }}
-      </div>
-    </div>
 
-    {% include footer.html %}
+      </div>  <!-- .col-sm-12 -->
+    </div>  <!-- .row -->
+  </div>  <!-- .container -->
+</div>  <!-- .meat -->
 
-  </body>
+<div class="meta-footer">
 
-</html>
+  {% if page.showFeedback %}
+    <div class="feedback">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="feedback-content">
+              <h3>Provide feedback for this information</h3>
+              <p>Want to edit or suggest content changes?  <a href="#">View this page</a> in our GitHub repository to get started.</p>
+            </div>  <!-- .feedback-content -->
+          </div>  <!-- .col-sm-12 -->
+        </div>  <!-- .row -->
+      </div>  <!-- .container -->
+    </div>  <!-- .feedback -->
+  {% endif %}
+
+  {% if page.showComments %}
+    <div class="comments">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <div id="disqus_thread"></div>
+          </div>  <!-- .col-sm-12 -->
+        </div>  <!-- .row -->
+      </div>  <!-- .container -->
+    </div>  <!-- .comments -->
+  {% endif %}
+
+</div>  <!-- .meta-footer -->
+
+<div class="footer">
+  &copy; Blackbaud
+</div>  <!-- .footer -->
