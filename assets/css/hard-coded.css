@@ -102,10 +102,20 @@ body {
   padding: 0;
 }
 
+.text-vertical-center h2 {
+  padding: 5px 0 30px 0;
+}
+
 .feedback-content h3 {
   margin-top: 0;
 }
 
 .comments {
   padding: 50px 0;
+}
+
+.btn-notes {
+  bottom: 5px;
+  position: fixed;
+  right: 5px;
 }
