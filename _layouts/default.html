@@ -1,17 +1,28 @@
 ---
 layout: base
+showComments: true
+showFeedback: true
 ---
+
+{% assign url_current = page.url|remove:'index.html' %}
+{% assign sidebar = false %}
 
 <div class="nav-wrap">
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
         <ul class="nav-items">
+          
           {% for item in site.links %}
-            <li>
-              <a href="{{ item.url | prepend: site.baseurl }}">{{ item.name }}</a>
+            {% assign url_item = item.url|prepend: site.baseurl %}
+            <li {% if url_current == url_item %} class="selected" {% endif %}>
+              <a href="{{ url_item }}">{{ item.name }}</a>
             </li>
+            {% if url_current == url_item and item.links.size > 0 %}
+              {% assign sidebar = true %}
+            {% endif %}
           {% endfor %}
+          
         </ul>  <!-- .nav-items -->
       </div>  <!-- .col-sm-12 -->
     </div>  <!-- .row -->
@@ -21,11 +32,40 @@ layout: base
 <div class="content">
   <div class="container">
     <div class="row">
-      <div class="col-sm-12">
 
-        {{ content }}
+      {% if sidebar %}
 
-      </div>  <!-- .col-sm-12 -->
+        <div class="col-md-3 hidden-xs hidden-sm">
+          <div class="sidebar">
+            
+            <ul class="nav nav-pills nav-stacked nav-sidebar">
+            {% for item in site.links %}
+              {% assign url_item = item.url|prepend: site.baseurl %}
+              {% if url_current == url_item %}
+                {% for item in item.links %}
+                  <li>
+                    <a href="{{ item.url | prepend: site.baseurl }}">{{ item.name }}</a>
+                  </li>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+            </ul>
+            
+          </div>  <!-- .sidebar -->
+        </div>  <!-- .col-md-3 -->
+
+        <div class="col-md-9">
+          {{ content }}
+        </div>  <!-- .col-md-9 -->
+
+      {% else %}
+
+        <div class="col-sm-12">
+          {{ content }}
+        </div>
+
+      {% endif %}
+      
     </div>  <!-- .row -->
   </div>  <!-- .container -->
 </div>  <!-- .content -->

@@ -14,6 +14,11 @@
     }
   });
   
+  // Scrollspy
+  $('body').scrollspy({
+    target: '.sidebar'
+  });
+  
   // Smooth scroll
   $('a.smooth-scroll').click(function(e) {
     e.preventDefault();

@@ -8,23 +8,27 @@ defaults:
       path: ""
     values:
       layout: "default"
+      sidebarRelative: true
+      sidebar: ""
 
+# NOTE: For consistency and performance, please begin and end all internal site URL's with a forward slash.
 links:
   - name: Home
     url: /
     
   - name: Getting Started
-    url: /getting-started/
-    
-  #- name: Partners
-  #  url: partners/
-    
-  - name: Tutorials
-    url: /tutorials
+    url: /start/
     links:
     
-      - name: Getting Started
-        url: /getting-started/
+      - name: Welcome
+        url: '#'
+        
+      - name: Authentication
+        url: '#'
+    
+  - name: Tutorials
+    url: /tutorials/
+    links:
         
       - name: Authentication (Use Case 1)
         url: '#'
@@ -39,7 +43,7 @@ links:
         url: '#'
       
   - name: Developer Guide
-    url: Version.html
+    url: /guide/
     links:
     
       - name: Schema
@@ -67,7 +71,7 @@ links:
         url: '#'
       
   - name: Resources
-    url: '#'
+    url: /resources/
     links:
     
       - name: Developer Portal
@@ -92,7 +96,7 @@ links:
         url: /changelog/
       
   - name: Support
-    url: '#'
+    url: /support/
     links:
     
       - name: FAQ

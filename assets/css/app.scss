@@ -94,6 +94,7 @@
 
   body {
     background: #FFF;
+    position: relative;
   }
 
   h1, .h1, h2, .h2, h3, .h3 {
@@ -198,6 +199,17 @@
 
 /* 
 * ==========================================================================
+* SECTION - START
+* ========================================================================== 
+*/
+
+  .start {
+    padding: $section-padding;
+  }
+
+
+/* 
+* ==========================================================================
 * FEEDBACK
 * ========================================================================== 
 */
@@ -245,6 +257,67 @@
 
 /* 
 * ==========================================================================
+* FOOTER - META
+* ========================================================================== 
+*/
+
+  .footer-meta {
+    background: #50535a;
+    color: #787D87;
+    padding: $section-padding;
+    margin-top: 30px;
+  }
+
+  .footer-meta a {
+    color: #949AA6;
+  }
+
+  .footer-meta a:hover,
+  .footer-meta a:focus {
+    color: #8cbe4f; 
+  }
+
+  .bb-love {
+    padding: 20px 0 0 0;
+  }
+
+  .bb-love li {
+    vertical-align: middle;
+    margin-left: 0;
+    padding: 0 10px 10px 0;
+  }
+
+  .bb-love .fa-heart {
+    color: #7F0000;
+  }
+
+  .bb-love a img {
+    opacity: .7;
+  }
+
+  .bb-love a:hover img,
+  .bb-love a:focus img {
+    opacity: 1;
+  }
+
+  .social-icons a {
+    font-size: 26px;
+    margin: 0 5px;
+  }
+  
+  .bb-love,
+  .social-icons {
+    text-align: center;
+  }
+
+  .test::before {
+    font-family: 'BBSKY-OMNIBAR';
+    content: $bbsky-char-re;
+    font-size: 24px;
+  }
+
+/* 
+* ==========================================================================
 * GENERIC
 * ========================================================================== 
 */
@@ -271,9 +344,7 @@
     color: #EFEFEF;
   }
 
-
-/* 
-* ==========================================================================
-* FOOTER
-* ========================================================================== 
-*/
+  .content img {
+    max-width: 100%;
+    height: auto;
+  }
