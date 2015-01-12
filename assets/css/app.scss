@@ -1,54 +1,279 @@
 ---
 ---
 
-$icon-font-path: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/';
-$fa-font-path: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts/';
-$screen-lg-min: '1200px';
+/* 
+* ==========================================================================
+* SKY UI SASS
+* ========================================================================== 
+*/
 
-@import 'Sky/_sky.scss';
+  //Import variables and mixins from Sky and then Bootstrap
+  @import "Sky/_mixins.scss";
 
-/*
-//Import Bootstrap
-@import "Sky/Bootstrap/bootstrap.scss";
+  /* Undoing a few things defined in _bootstrap-variable-defaults.scss */
+  $icon-font-path: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/';
+  $fa-font-path: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts/';
+  $grid-gutter-width: 30px;
+  $screen-lg-min: 1200px;
 
-// Import Font Awesome
-@import "Sky/FontAwesome/font-awesome.scss";
+  //Import Bootstrap
+  @import "Sky/Bootstrap/bootstrap.scss";
 
-// Google Fonts
-@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amplang=en");
+  // Import Font Awesome
+  @import "Sky/FontAwesome/font-awesome.scss";
 
-// Variables, Mixins
-@import "Sky/Inspinia/variables";
-@import "Sky/Inspinia/mixins";
+  // Google Fonts
+  @import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amplang=en");
 
-// INSPINIA Theme Elements
-@import "Sky/Inspinia/typography";
-@import "Sky/Inspinia/navigation";
-@import "Sky/Inspinia/buttons";
-@import "Sky/Inspinia/badgets_labels";
-@import "Sky/Inspinia/elements";
-@import "Sky/Inspinia/sidebar";
-@import "Sky/Inspinia/base";
-@import "Sky/Inspinia/pages";
+  // Variables, Mixins
+  @import "Sky/Inspinia/variables";
+  @import "Sky/Inspinia/mixins";
 
-// Media query style
-@import "Sky/Inspinia/media";
+  // INSPINIA Theme Elements
+  @import "Sky/Inspinia/typography";
+  @import "Sky/Inspinia/navigation";
+  @import "Sky/Inspinia/buttons";
+  @import "Sky/Inspinia/badgets_labels";
+  @import "Sky/Inspinia/elements";
+  @import "Sky/Inspinia/sidebar";
+  @import "Sky/Inspinia/base";
+  @import "Sky/Inspinia/pages";
+
+  // Media query style
+  @import "Sky/Inspinia/media";
+
+  //Load Sky styles
+  @import 'Sky/_jqgrid.scss';
+  @import 'Sky/_checklist.scss';
+  @import 'Sky/_grid.scss';
+  @import "Sky/_tables.scss";
+  @import "Sky/_spinning.scss";
+  @import "Sky/_imports.scss";
+  @import "Sky/_navigation.scss";
+  @import "Sky/_pagination.scss";
+  @import "Sky/_tile.scss";
+  @import "Sky/_toolbars.scss";
+  @import "Sky/_forms.scss";
+  @import "Sky/_modals.scss";
+  @import "Sky/_viewkeeper.scss";
+  @import "Sky/_responsivetabs.scss";
+  @import "Sky/_charts.scss";
+  @import "Sky/_omnibar.scss";
+  @import "Sky/_helpbutton.scss";
+
+  // Default Sky Theme
+  @import "Sky/_theme.scss";
+
+/* 
+* ==========================================================================
+* VARIABLE DECLARATION
+* ========================================================================== 
+*/
+  $section-padding: 50px 0;
+
+/* 
+* ==========================================================================
+* I know we're not supposed to do this, but I absolutely hated seeing the page jump down when the omnibar finally loads.
+* I'm risking setting that height here.  Worst case is you would see the page jump slightly if they ever change the height of the omnibar.
+* ========================================================================== 
+*/
+.bb-omnibar-height-padding {
+  padding-top: $omnibar-height;
+}
+
+/* 
+* ==========================================================================
+* GLOBAL
+* ========================================================================== 
+*/
+
+  html, body {
+    height: 100%;
+    width: 100%;
+  }
+
+  body {
+    background: #FFF;
+  }
+
+  h1, .h1, h2, .h2, h3, .h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  h4, .h4, h5, .h5, h6, .h6 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+
+  hr.small {
+    max-width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+/* 
+* ==========================================================================
+* WELCOME
+* ========================================================================== 
+*/
+
+  .welcome {
+    display: table;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url(../img/bridge-sunset.jpg) no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+  }
+
+  .text-vertical-center {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .text-vertical-center h1 {
+    font-size: 4.5em;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+  }
+
+  .text-vertical-center h2 {
+    padding: 5px 0 30px 0;
+  }
+
+/* 
+* ==========================================================================
+* SECTION - ABOUT
+* ========================================================================== 
+*/
+
+  .about {
+    padding: $section-padding;
+  }
+
+  .about h2 {
+    color: rgb(51, 51, 51);
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 33px;
+    margin: 20px 0 10px 0;
+  }
+
+/* 
+* ==========================================================================
+* SECTION - SERVICES
+* ========================================================================== 
+*/
+
+  .services {
+    padding: $section-padding;
+  }
+
+  .service-item {
+    margin-bottom: 30px;
+  }
+
+/* 
+* ==========================================================================
+* SECTION - LEARN
+* ========================================================================== 
+*/
+
+  .learn {
+    padding: $section-padding;
+  }
+
+/* 
+* ==========================================================================
+* FEEDBACK
+* ========================================================================== 
+*/
+
+  .feedback {
+    background: #FFF;
+  }
+
+  .feedback-content {
+    background: url(../img/octocat-small.png) no-repeat left 50px;
+    border-top: solid 1px #EFEFEF;
+    margin: 50px 0;
+    padding: 50px 0 0 80px;
+  }
+
+  .feedback-content h3 {
+    margin-top: 0;
+  }
+
+/* 
+* ==========================================================================
+* COMMENTS
+* ========================================================================== 
+*/
+
+  .comments {
+    padding: $section-padding;
+  }
+
+/* 
+* ==========================================================================
+* NOTES
+* ========================================================================== 
+*/
+
+  .btn-notes {
+    bottom: 5px;
+    position: fixed;
+    right: 5px;
+  }
+
+  .btn-notes .fa {
+    font-size: 16px;
+  }
+
+/* 
+* ==========================================================================
+* GENERIC
+* ========================================================================== 
+*/
+
+  .text-primary {
+    color: $brand-alternate;;
+  }
+
+  .bg-primary {
+    background: $brand-alternate;
+    color: #FFF;
+  }
+
+  .bg-secondary {
+    background: $blue-light;
+  }
+
+  .btn-fa-link {
+    color: #FFF;
+  }
+
+  .btn-fa-link:hover,
+  .btn-fa-link:focus {
+    color: #EFEFEF;
+  }
 
 
-//Load Sky styles
-@import "Sky/_tables.scss";
-@import "Sky/_spinning.scss";
-@import "Sky/_imports.scss";
-@import "Sky/_navigation.scss";
-@import "Sky/_pagination.scss";
-@import "Sky/_tile.scss";
-@import "Sky/_toolbars.scss";
-@import "Sky/_forms.scss";
-@import "Sky/_modals.scss";
-@import "Sky/_viewkeeper.scss";
-@import "Sky/_responsivetabs.scss";
-@import "Sky/_omnibar.scss";
-
-// Default Sky Theme
-@import "Sky/_theme.scss";
+/* 
+* ==========================================================================
+* FOOTER
+* ========================================================================== 
 */
