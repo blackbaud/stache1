@@ -9,7 +9,7 @@ layout: base
         <ul class="nav-items">
           {% for item in site.links %}
             <li>
-              <a href="{{ item.url }}">{{ item.name }}</a>
+              <a href="{{ item.url | prepend: site.baseurl }}">{{ item.name }}</a>
             </li>
           {% endfor %}
         </ul>  <!-- .nav-items -->
