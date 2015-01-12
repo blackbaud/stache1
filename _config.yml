@@ -15,8 +15,8 @@ links:
   - name: Getting Started
     url: getting-started/
     
-  - name: Partners
-    url: partners/
+  #- name: Partners
+  #  url: partners/
     
   - name: Tutorials
     url: tutorials
