@@ -1,4 +1,6 @@
 ---
+showComments: true
+showFeedback: true
 ---
 
 # API Version #
