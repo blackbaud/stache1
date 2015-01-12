@@ -47,11 +47,11 @@
     </div>
     
     {% if page.notes %}
-      <button type="button" class="hide btn btn-primary btn-lg btn-notes" data-toggle="modal" data-target="#modal-notes">
-        <i class="fa fa-lg fa-comments-o"></i>
+      <button type="button" class="btn btn-primary btn-notes" data-toggle="modal" data-target="#modal-notes">
+        <i class="fa fa-info-circle"></i>
       </button>
     
-      <div class="hide modal fade" id="modal-notes">
+      <div class="modal fade" id="modal-notes">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -84,7 +84,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/easyXDM/2.4.17.1/easyXDM.min.js"></script>
     <script src="//signin.blackbaud.com/omnibar.js"></script>
     
-    {% if page.comments %}
+    {% if page.showComments %}
     <script src="//blackbauddeveloperrenxtprototype.disqus.com/embed.js"></script>
     {% endif %}
     
