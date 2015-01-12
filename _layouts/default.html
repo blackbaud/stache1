@@ -4,7 +4,7 @@ showComments: true
 showFeedback: true
 ---
 
-{% assign url_current = page.url|remove:'index.html' %}
+{% assign url_current = page.url|remove:'index.html'|prepend: site.baseurl %}
 {% assign sidebar = false %}
 
 <div class="nav-wrap">
