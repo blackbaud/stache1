@@ -8,6 +8,8 @@ We periodically update the API in order to deliver new features and to repair de
 ### Added
 - All collections now include an empty list for the property when the collection contains no resources. Previously the  property would be omitted from the response. See the API Reference for complete details on queries and responses for API data.
 
+- The *prospect status* property is now available within the [Constituent] resource.  [more...](http://blackbaud.smallworldlabs.com/groups/blogpost/view/29/34/38)
+
 ### Bug Fix
 - Fix for Issue 123 - On the Proposals resource, the "Date Last Changed" property now correctly displays the correct date. 
 
@@ -33,3 +35,5 @@ New [docs] have been created to describe how the new Management API works.
 
 
 [docs]: http://blackbaud-community.github.io/developer.blackbaud.com-renxt/
+
+[Constituent]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb19ff
