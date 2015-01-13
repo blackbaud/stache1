@@ -6,6 +6,8 @@ layout: auto
 
 ![Ipsum Image][ipsum-image-00]
 
+## Trip ##
+
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum congue, leo et consequat dignissim, metus lacus laoreet dolor, a cursus ex lorem ac diam. Morbi ac gravida ex, a dapibus eros. Maecenas efficitur mauris purus. Vestibulum magna nibh, imperdiet ac ultricies eget, suscipit sed mauris. Integer gravida magna a posuere sagittis. Aliquam ornare id massa a eleifend. Nullam facilisis turpis id faucibus egestas. Vestibulum accumsan massa non eros sagittis, sit amet vulputate enim tempor. Suspendisse ut feugiat purus. Morbi et viverra tellus. Donec arcu diam, condimentum pretium tincidunt eleifend, sagittis nec augue. Integer ullamcorper, neque non porta dictum, velit ex gravida magna, sed rutrum nulla ex ac nisi. Praesent varius massa a consectetur malesuada.
 
 ## Authentication ##
