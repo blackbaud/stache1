@@ -1,7 +1,7 @@
 title: RENXT Developer Portal - Prototype
 baseurl: /developer.blackbaud.com-renxt/
 url: http://developer.blackbaud.com
-
+productname: RE NXT
 # This entire block simply sets the default layout.
 defaults:
   - scope:
@@ -24,7 +24,7 @@ links:
         url: /tutorials/getting-started/
         
       - name: Authentication (Use Case 1)
-        url: '#'
+        url: '/tutorials/auth/'
         
       - name: Searching for a Constituent (Use Case 2)
         url: '#'
