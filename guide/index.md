@@ -6,7 +6,7 @@ showFeedback: true
 # Introduction #
 The RE NXT REST API is designed to help you unlock your key RE NXT data allowing developers to create web applications that manage constituents, addresses, email addresses, attributes....  Since the API is based on REST principles, it's very easy to write and test applications. You can use your browser to access URLs, and you can use pretty much any HTTP client in any programming language to interact with the API.
 
-> <TO DO:  Complete Intro Paragraph>
+> TO DO:  Complete Intro Paragraph
 
 ## Easy to learn
 
