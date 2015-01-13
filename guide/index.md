@@ -6,7 +6,8 @@ showFeedback: true
 # Introduction #
 The RE NXT REST API is designed to help you unlock your key RE NXT data allowing developers to create web applications that manage constituents, addresses, email addresses, attributes....  Since the API is based on REST principles, it's very easy to write and test applications. You can use your browser to access URLs, and you can use pretty much any HTTP client in any programming language to interact with the API.
 
-> TO DO:  Complete Intro Paragraph
+
+> TO DO  Complete Intro Paragraph
 
 ## Easy to learn
 
@@ -17,11 +18,10 @@ tutorials, developer guide, technical reference, interactive API console, forum,
 
 ### Tutorials
 
-- Our getting started and authentication tutorials gets you up to speed fast.  These will guide you through the process of signing up for an API key, trying out our API console, and negotiating our security.    You will be writing code against our API in no time.  
+Our getting started and authentication tutorials gets you up to speed fast.  These will guide you through the process of signing up for an API key, trying out our API console, and negotiating our security.    You will be writing code against our API in no time.  
 
 ### Technical Reference and interactive API Console
-- We've made our API as explorable as possible.  Use our developer portal to [sign up] for an API key and start exploring our API right way.  The developer portal contains a technical reference and interactive API Console that let's you learn the api through hands on interaction.
-
+We've made our API as explorable as possible.  Use our developer portal to [sign up] for an API key and start exploring our API right way.  The developer portal contains a technical reference and interactive API Console that let's you learn the api through hands on interaction.
 
 ## Support
 
