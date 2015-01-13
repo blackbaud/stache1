@@ -1,4 +1,5 @@
 ---
+layout: auto
 showComments: true
 showFeedback: true
 ---

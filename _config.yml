@@ -16,19 +16,12 @@ links:
   - name: Home
     url: /
     
-  - name: Getting Started
-    url: /start/
-    links:
-    
-      - name: Welcome
-        url: '#'
-        
-      - name: Authentication
-        url: '#'
-    
   - name: Tutorials
     url: /tutorials/
     links:
+    
+      - name: Getting Started
+        url: /tutorials/getting-started/
         
       - name: Authentication (Use Case 1)
         url: '#'
