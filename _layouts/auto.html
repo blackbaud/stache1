@@ -5,7 +5,6 @@ showFeedback: true
 ---
 
 {% assign url_current = page.url|remove:'index.html'|prepend: site.baseurl %}
-{% assign sidebar = false %}
 
 <div class="nav-wrap">
   <div class="container">
@@ -18,9 +17,6 @@ showFeedback: true
             <li {% if url_current == url_item %} class="selected" {% endif %}>
               <a href="{{ url_item }}">{{ item.name }}</a>
             </li>
-            {% if url_current == url_item and item.links.size > 0 %}
-              {% assign sidebar = true %}
-            {% endif %}
           {% endfor %}
           
         </ul>  <!-- .nav-items -->
@@ -28,29 +24,42 @@ showFeedback: true
     </div>  <!-- .row -->
   </div>  <!-- .container -->
 </div>  <!-- .nav-wrap -->
+  
+{% assign h2 = content | split:'<h2' %}
+{% capture sidebar %}
+{% for item in h2 %}
+  {% assign parts = item | split:'</h2>' %}
+  {% if parts.size == 2 %}
+    {% assign href = parts[0] | replace:'id="','href="#' %}
+    <li><a {{ href }}</a></li>
+  {% endif %}
+{% endfor %}
+{% endcapture %}
 
 <div class="content">
   <div class="container">
     <div class="row">
 
-      {% if sidebar %}
+      {% if sidebar != "" %}
 
         <div class="col-md-3 hidden-xs hidden-sm">
           <div class="sidebar">
-            
-            <ul class="nav nav-pills nav-stacked nav-sidebar">
-            {% for item in site.links %}
-              {% assign url_item = item.url|prepend: site.baseurl %}
-              {% if url_current == url_item %}
-                {% for item in item.links %}
-                  <li>
-                    <a href="{{ item.url | prepend: site.baseurl }}">{{ item.name }}</a>
-                  </li>
-                {% endfor %}
-              {% endif %}
-            {% endfor %}
-            </ul>
-            
+            <ul class="nav nav-stacked nav-sidebar">
+              
+              <!-- Ridiculous Bootstrap Scrollspy bug that required this nested linkage to function properly -->
+              <li class="hidden">
+                <a href="#top">Top</a>
+              </li>
+              
+              {{ sidebar }}
+              
+              <li class="visible-on-affix">
+                <a href="#top" class="smooth-scroll">
+                  <i class="fa fa-caret-square-o-up"></i>
+                </a>
+              </li>
+              
+            </ul>            
           </div>  <!-- .sidebar -->
         </div>  <!-- .col-md-3 -->
 

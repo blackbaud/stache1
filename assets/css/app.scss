@@ -87,7 +87,7 @@
 * ========================================================================== 
 */
 
-  html, body {
+  .full-height-width {
     height: 100%;
     width: 100%;
   }
@@ -107,6 +107,10 @@
     margin-bottom: 10px;
   }
 
+  h2 {
+    padding-top: 40px;
+  }
+
   hr {
     border: 0;
     border-top: 1px solid #eee;
@@ -118,6 +122,48 @@
     max-width: 100px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+/* 
+* ==========================================================================
+* SIDEBAR
+* ========================================================================== 
+*/
+
+  .nav-sidebar.affix {
+    top: 50px;
+    z-index: 1;
+  }
+
+  .nav-sidebar.affix-bottom {
+    position: absolute;
+  }
+
+  .nav-sidebar .visible-on-affix {
+    opacity: 0;
+    transition: opacity .4s;
+    visibility: hidden;
+  }
+
+  .nav-sidebar.affix .visible-on-affix,
+  .nav-sidebar.affix-bottom .visible-on-affix {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .visible-on-affix {
+    background: none !important;
+    border: none !important;
+  }
+
+  .visible-on-affix a {
+    background: none !important;
+    color: #a7b1c2 !important;
+  }
+
+  .visible-on-affix a:focus,
+  .visible-on-affix a:hover {
+    color: #777 !important;
   }
 
 /* 
@@ -257,23 +303,23 @@
 
 /* 
 * ==========================================================================
-* FOOTER - META
+* FOOTER - SITE
 * ========================================================================== 
 */
 
-  .footer-meta {
+  .footer-site {
     background: #50535a;
     color: #787D87;
     padding: $section-padding;
     margin-top: 30px;
   }
 
-  .footer-meta a {
+  .footer-site a {
     color: #949AA6;
   }
 
-  .footer-meta a:hover,
-  .footer-meta a:focus {
+  .footer-site a:hover,
+  .footer-site a:focus {
     color: #8cbe4f; 
   }
 

@@ -1,5 +1,7 @@
+{% assign url = page.url | replace: 'index.html', '' %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" {% if url == '/' %} class="full-height-width" {% endif %}>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,11 +29,13 @@
     <![endif]-->
     
   </head>
-  <body class="bb-omnibar-height-padding">
+  <body class="bb-omnibar-height-padding {% if url == '/' %} full-height-width {% endif %}">
+    
+    <div id="top"></div>
     
     {{ content }}
     
-    <div class="footer-meta">
+    <div class="footer-site">
       <div class="container">
         <div class="row">
           <div class="col-xs-6 col-sm-4">
@@ -143,13 +147,8 @@
       </div>  <!-- .container -->
     </div>  <!-- .footer -->
     
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-12">
-          <div id="omnibar"></div>
-        </div>
-      </div>
-    </div>
+    <!-- Omnibar Placeholder -->
+    <div id="omnibar"></div>
     
     {% if page.notes %}
     
@@ -186,14 +185,13 @@
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/easyXDM/2.4.17.1/easyXDM.min.js"></script>
-    <script src="//signin.blackbaud.com/omnibar.js"></script>
+    <script src="//signin.blackbaud.com/omnibar.js"></script>    
+    <script src="{{ '/assets/js/holder.js' | prepend: site.baseurl }}"></script>
+    <script src="{{ '/assets/js/app.js' | prepend: site.baseurl }}"></script>
     
     {% if page.showComments %}
     <script src="//blackbauddeveloperrenxtprototype.disqus.com/embed.js"></script>
     {% endif %}
-    
-    <script src="{{ '/assets/js/holder.js' | prepend: site.baseurl }}"></script>
-    <script src="{{ '/assets/js/app.js' | prepend: site.baseurl }}"></script>
     
   </body>
 </html>
