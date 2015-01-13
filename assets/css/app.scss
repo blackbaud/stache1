@@ -140,12 +140,15 @@
   }
 
   .nav-sidebar .visible-on-affix {
-    display: none; 
+    opacity: 0;
+    transition: opacity .4s;
+    visibility: hidden;
   }
 
   .nav-sidebar.affix .visible-on-affix,
   .nav-sidebar.affix-bottom .visible-on-affix {
-    display: block;
+    opacity: 1;
+    visibility: visible;
   }
 
   .visible-on-affix {
