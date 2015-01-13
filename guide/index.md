@@ -28,6 +28,7 @@ We've made our API as explorable as possible.  Use our developer portal to [sign
 ### Blogs and Forum
 Our blogs help keep up to date with API changes, issues, and developer tips. Our Q and A forum enables you to ask a question about the API and receive an answer. To learn more including how to subscribe, see Community.     
 
+> TO DO  need community directory and index.md.  Need to link to that page once created.
 
 # API Version
 
