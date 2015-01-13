@@ -14,7 +14,7 @@ The RE NXT REST API is designed to help you unlock your key RE NXT data allowing
 We have provided numerous developer resources to help you integrate with RE NXT.  This developer web site (developer.blackbaud.com/renxt) orients you to the various 
 developer resources and tools:
 
-tutorials, developer guide, technical reference, interactive API console, forum, and code samples.  
+tutorials, developer guide, technical reference, interactive API console, forum, and code samples.  Hi Steve.
 
 ### Tutorials
 
@@ -28,7 +28,7 @@ We've made our API as explorable as possible.  Use our developer portal to [sign
 ### Blogs and Forum
 Our blogs help keep up to date with API changes, issues, and developer tips. Our Q and A forum enables you to ask a question about the API and receive an answer. To learn more including how to subscribe, see Community.     
 
-> TO DO  need community directory and index.md.  Need to link to that page once created.
+> TO DO  Community page will orient the dev to the various community pieces.  need community directory and index.md.  Need to link to that page once created.
 
 # API Version
 
