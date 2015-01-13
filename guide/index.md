@@ -7,7 +7,7 @@ showFeedback: true
 The RE NXT REST API is designed to help you unlock your key RE NXT data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes....
 
 
-> Note that by using Blackbaud developer tools, you accept our Developer Terms of Use. 
+<p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our Developer Terms of Use. </p>
 
 Through the RE NXT Web API your applications can retrieve and manage Raiser's Edge content.  The [endpoints] for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.  Authorization is done via the Blackbaud Auth service at `https://auth.blackbaud.com`.
 
