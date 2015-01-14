@@ -47,45 +47,4 @@
     }, 1000);
   });
   
-  $('p.note').each(function(i) {
-    
-    var element = $(this),
-        message = element.html(),
-        priority = element.data('priority').toUpperCase(),
-        label = 'default';
-    
-    switch (priority) {
-      case 'HIGH':
-        label = 'danger';
-      break;
-      case 'MEDIUM':
-        label = 'warning';
-      break;
-      case 'LOW':
-        label = 'success';
-      break;
-    }
-    
-    var html = [
-      '<button type="button" class="btn btn-default btn-xs pull-right" data-toggle="modal" data-target="#modal-notes-' + i + '">',
-      '  <i class="fa fa-info-circle"></i>',
-      '</button>',
-      '<div class="modal fade" id="modal-notes-' + i + '">',
-      '  <div class="modal-dialog">',
-      '    <div class="modal-content">',
-      '      <div class="modal-header">',
-      '        <button type="button" class="close" data-dismiss="modal">&times;</button>',
-      '        <h4 class="modal-title">Content Note <span class="label label-' + label + '">Priority: ' + priority + '</span></h4>',
-      '      </div>  <!-- .modal-header -->',
-      '      <div class="modal-body">',      
-      '        <p>' + message + '</p>',
-      '      </div>  <!-- .modal-body -->',
-      '    </div>  <!-- .modal-content -->',
-      '  </div>  <!-- .modal-dialog -->',
-      '</div>  <!-- .modal -->',  
-    ];
-    
-    element.after(html.join(''));
-  });
-  
 })(jQuery, window, document);
