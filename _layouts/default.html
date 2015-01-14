@@ -29,10 +29,8 @@ layout: base
         <ul class="nav-items">
           
           {% for parent in site.links %}
+          
             {% assign url_parent = parent.url | prepend: site.baseurl %}
-            <li {% if url_current == url_parent %} class="selected" {% endif %}>
-              <a href="{{ url_parent }}">{{ parent.name }}</a>
-            </li>
           
             {% if url_current == url_parent and parent.links.size > 0 %}
               {% assign hasSiblings = true %}
@@ -46,6 +44,10 @@ layout: base
                 {% assign url_parent_current = url_parent %}
               {% endif %}
             {% endfor %}
+          
+            <li {% if url_current == url_parent or url_parent == url_parent_current %} class="selected" {% endif %}>
+              <a href="{{ url_parent }}">{{ parent.name }}</a>
+            </li>
           
           {% endfor %}
           
