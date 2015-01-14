@@ -70,12 +70,12 @@ Get all the support you need.
 
 We provide developer <a href="{{ '/resources/' | prepend: site.baseurl }}">resources</a> that 
 
-Keep up to date on the latest changes with our API with our developer [blog]. 
+Our <a href="{{ site.communityblogurl }}">blog</a> keeps you up to date on the latest news and changes. 
 
-Stay in touch with our Developer Blog.
 
-Over in our {{ site.devportalname }}
-Explore the rest of the end points via API documentation, blogs and forums.
+
+
+Over in our {{ site.devportalname }} explore the rest of the end points via API documentation, blogs and forums.
 
 
 

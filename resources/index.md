@@ -18,7 +18,7 @@ We've made our API as explorable as possible.  Within our developer portal, a te
 ## Issues
 
 ## Developer Blogs 
-Our blogs help keep up to date with API news, issues, and developer tips.
+Our <a href="{{ site.communitygroupurl }}" >blogs</a> help keep up to date with API news, issues, and developer tips.
 
 ## Code Samples
 As a developer, you can't get enough code samples.  That's why we provide code samples in a variety of languages within our technical reference.  

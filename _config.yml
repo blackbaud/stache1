@@ -1,6 +1,9 @@
 title: RENXT Developer Portal - Prototype
 baseurl: /developer.blackbaud.com-renxt/
 url: http://developer.blackbaud.com
+communityurl: http://blackbaud.smallworldlabs.com
+communitygroupurl:  http://blackbaud.smallworldlabs.com/groups/home/30
+communityblogurl:  http://blackbaud.smallworldlabs.com/groups/blogs/30
 productname: RE NXT
 devportalname: API management developer portal
 # This entire block simply sets the default layout.
