@@ -37,21 +37,24 @@ This documentation is designed for people familiar with HTTP programming and RES
 
 ## Web API Authorization	
 
-This guide shows you how to get a user’s authorization to access private data through the {{ site.productname }} API.  Some requests to the {{ site.productname }} require authorization; that is, the user must have granted permission for an application to access the requested data. To prove that the user has granted permission, the request header sent by the application must include a valid access token.
+This guide shows you how to get a user’s authorization to access private {{ site.productname }} data through the {{ site.productname }} API.  OAuth 2.0 is an authorization framework commonly used to grant client applications limited access to a {{ site.productname }} user's resources without exposing the users credentials to the client application. Some requests to the {{ site.productname }} require authorization; that is, the user of a client application must have granted permission for an client application to access the requested {{ site.productname }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is used in OAuth to provide limited access to protected resources.  The access token is passed to subsequent API calls to do things such as searching for a constituent or adding a constituent.
 
-As the first step towards authorization, you will need to sign up within our developer portal and subscribe to the appropriate API product.    This  will give you a primary and secondary API keys to use in the authorization flow.  It will also provide access to analytics for your subscription.  See <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> for details on signing up and obtaining your keys.
+### Sign up and get your keys
+As the first step towards authorization, you will need to sign up within our developer portal and subscribe to the appropriate API product.    This  will give you your primary and secondary API keys to use in the authorization flow.  It will also provide access to analytics for your subscription.  See the <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial for help on signing up and obtaining your keys.
+
+> To do:  Verify which keys  (primary and/or secondary API key) are used as the public API key and secret API key.
 
 ![Ipsum Image][ipsum-image-00]
 
+### Register your app
+
+Before you can begin the OAuth process, you must first register a new app with the service. When registering a new app, you usually register basic information such as application name, website, a logo, etc. In addition, you must register a redirect URI to be used for redirecting users to for web server, browser-based, or mobile apps.  See the <a href="{{ '/tutorials/registerapp/' | prepend: site.baseurl }}" > Register Your App</a> tutorial for help on registering your application.
+
 ### Supported Authorization Flows
-The {{ site.productname }} API currently supports 1 authorization flow:
+The {{ site.productname }} API currently supports the Authorization Code flow:
 
-The Authorization Code flow first gets a code then exchanges it for an access token and a refresh token. Since the exchange uses your *secret API key*, you should make that request server-side to keep the integrity of the key. An advantage of this flow is that you can use refresh tokens to extend the validity of the access token.
-
-> To do:  Verify whether the primary and/or secondary API key is used as the secret API key.
-
-### Authorization Code Flow
-The method is suitable for long-running applications which the user logs into once. It provides an access token that can be refreshed. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a backend service, not from a client like a browser or mobile apps. This flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is also the authorization flow used in our <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" >Web API Authorization Tutorial</a>.
+#### Authorization Code Flow
+The Authorization Code flow first gets a code then exchanges it for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. This method is suitable for long-running applications which the user logs into once. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a back-end service, not from a client like a browser or mobile apps. This flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is the authorization flow used in our <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" >Web API Authorization Tutorial</a>.
 
 <p class="alert alert-info">With the Authorization Code flow the token exchange involves sending your secret API key. This should happen on a secure location, like a backend service, not from a client like a browser or mobile apps.</p>
 
