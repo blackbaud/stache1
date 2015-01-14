@@ -1,15 +1,25 @@
 title: RENXT Developer Portal - Prototype
-baseurl: /developer.blackbaud.com-renxt/
-url: http://developer.blackbaud.com
 productname: RE NXT
+
+baseurl: /developer.blackbaud.com-renxt
+url: http://developer.blackbaud.com
+
+# Used as the base in the feedback section
+github: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blob/gh-pages
+
 # This entire block simply sets the default layout.
 defaults:
   - scope:
       path: ""
     values:
       layout: "default"
-      sidebarRelative: true
-      sidebar: ""
+      showComments: false
+      showFeedback: false
+      showSidebar: true
+      showHeadings: true
+      
+# Used to count the number of notes on a single page
+noteCounter: 0
 
 # NOTE: For consistency and performance, please begin and end all internal site URL's with a forward slash.
 links:
@@ -24,7 +34,7 @@ links:
         url: /tutorials/getting-started/
         
       - name: Authentication
-        url: '/tutorials/auth/'
+        url: /tutorials/auth/
         
       - name: Searching and Retrieving a Constituent
         url: '#'
