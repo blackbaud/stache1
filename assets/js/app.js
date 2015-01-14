@@ -12,6 +12,7 @@
       sidebar = $('.sidebar'),
       sidebarNav = $('.nav-sidebar');
   
+  // No need to start these if there's no sidebar
   if (sidebar.length) {
     
     // Affix
@@ -38,6 +39,7 @@
   $('a.smooth-scroll').click(function(e) {
     e.preventDefault();
 
+    // Manually making #top = 0
     var href = $(this).attr('href'),
         top = href == '#top' ? 0 : $($(this).attr('href')).offset().top;
     
