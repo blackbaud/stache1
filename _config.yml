@@ -50,31 +50,6 @@ links:
     
   - name: Developer Guide
     url: /guide/
-    links:
-    
-      - name: Schema
-        url: '#'
-        
-      - name: Parameters
-        url: '#'
-        
-      - name: Version
-        url: '#'
-        
-      - name: Pagination
-        url: '#'
-        
-      - name: Rate Limiting
-        url: '#'
-        
-      - name: Quota
-        url: '#'
-        
-      - name: Endpoints (Create blended content from azure management API & authored content, with links back to azure technical reference)
-        url: '#'
-        
-      - name: ...
-        url: '#'
       
   - name: Resources
     url: /resources/
