@@ -1,7 +1,5 @@
 ---
-layout: auto
-showComments: true
-showFeedback: true
+layout: content
 ---
 # Developer Guide
 
