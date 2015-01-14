@@ -37,7 +37,7 @@ links:
         url: /tutorials/auth/
     
       - name: Registering Your App
-        url: '/tutorials/registerapp/'
+        url: /tutorials/register-app/
     
       - name: Searching and Retrieving a Constituent
         url: '#'
