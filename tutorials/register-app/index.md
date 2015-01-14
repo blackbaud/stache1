@@ -1,7 +1,7 @@
 ---
-layout: auto
+layout: content
 priority: low
-notes: |
+note: |
   The notes section defined in the page's front-matter, can really be anything.
   
   It supports multiple line breaks and even HTML.

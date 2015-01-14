@@ -1,19 +1,25 @@
-title: RENXT Developer Portal - Prototype
+# Used to correctly link in different environments
 baseurl: /developer.blackbaud.com-renxt/
 url: http://developer.blackbaud.com
-communityurl: http://blackbaud.smallworldlabs.com
-communitygroupurl:  http://blackbaud.smallworldlabs.com/groups/home/30
-communityblogurl:  http://blackbaud.smallworldlabs.com/groups/blogs/30
+
+# Used as the base in the feedback section
+github: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blob/gh-pages
+
+# Custom Site Variables
+title: RENXT Developer Portal - Prototype
 productname: RE NXT
 devportalname: API management developer portal
-# This entire block simply sets the default layout.
+
+# This block sets some default page variables
 defaults:
   - scope:
       path: ""
     values:
       layout: "default"
-      sidebarRelative: true
-      sidebar: ""
+      showComments: false
+      showFeedback: false
+      showSidebar: true
+      showHeadings: true
 
 # NOTE: For consistency and performance, please begin and end all internal site URL's with a forward slash.
 links:
@@ -28,10 +34,10 @@ links:
         url: /tutorials/getting-started/
     
       - name: Web API Authorization
-        url: '/tutorials/auth/'
+        url: /tutorials/auth/
     
       - name: Registering Your App
-        url: '/tutorials/registerapp/'
+        url: /tutorials/register-app/
     
       - name: Searching and Retrieving a Constituent
         url: '#'

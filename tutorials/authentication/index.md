@@ -1,5 +1,5 @@
 ---
-layout: auto
+layout: content
 ---
 
 # Tutorials #
