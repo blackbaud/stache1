@@ -8,18 +8,17 @@
     signOutRedirectUrl: ''
   });
   
-  var sidebar = $('.sidebar'),
+  var body = $('body'),
+      sidebar = $('.sidebar'),
       sidebarNav = $('.nav-sidebar');
   
   if (sidebar.length) {
     
-    // Affix - We calculate the bottom offset as disqus could change it
+    // Affix
     sidebarNav.affix({
       offset: {
-        top: 50,
-        bottom: function() {
-          return $('.footer-meta').outerHeight() + $('.footer-site').outerHeight();
-        }
+        top: body.css('padding-top').replace('px', ''),
+        bottom: $('.footer-site').outerHeight()
       }
     });
 
@@ -29,7 +28,7 @@
     }).trigger('resize');
 
     // Scrollspy
-    $('body').scrollspy({
+    body.scrollspy({
       target: '.sidebar'
     });
     
