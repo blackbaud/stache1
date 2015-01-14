@@ -23,16 +23,16 @@ links:
       - name: Getting Started
         url: /tutorials/getting-started/
         
-      - name: Authentication (Use Case 1)
+      - name: Authentication
         url: '/tutorials/auth/'
         
-      - name: Searching for a Constituent (Use Case 2)
+      - name: Searching and Retrieving a Constituent
         url: '#'
         
-      - name: Updating Constituent Address (Use Case 3)
+      - name: Common Developer Use Case Tutorial 1
         url: '#'
         
-      - name: Another Common Tutorial (Use Case ...)
+      - name: Another Common Use Case Tutorial 2
         url: '#'
       
   - name: Developer Guide
