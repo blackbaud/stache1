@@ -68,6 +68,10 @@ Get all the support you need.
 
 - Take a deeper dive into security with our <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}">Web API Authorization</a> guide and <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}">tutorial</a>.
 
+We provide developer <a href="{{ '/resources/' | prepend: site.baseurl }}">resources</a> that 
+
+Keep up to date on the latest changes with our API with our developer [blog]. 
+
 Stay in touch with our Developer Blog.
 
 Over in our {{ site.devportalname }}
