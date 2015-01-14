@@ -2,6 +2,7 @@
 layout: base
 ---
 
+{% assign hasSidebar = false %}
 {% assign hasSiblings = false %}
 {% assign isSibling = false %}
 {% assign hasHeadings = false %}
@@ -62,7 +63,8 @@ layout: base
     <div class="row">
 
       {% if page.showSidebar and (hasSiblings or isSibling or hasHeadings) %}
-
+      
+        {% assign hasSidebar = true %}
         <div class="col-md-3 hidden-xs hidden-sm">
           <div class="sidebar">
             <ul class="nav nav-stacked nav-sidebar">
@@ -133,7 +135,7 @@ layout: base
     <div class="feedback">
       <div class="container">
         <div class="row">
-          <div class="col-sm-12">
+          <div class="{% if hasSidebar %} col-sm-9 col-sm-offset-3 {% else %} col-sm-12 {% endif %}">
             <div class="feedback-content">
               <h3>Provide feedback for this information</h3>
               <p>Want to edit or suggest content changes?  <a href="{{ page.path | prepend: '/' | prepend: site.github }}" target="_blank">View this page</a> in our GitHub repository to get started.</p>
@@ -148,7 +150,7 @@ layout: base
     <div class="comments">
       <div class="container">
         <div class="row">
-          <div class="col-sm-12">
+          <div class="{% if hasSidebar %} col-sm-9 col-sm-offset-3 {% else %} col-sm-12 {% endif %}">
             <div id="disqus_thread"></div>
           </div>  <!-- .col-sm-12 -->
         </div>  <!-- .row -->
