@@ -3,6 +3,9 @@
 
 # Resources
 
+> TO DO  Resoruces page will orient the dev to the various developer resources available such as the technical reference, api console, analytics, developer blogs, tutorials, code samples, github, and changelog . 
+
+<!--
 ##  {{ site.devportalname }}
 
 ### Technical Reference with Interactive API Console
@@ -26,4 +29,4 @@ We use GitHub to host our code samples.
 
 ## Change Log
 We periodically update the API in order to deliver new features and to repair defects discovered in previous versions.  We utilize a <a href="{{ '/changelog/' | prepend: site.baseurl }}" >Change Log</a> to communicate these changes to you. 
-   
+ -->
