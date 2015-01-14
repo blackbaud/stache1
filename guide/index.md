@@ -1,6 +1,7 @@
 ---
 layout: content
 ---
+
 # Developer Guide
 
 The RE NXT REST API is designed to help you unlock your key RE NXT data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes....
