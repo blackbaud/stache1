@@ -42,7 +42,7 @@ Unfortunately, front-matter variables aren't inherited exactly as I feel like th
   </tr>
   <tr>
     <td>content</td>
-    <td>Extends the default layout by enabling comments and feedback.</td>
+    <td>Extends the default layout by enabling comments and feedback.  This is the ideal layout for most generic content on the site.</td>
     <td>true</td>
     <td>true</td>
   </tr>
