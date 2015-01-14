@@ -35,22 +35,25 @@ This documentation is designed for people familiar with HTTP programming and RES
 
 > TO DO: Add API Fundamentals and incorporate link above
 
+## Web API Authorization	
 
+This guide shows you how to get a user’s authorization to access private data through the {{ site.productname }} API.  Some requests to the {{ site.productname }} require authorization; that is, the user must have granted permission for an application to access the requested data. To prove that the user has granted permission, the request header sent by the application must include a valid access token.
 
+As the first step towards authorization, you will need to sign up within our developer portal and subscribe to the appropriate API product.    This  will give you a primary and secondary API keys to use in the authorization flow.  It will also provide access to analytics for your subscription.  See <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> for details on signing up and obtaining your keys.
 
+![Ipsum Image][ipsum-image-00]
 
+### Supported Authorization Flows
+The {{ site.productname }} API currently supports 1 authorization flow:
 
-### --------------------
+The Authorization Code flow first gets a code then exchanges it for an access token and a refresh token. Since the exchange uses your *secret API key*, you should make that request server-side to keep the integrity of the key. An advantage of this flow is that you can use refresh tokens to extend the validity of the access token.
 
- 
+> To do:  Verify whether the primary and/or secondary API key is used as the secret API key.
 
-## Support
+### Authorization Code Flow
+The method is suitable for long-running applications which the user logs into once. It provides an access token that can be refreshed. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a backend service, not from a client like a browser or mobile apps. This flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is also the authorization flow used in our <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" >Web API Authorization Tutorial</a>.
 
-### Blogs and Forum
-Our blogs help keep up to date with API changes, issues, and developer tips. Our Q and A forum enables you to ask a question about the API and receive an answer. To learn more including how to subscribe, see [Support].     
-
-> TO DO  Support page will orient the dev to the various community pieces.  need to create the support web page. 
-
+<p class="alert alert-info">With the Authorization Code flow the token exchange involves sending your secret API key. This should happen on a secure location, like a backend service, not from a client like a browser or mobile apps.</p>
 
 
 ## Version
@@ -80,7 +83,7 @@ The [changelog] reflects backwards-incompatible updates, backward compatible upd
 > TO DO: API Team engineers will be a major contributor the changelog as we version the API.  Potentially use TFS to categorize and track backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues.  
 
 ## HTTP Fundamentals
-
+ipsum lorem
 
 [sign up]: https://bbbobbyearl.portal.azure-api.net/
 [signing up]: https://bbbobbyearl.portal.azure-api.net/
@@ -89,4 +92,4 @@ The [changelog] reflects backwards-incompatible updates, backward compatible upd
 [changelog]: http://blackbaud-community.github.io/developer.blackbaud.com-renxt/changelog/
 [endpoints]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb1a02
 
-[Authorization]: /tutorials/auth/
+[ipsum-image-00]: http://placehold.it/800x300
