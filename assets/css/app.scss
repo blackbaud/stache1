@@ -139,6 +139,15 @@
     position: absolute;
   }
 
+  .nav > li.current {
+    border-left: 4px solid #19aa8d;
+    background: #293846;
+  }
+
+  .nav > li.current > a {
+    color: white;
+  }
+
   .nav-sidebar .visible-on-affix {
     opacity: 0;
     transition: opacity .4s;
@@ -299,6 +308,12 @@
 
   .btn-notes .fa {
     font-size: 16px;
+  }
+
+  .btn-xs > .fa {
+    font-size: 14px;
+    top: 1px;
+    position: relative;
   }
 
 /* 
