@@ -1,11 +1,26 @@
 ---
 layout: base
-showComments: false
-showFeedback: false
 ---
 
-{% assign url_current = page.url|remove:'index.html'|prepend: site.baseurl %}
-{% assign sidebar = false %}
+{% assign hasSiblings = false %}
+{% assign isSibling = false %}
+{% assign hasHeadings = false %}
+
+{% assign url_current = page.url | remove: 'index.html' | prepend: site.baseurl %}
+{% assign h2 = content | split: '<h2' %}
+  
+{% if page.showHeadings %}
+  {% capture headings %}
+    {% for item in h2 %}
+      {% assign parts = item | split:'</h2>' %}
+      {% if parts.size == 2 %}
+        {% assign hasHeadings = true %}
+        {% assign href = parts[0] | replace:'id="','href="#' %}
+        <li><a {{ href }}</a></li>
+      {% endif %}
+    {% endfor %}
+  {% endcapture %}
+{% endif %}
 
 <div class="nav-wrap">
   <div class="container">
@@ -13,14 +28,25 @@ showFeedback: false
       <div class="col-sm-12">
         <ul class="nav-items">
           
-          {% for item in site.links %}
-            {% assign url_item = item.url|prepend: site.baseurl %}
-            <li {% if url_current == url_item %} class="selected" {% endif %}>
-              <a href="{{ url_item }}">{{ item.name }}</a>
+          {% for parent in site.links %}
+            {% assign url_parent = parent.url | prepend: site.baseurl %}
+            <li {% if url_current == url_parent %} class="selected" {% endif %}>
+              <a href="{{ url_parent }}">{{ parent.name }}</a>
             </li>
-            {% if url_current == url_item and item.links.size > 0 %}
-              {% assign sidebar = true %}
+          
+            {% if url_current == url_parent and parent.links.size > 0 %}
+              {% assign hasSiblings = true %}
+              {% assign url_parent_current = url_parent %}
             {% endif %}
+          
+            {% for child in parent.links %}
+              {% assign url_child = child.url | prepend: site.baseurl %}
+              {% if url_current == url_child %}
+                {% assign isSibling = true %}
+                {% assign url_parent_current = url_parent %}
+              {% endif %}
+            {% endfor %}
+          
           {% endfor %}
           
         </ul>  <!-- .nav-items -->
@@ -33,22 +59,51 @@ showFeedback: false
   <div class="container">
     <div class="row">
 
-      {% if sidebar %}
+      {% if page.showSidebar and (hasSiblings or isSibling or hasHeadings) %}
 
         <div class="col-md-3 hidden-xs hidden-sm">
           <div class="sidebar">
-            
-            <ul class="nav nav-pills nav-stacked nav-sidebar">
-            {% for item in site.links %}
-              {% assign url_item = item.url|prepend: site.baseurl %}
-              {% if url_current == url_item %}
-                {% for item in item.links %}
-                  <li>
-                    <a href="{{ item.url | prepend: site.baseurl }}">{{ item.name }}</a>
-                  </li>
+            <ul class="nav nav-stacked nav-sidebar">
+              
+              {% if hasSiblings or isSibling %}
+              
+                {% for parent in site.links %}
+                  {% assign url_parent = parent.url | prepend: site.baseurl %}
+                  {% if url_parent_current == url_parent %}
+                    {% for child in parent.links %}
+                      {% assign url_child = child.url | prepend: site.baseurl %}
+              
+                      <li {% if url_current == url_child %} class="current" {% endif %}>
+                        <a href="{{ child.url | prepend: site.baseurl }}">{{ child.name }}</a>
+                        
+                        {% if url_current == url_child and headings != '' %}
+                        <ul class="nav">
+                          {{ headings }}
+                        </ul>
+                        {% endif %}
+                        
+                      </li>
+              
+                    {% endfor %}
+                  {% endif %}
                 {% endfor %}
+              
+              {% elsif hasHeadings %}
+              
+                <!-- Ridiculous Bootstrap Scrollspy bug that required this nested linkage to function properly -->
+                <li class="hidden">
+                  <a href="#top">Top</a>
+                </li>
+              
+                {{ headings }}
+              
+                <li class="visible-on-affix">
+                  <a href="#top" class="smooth-scroll">
+                    <i class="fa fa-caret-square-o-up"></i>
+                  </a>
+                </li>
+              
               {% endif %}
-            {% endfor %}
             </ul>
             
           </div>  <!-- .sidebar -->
@@ -79,14 +134,14 @@ showFeedback: false
           <div class="col-sm-12">
             <div class="feedback-content">
               <h3>Provide feedback for this information</h3>
-              <p>Want to edit or suggest content changes?  <a href="#">View this page</a> in our GitHub repository to get started.</p>
+              <p>Want to edit or suggest content changes?  <a href="{{ page.path | prepend: '/' | prepend: site.github }}" target="_blank">View this page</a> in our GitHub repository to get started.</p>
             </div>  <!-- .feedback-content -->
           </div>  <!-- .col-sm-12 -->
         </div>  <!-- .row -->
       </div>  <!-- .container -->
     </div>  <!-- .feedback -->
   {% endif %}
-
+  
   {% if page.showComments %}
     <div class="comments">
       <div class="container">
