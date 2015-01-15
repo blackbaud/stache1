@@ -27,7 +27,7 @@ Within our {{ site.devportalname }} [set up] your developer account or [log in] 
 
 
 ## Step 2 - Get your API keys ##
-You obtain an API keys by [subscribing to an API Product] such as a Starter product or Unlimited product.  If you are new to our API, we recommend subscribing to the [Starter] product as it does not require approval by a Blackbaud API administrator.  Partners can subscribe to the Unlimited product which requires approval by a Blackbaud API administrator.  
+You obtain API keys by [subscribing to an API Product] such as a Starter product or Unlimited product.  If you are new to our API, we recommend subscribing to the [Starter] product as it does not require approval by a Blackbaud API administrator.  Partners can subscribe to the Unlimited product which requires approval by a Blackbaud API administrator.  
 
 <p class="alert alert-info">The API keys will consist of a primary key and a secondary key.  Use the primary key as  API key and the secondary key as the secret API key.</p>
 
@@ -43,7 +43,7 @@ You obtain an API keys by [subscribing to an API Product] such as a Starter prod
 ## Step 3 - Create a {{ site.productname }} user  ##
 Before you can use the API Console to try out the api, you will need an API key and a valid OAuth 2.0 access token. The first step in obtaining an OAuth 2.0 access token is to create a trial {{ site.productname }} user account for an RE NXT user.  
 
-> Note to Doc/API Team:  This step may be unnecessary for partners if we eventually provision an RE NXT sandbox for each partner dev. The automatic creation of an {{ site.productname }} user may also be done as part of this process.  Either way, the API Console will need an access token which represents {{ site.productname }} use's authorization to the API Console to access protected {{ site.productname }} API resources.
+> Note to Doc/API Team:  This step may be unnecessary for partners if we eventually provision an RE NXT sandbox for each partner dev. The automatic creation of an {{ site.productname }} user may also be done as part of this process.  Either way, the API Console will need an access token which represents {{ site.productname }} user's authorization to the API Console to access protected {{ site.productname }} API resources.
 
 ![Ipsum Image][ipsum-image-00]
 
@@ -68,14 +68,10 @@ Get all the support you need.
 
 - Take a deeper dive into security with our <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}">Web API Authorization</a> guide and <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}">tutorial</a>.
 
-We provide developer <a href="{{ '/resources/' | prepend: site.baseurl }}">resources</a> that 
+- We provide developer <a href="{{ '/resources/' | prepend: site.baseurl }}">resources</a> such as tutorials, code samples, and a changelog.  
 
-Our <a href="{{ site.communityblogurl }}">blog</a> keeps you up to date on the latest news and changes. 
+- Our <a href="{{ site.communityblogurl }}">blog</a> keeps you up to date on the latest news and changes. 
 
-
-
-
-Over in our {{ site.devportalname }} explore the rest of the end points via API documentation, blogs and forums.
 
 
 

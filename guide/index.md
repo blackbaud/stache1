@@ -1,27 +1,28 @@
 ---
 layout: content
+priority: high
+note: |
+  This is a prototype.  As the API matures, this content will change. 
 ---
 
 # Developer Guide
 
-The RE NXT REST API is designed to help you unlock your key RE NXT data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes....
+The {{ site.productname }} API is designed to help you unlock your key {{ site.productname }} data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes, etc.  Since the API is based on REST principles, it's very easy to write and test applications. You can use your browser to access URLs, and you can use pretty much any HTTP client in any programming language to interact with the API.
 
 <p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our Developer Terms of Use. </p>
 
-Through the RE NXT Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the Blackbaud Auth service at `https://auth.blackbaud.com`.  
 
->  TO DO:  Complete Intro Paragraph.  Reference correct path for data and auth end points. 
-
-
-<!--
 ## Base URL
 
-All URLs referenced in the documentation have the following base:
 
-    https://api.blackbaud.com/{version}
+Through the RE NXT Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the Blackbaud Auth service at `https://auth.blackbaud.com`.  
 
-> TO DO:  Verify the base url with API engineering team
--->
+> TO DO: Verify the base url and SSL (HTTPS) with API engineering team.
+
+> TO DO: Does the URL contain identifying information that organizes resources for a specific instance/customer/tenant?  Is another mechanism used to identify a specific instance/customer/tenant?
+
+> TO DO:  Provide a sample of a typical url and indicate the base url and other pieces such as https, resource, tenant, etc.
+
 
 ## Audience
 Currently, the RE NXT API is only available to a limited group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to contact our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial. 
@@ -34,14 +35,30 @@ This documentation is designed for people familiar with HTTP programming and RES
 
 > TO DO: Add API Fundamentals and incorporate link above
 
+
+## Architectural Style
+The {{ site.productname }} API is organized around REST. Our API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients, and we support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website's client-side code). JSON will be returned in all responses from the API, including errors.
+
+> TO DO: We need to determine if we support cross-origin resource sharing (CORS).
+>
+> TO DO:  Verify the format of the data returned in responses from the API.  JSON only?
+
 ## Web API Authorization	
 
-This guide shows you how to get a user’s authorization to access private {{ site.productname }} data through the {{ site.productname }} API.  OAuth 2.0 is an authorization framework commonly used to grant client applications limited access to a {{ site.productname }} user's resources without exposing the users credentials to the client application. Some requests to the {{ site.productname }} require authorization; that is, the user of a client application must have granted permission for an client application to access the requested {{ site.productname }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is used in OAuth to provide limited access to protected resources.  The access token is passed to subsequent API calls to do things such as searching for a constituent or adding a constituent.
+This guide shows you how to get a user’s authorization to access private {{ site.productname }} data through the {{ site.productname }} API.  OAuth 2.0 is an authorization framework commonly used to grant client applications limited access to a  user's resources without exposing the users credentials to the client application. Some requests to the {{ site.productname }} API require authorization; that is, the user of a client application must have granted permission for an client application to access the requested {{ site.productname }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is used in OAuth to provide limited access to protected resources.  The access token is passed to subsequent API calls to do things such as searching for a constituent or adding a constituent.
+
+<p class="alert alert-info">All communication with Blackbaud servers be over SSL (https://) </p>
+
+>  TO DO:  Must all communication with Blackbaud servers be over SSL (https://).
 
 ### Sign up and get your keys
-As the first step towards authorization, you will need to sign up within our developer portal and subscribe to the appropriate API product.    This  will give you your primary and secondary API keys to use in the authorization flow.  It will also provide access to analytics for your subscription.  See the <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial for help on signing up and obtaining your keys.
+As the first step towards authorization, you will need to sign up within our developer portal and subscribe to the appropriate API product.    This  will give you your primary and secondary API keys to use in the authorization flow.  You can manage your API keys from your account within the {{ site.devportalname }}. It will also provide access to analytics for your subscription.  See the <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial for help on signing up and obtaining your keys.
 
 > To do:  Verify which keys  (primary and/or secondary API key) are used as the public API key and secret API key.
+
+> What does an API key represent?  Does it represent a specific client app's subscription to an API product?  Or, does it represent a client app developer's subscription to an API product?
+
+<p class="alert alert-info">It is important to keep the secret API key secure.  You should never expose the secret API key in your code.  You should take special care to never store the secret API key on the client, such as a native mobile or browser-based apps.</p>
 
 ![Ipsum Image][ipsum-image-00]
 
@@ -50,12 +67,15 @@ As the first step towards authorization, you will need to sign up within our dev
 Before you can begin the OAuth process, you must first register a new app with the service. When registering a new app, you usually register basic information such as application name, website, a logo, etc. In addition, you must register a redirect URI to be used for redirecting users to for web server, browser-based, or mobile apps.  See the <a href="{{ '/tutorials/registerapp/' | prepend: site.baseurl }}" > Register Your App</a> tutorial for help on registering your application.
 
 ### Supported Authorization Flows
-The {{ site.productname }} API currently supports the Authorization Code flow:
+The {{ site.productname }} API currently only supports the Authorization Code flow:
 
 #### Authorization Code Flow
-The Authorization Code flow first gets a code then exchanges it for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. This method is suitable for long-running applications which the user logs into once. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a back-end service, not from a client like a browser or mobile apps. This flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is the authorization flow used in our <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" >Web API Authorization Tutorial</a>.
+The Authorization Code flow first gets a code then exchanges it for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. This method is suitable for long-running applications which the user logs into once. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a back-end service or back-end web app, not from a client like a browser-based or mobile app.   The Authorization Code flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is the authorization flow used in our <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" >Web API Authorization Tutorial</a>.
 
-<p class="alert alert-info">With the Authorization Code flow the token exchange involves sending your secret API key. This should happen on a secure location, like a backend service, not from a client like a browser or mobile apps.</p>
+<p class="alert alert-info">As a best practice, Blackbaud recommends you use Authorization Code Flow within a Web application or service that is written in a server-side language and run on a server where the source code of the application is not available to the public. With the Authorization Code flow the token exchange involves sending your secret API key. This should happen on a secure location, like a backend service, not from code running on a client like a browser or a mobile app.
+</p>
+
+> To do:  If new use cases require the addition of different OAuth grant types, such as Implict flow for browser-based or mobile apps, we will need to document these new grant types within this section. 
 
 
 ## Version
@@ -80,7 +100,7 @@ For the RE NXT API, the URL has a major version number (v1), but the API has dat
 > TO DO: Get input to backwards-compatible changes from API Team engineers
 
 ### API Changelog
-The [changelog] reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.
+The  <a href="{{ '/changelog//' | prepend: site.baseurl }}" >Change Log</a> reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.
 
 > TO DO: API Team engineers will be a major contributor the changelog as we version the API.  Potentially use TFS to categorize and track backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues.  
 
@@ -91,7 +111,7 @@ ipsum lorem
 [signing up]: https://bbbobbyearl.portal.azure-api.net/
 [getting started]: http://blackbaud-community.github.io/developer.blackbaud.com-renxt/start/
 [support]: http://blackbaud-community.github.io/developer.blackbaud.com-renxt/support/
-[changelog]: http://blackbaud-community.github.io/developer.blackbaud.com-renxt/changelog/
+
 [endpoints]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb1a02
 
 [ipsum-image-00]: http://placehold.it/800x300
