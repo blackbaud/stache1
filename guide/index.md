@@ -136,9 +136,7 @@ In the Authorization request the client constructs the request URI by adding the
 	<tr>
 		<td>response_type</td>
 		<td>The value must be one of "code" for requesting an
-         authorization code 
-
-determines the appropriate OAuth2 grant type authorization flow.  As an example, a query string with a parameter of <code>response_type=Code</code> represents the use of the OAuth2 Authorization Code flow. See <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" >Web API Authorization </a> for more info.
+         authorization code determines the appropriate OAuth2 grant type authorization flow.  As an example, a query string with a parameter of <code>response_type=Code</code> represents the use of the OAuth2 Authorization Code flow. See <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" >Web API Authorization </a> for more info.</td>
 	</tr>
 	<tr>
 		<td>redirect_uri</td>
@@ -153,7 +151,7 @@ determines the appropriate OAuth2 grant type authorization flow.  As an example,
 </div>
 
 
->To Do:  Add examples
+
 
 
 ## Version
