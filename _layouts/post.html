@@ -16,15 +16,17 @@ showSidebar: false
       {% if page.meta %} 
         • {{ page.meta }}
       {% endif %}
-      {% if page.tags %}
+      {% if page.categories %}
         • 
-        {% for tag in page.tags %}
-          <a href="{{ '/blog/' | prepend: site.baseurl }}{{ tag }}/">{{ tag | capitalize }}</a>&nbsp;
+        {% for category in page.categories %}
+          {% if category != 'blog' %}
+            <a href="{{ '/blog/' | prepend: site.baseurl }}{{ category }}/">{{ category | capitalize }}</a>
+          {% endif %}
         {% endfor %}
       {% endif %}
     </p>
   </header>
-
+  
   <article class="post-content">
     {{ content }}
   </article>

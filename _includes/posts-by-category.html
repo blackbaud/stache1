@@ -1,0 +1,16 @@
+{% assign category = page.dir | split: '/' | last %}
+{% assign title = category | capitalize %}
+
+{% if category != 'blog' %}
+  {% assign title = title | prepend: 'Blog - ' %}
+{% endif %}
+
+<h1>{{ title }}</h1>
+ 
+{% for post in site.categories[category] %}
+  <h2>{{ post.title }}</h2>
+  <p>{{ post.excerpt }}</p>
+  <p>
+    <a href="{{ post.url }}" class="btn btn-sm btn-white">Read More</a>
+  </p>
+{% endfor %}

@@ -99,3 +99,9 @@ Unfortunately, front-matter variables aren't inherited exactly as I feel like th
 Very similar to the page note which is specified in the front matter, the following snippet can be used to include inline notes.
 
 `{% raw %}{% include note.html priority='medium' note='Medium priority note.' %}{% endraw %}`
+
+## Adding Blog Category
+
+0. Create a folder under blog with the name of your category.
+0. Create a folder under that new folder called _posts.
+0. Create your blog posts in that new _posts folder.

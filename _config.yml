@@ -1,7 +1,7 @@
 # Used to correctly link in different environments
 baseurl: /developer.blackbaud.com-renxt/
 url: http://developer.blackbaud.com
-permalink: /blog/:year/:month/:day/:title/
+permalink: /:categories/:year/:month/:day/:title/
 
 # Used as the base in the feedback section
 github: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blob/gh-pages
@@ -22,12 +22,15 @@ defaults:
       showFeedback: false
       showSidebar: true
       showHeadings: true
+      sidebarRelative: false
+      sidebar: ""
   - 
     scope:
-      path: ""
+      path: "blog"
       type: "posts"
     values:
-      layout: "blog"
+      layout: "post"
+      showSidebar: false
 
 # NOTE: For consistency and performance, please begin and end all internal site URL's with a forward slash.
 links:
