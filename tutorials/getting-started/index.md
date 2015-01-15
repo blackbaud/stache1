@@ -4,7 +4,7 @@ priority: high
 note: |
   This is a prototype.  As the API matures, this content will change. 
   
-  This tutorial will help developers start integrating with constant contact. It will make it easy to get started in a few steps. It will guide users through the Azure API management platform, including setting up a developer account, logging in, getting API keys, starting the integration, using the technical reference and API console, orienting the user to the developer guides, authentication, tutorials, support and resources. 
+  This tutorial will help developers start integrating with {{ site.productname }}. It will make it easy to get started in a few steps. It will guide users through the Azure API management platform, including setting up a developer account, logging in, getting API keys, , using the technical reference and interactive API console.  At the end of the tutorial, we will orient the user to the various resources available to them . 
 ---
 
 # Get Started with the {{ site.productname }} API #
