@@ -175,6 +175,10 @@
     color: #777 !important;
   }
 
+  .nav > li > a {
+    padding: 6px 5px 9px 16px;
+  }
+
 /* 
 * ==========================================================================
 * WELCOME
@@ -335,7 +339,7 @@
 
   .footer-site a:hover,
   .footer-site a:focus {
-    color: #8cbe4f; 
+    color: #1ab394; 
   }
 
   .bb-love {
@@ -375,6 +379,41 @@
     font-family: 'BBSKY-OMNIBAR';
     content: $bbsky-char-re;
     font-size: 24px;
+  }
+
+/* 
+* ==========================================================================
+* COPYRIGHT
+* ========================================================================== 
+*/
+
+  .copyright {
+    background: #595c64;
+    color: #949AA6;
+    padding: 10px 0;
+  }
+
+  .copyright p {
+    margin: 0;
+  }
+
+/* 
+* ==========================================================================
+* BBSKY CHAR
+* ========================================================================== 
+*/
+
+  .bbsky-char::before {
+    font-family: 'BBSKY-OMNIBAR';
+    font-size: 24px;
+  }
+
+  .bbsky-char-re::before {
+    content: $bbsky-char-re;
+  }
+
+  .bbsky-char-nxt::before {
+    content: $bbsky-char-nxt;
   }
 
 /* 

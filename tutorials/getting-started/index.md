@@ -74,10 +74,6 @@ Finally, you can familiarize yourself with our documentation and {{ site.devport
 - Keep up to date on the latest news and changes through our <a href="{{ site.communityblogurl }}">blog</a>. 
 
 
-Over in our {{ site.devportalname }} explore the rest of the end points via API documentation, blogs and forums.
-
-
-
 [ipsum-image-00]: holder.js/800x300
 [ipsum-image-01]: holder.js/800x800
 [ipsum-image-02]: holder.js/800x200

@@ -1,6 +1,7 @@
 # Used to correctly link in different environments
 baseurl: /developer.blackbaud.com-renxt/
 url: http://developer.blackbaud.com
+permalink: /blog/:year/:month/:day/:title/
 
 # Used as the base in the feedback section
 github: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blob/gh-pages
@@ -12,7 +13,8 @@ devportalname: API management developer portal
 
 # This block sets some default page variables
 defaults:
-  - scope:
+  - 
+    scope:
       path: ""
     values:
       layout: "default"
@@ -20,6 +22,12 @@ defaults:
       showFeedback: false
       showSidebar: true
       showHeadings: true
+  - 
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "blog"
 
 # NOTE: For consistency and performance, please begin and end all internal site URL's with a forward slash.
 links:
@@ -56,22 +64,19 @@ links:
     links:
     
       - name: Developer Portal
-        url: '#'
+        url: https://bbbobbyearl.portal.azure-api.net/
         
-      - name: Issues (Option 1 SWL, Option 2 Jekyll)
-        url: '#'
+      - name: Issues
+        url: /resources/issues/
         
-      - name: Developer Blog (Option 1 SWL, Option 2 Jekyll)
-        url: '#'
-        
-      - name: Keep In Touch
-        url: '#'
+      - name: Developer Blog
+        url: /resources/blog/
         
       - name: Code Samples
-        url: '#'
+        url: /resources/code/
         
       - name: Change Log
-        url: /changelog/
+        url: /resources/changelog/
       
   - name: Support
     url: /support/

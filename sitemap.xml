@@ -1,0 +1,37 @@
+---
+layout: blank
+---
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  {% for parent in site.links %}
+  
+    {% if parent.url != '#' %}
+      <url>
+        <loc>{{ site.url }}{{ site.baseurl }}{{ parent.url }}</loc>
+        <lastmod>{{ site.time | date: '%FT%T' }}{{ site.timezone }}</lastmod>
+        <changefreq>weekly</changefreq>
+      </url>
+    {% endif %}
+    
+    {% if parent.links.size > 0 %}
+      {% for child in parent.links %}
+    
+        {% if child.url != '#' %}
+          <url>
+            <loc>{{ site.url }}{{ site.baseurl }}{{ child.url }}</loc>
+            <lastmod>{{ site.time | date: '%FT%T' }}{{ site.timezone }}</lastmod>
+            <changefreq>weekly</changefreq>
+          </url>
+        {% endif %}
+      
+      {% endfor %}
+    {% endif %}
+    
+  {% endfor %}
+  
+</urlset>
