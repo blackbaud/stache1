@@ -59,7 +59,7 @@ To generate an access token, follow these steps:
 
 ![Ipsum Image][ipsum-image-00]
 
-## Step 5 - Test drive the API with the API Console ##
+## Step 5 - Test-drive the API with the API Console ##
 After you have the API key and OAuth 2.0 access token, you can test-drive the API by making API calls with the API Console. For example, you can start by viewing the API technical reference and then performing a GET to retrieve Robert Hernandez. 
 
 ![Ipsum Image][ipsum-image-00]
