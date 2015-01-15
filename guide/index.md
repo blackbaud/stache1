@@ -11,18 +11,9 @@ The {{ site.productname }} API is designed to help you unlock your key {{ site.p
 
 <p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our Developer Terms of Use. </p>
 
-
-## Base URL
-
-
-Through the RE NXT Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the Blackbaud Auth service at `https://auth.blackbaud.com`.  
-
-> TO DO: Verify the base url and SSL (HTTPS) with API engineering team.
-
-> TO DO: Does the URL contain identifying information that organizes resources for a specific instance/customer/tenant?  Is another mechanism used to identify a specific instance/customer/tenant?
-
-> TO DO:  Provide a sample of a typical url and indicate the base url and other pieces such as https, resource, tenant, etc.
-
+> TO DO:  Work with BB legal to develop a Developer Terms of Use.
+> 
+> TO DO:  Provide link to legal for Developer Terms of Use.
 
 ## Audience
 Currently, the RE NXT API is only available to a limited group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to contact our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial. 
@@ -45,7 +36,7 @@ The {{ site.productname }} API is organized around REST. Our API is designed to 
 
 ## Web API Authorization	
 
-This guide shows you how to get a user’s authorization to access private {{ site.productname }} data through the {{ site.productname }} API.  OAuth 2.0 is an authorization framework commonly used to grant client applications limited access to a  user's resources without exposing the users credentials to the client application. Some requests to the {{ site.productname }} API require authorization; that is, the user of a client application must have granted permission for an client application to access the requested {{ site.productname }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is used in OAuth to provide limited access to protected resources.  The access token is passed to subsequent API calls to do things such as searching for a constituent or adding a constituent.
+This guide shows you how to enable your application to obtain a user’s authorization to access private {{ site.productname }} data through the {{ site.productname }} API. <a href="https://tools.ietf.org/html/rfc6749" > OAuth 2.0</a> is an authorization framework commonly used to grant client applications limited access to a  user's resources without exposing the users credentials to the client application. Some requests to the {{ site.productname }} API require authorization; that is, the user of a client application must have granted permission for an client application to access the requested {{ site.productname }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is used in OAuth to provide limited access to protected resources.  The access token is passed to subsequent API calls to do things such as searching or adding a constituent.
 
 <p class="alert alert-info">All communication with Blackbaud servers be over SSL (https://) </p>
 
@@ -78,6 +69,93 @@ The Authorization Code flow first gets a code then exchanges it for an access to
 > To do:  If new use cases require the addition of different OAuth grant types, such as Implict flow for browser-based or mobile apps, we will need to document these new grant types within this section. 
 
 
+
+## Requests
+
+The {{ site.productname }} API is based on REST principles: data resources are accessed via standard HTTPS requests in UTF-8 format to an API endpoint. Where possible, the API strives to use appropriate HTTP verbs for each action:
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+		<tr>
+			<th >Verb</th>
+			<th >Description</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>GET</td>
+		<td>Used for retrieving resources.</td>
+	</tr>
+	<tr>
+		<td>POST</td>
+		<td>Used for creating resources.</td>
+	</tr>
+	<tr>
+		<td>PUT</td>
+		<td>Used for changing/replacing resources or collections.</td>
+	</tr>
+	<tr>
+		<td>DELETE</td>
+		<td class="column-2">Used for deleting resources.</td>
+	</tr>
+	</tbody>
+  </table>
+</div>
+
+### Base URL
+
+Through the RE NXT Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the Blackbaud Auth service at `https://auth.blackbaud.com`.  
+
+> TO DO: Verify the base url and SSL (HTTPS) with API engineering team.
+
+> TO DO: Does the URL contain identifying information that organizes resources for a specific instance/customer/tenant?  Is another mechanism used to identify a specific instance/customer/tenant?
+
+> TO DO:  Provide a sample of a typical url and indicate the base url and other pieces such as https, resource, tenant, etc.
+
+### Common Parameters and Identifiers
+
+In requests to the API and responses from it, you will frequently encounter the following parameters within  query string which is added to the base endpoint URI.
+
+####Common Authorization Request Parameters
+In the Authorization request the client constructs the request URI by adding the following parameters to the query component of the authorization endpoint URI using the the "application/x-www-form-urlencoded" format. 
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+		<tr>
+			<th >Parameter </th>
+			<th >Description</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>client_id</td>
+		<td >A unique string representing the registration information provided by the client application (client).  Thie client_id is issued by the Blackbaud authorization server.   See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+	</tr>
+	<tr>
+		<td>response_type</td>
+		<td>The value must be one of "code" for requesting an
+         authorization code 
+
+determines the appropriate OAuth2 grant type authorization flow.  As an example, a query string with a parameter of <code>response_type=Code</code> represents the use of the OAuth2 Authorization Code flow. See <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" >Web API Authorization </a> for more info.
+	</tr>
+	<tr>
+		<td>redirect_uri</td>
+		<td>See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+	</tr>
+	<tr>
+		<td>state</td>
+		<td class="column-2">A value used by the client application to maintain state between the request and callback.  The Blackbaud authorization server includes the value when redirecting the user back to the client application.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+	</tr>
+	</tbody>
+  </table>
+</div>
+
+
+>To Do:  Add examples
+
+
 ## Version
 
 When we change the API in a backwards-incompatible way, we release a new  version.
@@ -104,6 +182,28 @@ The  <a href="{{ '/changelog//' | prepend: site.baseurl }}" >Change Log</a> refl
 
 > TO DO: API Team engineers will be a major contributor the changelog as we version the API.  Potentially use TFS to categorize and track backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues.  
 
+
+##Rate limiting
+To make the API fast for everybody, rate limits apply. Unauthenticated requests are processed at the lowest rate limit. Authenticated requests with a valid access token benefit from higher rate limits — this is true even if endpoint doesn’t require an access token to be passed in the call. Read the Authorization Guide for more information about how to register an application and sign your requests with an access token.
+
+A way to reduce the amount of requests is to use endpoints that fetch multiple entities. If you are making many requests to get single tracks, albums or artists, you can use endpoints such as Get Several Tracks, Get Several Albums or Get Several Artists instead.
+
+##Responses
+All data is received as a JSON object. The Web API Object Model provides a description of all the retrievable objects.
+
+##Timestamps
+Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field will show the precision; see for example, release_date in an album object.
+
+##Pagination
+Some endpoints support a way of paging the dataset, taking an offset and limit as query parameters:
+
+$ curl "https://api.spotify.com/v1/artists/1vCWHaC5f2uS3yhpwWbIA6/albums?album_type=SINGLE&offset=20&limit=10"
+Note that offset numbering is zero-based and that omitting the offset parameter will return the first X elements. Check the documentation for the specific endpoint to see the default limit value. Requests that return an array of items are automatically paginated if the number of items vary (for example, tracks in a playlist). In this case, the results are returned within a paging object.
+
+##Response Status Codes
+The API uses the following response status codes, as defined in the RFC 2616 and RFC 6585:
+
+
 ## HTTP Fundamentals
 ipsum lorem
 
@@ -115,3 +215,5 @@ ipsum lorem
 [endpoints]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb1a02
 
 [ipsum-image-00]: http://placehold.it/800x300
+
+[fc6749-section-22]: https://tools.ietf.org/html/rfc6749#section-2.2
