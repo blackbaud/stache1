@@ -48,4 +48,9 @@
     }, 1000);
   });
   
+  // Tooltips
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  });
+  
 })(jQuery, window, document);
