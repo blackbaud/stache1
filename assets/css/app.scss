@@ -179,6 +179,13 @@
     padding: 6px 5px 9px 16px;
   }
 
+  .nav > li > a:hover, 
+  .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #cccccc;
+    color: #293846 !important;
+  }
+
 /* 
 * ==========================================================================
 * WELCOME
