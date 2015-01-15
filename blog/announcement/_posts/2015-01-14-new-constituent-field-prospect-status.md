@@ -1,6 +1,4 @@
 ---
-tags:
-  - announcement
 ---
 
 The 'prospect_status' property is now available within the [Constituent][constituent] resource.  The prospect_status property represents where the constituent is in your solication process, such as Cultivation or Active.  The API allows you to retrieve and manage the property value via a GET, POST or PUT on the Constituent resource.  

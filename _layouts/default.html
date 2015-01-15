@@ -62,52 +62,63 @@ layout: base
   <div class="container">
     <div class="row">
 
-      {% if page.showSidebar and (hasSiblings or isSibling or hasHeadings) %}
+      {% if page.showSidebar and (page.sidebar != '' or hasSiblings or isSibling or hasHeadings) %}
       
         {% assign hasSidebar = true %}
         <div class="col-md-3 hidden-xs hidden-sm">
           <div class="sidebar">
             <ul class="nav nav-stacked nav-sidebar">
               
-              {% if hasSiblings or isSibling %}
+              {% if page.sidebar != '' %}
               
-                {% for parent in site.links %}
-                  {% assign url_parent = parent.url | prepend: site.baseurl %}
-                  {% if url_parent_current == url_parent %}
-                    {% for child in parent.links %}
-                      {% assign url_child = child.url | prepend: site.baseurl %}
+                {% if page.sidebarRelative %}
+                  {% include_relative {{ page.sidebar }} %}
+                {% else %}
+                  {% include {{ page.sidebar }} %}
+                {% endif %}
               
-                      <li {% if url_current == url_child %} class="current" {% endif %}>
-                        <a href="{{ child.url | prepend: site.baseurl }}">{{ child.name }}</a>
-                        
-                        {% if url_current == url_child and headings != '' %}
-                        <ul class="nav">
-                          {{ headings }}
-                        </ul>
-                        {% endif %}
-                        
-                      </li>
-              
-                    {% endfor %}
-                  {% endif %}
-                {% endfor %}
-              
-              {% elsif hasHeadings %}
-              
-                <!-- Ridiculous Bootstrap Scrollspy bug that required this nested linkage to function properly -->
-                <li class="hidden">
-                  <a href="#top">Top</a>
+              {% else %}
+                {% if hasSiblings or isSibling %}
+
+                  {% for parent in site.links %}
+                    {% assign url_parent = parent.url | prepend: site.baseurl %}
+                    {% if url_parent_current == url_parent %}
+                      {% for child in parent.links %}
+                        {% assign url_child = child.url | prepend: site.baseurl %}
+
+                        <li {% if url_current == url_child %} class="current" {% endif %}>
+                          <a href="{{ child.url | prepend: site.baseurl }}">{{ child.name }}</a>
+
+                          {% if url_current == url_child and headings != '' %}
+                          <ul class="nav">
+                            {{ headings }}
+                          </ul>
+                          {% endif %}
+
+                        </li>
+
+                      {% endfor %}
+                    {% endif %}
+                  {% endfor %}
+
+                {% elsif hasHeadings %}
+
+                  <!-- Ridiculous Bootstrap Scrollspy bug that required this nested linkage to function properly -->
+                  <li class="hidden">
+                    <a href="#top">Top</a>
+                  </li>
+
+                  {{ headings }}
+
+                {% endif %}
+
+                <li class="visible-on-affix">
+                  <a href="#top" class="smooth-scroll">
+                    <i class="fa fa-caret-square-o-up"></i>
+                  </a>
                 </li>
               
-                {{ headings }}
-              
               {% endif %}
-              
-              <li class="visible-on-affix">
-                <a href="#top" class="smooth-scroll">
-                  <i class="fa fa-caret-square-o-up"></i>
-                </a>
-              </li>
               
             </ul>
             

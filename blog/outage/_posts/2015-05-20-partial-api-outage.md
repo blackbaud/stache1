@@ -1,6 +1,4 @@
 ---
-tags:
-  - outage
 ---
 
 There was a partial outage today that affected the Blackbaud RE NXT API.  Starting around 21:53 UTC a network issue caused approximately 10% of API calls to fail. Our systems team routed traffic to alternate servers and the network problem was fixed. The partial outage lasted 20 minutes.  The API is now back to normal and responding to all traffic.
