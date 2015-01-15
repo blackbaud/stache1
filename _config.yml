@@ -10,6 +10,12 @@ github: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blo
 title: RENXT Developer Portal - Prototype
 productname: RE NXT
 devportalname: API management developer portal
+authservicename:  Blackbaud Authorization Service
+devportalurl: https://bbbobbyearl.portal.azure-api.net/
+devportalurlsubscribeproduct: https://bbbobbyearl.portal.azure-api.net/products
+communityurl: http://blackbaud.smallworldlabs.com
+communitygroupurl:  http://blackbaud.smallworldlabs.com/groups/home/30
+communityblogurl:  http://blackbaud.smallworldlabs.com/groups/blogs/30
 
 # This block sets some default page variables
 defaults:
