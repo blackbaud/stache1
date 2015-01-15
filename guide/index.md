@@ -176,7 +176,7 @@ For the RE NXT API, the URL has a major version number (v1), but the API has dat
 > TO DO: Get input to backwards-compatible changes from API Team engineers
 
 ### API Changelog
-The  <a href="{{ '/changelog//' | prepend: site.baseurl }}" >Change Log</a> reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.
+The  <a href="{{ '/resources/changelog/' | prepend: site.baseurl }}" >Change Log</a> reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.
 
 > TO DO: API Team engineers will be a major contributor the changelog as we version the API.  Potentially use TFS to categorize and track backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues.  
 
