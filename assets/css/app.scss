@@ -179,6 +179,13 @@
     padding: 6px 5px 9px 16px;
   }
 
+  .nav > li > a:hover, 
+  .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #cccccc;
+    color: #293846 !important;
+  }
+
 /* 
 * ==========================================================================
 * WELCOME
@@ -452,3 +459,26 @@
   p.note {
     display: none;
   }
+
+
+/* 
+* ==========================================================================
+* MOBILE
+* ========================================================================== 
+*/
+
+@media (max-width: 767px) {
+  
+  .bb-omnibar .menuheader {
+    display: block !important;
+  }
+  
+  .nav-sidebar {
+    position: relative !important;
+    top: 10px !important;
+  }
+  
+  .visible-on-affix {
+    display: none !important;
+  }
+}

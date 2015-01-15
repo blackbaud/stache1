@@ -3,9 +3,16 @@
   // Initialize the Omnibar
   BBAUTH.Omnibar.load(document.getElementById("omnibar"), {
     enableSearch: false, // FYI, toggle the "searching" class on "searchContainer" to get the spinner
+    enableHelp: false,
     serviceName: 'RENXT Developer',
     signInRedirectUrl: document.location.href,
-    signOutRedirectUrl: ''
+    signOutRedirectUrl: '',
+    afterLoad: function() {
+      
+      // There's definitly an official way to do this, but I don't have time to find out.
+      $('.productmenucontainer').append($('.nav-items').clone().toggleClass('nav-items bb-omnibar-productmenu'));
+      
+    }
   });
   
   var body = $('body'),
@@ -51,6 +58,6 @@
   // Tooltips
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
-  });
+  });  
   
 })(jQuery, window, document);

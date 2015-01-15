@@ -1,6 +1,12 @@
+{% if page.categories.size > 0 %}
+  {% assign category_current = page.categories | last %}
+{% else %}
+  {% assign category_current = page.dir | split: '/' | last %}
+{% endif %}
+
 {% for category in site.categories %}
   {% if category[0] != 'blog' %}
-    <li>
+    <li {% if category[0] == category_current %} class="current" {% endif %}>
       <a href="{{ site.baseurl }}/blog/{{ category[0] }}">{{ category[0] }}</a>
     </li>
   {% endif %}

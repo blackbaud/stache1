@@ -26,11 +26,11 @@ defaults:
       sidebar: ""
   - 
     scope:
-      path: "blog"
       type: "posts"
     values:
       layout: "post"
-      showSidebar: false
+      showComments: true
+      sidebar: category-list.html
 
 # NOTE: For consistency and performance, please begin and end all internal site URL's with a forward slash.
 links:
