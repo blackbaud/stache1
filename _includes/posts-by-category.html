@@ -11,6 +11,6 @@
   <h2>{{ post.title }}</h2>
   <p>{{ post.excerpt }}</p>
   <p>
-    <a href="{{ post.url }}" class="btn btn-sm btn-white">Read More</a>
+    <a href="{{ post.url | prepend: site.baseurl }}" class="btn btn-sm btn-white">Read More</a>
   </p>
 {% endfor %}
