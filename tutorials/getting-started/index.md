@@ -9,28 +9,23 @@ note: |
 
 # Get Started with the {{ site.productname }} API #
 
-Ready to integrate with {{ site.productname }}? We've made it easy for you to get started in a matter of minutes. Our documentation and {{ site.devportalname }} deliver a development experience that gives you the information and tools that you need to quickly integrate your apps with {{ site.productname }}.  The goal of this tutorial is to introduce you to our {{ site.devportalname }}'s technical reference and API console which allows you to test drive the API while you learn. 
+> This is a prototype.  The details surrounding registering an client application and developer environment provisioning are a work in progress.  As those details emerge they will be reflected in this guide.  
 
-This tutorial consists of the following steps:
+Ready to integrate with {{ site.productname }}? We've made it easy for you to get started in a matter of minutes. Our documentation and {{ site.devportalname }} deliver a development experience that gives you the information and tools that you need to quickly integrate your apps with {{ site.productname }}.  
 
-1. Sign up as a developer in the developer portal.
-2. Subscribe to an API product and get your API keys.
-3. Create an {{ site.productname }} user account.
-4. Generate an OAuth 2.0 access token and test-drive the API with the API Console.
-5. Get to know our resources and support.
+This tutorial introduces our developer portal, developer sign up process, technical reference, and interactive API console.  By successfully completing this tutorial you will begin test driving the API by making actual API calls.
 
 ## Step 1 - Set up your developer account ##
 Within our {{ site.devportalname }}, you can [set up] a new developer account or [log back in] if you're a returning developer.
 
 ![Ipsum Image][ipsum-image-00]
 
-
 ## Step 2 - Get your API keys ##
-To obtain API keys, you <a href="{{ site.devportalurlsubscribeproduct }}" target="_blank">subscribe to an API Product</a>. If you are new to our API, we recommend that you subscribe to the **Starter** product because it does not require approval by a Blackbaud API administrator. Partners can subscribe to the Unlimited product that requires approval by a Blackbaud API administrator.  
+To obtain API keys, you <a href="{{ site.devportalurlsubscribeproduct }}" target="_blank">subscribe to an API Product</a>. If you are new to our API, we recommend that you subscribe to the **Starter** product because it does not require approval by a Blackbaud API administrator. Partners can subscribe to the **Unlimited** product that requires approval by a Blackbaud API administrator.  
 
 <p class="alert alert-info">The API keys include a primary key and a secondary key. Use the primary key as the API key, and use the secondary key as the secret API key.</p>
 
-> To Do: The organization of API products and APIs are still a work in progress. This step needs to be updated as the API is organized.
+> To Do: The organization of API products and associated API endpoints are still a work in progress. This step needs to be updated as the API product(s) is organized.
 >
 > To Do: The partner details need to be discussed with the global partnership team
 >
@@ -41,7 +36,7 @@ To obtain API keys, you <a href="{{ site.devportalurlsubscribeproduct }}" target
 ![Ipsum Image][ipsum-image-01]
 
 ## Step 3 - Create an {{ site.productname }} user account  ##
-Before you can use the API Console to try out the API, you need the API key and a valid OAuth 2.0 access token. The first step to obtain an OAuth 2.0 access token is to create a trial {{ site.productname }} user account.
+Before you can use the API Console to try out the API, you'll need an API key and a valid OAuth 2.0 access token. The first step to obtain an OAuth 2.0 access token is to create a trial {{ site.productname }} user account.
 
 > To Do:  If the creation of an trial {{ site.productname }} user account is not auto provisioned, create content here that guides the reader on how to create a trial {{ site.productname }} user account. Include necessary images.
 
@@ -50,7 +45,7 @@ Before you can use the API Console to try out the API, you need the API key and 
 ![Ipsum Image][ipsum-image-00]
 
 ## Step 4 - Generate an OAuth 2.0 access token  ##
-After you create a trial {{ site.productname }} user account, you need to generate an OAuth 2.0 access token to represent that {{ site.productname }} user's authorization to the API Console. The token allows the API Console  to access the user's protected resources (data) within {{ site.productname }}.  Once you have an access token, you can provide any necessary URI parameters followed by submitting the request.  . For example, use the API Console to perform a GET on the Constituent resource to retrieve Robert Hernandez. 
+After you create a trial {{ site.productname }} user account, you need to generate an OAuth 2.0 access token to represent that {{ site.productname }} user's authorization to the API Console. The access token allows the API Console to access the user's protected resources (data) within {{ site.productname }}.  Once you have an access token, you can provide any necessary URI parameters followed by submitting the request.  For example, use the API Console to perform a GET on the Constituent resource to retrieve Robert Hernandez. 
 
 To generate an access token, follow these steps:
 
@@ -68,8 +63,6 @@ If successful, you should see the generated Requested URL, status, latency, head
 
 > TO DO:  In the list of steps above, it would be preferable to use a resource that lists constituents rather than Constituent (GET).  In that way you would retrieve a list of constituentId's that could be used at a later time to perform a Constituent (GET) or a Constituent (Update).  
 
->TO DO: The steps above will require images.
->
 >TO DO: The steps above may require additional URI parameters (tenand id?)
 
 ![Ipsum Image][ipsum-image-00]
@@ -80,12 +73,10 @@ If successful, you should see the generated Requested URL, status, latency, head
 ## Step 5 - Get to know our resources and support
 Finally, you can familiarize yourself with our documentation and {{ site.devportalname }} to get all the support you need.  
 
-- Take a deeper dive into security with our <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}">Web API Authorization guide</a> and <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}">tutorial</a>.
-
+- Take a deeper dive into security and OAuth with our <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}">Web API Authorization guide</a> and <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}">tutorial</a>.
 - Explore developer <a href="{{ '/resources/' | prepend: site.baseurl }}">resources</a> such as tutorials, code samples, and a change log.
-
+- Explore developer <a href="{{ '/support/' | prepend: site.baseurl }}">support</a> such as tutorials, code samples, and a change log.
 - Keep up to date on the latest news and changes through our <a href="{{ site.communityblogurl }}">blog</a>. 
-
 
 [ipsum-image-00]: holder.js/800x300
 [ipsum-image-01]: holder.js/800x800

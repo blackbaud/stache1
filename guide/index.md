@@ -4,7 +4,6 @@ priority: high
 note: |  
   A developer guide provides details surrounding various API topics.
   This is a prototype.  As the API matures, this content will change. 
-
 ---
 
 # Developer Guide
