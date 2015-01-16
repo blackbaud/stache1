@@ -1,0 +1,17 @@
+<p class="post-meta">
+  {{ include.post.date | date: "%b %-d, %Y" }}
+  {% if include.post.author %} 
+    • {{ include.post.author }}
+  {% endif %}
+  {% if include.post.meta %} 
+    • {{ include.post.meta }}
+  {% endif %}
+  {% if include.post.categories %}
+    • 
+    {% for category in include.post.categories %}
+      {% if category != 'blog' %}
+        <a href="{{ '/blog/' | prepend: site.baseurl }}{{ category }}/">{{ category | capitalize }}</a>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+</p>

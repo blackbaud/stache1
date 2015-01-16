@@ -3,9 +3,14 @@
 
 /* 
 * ==========================================================================
-* SKY UI SASS
+* SKY UI
 * ========================================================================== 
 */
+
+  @font-face {
+    font-family: 'BBSKY-OMNIBAR';
+    src: url('../fonts/BBSKY.woff') format('woff');
+  }
 
   //Import variables and mixins from Sky and then Bootstrap
   @import "Sky/_mixins.scss";
@@ -70,6 +75,22 @@
 * ========================================================================== 
 */
   $section-padding: 50px 0;
+
+/* 
+* ==========================================================================
+* SHIMMING LATEST BOOTSTRAP
+* ========================================================================== 
+*/
+
+  .visible-sm-block{
+    display: none !important;
+  }
+
+  .visible-sm-block {
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      display: block !important;
+    }
+  }
 
 /* 
 * ==========================================================================

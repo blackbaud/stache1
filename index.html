@@ -10,6 +10,18 @@ notes: |
   <i class="fa fa-2x fa-soccer-ball-o fa-spin"></i>
 ---
 
+<div class="hide">
+  <ul class="nav-items">
+    {% for item in site.links %}
+      {% if item.url != '#' %}
+        <li>
+          <a href="{{ item.url | prepend: item.url }}">{{ item.name }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+
 <header class="welcome">
   <div class="text-vertical-center">
     <h1>Welcome to the Open Blackbaud</h1>
