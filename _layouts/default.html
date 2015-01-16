@@ -30,26 +30,26 @@ layout: base
         <ul class="nav-items">
           
           {% for parent in site.links %}
-          
-            {% assign url_parent = parent.url | prepend: site.baseurl %}
-          
-            {% if url_current == url_parent and parent.links.size > 0 %}
-              {% assign hasSiblings = true %}
-              {% assign url_parent_current = url_parent %}
-            {% endif %}
-          
-            {% for child in parent.links %}
-              {% assign url_child = child.url | prepend: site.baseurl %}
-              {% if url_current == url_child %}
-                {% assign isSibling = true %}
+            {% if parent.header != false %}
+              {% assign url_parent = parent.url | prepend: site.baseurl %}
+
+              {% if url_current == url_parent and parent.links.size > 0 %}
+                {% assign hasSiblings = true %}
                 {% assign url_parent_current = url_parent %}
               {% endif %}
-            {% endfor %}
-          
-            <li {% if url_current == url_parent or url_parent == url_parent_current %} class="selected" {% endif %}>
-              <a href="{{ url_parent }}">{{ parent.name }}</a>
-            </li>
-          
+
+              {% for child in parent.links %}
+                {% assign url_child = child.url | prepend: site.baseurl %}
+                {% if url_current == url_child %}
+                  {% assign isSibling = true %}
+                  {% assign url_parent_current = url_parent %}
+                {% endif %}
+              {% endfor %}
+
+              <li {% if url_current == url_parent or url_parent == url_parent_current %} class="selected" {% endif %}>
+                <a href="{{ url_parent }}">{{ parent.name }}</a>
+              </li>
+            {% endif %}
           {% endfor %}
           
         </ul>  <!-- .nav-items -->
