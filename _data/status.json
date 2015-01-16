@@ -1,0 +1,26 @@
+{
+  "authorization": {
+    "2015/01/16": {
+      "status": "high",
+      "message": "API Outage",
+      "blog": "/blog/outage/2015/05/20/partial-api-outage/",
+      "swl": "http://blackbaud.smallworldlabs.com/groups/blogpost/view/30/36/45"
+    }
+  },
+  "constituent": {
+    "2015/01/14": {
+      "status": "medium",
+      "message": "Performance Degradation",
+      "blog": "/blog/outage/2015/05/20/partial-api-outage/",
+      "swl": "http://blackbaud.smallworldlabs.com/groups/blogpost/view/30/36/45"
+    }
+  },
+  "renxt": {
+    "2015/01/11": {
+      "status": "low",
+      "message": "Monitoring Analytics Data",
+      "blog": "/blog/advisory/2015/09/06/monitoring-analytics-data/",
+      "swl": "http://blackbaud.smallworldlabs.com/groups/blogpost/view/30/36/45"
+    }
+  }
+}
