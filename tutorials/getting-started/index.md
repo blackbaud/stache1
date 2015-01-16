@@ -3,7 +3,7 @@ layout: content
 priority: high
 note: |  
   <p>Problem -  You don’t make it easy.</p>
-  <p>Best Practice - Minimize friction by providing a “Getting Started” guide..  Explain the steps to get going.  Explain how to set up an developer account, get an API key, start using the API console and trying the API, point them to authentication documentation, code samples, other tutorials, blog, mailing list, forum.  </p>
+  <p>Best Practice - Minimize friction by providing a “Getting Started” guide.  Explain the steps to get going.  Explain how to set up an developer account, get an API key, start using the API console and trying the API, point them to authentication documentation, code samples, other tutorials, blog, mailing list, forum.  </p>
   <p>Benchmark -  <a href="http://developer.constantcontact.com/get-started.html" target="_blank">Constant Contact</a></p> 
   <p>Note - This is a prototype.  As the API matures, this content will change.</p> 
 ---

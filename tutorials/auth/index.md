@@ -1,20 +1,39 @@
 ---
 layout: content
+priority: high
+note: |  
+  <p>Problem -  You don’t make it easy.</p>
+  <p>Best Practice - Provide clear instructions and samples on how to negotiate OAuth.</p>
+  <p>Benchmark -  <a href="https://developer.spotify.com/web-api/tutorial/" target="_blank">Web API Tutorial</a></p> 
+  <p>Note - This is a prototype.  As the API matures, this content will change.</p> 
 ---
 
 # Web API Authorization Tutorial #
 
-## Introduction	
+This tutorial shows you how to create a small server-side application that accesses user-related data through the  {{ site.productname }} API.
 
 
+<p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ '/legal/' | prepend: site.baseurl }}" >Developer Terms of Use</a>. </p>
 
-## Section C ##
+Through the {{ site.productname }} API, external applications can retrieve {{ site.productname }} content such as constituent data and events. If an application wants to access user-related data through the Web API, it must get the user’s authorization to access that data.
 
-Vestibulum blandit justo eget interdum cursus. Praesent dapibus massa id dolor convallis, vel sollicitudin est dictum. Morbi volutpat laoreet turpis. Curabitur ut lacus sit amet libero cursus tincidunt eu ac turpis. Vestibulum id lacus purus. Curabitur ut imperdiet mauris. In sollicitudin mollis lorem, vel laoreet erat dignissim vel. Fusce dignissim fringilla sem, vitae efficitur lacus sagittis non.
+This tutorial is based around the creation of a simple application using ASP.NET MVC.   We will show you how to:
 
-![Ipsum Image][ipsum-image-01]
+- Register an application with Blackbaud
+- Authenticate a user
+- Get authorization to access the user’s data
+- Retrieve that data from a {{ site.productname }} API endpoint.
 
-Pellentesque id tincidunt ligula, ut convallis libero. Mauris tristique elit ac ipsum laoreet facilisis. Aliquam consectetur tortor eu ligula volutpat, eu volutpat tortor euismod. In ex eros, aliquet nec tincidunt et, vehicula vel elit. Quisque id mollis eros. Phasellus malesuada consectetur tortor quis volutpat. Suspendisse luctus scelerisque ligula, quis vehicula lectus posuere sit amet. Suspendisse nisi eros, mattis at elit vel, commodo suscipit nulla. Morbi luctus ipsum vitae nulla egestas aliquet. Ut vel molestie lectus, vel aliquet lectus. Vestibulum nisl dui, condimentum non mauris at, rhoncus finibus sem. Cras sem lectus, finibus at mattis mattis, tempor id lacus. Morbi scelerisque vulputate eleifend. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus vel neque non lorem vulputate iaculis. Nunc quis accumsan neque, ac feugiat tortor.
+The authorization flow we will use in this tutorial is the Authorization Code Flow. This flow first gets a code from the {{ site.authservicename }}, then exchanges that code for an access token. The code-to-token exchange requires a secret API key, and for security is done through direct server-to-server communication. 
+
+<p class="alert alert-info">It is important to keep the secret API key secure.  You should never expose the secret API key in your code.  You should take special care to never store the secret API key on the client, such as a native mobile or browser-based apps.</p>
+
+The data that we will retrieve will be from the Web API’s `/Constituent` endpoint.
+
+The complete source code of the app that we will create in this tutorial is available on GitHub.
+
+
+![Ipsum Image][ipsum-image-00]
 
 
 
@@ -28,4 +47,4 @@ Pellentesque id tincidunt ligula, ut convallis libero. Mauris tristique elit ac 
 [ipsum-image-02A]: holder.js/800x200
 [ipsum-image-03A]: holder.js/800x200/sky
 
-[endpoints]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb1a02
+

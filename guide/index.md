@@ -7,12 +7,9 @@ layout: content
 priority: high
 note: |  
   <p>Problem -  You don’t make it easy.</p>
-  <p>Best Practice - Minimize friction by providing a “Getting Started” guide..  Explain the steps to get going.  Explain how to set up an developer account, get an API key, start using the API console and trying the API, point them to authentication documentation, code samples, other tutorials, blog, mailing list, forum.  </p>
-  <p>Benchmark -  <a href="http://developer.constantcontact.com/get-started.html" target="_blank">Constant Contact</a></p> 
-  <p>Note -This is a prototype.   A developer guide provides details surrounding various API topics.</p>
-  <p>As the API matures, this content will change.</p>
- 
-
+  <p>Best Practice -  A developer guide provides details surrounding various API topics.</p>
+  <p>Benchmarks -  <a href="https://developer.spotify.com/web-api/user-guide/" target="_blank">Spotify Web API User Guide</a> and <a href="https://developer.spotify.com/web-api/authorization-guide/" target="_blank">Spotify Web API Authorization Guide</a></p> 
+  <p>Note - This is a prototype.  As the API matures, this content will change.</p>
 ---
 
 # Developer Guide
@@ -49,8 +46,6 @@ The {{ site.productname }} API is organized around REST. Our API is designed to 
 This guide shows you how to enable your application to obtain a user’s authorization to access private {{ site.productname }} data through the {{ site.productname }} API. <a href="https://tools.ietf.org/html/rfc6749" > OAuth 2.0</a> is an authorization framework commonly used to grant client applications limited access to a  user's resources without exposing the users credentials to the client application. Some requests to the {{ site.productname }} API require authorization; that is, the user of a client application must have granted permission for an client application to access the requested {{ site.productname }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is used in OAuth to provide limited access to protected resources.  The access token is passed to subsequent API calls to do things such as searching or adding a constituent.
 
 <p class="alert alert-info">All communication with Blackbaud servers be over SSL (https://) </p>
-
->  TO DO:  Must all communication with Blackbaud servers be over SSL (https://).
 
 ### Sign up and get your keys
 As the first step towards authorization, you will need to sign up within our developer portal and subscribe to the appropriate API product.    This  will give you your primary and secondary API keys to use in the authorization flow.  You can manage your API keys from your account within the {{ site.devportalname }}. It will also provide access to analytics for your subscription.  See the <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial for help on signing up and obtaining your keys.
