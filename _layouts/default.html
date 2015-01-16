@@ -17,7 +17,7 @@ layout: base
       {% if parts.size == 2 %}
         {% assign hasHeadings = true %}
         {% assign href = parts[0] | replace:'id="','href="#' %}
-        <li><a {{ href }}</a></li>
+        <li><a class="smooth-scroll" {{ href }}</a></li>
       {% endif %}
     {% endfor %}
   {% endcapture %}

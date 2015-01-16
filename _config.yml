@@ -75,17 +75,20 @@ links:
       - name: Developer Portal
         url: https://bbbobbyearl.portal.azure-api.net/
         
-      - name: Issues
-        url: /resources/issues/
-        
       - name: Developer Blog
         url: /resources/blog/
         
-      - name: Code Samples
-        url: /resources/code/
+      - name: Status
+        url: /resources/status/
+        
+      - name: Issues
+        url: /resources/issues/
         
       - name: Change Log
         url: /resources/changelog/
+        
+      - name: Code Samples
+        url: /resources/code/
       
   - name: Support
     url: /support/
