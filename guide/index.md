@@ -70,8 +70,6 @@ The Authorization Code flow first gets a code then exchanges it for an access to
 
 > To do:  If new use cases require the addition of different OAuth grant types, such as Implict flow for browser-based or mobile apps, we will need to document these new grant types within this section. 
 
-
-
 ## Requests
 
 The {{ site.productname }} API is based on REST principles: data resources are accessed via standard HTTPS requests in UTF-8 format to an API endpoint. Where possible, the API strives to use appropriate HTTP verbs for each action:
@@ -107,7 +105,7 @@ The {{ site.productname }} API is based on REST principles: data resources are a
 
 ### Base URL
 
-Through the RE NXT Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the Blackbaud Auth service at `https://auth.blackbaud.com`.  
+Through the RE NXT Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the {{site.authservicename}} at `https://auth.blackbaud.com`.  
 
 > TO DO: Verify the base url and SSL (HTTPS) with API engineering team.
 
@@ -122,6 +120,8 @@ In requests to the API and responses from it, you will frequently encounter the 
 ####Common Authorization Request Parameters
 In the Authorization request the client constructs the request URI by adding the following parameters to the query component of the authorization endpoint URI using the the "application/x-www-form-urlencoded" format. 
 
+> TO DO:  Document the max length of the client identifier (client_id) parameter issued by the Blackbaud authorization server. 
+
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
@@ -133,16 +133,15 @@ In the Authorization request the client constructs the request URI by adding the
 	<tbody>
 	<tr>
 		<td>client_id</td>
-		<td >A unique string representing the registration information provided by the client application (client).  Thie client_id is issued by the Blackbaud authorization server.   See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+		<td >A unique string representing the registration information provided by the client application (client).  The client_id is issued by the Blackbaud authorization server.   The client identifier is a string with a maximum length of x.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
 	</tr>
 	<tr>
 		<td>response_type</td>
-		<td>The value must be one of "code" for requesting an
-         authorization code determines the appropriate OAuth2 grant type authorization flow.  As an example, a query string with a parameter of <code>response_type=Code</code> represents the use of the OAuth2 Authorization Code flow. See <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" >Web API Authorization </a> for more info.</td>
+		<td>The value must be set to "code".</td>
 	</tr>
 	<tr>
 		<td>redirect_uri</td>
-		<td>See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+		<td>After obtaining a user’s authorization to access private {{ site.productname }} data, the authorization server will redirect your client application (user-agent) to the your redirection endpoint previously established with the authorization server during the client registration process. See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> and <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" >Web API Authorization</a> for more info.</td>
 	</tr>
 	<tr>
 		<td>state</td>
@@ -152,7 +151,52 @@ In the Authorization request the client constructs the request URI by adding the
   </table>
 </div>
 
+####Common Endpoint Request Parameters
+In the request to end points such as the Constituent or Address resources, the client constructs the request URI by adding the following parameters to the query component of the endpoint URI.
 
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+		<tr>
+			<th >Parameter </th>
+			<th >Description</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>client_id</td>
+		<td >A unique string representing the registration information provided by the client application (client).  The client_id is issued by the Blackbaud authorization server.   The client identifier is a string with a maximum length of x.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
+	</tr>
+	
+	</tbody>
+  </table>
+</div>
+
+### Common Request Headers
+Because {{ site.productname }} API uses HTTP for all communication, you need to ensure that the correct HTTP headers are supplied (and processed on retrieval) so that you get the right format and encoding. Different environments and clients will be more or less strict on the effect of these HTTP headers (especially when not present). Where possible you should be as specific as possible.
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+		<tr>
+			<th >Header </th>
+			<th >Description</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>Content-type</td>
+		<td >A unique string representing the registration information provided by the client application (client).  Thie client_id is issued by the Blackbaud authorization server.   See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+	</tr>
+	
+	</tbody>
+  </table>
+</div>
+
+##Responses
+All data is received as a JSON object.
+
+>  To Do:  Document the standard/typical HTTP request response headers returned by the API such as Content-type and Content-length *Engineering should work with documentation to identify and explain any significant and important HTTP headers such as Cache-control or Authorization*
 
 
 
@@ -184,14 +228,13 @@ The  <a href="{{ '/resources/changelog/' | prepend: site.baseurl }}" >Change Log
 
 
 ##Rate limiting
-> TO DO:  This section is simply a prototype.  The API team may not wish to employ Rate Limiting at this time. Any new endpoints that retrieve multiple resources would have to be prioritized in the backlog.
+> TO DO:  This section is simply a prototype.  The API team may not wish to employ Rate Limiting at this time. 
 
 To make the API fast for everybody, rate limits apply. Unauthenticated requests are processed at the lowest rate limit. Authenticated requests with a valid access token benefit from higher rate limits — this is true even if endpoint doesn’t require an access token to be passed in the call. Read Web API Authorization for more information about how to register an application and sign your requests with an access token.
 
 A way to reduce the amount of requests is to use endpoints that fetch multiple entities. If you are making many requests to get single constituents, events or Gifts, you can use endpoints such as Get Constituents, Get Events or Get Gifts instead.
 
-##Responses
-All data is received as a JSON object. 
+> Any new endpoints that retrieve multiple resources would have to be prioritized in the backlog.
 
 ##Timestamps
 > TO DO:  This section is simply a prototype.  Verify format of all dates and times with the API team.
@@ -201,7 +244,7 @@ Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) w
 ##Pagination
 
 > TO DO:  This section is simply a prototype. Pagination may be added at a later time.  Verify with API Team
-> 
+
 Some endpoints support a way of paging the dataset, taking an offset and limit as query parameters:
 
     $ curl "https://api.blackbaud.com/v1/constituents?offset=20&limit=10"
