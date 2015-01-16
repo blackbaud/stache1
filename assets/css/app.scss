@@ -3,9 +3,14 @@
 
 /* 
 * ==========================================================================
-* SKY UI SASS
+* SKY UI
 * ========================================================================== 
 */
+
+  @font-face {
+    font-family: 'BBSKY-OMNIBAR';
+    src: url('../fonts/BBSKY.woff') format('woff');
+  }
 
   //Import variables and mixins from Sky and then Bootstrap
   @import "Sky/_mixins.scss";
