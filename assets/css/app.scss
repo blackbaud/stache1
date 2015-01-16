@@ -78,6 +78,22 @@
 
 /* 
 * ==========================================================================
+* SHIMMING LATEST BOOTSTRAP
+* ========================================================================== 
+*/
+
+  .visible-sm-block{
+    display: none !important;
+  }
+
+  .visible-sm-block {
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      display: block !important;
+    }
+  }
+
+/* 
+* ==========================================================================
 * I know we're not supposed to do this, but I absolutely hated seeing the page jump down when the omnibar finally loads.
 * I'm risking setting that height here.  Worst case is you would see the page jump slightly if they ever change the height of the omnibar.
 * ========================================================================== 
