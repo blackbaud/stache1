@@ -78,6 +78,12 @@ links:
       - name: Developer Blog
         url: /resources/blog/
         
+      - name: Community
+        url: /resources/community/
+        
+      - name: FAQ
+        url: /resources/faq/
+        
       - name: Status
         url: /resources/status/
         
@@ -89,22 +95,7 @@ links:
         
       - name: Code Samples
         url: /resources/code/
-      
-  - name: Support
-    url: /support/
-    links:
-    
-      - name: FAQ
-        url: '#'
         
-      - name: Forum
-        url: '#'
-        
-      - name: API Status
-        url: '#'
-        
-      - name: Report an Issue (Option 1 Azure, Option 2 Contact Us with subject prefilled)
-        url: '#'
-        
-      - name: Issues Blog (Option 1 SWL, Option 2 Jekyll)
-        url: '#'
+  - name: Legal
+    url: /legal/
+    header: false
