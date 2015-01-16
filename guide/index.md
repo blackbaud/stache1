@@ -2,8 +2,17 @@
 layout: content
 priority: high
 note: |  
-  A developer guide provides details surrounding various API topics.
-  This is a prototype.  As the API matures, this content will change. 
+   
+layout: content
+priority: high
+note: |  
+  <p>Problem -  You don’t make it easy.</p>
+  <p>Best Practice - Minimize friction by providing a “Getting Started” guide..  Explain the steps to get going.  Explain how to set up an developer account, get an API key, start using the API console and trying the API, point them to authentication documentation, code samples, other tutorials, blog, mailing list, forum.  </p>
+  <p>Benchmark -  <a href="http://developer.constantcontact.com/get-started.html" target="_blank">Constant Contact</a></p> 
+  <p>Note -This is a prototype.   A developer guide provides details surrounding various API topics.</p>
+  <p>As the API matures, this content will change.</p>
+ 
+
 ---
 
 # Developer Guide
@@ -17,7 +26,7 @@ The {{ site.productname }} API is designed to help you unlock your key {{ site.p
 > TO DO:  Provide link to legal for Developer Terms of Use.
 
 ## Audience
-Currently, the RE NXT API is only available to a limited group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to contact our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial. 
+Currently, the RE NXT API is only available to a limited group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you are an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to contact our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial. 
 
 > TO DO:  Review the above with Partnership Team and Product Management
 

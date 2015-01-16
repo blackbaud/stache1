@@ -3,7 +3,7 @@
 
 # Resources
 
-> TO DO  Resoruces page will orient the dev to the various developer resources available such as the technical reference, api console, analytics, developer blogs, tutorials, code samples, github, and changelog . 
+<p class="alert alert-warning">Please note the resources page will orient the dev to the various developer resources available such as the technical reference, api console, analytics, developer blogs, tutorials, code samples, github, and changelog. </p>
 
 <!--
 ##  {{ site.devportalname }}
