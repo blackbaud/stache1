@@ -40,7 +40,9 @@ layout: base
 
               {% for child in parent.links %}
                 {% assign url_child = child.url | prepend: site.baseurl %}
-                {% if url_current == url_child %}
+                {% assign indexOf = url_current | split: url_child %}
+          
+                {% if url_current == url_child or indexOf.size > 1 %}
                   {% assign isSibling = true %}
                   {% assign url_parent_current = url_parent %}
                 {% endif %}
@@ -85,8 +87,9 @@ layout: base
                     {% if url_parent_current == url_parent %}
                       {% for child in parent.links %}
                         {% assign url_child = child.url | prepend: site.baseurl %}
+                        {% assign indexOf = url_current | split: url_child %}
 
-                        <li {% if url_current == url_child %} class="current" {% endif %}>
+                        <li {% if url_current == url_child or indexOf.size > 1 %} class="current" {% endif %}>
                           <a href="{{ child.url | prepend: site.baseurl }}">{{ child.name }}</a>
 
                           {% if url_current == url_child and headings != '' %}
