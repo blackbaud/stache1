@@ -160,11 +160,11 @@ In the Authorization request the client constructs the request URI by adding the
 
 When we change the API in a backwards-incompatible way, we release a new  version.
 
-*(Below represents some test verbiage for versioning and does not necessarily reflect the final versioning strategy)*
-
-For the RE NXT API, the URL has a major version number (v1), but the API has date based sub-versions which can be chosen using a custom HTTP request header. In this case, the major version provides structural stability of the API as a whole while the dated versions account for smaller changes (field deprecation, endpoint changes, etc). 
+> Below represents some test verbiage for versioning and does not necessarily reflect the final versioning strategy
 
 > TO DO: Get the correct versioning story from API Team engineers
+
+For the RE NXT API, the URL has a major version number (v1), but the API has date based sub-versions which can be chosen using a custom HTTP request header. In this case, the major version provides structural stability of the API as a whole while the dated versions account for smaller changes (field deprecation, endpoint changes, etc). 
 
 ### What changes does Blackbaud consider to be “backwards-compatible”? ##
 
@@ -184,21 +184,29 @@ The  <a href="{{ '/resources/changelog/' | prepend: site.baseurl }}" >Change Log
 
 
 ##Rate limiting
-To make the API fast for everybody, rate limits apply. Unauthenticated requests are processed at the lowest rate limit. Authenticated requests with a valid access token benefit from higher rate limits — this is true even if endpoint doesn’t require an access token to be passed in the call. Read the Authorization Guide for more information about how to register an application and sign your requests with an access token.
+> TO DO:  This section is simply a prototype.  The API team may not wish to employ Rate Limiting at this time. Any new endpoints that retrieve multiple resources would have to be prioritized in the backlog.
 
-A way to reduce the amount of requests is to use endpoints that fetch multiple entities. If you are making many requests to get single tracks, albums or artists, you can use endpoints such as Get Several Tracks, Get Several Albums or Get Several Artists instead.
+To make the API fast for everybody, rate limits apply. Unauthenticated requests are processed at the lowest rate limit. Authenticated requests with a valid access token benefit from higher rate limits — this is true even if endpoint doesn’t require an access token to be passed in the call. Read Web API Authorization for more information about how to register an application and sign your requests with an access token.
+
+A way to reduce the amount of requests is to use endpoints that fetch multiple entities. If you are making many requests to get single constituents, events or Gifts, you can use endpoints such as Get Constituents, Get Events or Get Gifts instead.
 
 ##Responses
-All data is received as a JSON object. The Web API Object Model provides a description of all the retrievable objects.
+All data is received as a JSON object. 
 
 ##Timestamps
-Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field will show the precision; see for example, release_date in an album object.
+> TO DO:  This section is simply a prototype.  Verify format of all dates and times with the API team.
+
+Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with zero offset: YYYY-MM-DDTHH:MM:SSZ. 
 
 ##Pagination
+
+> TO DO:  This section is simply a prototype. Pagination may be added at a later time.  Verify with API Team
+> 
 Some endpoints support a way of paging the dataset, taking an offset and limit as query parameters:
 
-$ curl "https://api.spotify.com/v1/artists/1vCWHaC5f2uS3yhpwWbIA6/albums?album_type=SINGLE&offset=20&limit=10"
-Note that offset numbering is zero-based and that omitting the offset parameter will return the first X elements. Check the documentation for the specific endpoint to see the default limit value. Requests that return an array of items are automatically paginated if the number of items vary (for example, tracks in a playlist). In this case, the results are returned within a paging object.
+    $ curl "https://api.blackbaud.com/v1/constituents?offset=20&limit=10"
+
+Note that offset numbering is zero-based and that omitting the offset parameter will return the first X elements. Check the technical reference for the specific endpoint to see the default limit value. Requests that return an array of items are automatically paginated if the number of items vary (for example, addresses for a constituent). 
 
 ##Response Status Codes
 The API uses the following response status codes, as defined in the RFC 2616 and RFC 6585:
