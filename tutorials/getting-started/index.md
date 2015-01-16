@@ -5,12 +5,10 @@ note: |
   <p>Problem -  You don’t make it easy.</p>
   <p>Best Practice - Minimize friction by providing a “Getting Started” guide.  Explain the steps to get going.  Explain how to set up an developer account, get an API key, start using the API console and trying the API, point them to authentication documentation, code samples, other tutorials, blog, mailing list, forum.  </p>
   <p>Benchmark -  <a href="http://developer.constantcontact.com/get-started.html" target="_blank">Constant Contact</a></p> 
-  <p>Note - This is a prototype.  As the API matures, this content will change.</p> 
+  <p>Note - This is a prototype. The details surrounding registering an client application and developer environment provisioning are a work in progress.  As those details emerge they will be reflected in this guide. </p> 
 ---
 
 # Get Started with the {{ site.productname }} API #
-
-> This is a prototype.  The details surrounding registering an client application and developer environment provisioning are a work in progress.  As those details emerge they will be reflected in this guide.  
 
 Ready to integrate with {{ site.productname }}? We've made it easy for you to get started in a matter of minutes. Our documentation and {{ site.devportalname }} deliver a development experience that gives you the information and tools that you need to quickly integrate your apps with {{ site.productname }}.  
 
