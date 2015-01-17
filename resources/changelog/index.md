@@ -1,6 +1,9 @@
 ---
+showHeadings: false
 ---
-# RE NXT API Change Log (v2)
+
+# {{ site.productname }} API Change Log
+
 We periodically update the API in order to deliver new features and to repair defects discovered in previous versions.  In most cases, these changes will be transparent to API developers.  However, occasionally we need to make changes that require developers to modify their existing applications.  
 
 ## Release 2015-10-12 (Oct 12, 2015)
@@ -8,7 +11,8 @@ We periodically update the API in order to deliver new features and to repair de
 ### Added
 - All collections now include an empty list for the property when the collection contains no resources. Previously the  property would be omitted from the response. See the API Reference for complete details on queries and responses for API data.
 
-- The *prospect status* property is now available within the [Constituent] resource.  [more...](http://blackbaud.smallworldlabs.com/groups/blogpost/view/29/34/38)
+- The *prospect status* property is now available within the [Constituent][constituent] resource.  
+[Learn more option 1...][option1] [Learn more option 2...][option2]
 
 ### Bug Fix
 - Fix for Issue 123 - On the Proposals resource, the "Date Last Changed" property now correctly displays the correct date. 
@@ -35,5 +39,6 @@ New [docs] have been created to describe how the new Management API works.
 
 
 [docs]: http://blackbaud-community.github.io/developer.blackbaud.com-renxt/
-
-[Constituent]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb19ff
+[constituent]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb19ff
+[option1]: http://blackbaud.smallworldlabs.com/groups/blogpost/view/29/34/38
+[option2]: {{ "/resources/blog/2015/01/14/new-constituent-field-prospect-status/" | prepend: site.baseurl }}

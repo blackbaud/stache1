@@ -213,7 +213,7 @@
 
 /* 
 * ==========================================================================
-* WELCOME
+* PAGE - HOME
 * ========================================================================== 
 */
 
@@ -246,16 +246,6 @@
     padding: 5px 0 30px 0;
   }
 
-/* 
-* ==========================================================================
-* SECTION - ABOUT
-* ========================================================================== 
-*/
-
-  .about {
-    padding: $section-padding;
-  }
-
   .about h2 {
     color: rgb(51, 51, 51);
     font-size: 30px;
@@ -264,40 +254,44 @@
     margin: 20px 0 10px 0;
   }
 
-/* 
-* ==========================================================================
-* SECTION - SERVICES
-* ========================================================================== 
-*/
-
-  .services {
-    padding: $section-padding;
-  }
-
   .service-item {
     margin-bottom: 30px;
   }
 
 /* 
 * ==========================================================================
-* SECTION - LEARN
+* PAGE - RESOURCES
 * ========================================================================== 
 */
 
-  .learn {
-    padding: $section-padding;
+  .resources {
+    padding: 80px 0 0 0;
   }
 
-/* 
-* ==========================================================================
-* SECTION - START
-* ========================================================================== 
-*/
-
-  .start {
-    padding: $section-padding;
+  .resources-more {
+    padding: 30px 0 50px 0;
   }
 
+  .resources .fa {
+    float: left;
+    font-size: 35px;
+    text-align: center;
+    padding: 0 10px 10px 0;
+  }
+
+  .resources .desc {
+    padding: 0 15px;
+    overflow: hidden;
+  }
+
+  .resources h2 {
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .resources-more {
+    padding: 20px 0 50px 0;
+  }
 
 /* 
 * ==========================================================================
@@ -407,12 +401,6 @@
     text-align: center;
   }
 
-  .test::before {
-    font-family: 'BBSKY-OMNIBAR';
-    content: $bbsky-char-re;
-    font-size: 24px;
-  }
-
 /* 
 * ==========================================================================
 * COPYRIGHT
@@ -495,6 +483,10 @@
 
   .post-footer {
     margin-top: 40px;
+  }
+
+  .section-padding {
+    padding: $section-padding;
   }
 
 

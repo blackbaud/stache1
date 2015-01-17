@@ -10,8 +10,7 @@ showHeadings: false
 
 <div class="clearfix"></div>
 
-<p class="alert alert-warning">This is "option 1."  "Option 2" would be to use <a href="http://blackbaud.smallworldlabs.com/groups/blogs/30" target="_blank" class="alert-link">Small World Labs - Blogs</a>.</p>
-
+<p class="alert alert-warning"><a href="http://blackbaud.smallworldlabs.com/groups/blogs/30" target="_blank" class="alert-link">Small World Labs blogging capabilities</a> is also another viable option.</p>
 
 <!-- This loops through the paginated posts -->
 {% for post in paginator.posts %}
@@ -19,7 +18,7 @@ showHeadings: false
     <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
   </h2>  
   {% include posts-meta.html post=post %}
-  <p>{{ post.excerpt }}</p>
+  <p>{{ post.excerpt | remove: '<p>' | remove: '</p>' }}&nbsp;&nbsp;<a href="{{ post.url | prepend: site.baseurl }}">More...</a></p>
 
 {% endfor %}
 
