@@ -49,61 +49,13 @@ notes: |
   </div>  <!-- .container -->
 </section>  <!-- .about -->
 
-<section id="services" class="services section-padding bg-primary">
-  <div class="container">
-    <div class="row text-center">
-      <div class="col-lg-10 col-lg-offset-1">
-        
-        <h2>Our endpoints.</h2>
-        <hr class="small">
-        <div class="row">
-          
-          <div class="col-sm-4">
-            <a href="https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb1a02" class="btn-fa-link">
-
-
-              <span class="fa-stack fa-4x">
-                <i class="fa fa-square fa-stack-2x"></i>
-                <i class="fa fa-users fa-stack-1x text-primary"></i>
-              </span>  <!-- .fa-stack -->
-            </a>  <!-- .btn-fa-link -->
-            <h4><strong>Constituents</strong></h4>
-            <p>Get your constituent details.</p>
-          </div>  <!-- .col-md-4 -->
-          
-          <div class="col-sm-4">
-            <!--<a href="#" class="btn-fa-link">-->
-              <span class="fa-stack fa-4x">
-                <i class="fa fa-square fa-stack-2x"></i>
-                <i class="fa fa-shield fa-stack-1x text-primary"></i>
-              </span>  <!-- .fa-stack -->
-            <!--</a>-->  <!-- .btn-fa-link -->
-            <h4><strong>Security</strong></h4>
-            <p>We use OAuth 2.0 for API endpoints that require the permission of an authenticated user.</p>
-          </div>  <!-- .col-md-4 -->
-          
-          <div class="col-sm-4">
-            
-              <span class="fa-stack fa-4x">
-                <i class="fa fa-square fa-stack-2x"></i>
-                <i class="fa fa-plug fa-stack-1x text-primary"></i>
-              </span>  <!-- .fa-stack -->
-            
-            <h4><strong>More endpoints coming soon</strong></h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-          </div>  <!-- .col-md-4 -->
-        </div>  <!-- .row -->
-      </div>  <!-- .col-lg-10 -->
-    </div>  <!-- .row -->
-  </div>  <!-- .container -->
-</section>  <!-- .services -->
-
-<section id="learn" class="learn section-padding bg-secondary">
+<section id="learn" class="learn section-padding bg-primary">
   <div class="container">
     <div class="row text-center">
       <div class="col-lg-10 col-lg-offset-1">
         
         <h2>Learn</h2>
+
         <div class="row">
           
           <div class="col-md-3 col-sm-6">
@@ -124,33 +76,80 @@ notes: |
                 <i class="fa fa-file-text fa-stack-1x text-primary"></i>
               </span>  <!-- .fa-stack -->
             </a>  <!-- .btn-fa-link -->
-            <h4><strong>Developer Guides</strong></h4>
+            <h4><strong>Developer Guide</strong></h4>
             <p>Deeper documentation for topics such as auth, pagination, quotas, versions, schema... </p>
           </div>  <!-- .col-md-3 -->
           
           <div class="clearfix visible-sm-block"></div>
           
           <div class="col-md-3 col-sm-6">
-            <a href="https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb19ff/console" class="btn-fa-link">
+            <a href="{{ '/resources/' | prepend: site.baseurl }}" class="btn-fa-link">
               <span class="fa-stack fa-4x">
                 <i class="fa fa-square fa-stack-2x"></i>
-                <i class="fa fa-cog fa-stack-1x text-primary"></i>
+                <i class="fa fa-cubes fa-stack-1x text-primary"></i>
               </span>  <!-- .fa-stack -->
             </a>  <!-- .btn-fa-link -->
-            <h4><strong>Interactive API Console</strong></h4>
-            <p>Our technical reference includes an interactive API console which allows you to directly interact with the API while you learn!</p>
+            <h4><strong>Resources</strong></h4>
+            <p>Stay connected by using our developer blog, community forum, and other tools.</p>
           </div>  <!-- .col-md-3 -->
           
           <div class="col-md-3 col-sm-6">
-            <a href="#" class="btn-fa-link">
+            <a href="{{ '/resources/code/' | prepend: site.baseurl }}" class="btn-fa-link">
               <span class="fa-stack fa-4x">
                 <i class="fa fa-square fa-stack-2x"></i>
                 <i class="fa fa-github fa-stack-1x text-primary"></i>
               </span>  <!-- .fa-stack -->
             </a>  <!-- .btn-fa-link -->
             <h4><strong>Code</strong></h4>
-            <p>Follow along within our developer guides and tutorials with code samples that are available within our GitHub repos. Collaborate with us today.</p>
+            <p>Follow along within our developer guides and tutorials with code samples that are available within our GitHub repos.</p>
           </div>  <!-- .col-md-3 -->
+        </div>  <!-- .row -->
+      </div>  <!-- .col-lg-10 -->
+    </div>  <!-- .row -->
+  </div>  <!-- .container -->
+</section>  <!-- .learn -->
+
+<section id="services" class="services section-padding bg-secondary">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-lg-10 col-lg-offset-1">
+        
+        <h2>Our API</h2>
+        <div class="row">
+          
+          <div class="col-sm-4">
+            <a href="https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb1a02" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-users fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Constituents</strong></h4>
+            <p>Get your constituent details by learning about the API endpoints.</p>
+          </div>  <!-- .col-md-4 -->
+          
+          <div class="col-sm-4">            
+            <a href="https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb19ff/console" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-terminal fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Interactive API Console</strong></h4>
+            <p>Our technical reference includes an interactive API console which allows you to directly interact with the API while you learn!</p>
+          </div>  <!-- .col-md-4 -->
+          
+          <div class="col-sm-4">
+            <a href="{{ '/resources/status/' | prepend: site.baseurl }}" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-tachometer fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Real-time Status</strong></h4>
+            <p>Get real-time status updates, including historical references and explanations of any status changes.</p>
+          </div>  <!-- .col-md-4 -->
+          
         </div>  <!-- .row -->
       </div>  <!-- .col-lg-10 -->
     </div>  <!-- .row -->
@@ -162,7 +161,7 @@ notes: |
     <div class="row">
       <div class="col-sm-12">
         <h2>Get Help the Way You Want</h2>
-        <p>We want our help to be just as available as our API.  Use the <a href="#">community forums</a>, check out <a href="#">code samples</a>, view the up-to-date <a href="#">status page</a>, or <a href="#">file an issue</a> for even more support.</p>
+        <p>We want our help to be just as available as our API.  Use the <a href="{{ '/resources/community/' | prepend: site.baseurl }}">community forums</a>, check out <a href="{{ '/resources/faq/' | prepend: site.baseurl }}">frequently asked questions</a>, view the <a href="{{ '/resources/changelog/' | prepend: site.baseurl }}">change log</a>, or explore <a href="{{ '/resources/issues/' | prepend: site.baseurl }}">active issues</a> to stay connected.</p>
       </div>  <!-- .col-sm-12 -->
     </div>  <!-- .row -->
   </div>  <!-- .container -->
