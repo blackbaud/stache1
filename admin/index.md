@@ -102,5 +102,5 @@ Very similar to the page note which is specified in the front matter, the follow
 
 ## Adding Links to _config.yml
   
-- showInHeader: Useful for showing menu items only in the footer.
-- openNewWindow: Sets a links target to "_blank," which means it will open in a new window/tab.
+- showInHeader: Useful for showing menu items only in the footer. (default: true)
+- openNewWindow: Sets a links target to "_blank," which means it will open in a new window/tab. (default: false)

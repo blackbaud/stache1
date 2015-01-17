@@ -31,7 +31,11 @@ layout: base
           
           {% for parent in site.links %}
             {% if parent.showInHeader != false %}
-              {% assign url_parent = parent.url | prepend: site.baseurl %}
+          
+              {% assign url_parent = parent.url %}
+              {% unless parent.url contains '://' %}
+                {% assign url_parent = url_parent | prepend: site.baseurl %}
+              {% endunless %}
 
               {% if url_current == url_parent and parent.links.size > 0 %}
                 {% assign hasSiblings = true %}
@@ -86,11 +90,15 @@ layout: base
                     {% assign url_parent = parent.url | prepend: site.baseurl %}
                     {% if url_parent_current == url_parent %}
                       {% for child in parent.links %}
-                        {% assign url_child = child.url | prepend: site.baseurl %}
+                        
+                        {% assign url_child = child.url %}
+                        {% unless url_child contains '://' %}
+                          {% assign url_child = url_child | prepend: site.baseurl %}
+                        {% endunless %}
                         {% assign indexOf = url_current | split: url_child %}
 
                         <li {% if url_current == url_child or indexOf.size > 1 %} class="current" {% endif %}>
-                          <a href="{{ child.url | prepend: site.baseurl }}" {% if child.openNewWindow %}target="_blank"{% endif %}>{{ child.name }}</a>
+                          <a href="{{ url_child }}" {% if child.openNewWindow %}target="_blank"{% endif %}>{{ child.name }}</a>
 
                           {% if url_current == url_child and headings != '' %}
                           <ul class="nav">
