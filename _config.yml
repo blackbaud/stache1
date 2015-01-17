@@ -5,7 +5,7 @@ permalink: /resources/blog/:categories/:year/:month/:day/:title/
 
 # Blog setup
 paginate: 3 # Purposefully low just to show pagination
-paginate_path: /resources/blog/page:num
+paginate_path: /resources/blog/:num
 
 # Used as the base in the feedback section
 github: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blob/gh-pages
