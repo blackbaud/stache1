@@ -1,5 +1,5 @@
 # Used to correctly link in different environments
-baseurl: /developer.blackbaud.com-renxt/
+baseurl: /developer.blackbaud.com-renxt
 url: http://developer.blackbaud.com
 permalink: /resources/blog/:categories/:year/:month/:day/:title/
 
