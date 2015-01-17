@@ -15,7 +15,7 @@ We periodically update the API in order to deliver new features and to repair de
 [Learn more option 1...][option1] [Learn more option 2...][option2]
 
 ### Bug Fix
-- Fix for Issue 123 - On the Proposals resource, the "Date Last Changed" property now correctly displays the correct date. 
+- Fix for [Issue 4][issue4] - On the Proposals resource, the "Date Last Changed" property now correctly displays the correct date. [Learn more...][issue4-blog]
 
 ## Release 2014-06-01 (June X, 2015)
 
@@ -42,3 +42,5 @@ New [docs] have been created to describe how the new Management API works.
 [constituent]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb19ff
 [option1]: http://blackbaud.smallworldlabs.com/groups/blogpost/view/29/34/38
 [option2]: {{ "/resources/blog/2015/01/14/new-constituent-field-prospect-status/" | prepend: site.baseurl }}
+[issue4]: https://bbbobbyearl.portal.azure-api.net/Issues/4
+[issue4-blog]: {{ "/resources/blog/2015/10/12/date-last-changed-fixed/" | prepend: site.baseurl }}
