@@ -35,8 +35,12 @@
             </p>
             <ul class="list-unstyled">
               {% for item in site.links %}
+                {% assign item_url = item.url %}
+                {% unless item_url contains '://' %}
+                  {% assign item_url = item_url | prepend: site.baseurl %}
+                {% endunless %}
                 <li>
-                  <a href="{{ item.url | prepend: site.baseurl }}">{{ item.name }}</a>
+                  <a href="{{ item_url }}" {% if child.openNewWindow %}target="_blank"{% endif %}>{{ item.name }}</a>
                 </li>
               {% endfor %}
             </ul>  <!-- .list-unstyled -->            
