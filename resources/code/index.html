@@ -1,0 +1,73 @@
+---
+showHeadings: false
+code:
+  - title: Constituent Endpoints Demo
+    description: Walk through some of the very basics of the constituent api.
+    repo: RENXT-Constituent-Endpoints
+    tutorial: /tutorials/auth/
+    
+  - title: Search for a Constituent
+    description: A more specific example of the constituent api where we search based on different criteria.
+    repo: RENXT-Constituent-Search
+
+  - title: Updating Constituent Addresses
+    description: Learn how to send information back to the API by updating a constituent address.
+    repo: RENXT-Constituent-Address
+    tutorial: /tutorials/getting-started/
+---
+
+<div class="code">
+  
+  <h1>Code Samples</h1>
+  
+  <h2>Option 1</h2>
+  
+  {% for item in page.code %}
+    
+    {% assign mod = forloop.index0 | modulo: 2 %}
+  
+    <div class="row  {% if mod == 1 %}row-striped{% endif %}">
+      <div class="col-sm-6">
+        <p><img src="holder.js/300x150/sky" alt="" /></p>
+      </div>
+      <div class="col-sm-6">
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.description }}</p>
+        <p>
+          <a href="{{ item.repo }}" class="btn btn-primary">View Code</a>
+          {% if item.tutorial %}
+            <a href="{{ item.tutorial }}" class="btn btn-white">View Tutorial</a>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  {% endfor %}
+  
+  <h2>Option 2</h2>
+
+  {% for item in page.code %}
+
+    {% assign mod = forloop.index0 | modulo: 2 %}
+
+    {% if mod == 0 or forloop.first %}
+      <div class="row">
+    {% endif %}
+
+    <div class="col-sm-6">
+      <h2>{{ item.title }}</h2>
+      <p><img src="holder.js/300x150" alt="" /></p>
+      <p>{{ item.description }}</p>
+      <p>
+        <a href="{{ item.repo }}" class="btn btn-primary">View Code</a>
+        {% if item.tutorial %}
+          <a href="{{ item.tutorial }}" class="btn btn-white">View Tutorial</a>
+        {% endif %}
+      </p>
+    </div>
+
+    {% if mod == 1 or forloop.last %}
+      </div>
+    {% endif %}
+
+  {% endfor %}
+</div>  

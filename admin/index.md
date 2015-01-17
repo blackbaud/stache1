@@ -100,8 +100,7 @@ Very similar to the page note which is specified in the front matter, the follow
 
 `{% raw %}{% include note.html priority='medium' note='Medium priority note.' %}{% endraw %}`
 
-## Adding Blog Category
-
-0. Create a folder under blog with the name of your category.
-0. Create a folder under that new folder called _posts.
-0. Create your blog posts in that new _posts folder.
+## Adding Links to _config.yml
+  
+- showInHeader: Useful for showing menu items only in the footer.
+- openNewWindow: Sets a links target to "_blank," which means it will open in a new window/tab.

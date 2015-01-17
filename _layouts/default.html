@@ -30,7 +30,7 @@ layout: base
         <ul class="nav-items">
           
           {% for parent in site.links %}
-            {% if parent.header != false %}
+            {% if parent.showInHeader != false %}
               {% assign url_parent = parent.url | prepend: site.baseurl %}
 
               {% if url_current == url_parent and parent.links.size > 0 %}
@@ -49,7 +49,7 @@ layout: base
               {% endfor %}
 
               <li {% if url_current == url_parent or url_parent == url_parent_current %} class="selected" {% endif %}>
-                <a href="{{ url_parent }}">{{ parent.name }}</a>
+                <a href="{{ url_parent }}" {% if parent.openNewWindow %}target="_blank"{% endif %}>{{ parent.name }}</a>
               </li>
             {% endif %}
           {% endfor %}
@@ -90,7 +90,7 @@ layout: base
                         {% assign indexOf = url_current | split: url_child %}
 
                         <li {% if url_current == url_child or indexOf.size > 1 %} class="current" {% endif %}>
-                          <a href="{{ child.url | prepend: site.baseurl }}">{{ child.name }}</a>
+                          <a href="{{ child.url | prepend: site.baseurl }}" {% if child.openNewWindow %}target="_blank"{% endif %}>{{ child.name }}</a>
 
                           {% if url_current == url_child and headings != '' %}
                           <ul class="nav">
