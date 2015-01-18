@@ -82,7 +82,7 @@ Finally, you can familiarize yourself with our documentation and {{ site.devport
 [ipsum-image-00]: holder.js/800x300
 [ipsum-image-01]: holder.js/800x800
 [ipsum-image-02]: holder.js/800x200
-[set up]: https://bbbobbyearl.portal.azure-api.net/
-[log back in]: https://bbbobbyearl.portal.azure-api.net/signin
+[set up]: {{ '/signup/' | prepend: site.devportalurl }}
+[log back in]: {{ '/signin/' | prepend: site.devportalurl }}
 [subscribe to an API Product]: 
 [Starter]: https://bbbobbyearl.portal.azure-api.net/Products/5485eb288f29c10414060001

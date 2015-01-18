@@ -22,18 +22,19 @@ notes: |
   </ul>
 </div>
 
-<header class="welcome">
+<header class="welcome" data-stellar-background-ratio="0.5">
   <div class="text-vertical-center">
     <h1>Welcome to the Open Blackbaud</h1>
     <h2>Connect your app to the power of the NXT API.</h2>
     <ul class="list-inline">
       <li>
-        <a href="https://bbbobbyearl.portal.azure-api.net/" class="btn btn-lg btn-primary">Sign Up</a>
+        <a href="{{ '/signup/' | prepend: site.devportalurl }}" class="btn btn-lg btn-primary">Sign Up</a>
       </li>
       <li>
         <a href="#about" class="btn btn-lg btn-white smooth-scroll">Learn More</a>
       </li>
     </ul>
+    <p class="muted">Already have an account?  <a href="{{ '/signin/' | prepend: site.devportalurl }}">Sign In</a></p>
   </div>
 </header>
 

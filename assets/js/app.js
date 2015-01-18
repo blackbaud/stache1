@@ -42,6 +42,11 @@
     
   }
   
+  // Parallax background
+  $.stellar({
+    horizontalScrolling: false
+  });
+  
   // Smooth scroll
   $('a.smooth-scroll').click(function(e) {
     e.preventDefault();
