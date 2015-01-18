@@ -9,7 +9,7 @@ The ability to provide a way for developers to report issues with the API, inclu
 
 At the time of building this prototype, the issues capability built into the Microsoft Azure API Management Suite seems to still be in its infancy.  For example, listed below are just a few areas where the capabilities seem to fall short, as compared to a tool such as GitHub or comparable third-party application:
 
-- Only able to view issues in a single view, sorted newest first
+- Only able to view issues in a single view (10 per page), sorted newest first
 - Inability to search issues
 - Inability to sort issues
 - Inability to tag or label issues
