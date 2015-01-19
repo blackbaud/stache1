@@ -312,6 +312,45 @@
     background: #EFEFEF;
   }
 
+  .code .has-hover {
+    display: block;
+    position: relative; 
+  }
+
+  .code .show-on-hover {
+    background: rgba(0, 0, 0, .5);
+    display: block;
+    left: 0;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    width: 100%;
+    transition: opacity .3s;
+  }
+
+  .code .show-on-hover .is-table {
+    display: table;
+    height: 100%;
+    width: 100%;
+  }
+
+  .code .show-on-hover .is-table-cell {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .code .has-hover.is-hover .show-on-hover {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .code .show-on-hover .btn-white {
+    margin-top: 10px;
+  }
+  
 /* 
 * ==========================================================================
 * FEEDBACK
@@ -492,7 +531,8 @@
     display: none;
   }
 
-  .header-with-button .btn {
+  .header-with-button a,
+  .header-with-button button {
     margin-top: 35px;
   }
 
