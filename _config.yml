@@ -100,7 +100,7 @@ links:
       - name: Code Samples
         url: /resources/code/
         
-  - name: Portal
+  - name: Developer Portal
     url: https://bbbobbyearl.portal.azure-api.net/
         
   - name: Legal
