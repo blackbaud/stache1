@@ -89,6 +89,9 @@ links:
       - name: FAQ
         url: /resources/faq/
         
+      - name: My Applications
+        url: /resources/applications/
+        
       - name: Status
         url: /resources/status/
         
