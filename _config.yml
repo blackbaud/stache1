@@ -14,7 +14,8 @@ github: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blo
 title: RENXT Developer Portal - Prototype
 productname: RE NXT
 devportalname: API management developer portal
-authservicename:  Blackbaud OAuth 2.0 Service
+authorizationservicename:  Blackbaud Authorization Service
+authenticationname:  Blackbaud Authorization Service
 devportalurl: https://bbbobbyearl.portal.azure-api.net
 devportalurlsubscribeproduct: https://bbbobbyearl.portal.azure-api.net/products
 communityurl: http://blackbaud.smallworldlabs.com
