@@ -441,105 +441,43 @@ The {{ site.productname }} Web API is based on REST principles: data resources a
 
 Through the {{ site.productname }} Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the Web API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" > Web API Authorization</a> is done via the {{site.authorizationservicename}} at `https://accounts.blackbaud.com`.  
 
-<!--
-### Common Parameters and Identifiers
 
-In requests to the Web API and responses from it, you will frequently encounter the following parameters within  query string which is added to the base endpoint URI.
-
-{% include note.html priority='medium' note='TO DO: Document the max length of the client identifier (client_id) parameter issued by the Blackbaud authorization server.' %}
-
-In the Authorization request the client constructs the request URI by adding the following parameters to the query component of the authorization endpoint URI using the the "application/x-www-form-urlencoded" format.
-
-####Common Endpoint Request Parameters
-In the request to end points such as the Constituent or Address resources, the client constructs the request URI by adding the following parameters to the query component of the endpoint URI.
-
-<div class="table-responsive">
-  <table class="table table-striped table-hover">
-    <thead>
-		<tr>
-			<th >Parameter </th>
-			<th >Description</th>
-		</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>client_id</td>
-		<td >A unique string representing the registration information provided by the client application (client).  The client_id is issued by the Blackbaud authorization server.   The client identifier is a string with a maximum length of x.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
-	</tr>
-	</tbody>
-  </table>
-</div>
-
-### Common Request Headers
-Because {{ site.productname }} Web API uses HTTP for all communication, you need to ensure that the correct HTTP headers are supplied (and processed on retrieval) so that you get the right format and encoding. Different environments and clients will be more or less strict on the effect of these HTTP headers (especially when not present). Where possible you should be as specific as possible.
-
-<div class="table-responsive">
-  <table class="table table-striped table-hover">
-    <thead>
-		<tr>
-			<th>Header </th>
-			<th>Description</th>
-		</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>Content-type</td>
-		<td ></td>
-	</tr>
-	
-	</tbody>
-  </table>
-</div>
--->
 ##Responses
+
 All data is received as a JSON object.
 
->  To Do:  Document the standard/typical HTTP request response headers returned by the Web API such as Content-type and Content-length *Engineering should work with documentation to identify and explain any significant and important HTTP headers such as Cache-control or Authorization*
 
 ## Version
 
+{% include note.html priority='medium' note='Below represents some test verbiage for versioning and does not necessarily reflect the final versioning strategy' %}
+
 When we change the Web API in a backwards-incompatible way, we release a new  version.
 
-> Below represents some test verbiage for versioning and does not necessarily reflect the final versioning strategy
+For the {{ site.productname }} Web API, the URL has a major version number (v1), but the Web API has date based sub-versions which can be chosen using a custom HTTP request header. In this case, the major version provides structural stability of the Web API as a whole while the dated versions account for smaller changes (field deprecation, endpoint changes, etc). 
 
-> TO DO: Get the correct versioning story from API Team engineers
-
-For the RE NXT Web API, the URL has a major version number (v1), but the Web API has date based sub-versions which can be chosen using a custom HTTP request header. In this case, the major version provides structural stability of the Web API as a whole while the dated versions account for smaller changes (field deprecation, endpoint changes, etc). 
-
-### What changes does Blackbaud consider to be “backwards-compatible”? ##
+### What changes does Blackbaud consider to be “backwards-compatible”?
+{% include note.html priority='medium' note='TO DO: Get input to backwards-compatible changes from  API Team engineers' %}
 
 - Adding new Web API resources.
 - Adding new optional request parameters to existing Web API methods.
 - Adding new properties to existing Web API responses.
 - Changing the order of properties in existing Web API responses.
 - Changing the length or format of object IDs or other opaque strings. This includes adding or removing fixed prefixes. 
-- You can safely assume IDs we generate will never exceed x characters, but you should be able to handle IDs of up to that length. If for example you’re using MySQL, you should store IDs in a VARCHAR(x) COLLATE utf8_bin column (the COLLATE configuration ensures case-sensitivity in lookups).
-
-> TO DO: Get input to backwards-compatible changes from Web API Team engineers
+- You can safely assume IDs we generate will never exceed x characters, but you should be able to handle IDs of up to that length. 
 
 ### API Changelog
+{% include note.html priority='medium' note='TO DO: API Team engineers will be a major contributor the changelog as we version the API.  Potentially use TFS to categorize and track changes, fixes, issues, new features, bugs, etc.' %}
+
 The  <a href="{{ '/resources/changelog/' | prepend: site.baseurl }}" >Change Log</a> reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.
 
-> TO DO: API Team engineers will be a major contributor the changelog as we version the API.  Potentially use TFS to categorize and track backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues.  
-
-
-##Rate limiting
-> TO DO:  This section is simply a prototype.  The API team may not wish to employ Rate Limiting at this time. 
-
-To make the API fast for everybody, rate limits apply. Unauthenticated requests are processed at the lowest rate limit. Authenticated requests with a valid access token benefit from higher rate limits — this is true even if endpoint doesn’t require an access token to be passed in the call. Read Web API Authorization for more information about how to register an application and sign your requests with an access token.
-
-A way to reduce the amount of requests is to use endpoints that fetch multiple entities. If you are making many requests to get single constituents, events or Gifts, you can use endpoints such as Get Constituents, Get Events or Get Gifts instead.
-
-> Any new endpoints that retrieve multiple resources would have to be prioritized in the backlog.
-
 ##Timestamps
-> TO DO:  This section is simply a prototype.  Verify format of all dates and times with the API team.
+{% include note.html priority='medium' note='TO DO:  This section is simply a prototype.  Verify format of all dates and times with the API team.' %}
 
 Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with zero offset: YYYY-MM-DDTHH:MM:SSZ. 
 
 ##Pagination
+{% include note.html priority='medium' note=' TO DO:  This section is simply a prototype. Pagination may be added at a later time.  Verify with API Team' %}
 
-> TO DO:  This section is simply a prototype. Pagination may be added at a later time.  Verify with API Team
 
 Some endpoints support a way of paging the dataset, taking an offset and limit as query parameters:
 
