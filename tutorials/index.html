@@ -29,12 +29,12 @@ itemsPerRow: 3
             <div class="show-on-hover">
               <div class="is-table">
                 <div class="is-table-cell">
-                  <a href="{{ child.url }}" class="btn btn-primary">View Tutorial</a>
+                  <a href="{{ child.url | prepend: site.baseurl }}" class="btn btn-primary">View Tutorial</a>
                 </div>
               </div>
             </div>
           </div>
-          <h3><a href="{{ child.url }}">{{ child.name }}</a></h3>
+          <h3><a href="{{ child.url | prepend: site.baseurl }}">{{ child.name }}</a></h3>
           <p>{{ child.description }}</p>
         </div>
 
