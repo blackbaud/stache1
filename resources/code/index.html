@@ -46,7 +46,7 @@ code:
             <div class="is-table-cell">
               <a href="{{ item.repo | prepend: site.githubbase }}" target="_blank" class="btn btn-primary">View Code</a>
               {% if item.tutorial %}
-                <br /><a href="{{ item.tutorial }}" class="btn btn-white">View Tutorial</a>
+                <br /><a href="{{ item.tutorial | prepend: site.baseurl }}" class="btn btn-white">View Tutorial</a>
               {% endif %}
             </div>
           </div>
