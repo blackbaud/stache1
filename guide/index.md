@@ -48,16 +48,13 @@ Follow these steps to register an application:
 9.  Your application will now be shown, along with any other applications you have registered, in the main list on the **My Applications** page:
 ![Ipsum Image][ipsum-image-02]
 
-
 ## Web API Authorization	
-This guide shows you how to enable your application to obtain a user’s authorization to access private {{ site.productname }} data through the {{ site.productname }} Web API. <a href="https://tools.ietf.org/html/rfc6749" > OAuth 2.0</a> is an authorization framework commonly used to grant client applications limited access to a  user's resources without exposing the users credentials to the client application. Most requests to the {{ site.productname }} Web API require authorization; that is, the user of your client application must have granted permission for your client application to access their requested {{ site.productname }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is passed to subsequent Web API calls to do things such as searching or adding a constituent.
+This guide shows you how to enable your application to obtain a user’s authorization to access private {{ site.productname }} data through the {{ site.productname }} Web API. <a href="https://tools.ietf.org/html/rfc6749" > OAuth 2.0</a> is an authorization framework commonly used to grant client applications limited access to a  user's resources without exposing the users credentials to the client application. Nearly all requests to the {{ site.productname }} Web API require authorization; that is, the user of your client application must have granted permission for your client application to access their requested {{ site.productname }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is passed to subsequent Web API calls to do things such as searching or adding a constituent.
 
 <p class="alert alert-info">All communication with Blackbaud servers should be over SSL (https://) </p>
 
 ### Authorization Code Flow
-{% include note.html priority='medium' note='If new use cases require the addition of different OAuth grant types, such as Implict flow for browser-based or mobile apps, we will need to document these new grant types within this section.' %}
-
-The {{ site.productname }} Web API currently only supports the Authorization Code flow.
+The {{ site.productname }} Web API currently supports the Authorization Code, Client Credentials, and Implicit Grant flows. 
 
 The Authorization Code flow is suitable for long-running applications which the user logs into once. It provides an access token that can be refreshed. This method first gets a code then exchanges it for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a back-end service or back-end web app, not from a client like a browser-based or mobile app.   The Authorization Code flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is the authorization flow used in our <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" >Web API Authorization Tutorial</a>.
 
@@ -177,7 +174,7 @@ For example:
 
 When the authorization code has been received, you will need to exchange it with an access token by making a POST request to the {{ site.authorizationservicename }}, this time to its /token endpoint:
 
-    POST https://accounts.spotify.com/token
+    POST https://accounts.blackbaud.com/token
 
 The *body* of this POST request must contain the following parameters:
 
@@ -290,6 +287,7 @@ The request is sent to the token endpoint of the {{ site.authorizationservicenam
     POST https://accounts.blackbaud.com/token
 
 The body of this POST request must contain the following parameters:
+
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
@@ -305,7 +303,7 @@ The body of this POST request must contain the following parameters:
 		</tr>
 		<tr>
 			<td>refresh_token</td>
-			<td class="column-2">Required. The refresh token returned from the authorization code exchange. </td>
+			<td>Required. The refresh token returned from the authorization code exchange. </td>
 		</tr>
 	</tbody>
   </table>
@@ -333,7 +331,7 @@ The header of this POST request must contain the following parameter:
 
 For example:
 
-    curl -H "Authorization: Basic ZjM4Zj...Y0MzE=" -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo https://accounts.spotify.com/api/token
+    curl -H "Authorization: Basic ZjM4Zj...Y0MzE=" -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo https://accounts.blackbaud.com/api/token
     {
        "access_token": "NgA6ZcYI...ixn8bUQ",
        "token_type": "Bearer",
@@ -441,7 +439,7 @@ The {{ site.productname }} Web API is based on REST principles: data resources a
 
 {% include note.html priority='medium' note='TO DO: Update content for endpoints and authorization urls.<p> TO DO:  Provide a sample of a typical url and indicate the base url and other pieces such as https, resource, tenant, etc. </p>' %}
 
-Through the {{ site.productname }} Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the Web API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/guide//#web-api-authorization' | prepend: site.baseurl }}" > Web API Authorization</a> is done via the {{site.authorizationservicename}} at `https://auth.blackbaud.com`.  
+Through the {{ site.productname }} Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the Web API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" > Web API Authorization</a> is done via the {{site.authorizationservicename}} at `https://accounts.blackbaud.com`.  
 
 <!--
 ### Common Parameters and Identifiers
