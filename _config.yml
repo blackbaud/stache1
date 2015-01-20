@@ -1,7 +1,11 @@
 # Used to correctly link in different environments
-baseurl: /developer.blackbaud.com-renxt/
+baseurl: /developer.blackbaud.com-renxt
 url: http://developer.blackbaud.com
-permalink: /:categories/:year/:month/:day/:title/
+permalink: /resources/blog/:categories/:year/:month/:day/:title/
+
+# Blog setup
+paginate: 3 # Purposefully low just to show pagination
+paginate_path: /resources/blog/:num
 
 # Used as the base in the feedback section
 github: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blob/gh-pages
@@ -11,7 +15,7 @@ title: RENXT Developer Portal - Prototype
 productname: RE NXT
 devportalname: API management developer portal
 authservicename:  Blackbaud OAuth 2.0 Service
-devportalurl: https://bbbobbyearl.portal.azure-api.net/
+devportalurl: https://bbbobbyearl.portal.azure-api.net
 devportalurlsubscribeproduct: https://bbbobbyearl.portal.azure-api.net/products
 communityurl: http://blackbaud.smallworldlabs.com
 communitygroupurl:  http://blackbaud.smallworldlabs.com/groups/home/30
@@ -36,7 +40,6 @@ defaults:
     values:
       layout: "post"
       showComments: true
-      sidebar: category-list.html
 
 # NOTE: For consistency and performance, please begin and end all internal site URL's with a forward slash.
 links:
@@ -74,6 +77,7 @@ links:
     
       - name: Developer Portal
         url: https://bbbobbyearl.portal.azure-api.net/
+        openNewWindow: true
         
       - name: Developer Blog
         url: /resources/blog/
@@ -96,6 +100,9 @@ links:
       - name: Code Samples
         url: /resources/code/
         
+  - name: Portal
+    url: https://bbbobbyearl.portal.azure-api.net/
+        
   - name: Legal
     url: /legal/
-    header: false
+    showInHeader: false

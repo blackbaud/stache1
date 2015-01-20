@@ -12,7 +12,7 @@ note: |
 
 The {{ site.productname }} API is designed to help you unlock your key {{ site.productname }} data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes, etc.  Since the API is based on REST principles, it's very easy to write and test applications. You can use your browser to access URLs, and you can use pretty much any HTTP client in any programming language to interact with the API.
 
-<p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our Developer Terms of Use. </p>
+<p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ '/legal/' | prepend: site.baseurl }}" class="alert-link">Developer Terms of Use</a>. </p>
 
 > TO DO:  Work with BB legal to develop a Developer Terms of Use.
 > 
@@ -271,7 +271,6 @@ ipsum lorem
 [signing up]: https://bbbobbyearl.portal.azure-api.net/
 [getting started]: http://blackbaud-community.github.io/developer.blackbaud.com-renxt/start/
 [support]: http://blackbaud-community.github.io/developer.blackbaud.com-renxt/support/
-
 [endpoints]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb1a02
 
 

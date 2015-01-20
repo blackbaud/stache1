@@ -213,7 +213,7 @@
 
 /* 
 * ==========================================================================
-* WELCOME
+* PAGE - HOME
 * ========================================================================== 
 */
 
@@ -246,16 +246,6 @@
     padding: 5px 0 30px 0;
   }
 
-/* 
-* ==========================================================================
-* SECTION - ABOUT
-* ========================================================================== 
-*/
-
-  .about {
-    padding: $section-padding;
-  }
-
   .about h2 {
     color: rgb(51, 51, 51);
     font-size: 30px;
@@ -264,41 +254,103 @@
     margin: 20px 0 10px 0;
   }
 
-/* 
-* ==========================================================================
-* SECTION - SERVICES
-* ========================================================================== 
-*/
-
-  .services {
-    padding: $section-padding;
-  }
-
   .service-item {
     margin-bottom: 30px;
   }
 
 /* 
 * ==========================================================================
-* SECTION - LEARN
+* PAGE - RESOURCES
 * ========================================================================== 
 */
 
-  .learn {
-    padding: $section-padding;
+  .resources {
+    padding: 80px 0 0 0;
+  }
+
+  .resources-more {
+    padding: 30px 0 50px 0;
+  }
+
+  .resources .fa {
+    float: left;
+    font-size: 35px;
+    text-align: center;
+    padding: 0 10px 10px 0;
+  }
+
+  .resources .desc {
+    padding: 0 15px;
+    overflow: hidden;
+  }
+
+  .resources h2 {
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .resources-more {
+    padding: 20px 0 50px 0;
   }
 
 /* 
 * ==========================================================================
-* SECTION - START
+* PAGE - CODE SAMPLES
 * ========================================================================== 
 */
 
-  .start {
-    padding: $section-padding;
+  .code h2 {
+    margin: 0 0 20px 0;
+    padding: 0;
   }
 
+  .code .row {
+    padding: 30px 0;
+  }
 
+  .row-striped {
+    background: #EFEFEF;
+  }
+
+  .code .has-hover {
+    display: block;
+    position: relative; 
+  }
+
+  .code .show-on-hover {
+    background: rgba(0, 0, 0, .5);
+    display: block;
+    left: 0;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    width: 100%;
+    transition: opacity .3s;
+  }
+
+  .code .show-on-hover .is-table {
+    display: table;
+    height: 100%;
+    width: 100%;
+  }
+
+  .code .show-on-hover .is-table-cell {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .code .has-hover.is-hover .show-on-hover {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .code .show-on-hover .btn-white {
+    margin-top: 10px;
+  }
+  
 /* 
 * ==========================================================================
 * FEEDBACK
@@ -407,12 +459,6 @@
     text-align: center;
   }
 
-  .test::before {
-    font-family: 'BBSKY-OMNIBAR';
-    content: $bbsky-char-re;
-    font-size: 24px;
-  }
-
 /* 
 * ==========================================================================
 * COPYRIGHT
@@ -483,6 +529,27 @@
 
   p.note {
     display: none;
+  }
+
+  .header-with-button a,
+  .header-with-button button {
+    margin-top: 35px;
+  }
+
+  .alert {
+    margin-top: 18px;
+  }
+
+  .post-footer {
+    margin-top: 40px;
+  }
+
+  .section-padding {
+    padding: $section-padding;
+  }
+
+  .section-padding h2 {
+    padding: 20px 0;
   }
 
 

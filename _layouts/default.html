@@ -30,8 +30,12 @@ layout: base
         <ul class="nav-items">
           
           {% for parent in site.links %}
-            {% if parent.header != false %}
-              {% assign url_parent = parent.url | prepend: site.baseurl %}
+            {% if parent.showInHeader != false %}
+          
+              {% assign url_parent = parent.url %}
+              {% unless parent.url contains '://' %}
+                {% assign url_parent = url_parent | prepend: site.baseurl %}
+              {% endunless %}
 
               {% if url_current == url_parent and parent.links.size > 0 %}
                 {% assign hasSiblings = true %}
@@ -40,14 +44,16 @@ layout: base
 
               {% for child in parent.links %}
                 {% assign url_child = child.url | prepend: site.baseurl %}
-                {% if url_current == url_child %}
+                {% assign indexOf = url_current | split: url_child %}
+          
+                {% if url_current == url_child or indexOf.size > 1 %}
                   {% assign isSibling = true %}
                   {% assign url_parent_current = url_parent %}
                 {% endif %}
               {% endfor %}
 
               <li {% if url_current == url_parent or url_parent == url_parent_current %} class="selected" {% endif %}>
-                <a href="{{ url_parent }}">{{ parent.name }}</a>
+                <a href="{{ url_parent }}" {% if parent.openNewWindow %}target="_blank"{% endif %}>{{ parent.name }}</a>
               </li>
             {% endif %}
           {% endfor %}
@@ -84,10 +90,15 @@ layout: base
                     {% assign url_parent = parent.url | prepend: site.baseurl %}
                     {% if url_parent_current == url_parent %}
                       {% for child in parent.links %}
-                        {% assign url_child = child.url | prepend: site.baseurl %}
+                        
+                        {% assign url_child = child.url %}
+                        {% unless url_child contains '://' %}
+                          {% assign url_child = url_child | prepend: site.baseurl %}
+                        {% endunless %}
+                        {% assign indexOf = url_current | split: url_child %}
 
-                        <li {% if url_current == url_child %} class="current" {% endif %}>
-                          <a href="{{ child.url | prepend: site.baseurl }}">{{ child.name }}</a>
+                        <li {% if url_current == url_child or indexOf.size > 1 %} class="current" {% endif %}>
+                          <a href="{{ url_child }}" {% if child.openNewWindow %}target="_blank"{% endif %}>{{ child.name }}</a>
 
                           {% if url_current == url_child and headings != '' %}
                           <ul class="nav">

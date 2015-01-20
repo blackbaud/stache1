@@ -1,0 +1,87 @@
+---
+showHeadings: false
+itemsPerRow: 3
+code:
+  - title: Constituent Endpoints Demo
+    description: Walk through some of the very basics of the constituent api.
+    repo: RENXT-Constituent-Endpoints
+    tutorial: /tutorials/auth/
+    
+  - title: Search for a Constituent
+    description: A more specific example of the constituent api where we search based on different criteria.
+    repo: RENXT-Constituent-Search
+
+  - title: Updating Constituent Addresses
+    description: Learn how to send information back to the API by updating a constituent address.
+    repo: RENXT-Constituent-Address
+    tutorial: /tutorials/getting-started/
+
+  - title: Search for a Constituent
+    description: A more specific example of the constituent api where we search based on different criteria.
+    repo: RENXT-Constituent-Search
+
+  - title: Constituent Endpoints Demo
+    description: Walk through some of the very basics of the constituent api.
+    repo: RENXT-Constituent-Endpoints
+    tutorial: /tutorials/auth/
+
+  - title: Updating Constituent Addresses
+    description: Learn how to send information back to the API by updating a constituent address.
+    repo: RENXT-Constituent-Address
+    tutorial: /tutorials/getting-started/
+---
+
+{% assign itemsPerRow = page.itemsPerRow %}
+{% assign width = 12 | divided_by: itemsPerRow %}
+{% assign remainder = itemsPerRow | minus: 1 %}
+
+<div class="code">
+  
+  <div class="header-with-button">
+    <a href="https://github.com/blackbaud-community" target="_blank" class="pull-right btn btn-primary"><i class="fa fa-github fa-2x"></i></a>
+    <h1 class="pull-left">Code Samples</h1>
+  </div>
+
+  <div class="clearfix"></div>
+  
+  <p class="alert alert-info hide">
+   Get involved in our code samples by checking out our <a href="https://github.com/blackbaud-community" target="_blank" class="alert-link">Blackbaud Community GitHub organization</a>.
+  </p>
+
+  {% for item in page.code %}
+
+    {% assign mod = forloop.index0 | modulo: itemsPerRow %}
+
+    {% if mod == 0 or forloop.first %}
+      <div class="row">
+    {% endif %}
+
+    <div class="col-sm-{{ width }}">
+      <div class="thumbnailzzz">
+        <div class="has-hover">
+          <img src="holder.js/300x150" alt="" />
+          <div class="show-on-hover">
+            <div class="is-table">
+              <div class="is-table-cell">
+                <a href="{{ item.repo }}" class="btn btn-primary">View Code</a>
+                {% if item.tutorial %}
+                  <br /><a href="{{ item.tutorial }}" class="btn btn-white">View Tutorial</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    {% if mod == remainder or forloop.last %}
+      </div>
+    {% endif %}
+
+  {% endfor %}
+  
+</div>  

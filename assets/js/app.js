@@ -42,6 +42,25 @@
     
   }
   
+  // Parallax background
+  $.stellar({
+    horizontalScrolling: false
+  });
+  
+  // Equal Height
+  var height = 0;
+  $('.equal-height').each(function() {
+    var h = $(this).outerHeight();
+    height = h > height ? h : height;
+  }).css('min-height', height + 'px');
+  
+  // Show on Hover
+  $('.has-hover').each(function() {
+    $(this).hover(function() {
+      $(this).toggleClass('is-hover');
+    });
+  });
+  
   // Smooth scroll
   $('a.smooth-scroll').click(function(e) {
     e.preventDefault();
