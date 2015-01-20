@@ -60,10 +60,6 @@ links:
         url: /tutorials/auth/
         description: "This tutorial shows you how to create a small server-side application that accesses user-related data through the RE NXT API."
     
-      - name: Registering Your App
-        url: /tutorials/register-app/
-        description:
-    
       - name: Search and Retrieve a Constituent
         url: '#'
         description:
