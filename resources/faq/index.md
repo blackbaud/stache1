@@ -1,6 +1,9 @@
 ---
 faq: 
-  - question: How do I signup for the API?
+  - question: So, how do you sign your requests?
+    answer:  
+     You need to provide a token obtained using OAuth 2. Check <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" target="_blank">Web API Authorization within our Developer Guide</a> for more information.
+  - question: How do I sign up for the API?
     answer: IPhone banh mi crucifix taxidermy Shoreditch fingerstache. Kickstarter mlkshk literally, flexitarian kitsch Bushwick polaroid Thundercats squid wolf fanny pack distillery. DIY Echo Park you probably haven't heard of them master cleanse. Pickled you probably haven't heard of them heirloom, kale chips selfies freegan brunch Helvetica 3 wolf moon pour-over Blue Bottle vegan. Bespoke chia Echo Park roof party, mixtape normcore cold-pressed Blue Bottle before they sold out pour-over whatever. Ethical raw denim American Apparel drinking vinegar mustache mixtape. Four loko migas raw denim asymmetrical McSweeney's pickled, Echo Park scenester cred dreamcatcher.
     
   - question: I need help, where can I get support?

@@ -9,30 +9,27 @@ note: |
 ---
 
 # Developer Guide
+{% include note.html priority='medium' note='TO DO:  Work with BB legal to develop a Developer Terms of Use.' %}
 
 The {{ site.productname }} API is designed to help you unlock your key {{ site.productname }} data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes, etc.  Since the API is based on REST principles, it's very easy to write and test applications. You can use your browser to access URLs, and you can use pretty much any HTTP client in any programming language to interact with the API.
 
 <p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ '/legal/' | prepend: site.baseurl }}" class="alert-link">Developer Terms of Use</a>. </p>
 
-{% include note.html priority='medium' note='TO DO:  Work with BB legal to develop a Developer Terms of Use.<p>TO DO:  Provide link to legal for Developer Terms of Use.</p>' %}
+
 
 ## Audience
+{% include note.html priority='medium' note='TO DO:  Review with Partnership Team and Product Management<p>TO DO:  Provide email form to contact product management and global partnership team</p>' %}
+
 Currently, the RE NXT API is only available to a limited group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you are an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to contact our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial. 
 
-{% include note.html priority='medium' note='TO DO:  Review the above with Partnership Team and Product Management<p>TO DO:  Provide email form to contact product management and global partnership team</p>' %}
-
-This documentation is designed for people familiar with HTTP programming and RESTful programming concepts. You should also be familiar with the Raiser's Edge from a user's and administrator's point of view. There are many HTTP RESTful tutorials available on the Web, including using cURL and Fiddler to make and test HTTP requests. If you are unfamiliar with HTTP programming and RESTful Web API’s, we recommend spending some time reviewing [API Fundamentals].
-
-{% include note.html priority='medium' note='TO DO: Add API Fundamentals and incorporate link above' %}
+This documentation is designed for people familiar with HTTP programming and RESTful programming concepts. You should also be familiar with the Raiser's Edge from a user's and administrator's point of view. There are many HTTP RESTful tutorials available on the Web, including using cURL and Fiddler to make and test HTTP requests. If you are unfamiliar with HTTP programming and RESTful Web APIs, we recommend spending some time reviewing <a href="{{ '/guide/#web-api-fundamentals' | prepend: site.baseurl }}" >Web API Fundamentals</a>.
 
 ## Architectural Style
-The {{ site.productname }} API is organized around REST. Our API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients, and we support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website's client-side code). JSON will be returned in all responses from the API, including errors.
-
 {% include note.html priority='medium' note='We need to determine if and when we support cross-origin resource sharing (CORS).' %}
 
+The {{ site.productname }} API is organized around REST. Our API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients, and we support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website's client-side code). JSON will be returned in all responses from the API, including errors.
 
 ## Web API Authorization	
-
 This guide shows you how to enable your application to obtain a user’s authorization to access private {{ site.productname }} data through the {{ site.productname }} API. <a href="https://tools.ietf.org/html/rfc6749" > OAuth 2.0</a> is an authorization framework commonly used to grant client applications limited access to a  user's resources without exposing the users credentials to the client application. Some requests to the {{ site.productname }} API require authorization; that is, the user of a client application must have granted permission for an client application to access the requested {{ site.productname }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is used in OAuth to provide limited access to protected resources.  The access token is passed to subsequent API calls to do things such as searching or adding a constituent.
 
 <p class="alert alert-info">All communication with Blackbaud servers should be over SSL (https://) </p>
@@ -46,6 +43,27 @@ The Authorization Code flow first gets a code then exchanges it for an access to
 </p>
 
 {% include note.html priority='medium' note='If new use cases require the addition of different OAuth grant types, such as Implict flow for browser-based or mobile apps, we will need to document these new grant types within this section.' %}
+
+## Using Scopes
+
+When your application seeks authorization to access user-related data, you will often need to specify one or more scopes. Here’s how.
+
+Some calls to the RE NXT Web API require prior authorization by your application’s user. To get that authorization, your application will first need to make a call to the RE NXT Accounts Service’s /authorize endpoint, passing along a list of the scopes for which access permission is sought.
+
+Scopes let you specify exactly what types of data your application wants to access, and the set of scopes you pass in your call determines what access permissions the user is asked to grant.
+
+Example
+The following code makes a request asking for scopes ‘user-read-private’ and ‘user-read-email':
+
+app.get('/login', function(req, res) {
+var scopes = 'user-read-private user-read-email';
+res.redirect('https://accounts.spotify.com/authorize' + 
+  '?response_type=code' +
+  '&client_id=' + my_client_id +
+  (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
+  '&redirect_uri=' + encodeURIComponent(redirect_uri));
+});
+On execution, the user is redirected to a page explaining the information that is requested:	
 
 ## Requests
 
@@ -84,7 +102,7 @@ The {{ site.productname }} API is based on REST principles: data resources are a
 
 Through the {{ site.productname }} API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the {{site.authorizationservicename}} at `https://auth.blackbaud.com`.  
 
-{% include note.html priority='medium' note='TO DO: Update content the base url for authentication and authorization.<p> TO DO:  Provide a sample of a typical url and indicate the base url and other pieces such as https, resource, tenant, etc. </p>' %}
+{% include note.html priority='medium' note='TO DO: Update content for endpoints and authorization urls.<p> TO DO:  Provide a sample of a typical url and indicate the base url and other pieces such as https, resource, tenant, etc. </p>' %}
 
 ### Common Parameters and Identifiers
 
@@ -93,7 +111,7 @@ In requests to the API and responses from it, you will frequently encounter the 
 ####Common Authorization Request Parameters
 In the Authorization request the client constructs the request URI by adding the following parameters to the query component of the authorization endpoint URI using the the "application/x-www-form-urlencoded" format. 
 
-> TO DO:  Document the max length of the client identifier (client_id) parameter issued by the Blackbaud authorization server. 
+{% include note.html priority='medium' note='TO DO: Document the max length of the client identifier (client_id) parameter issued by the Blackbaud authorization server.' %}
 
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -106,7 +124,7 @@ In the Authorization request the client constructs the request URI by adding the
 	<tbody>
 	<tr>
 		<td>client_id</td>
-		<td >A unique string representing the registration information provided by the client application (client).  The client_id is issued by the Blackbaud authorization server.   The client identifier is a string with a maximum length of x.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
+		<td >A unique string representing the client registration information provided by the client application (client).  The client_id is issued by the Blackbaud authorization server.   The client identifier is a string with a maximum length of x.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
 	</tr>
 	<tr>
 		<td>response_type</td>
@@ -140,7 +158,6 @@ In the request to end points such as the Constituent or Address resources, the c
 		<td>client_id</td>
 		<td >A unique string representing the registration information provided by the client application (client).  The client_id is issued by the Blackbaud authorization server.   The client identifier is a string with a maximum length of x.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
 	</tr>
-	
 	</tbody>
   </table>
 </div>
@@ -152,14 +169,14 @@ Because {{ site.productname }} API uses HTTP for all communication, you need to 
   <table class="table table-striped table-hover">
     <thead>
 		<tr>
-			<th >Header </th>
-			<th >Description</th>
+			<th>Header </th>
+			<th>Description</th>
 		</tr>
 	</thead>
 	<tbody>
 	<tr>
 		<td>Content-type</td>
-		<td >A unique string representing the registration information provided by the client application (client).  Thie client_id is issued by the Blackbaud authorization server.   See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+		<td ></td>
 	</tr>
 	
 	</tbody>
@@ -253,7 +270,7 @@ Note that offset numbering is zero-based and that omitting the offset parameter 
 The API uses the following response status codes, as defined in the RFC 2616 and RFC 6585:
 
 
-## HTTP Fundamentals
+## Web API Fundamentals
 ipsum lorem
 
 [sign up]: https://bbbobbyearl.portal.azure-api.net/
