@@ -345,9 +345,10 @@ For example:
 
 The Client Credentials flow is used by the developer to access data that is related to their partner client application. This flow is used the **xyz** end points. 
 
-<p class="alert alert-info">The Client Credentials flow does not include authorization and therefore cannot be used to access or manage a user’s private data. This flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.4).<p>
+<p class="alert alert-info">The Client Credentials flow does not include authorization and therefore cannot be used to access or manage a user’s private data. This flow is described in <a href="http://tools.ietf.org/html/rfc6749#section-4.4">RFC-6749</a>.</p>
 
 ### Implicit Grant Flow
+
 {% include note.html priority='medium' note='This needs more work.' %}
 
 Implicit grant flow is for clients that are implemented entirely using JavaScript and running in the resource owner’s (partner client application user's) browser. You do not need any server-side code to use it.
