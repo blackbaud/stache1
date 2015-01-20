@@ -57,24 +57,22 @@ code:
     {% endif %}
 
     <div class="col-sm-{{ width }}">
-      <div class="thumbnailzzz">
-        <div class="has-hover">
-          <img src="holder.js/300x150" alt="" />
-          <div class="show-on-hover">
-            <div class="is-table">
-              <div class="is-table-cell">
-                <a href="{{ item.repo }}" class="btn btn-primary">View Code</a>
-                {% if item.tutorial %}
-                  <br /><a href="{{ item.tutorial }}" class="btn btn-white">View Tutorial</a>
-                {% endif %}
-              </div>
+      <div class="has-hover">
+        <img src="holder.js/300x150" alt="" />
+        <div class="show-on-hover">
+          <div class="is-table">
+            <div class="is-table-cell">
+              <a href="{{ item.repo }}" class="btn btn-primary">View Code</a>
+              {% if item.tutorial %}
+                <br /><a href="{{ item.tutorial }}" class="btn btn-white">View Tutorial</a>
+              {% endif %}
             </div>
           </div>
         </div>
-        <div class="">
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.description }}</p>
-        </div>
+      </div>
+      <div class="">
+        <h3><a href="{{ item.repo }}">{{ item.title }}</a></h3>
+        <p>{{ item.description }}</p>
       </div>
     </div>
 
