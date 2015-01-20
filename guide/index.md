@@ -2,10 +2,6 @@
 layout: content
 priority: high
 note: |  
-   
-layout: content
-priority: high
-note: |  
   <p>Problem -  You don’t make it easy.</p>
   <p>Best Practice -  A developer guide provides details surrounding various API topics.</p>
   <p>Benchmarks -  <a href="https://developer.spotify.com/web-api/user-guide/" target="_blank">Spotify Web API User Guide</a> and <a href="https://developer.spotify.com/web-api/authorization-guide/" target="_blank">Spotify Web API Authorization Guide</a></p> 
@@ -47,31 +43,16 @@ This guide shows you how to enable your application to obtain a user’s authori
 
 <p class="alert alert-info">All communication with Blackbaud servers be over SSL (https://) </p>
 
-### Sign up and get your keys
-As the first step towards authorization, you will need to sign up within our developer portal and subscribe to the appropriate API product.    This  will give you your primary and secondary API keys to use in the authorization flow.  You can manage your API keys from your account within the {{ site.devportalname }}. It will also provide access to analytics for your subscription.  See the <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial for help on signing up and obtaining your keys.
-
-> To do:  Verify which keys  (primary and/or secondary API key) are used as the public API key and secret API key.
-
-> What does an API key represent?  Does it represent a specific client app's subscription to an API product?  Or, does it represent a client app developer's subscription to an API product?
-
-<p class="alert alert-info">It is important to keep the secret API key secure.  You should never expose the secret API key in your code.  You should take special care to never store the secret API key on the client, such as a native mobile or browser-based apps.</p>
-
-![Ipsum Image][ipsum-image-00]
-
-### Register your app
-
-Before you can begin the OAuth process, you must first register a new app with the service. When registering a new app, you usually register basic information such as application name, website, a logo, etc. In addition, you must register a redirect URI to be used for redirecting users to for web server, browser-based, or mobile apps.  See the <a href="{{ '/tutorials/registerapp/' | prepend: site.baseurl }}" > Register Your App</a> tutorial for help on registering your application.
-
-### Supported Authorization Flows
-The {{ site.productname }} API currently only supports the Authorization Code flow:
-
 #### Authorization Code Flow
+The {{ site.productname }} API currently only supports the Authorization Code flow.
+
 The Authorization Code flow first gets a code then exchanges it for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. This method is suitable for long-running applications which the user logs into once. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a back-end service or back-end web app, not from a client like a browser-based or mobile app.   The Authorization Code flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is the authorization flow used in our <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" >Web API Authorization Tutorial</a>.
 
 <p class="alert alert-info">As a best practice, Blackbaud recommends you use Authorization Code Flow within a Web application or service that is written in a server-side language and run on a server where the source code of the application is not available to the public. With the Authorization Code flow the token exchange involves sending your secret API key. This should happen on a secure location, like a backend service, not from code running on a client like a browser or a mobile app.
 </p>
 
 > To do:  If new use cases require the addition of different OAuth grant types, such as Implict flow for browser-based or mobile apps, we will need to document these new grant types within this section. 
+
 
 ## Requests
 
@@ -108,7 +89,7 @@ The {{ site.productname }} API is based on REST principles: data resources are a
 
 ### Base URL
 
-Through the RE NXT Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the {{site.authservicename}} at `https://auth.blackbaud.com`.  
+Through the RE NXT Web API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the {{site.authorizationservicename}} at `https://auth.blackbaud.com`.  
 
 > TO DO: Verify the base url and SSL (HTTPS) with API engineering team.
 
@@ -201,6 +182,31 @@ All data is received as a JSON object.
 
 >  To Do:  Document the standard/typical HTTP request response headers returned by the API such as Content-type and Content-length *Engineering should work with documentation to identify and explain any significant and important HTTP headers such as Cache-control or Authorization*
 
+## Registering Your App
+
+If your application seeks access to a {{ site.productname }} data (constituents, gifts, etc.) it must be registered. You can register your application, even before you have created it. Follow these steps to register an application:
+
+
+1. Go to the **TBD** page at the **{{ site.devportalname }}?** website.
+2. Click Create a new application.
+3. Enter the name of your application (for example, “My Test Application”.) Note that this name will be shown in the pop-up that asks the user for authorization to access their Blackbaud {{ site.productname }} data (see Running the Application, below).
+4. Enter an application description.
+5. Click Create. The application details screen will open:
+![Ipsum Image][ipsum-image-00]
+6. Enter the address of a Website where the user can find more information about your application (for example, its user guide, terms of use, licensing restrictions, and support information).
+7. Add any Redirect URIs that the {{ site.authorizationservicename }} could call when authentication process completes. 
+
+<p class="alert alert-warning">Important: When you call the {{ site.authorizationservicename }} from your application, you will send a redirect-uri in the call. The redirect-uri is the address that the {{ site.authorizationservicename }} redirects to after authorization succeeds or fails. If you do not white-list that URI here, authorization will fail. Any URI you enter here must exactly match the value you later use in the calls to the {{ site.authorizationservicename }}, including upper/lowercase characters, terminating slashes, and so on.</p>
+
+<p class="alert alert-info">Note: If your redirect_uri points to a directory, include a trailing slash (/)—otherwise some browsers may have a problem handling the redirect. You do not need to add a trailing slash to your URI if it points to a file. You should also check that your server does not add or remove trailing slashes when handling the incoming redirect URI as that can also cause problems. </p>
+
+For the purposes of this tutorial, add this URI to the Redirect URIs whitelist:
+
+    http://localhost:8888/callback
+
+8.  Click Save to complete the registration of your application.
+9.  Your application will now be shown, along with any other applications you have registered, in the main list on the **My Applications** page:
+![Ipsum Image][ipsum-image-02]
 
 
 ## Version
@@ -268,6 +274,14 @@ ipsum lorem
 
 [endpoints]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb1a02
 
-[ipsum-image-00]: http://placehold.it/800x300
 
 [fc6749-section-22]: https://tools.ietf.org/html/rfc6749#section-2.2
+
+[ipsum-image-00]: http://placehold.it/800x300
+[ipsum-image-01]: http://placehold.it/800x800
+[ipsum-image-02]: http://placehold.it/800x200
+[ipsum-image-03]: http://placehold.it/800x200
+[ipsum-image-00A]: holder.js/800x300
+[ipsum-image-01A]: holder.js/800x800
+[ipsum-image-02A]: holder.js/800x200
+[ipsum-image-03A]: holder.js/800x200/sky

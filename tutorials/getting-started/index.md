@@ -19,18 +19,17 @@ Within our {{ site.devportalname }}, you can [set up] a new developer account or
 
 ![Ipsum Image][ipsum-image-00]
 
-## Step 2 - Get your API keys ##
-To obtain API keys, you <a href="{{ site.devportalurlsubscribeproduct }}" target="_blank">subscribe to an API Product</a>. If you are new to our API, we recommend that you subscribe to the **Starter** product because it does not require approval by a Blackbaud API administrator. Partners can subscribe to the **Unlimited** product that requires approval by a Blackbaud API administrator.  
+## Step 2 - Get your API key ##
+The API key is assigned to an individual developer in order to access the API.  The API key is associated with your developer account.  To obtain an API key, you <a href="{{ site.devportalurlsubscribeproduct }}" target="_blank">subscribe to an API Product</a>. If you are new to our API, we recommend that you subscribe to the **Starter** product because it does not require approval by a Blackbaud API administrator. Partners can subscribe to the **Unlimited** product that requires approval by a Blackbaud API administrator.  
+ 
+ After you subscribe to a product, a primary key and a secondary key will be created.  These keys are visible in the product subscription details: 
+  ![Ipsum Image][ipsum-image-00]
 
-<p class="alert alert-info">The API keys include a primary key and a secondary key. Use the primary key as the API key, and use the secondary key as the secret API key.</p>
+<p class="alert alert-info">When interacting with the API console, the primary key represents the API key. For this tutorial, we will not use the secondary key.</p>
 
 > To Do: The organization of API products and associated API endpoints are still a work in progress. This step needs to be updated as the API product(s) is organized.
 >
 > To Do: The partner details need to be discussed with the global partnership team
->
-> To Do: Verify which keys (primary and/or secondary API key) are used as the public API key and secret API key.
- 
- After you subscribe to a product, your API keys are visible in the subscription details.
 
 ![Ipsum Image][ipsum-image-01]
 
@@ -67,8 +66,6 @@ If successful, you should see the generated Requested URL, status, latency, head
 ![Ipsum Image][ipsum-image-00]
 
 
-![Ipsum Image][ipsum-image-00]
-
 ## Step 5 - Get to know our resources and support
 Finally, you can familiarize yourself with our documentation and {{ site.devportalname }} to get all the support you need.  
 
@@ -77,9 +74,16 @@ Finally, you can familiarize yourself with our documentation and {{ site.devport
 - Explore developer <a href="{{ '/support/' | prepend: site.baseurl }}">support</a> such as tutorials, code samples, and a change log.
 - Keep up to date on the latest news and changes through our <a href="{{ site.communityblogurl }}">blog</a>. 
 
-[ipsum-image-00]: holder.js/800x300
-[ipsum-image-01]: holder.js/800x800
-[ipsum-image-02]: holder.js/800x200
+[ipsum-image-00]: http://placehold.it/800x300
+[ipsum-image-01]: http://placehold.it/800x800
+[ipsum-image-02]: http://placehold.it/800x200
+[ipsum-image-03]: http://placehold.it/800x200
+
+[ipsum-image-00A]: holder.js/800x300
+[ipsum-image-01A]: holder.js/800x800
+[ipsum-image-02A]: holder.js/800x200
+[ipsum-image-03A]: holder.js/800x200/sky
+
 [set up]: https://bbbobbyearl.portal.azure-api.net/
 [log back in]: https://bbbobbyearl.portal.azure-api.net/signin
 [subscribe to an API Product]: 
