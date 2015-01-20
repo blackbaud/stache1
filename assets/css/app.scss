@@ -567,6 +567,13 @@
     padding: 20px 0;
   }
 
+  .table thead tr th {
+    background-color: darken($navy, 2%);
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    color: #FFF;
+  }
+
 
 /* 
 * ==========================================================================
