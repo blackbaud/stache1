@@ -104,3 +104,10 @@ Very similar to the page note which is specified in the front matter, the follow
   
 - showInHeader: Useful for showing menu items only in the footer. (default: true)
 - openNewWindow: Sets a links target to "_blank," which means it will open in a new window/tab. (default: false)
+
+## Equal Height Divs
+
+In many cases, for example on the [tutorials landing page][tutorials] and the [code samples page][code], we found the need for equal height divs.  If you find yourself in that situation, simply add the `equal-height` class to any number of divs.  JavaScript will automatically run on the page looking for that class and adjust the divs so that they all have the same height.
+
+[tutorials]: {{ '/tutorials/' | prepend: site.baseurl }}
+[code]: {{ '/resources/code/' | prepend: site.baseurl }}

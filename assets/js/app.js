@@ -1,19 +1,24 @@
 ;(function($, window, document, undefined) {
   
-  // Initialize the Omnibar
-  BBAUTH.Omnibar.load(document.getElementById("omnibar"), {
-    enableSearch: false, // FYI, toggle the "searching" class on "searchContainer" to get the spinner
-    enableHelp: false,
-    serviceName: 'RENXT Developer',
-    signInRedirectUrl: document.location.href,
-    signOutRedirectUrl: '',
-    afterLoad: function() {
-      
-      // There's definitly an official way to do this, but I don't have time to find out.
-      $('.productmenucontainer').append($('.nav-items').clone().toggleClass('nav-items bb-omnibar-productmenu'));
-      
-    }
-  });
+  // For those annoying times when signin timesout
+  try {
+    
+    // Initialize the Omnibar
+    BBAUTH.Omnibar.load(document.getElementById("omnibar"), {
+      enableSearch: false, // FYI, toggle the "searching" class on "searchContainer" to get the spinner
+      enableHelp: false,
+      serviceName: 'RENXT Developer',
+      signInRedirectUrl: document.location.href,
+      signOutRedirectUrl: '',
+      afterLoad: function() {
+
+        // There's definitly an official way to do this, but I don't have time to find out.
+        $('.productmenucontainer').append($('.nav-items').clone().toggleClass('nav-items bb-omnibar-productmenu'));
+
+      }
+    });
+    
+  } catch (ex) { }
   
   var body = $('body'),
       sidebar = $('.sidebar'),

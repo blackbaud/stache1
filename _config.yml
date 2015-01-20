@@ -54,21 +54,27 @@ links:
     
       - name: Getting Started
         url: /tutorials/getting-started/
+        description: "This tutorial introduces our developer portal, developer sign up process, technical reference, and interactive API Console."
     
       - name: Web API Authorization
         url: /tutorials/auth/
+        description: "This tutorial shows you how to create a small server-side application that accesses user-related data through the RE NXT API."
     
       - name: Registering Your App
         url: /tutorials/register-app/
+        description:
     
       - name: Searching and Retrieving a Constituent
         url: '#'
+        description:
     
       - name: Common Developer Use Case Tutorial 1
         url: '#'
+        description:
     
       - name: Another Common Use Case Tutorial 2
         url: '#'
+        description:
     
   - name: Developer Guide
     url: /guide/
