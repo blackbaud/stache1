@@ -11,14 +11,14 @@ note: |
 # Developer Guide
 {% include note.html priority='medium' note='TO DO:  Work with BB legal to develop a Developer Terms of Use.' %}
 
-The {{ site.productname }} Web API is designed to help you unlock your key {{ site.productname }} data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes, etc.  Since the {{ site.productname }} Web API is organized around REST, it's very easy to write and test applications. You can use your browser to access URLs, and you can use pretty much any HTTP client in any programming language to interact with the API.  Our API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients, and we support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website's client-side code). JSON will be returned in all responses from the API, including errors.
+The {{ site.productname }} Web API is designed to help you unlock your key {{ site.productname }} data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes, etc.  Since the {{ site.productname }} Web API is organized around REST, it's very easy to write and test applications. You can use your browser and pretty much any HTTP client in any programming language to interact with the Web API.  Our Web API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients, and we support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website's client-side code). JSON will be returned in all responses from the API, including errors.
 
 <p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ '/legal/' | prepend: site.baseurl }}" class="alert-link">Developer Terms of Use</a>. </p>
 
 ## Audience
 {% include note.html priority='medium' note='TO DO:  Review with Partnership Team and Product Management<p>TO DO:  Provide email form to contact product management and global partnership team</p>' %}
 
-Currently, the RE NXT API is only available to a limited group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you are an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to contact our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial. 
+Currently, the RE NXT API is only available to a select group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you are an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to contact our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ '/tutorials/getting-started/' | prepend: site.baseurl }}" > Getting Started</a> tutorial. 
 
 This documentation is designed for people familiar with HTTP programming and RESTful programming concepts. You should also be familiar with the Raiser's Edge from a user's and administrator's point of view. There are many HTTP RESTful tutorials available on the Web, including using cURL and Fiddler to make and test HTTP requests. If you are unfamiliar with HTTP programming and RESTful Web APIs, we recommend spending some time reviewing <a href="{{ '/guide/#web-api-fundamentals' | prepend: site.baseurl }}" >Web API Fundamentals</a>.
 
@@ -28,24 +28,37 @@ If your application seeks access to {{ site.productname }} data (constituents, g
 
 Follow these steps to register an application:
 
-1. Go to the **My Application** page at the **{{ site.authorizationservicename }}?** website.  This page allows you manage your applications that integrate with Blackbaud using the new {{ site.productname }} Web API. 
-2. Click **Create a new application**.
-3. Enter the name of your application (for example, “My Test Application”.) Note that this name will be shown in the pop-up that asks the user for authorization to access their Blackbaud {{ site.productname }} data.
-4. Enter an application description.
-5. Click the **Create** button.  After your application has been successfully created, you will be directed to a page to enter additional application details.
-5. Enter the address of a Website where the user can find more information about your application (for example, its user guide, terms of use, licensing restrictions, and support information).
-6. Note the **Client ID** and **Client Secret** values. Write these down and keep them safe.
+**1. Go to the *My Applications* page at the {{ site.authorizationservicename }} website. ** 
+
+This page allows you manage your applications that integrate with Blackbaud using the new {{ site.productname }} Web API. 
+
+**2. Click <i>Create a new application</i>**
+
+- Enter the name of your application (for example, “My Test Application”.) Note that this name will be shown in the pop-up that asks the user for authorization to access their Blackbaud {{ site.productname }} data.
+- Enter an application description.
+- Click the **Create** button.  
+ 
+After your application has been successfully created, you will be directed to a page to enter additional application details.
+
+**3. Enter your website address for your app.**  
+
+- Enter the Website URL where your users can find more information about your application (for example, its user guide, terms of use, licensing restrictions, and support information).
+
+**4.  Note the *Client ID* and *Client Secret* values.** 
+
+- Write these down and keep them safe!
 
 <p class="alert alert-warning">Important: Always store keys securely! <b>Regenerate</b> your client secret if you suspect it has been compromised!</p>
 
-7. Add any Redirect URIs that the {{ site.authorizationservicename }} could call when the authentication process completes. (e.g. http://mysite.com/callback/).  For the purposes of this tutorial, add this URI to the Redirect URIs whitelist:   `http://localhost:8888/callback`.  At a later time, you can come back  and edit this URI. 
+**5.  Add any Redirect URIs** 
+
+- Add the Redirect URI that the {{ site.authorizationservicename }} could call when the authentication process completes. (e.g. http://mysite.com/callback/).  For the purposes of this tutorial, add this URI to the Redirect URIs whitelist:   `http://localhost:8888/callback`.  At a later time, you can come back  and edit this URI. 
 
 <p class="alert alert-warning">Important: When you call the {{ site.authorizationservicename }} from your application, you will send a redirect-uri in the call. The redirect-uri is the address that the {{ site.authorizationservicename }} redirects to after authorization succeeds or fails. If you do not white-list that URI here, authorization will fail. Any URI you enter here must exactly match the value you later use in the calls to the {{ site.authorizationservicename }}, including upper/lowercase characters, terminating slashes, and so on.</p>
 
-<p class="alert alert-info">Note: If your redirect_uri points to a directory, include a trailing slash (/)—otherwise some browsers may have a problem handling the redirect. You do not need to add a trailing slash to your URI if it points to a file. You should also check that your server does not add or remove trailing slashes when handling the incoming redirect URI as that can also cause problems. </p>
+**6. Click Save to complete the registration of your application.**
 
-8.  Click Save to complete the registration of your application.
-9.  Your application will now be shown, along with any other applications you have registered, in the main list on the **My Applications** page:
+**7.  Your application will now be shown, along with any other applications you have registered, in the main list on the <i>My Applications</i> page:**
 ![Ipsum Image][ipsum-image-02]
 
 ## Web API Authorization	
@@ -331,7 +344,7 @@ The header of this POST request must contain the following parameter:
 
 For example:
 
-    curl -H "Authorization: Basic ZjM4Zj...Y0MzE=" -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo https://accounts.blackbaud.com/api/token
+    curl -H "Authorization: Basic ZjM4Zj...Y0MzE=" -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo https://accounts.blackbaud.com/token
     {
        "access_token": "NgA6ZcYI...ixn8bUQ",
        "token_type": "Bearer",
