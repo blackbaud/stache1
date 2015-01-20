@@ -111,3 +111,298 @@ In many cases, for example on the [tutorials landing page][tutorials] and the [c
 
 [tutorials]: {{ '/tutorials/' | prepend: site.baseurl }}
 [code]: {{ '/resources/code/' | prepend: site.baseurl }}
+
+## Styling Azure
+
+Although Azure's API Management Suite provides access to the Bootstrap LESS variables, I chose to make all modifications through CSS overrides.  This was purposefully done in an effort to make replicating the steps as efficient as possible.
+
+<ol>
+  <li>In Azure API Management, click Widgets link.</li>
+  <li>Click Header widget in Header placeholder.</li>
+  <li>Rename title to Custom CSS, copy/paste the following, and click save:
+<textarea class="form-control" rows="8">
+&lt;link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"&gt;
+&lt;style&gt;
+#navigation .navbar-nav > li > a {
+    font-size: 14px;
+    font-weight: 600;
+    padding-bottom: 15px;    
+    padding-top: 15px;
+    text-transform: none;
+}
+
+#navigation .navbar-nav > li > a:hover,
+#navigation .navbar-nav > li > a:focus,
+#navigation .navbar-nav > li.active > a {
+    border-bottom: solid 4px #1ab394;
+    color: #FFF !important;
+    padding-bottom: 11px;    
+}
+
+.zone-aside-first .navbar-nav,
+.zone-aside-first .navbar-nav li {
+    float: none;
+}
+
+.zone-aside-first .nav-pills {
+    border-top: solid 1px #EFEFEF;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.zone-aside-first .navbar-nav li a,
+.zone-aside-first .nav-pills li a {
+    color: #a7b1c2;
+    display: block;
+    font-weight: 600;
+    padding: 6px 5px 9px 16px;
+}
+
+.zone-aside-first .navbar-nav li.active a,
+.zone-aside-first .nav-pills li.active a {
+    background: #293846;
+    border-left: 4px solid #19aa8d;
+}
+
+.zone-aside-first .navbar-nav li a:hover,
+.zone-aside-first .navbar-nav li a:focus,
+.zone-aside-first .navbar-nav li.active a:hover,
+.zone-aside-first .navbar-nav li.active a:focus,
+.zone-aside-first .nav-pills li.active a:hover,
+.zone-aside-first .nav-pills li.active a:focus {
+    background: #cccccc;
+    color: #293846;
+}
+
+.navbar-collapse,
+.layout-row-content .layout,
+.zone-footer footer {
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) { 
+    .navbar-collapse,
+    .layout-row-content .layout,
+    .zone-footer footer { 
+        width: 720px;
+    } 
+}
+
+@media (min-width: 992px) { 
+    .navbar-collapse,
+    .layout-row-content .layout,
+    .zone-footer footer { 
+        width: 940px;
+    } 
+}
+
+@media (min-width: 1200px) { 
+    .navbar-collapse,
+    .layout-row-content .layout,
+    .zone-footer footer { 
+        width: 1140px;
+    } 
+}
+
+  .footer-site {
+      padding: 50px 0;
+  }
+
+  .footer-site a {
+    color: #949AA6;
+  }
+
+  .footer-site a:hover,
+  .footer-site a:focus {
+    color: #1ab394; 
+    text-decoration: none;
+  }
+
+  .bb-love {
+    padding: 20px 0 0 0;
+  }
+
+  .bb-love li {
+    vertical-align: middle;
+    margin-left: 0;
+    padding: 0 10px 10px 0;
+  }
+
+  .bb-love .fa-heart {
+    color: #7F0000;
+  }
+
+  .bb-love a img {
+    opacity: .7;
+  }
+
+  .bb-love a:hover img,
+  .bb-love a:focus img {
+    opacity: 1;
+  }
+
+  .social-icons a {
+    font-size: 26px;
+    margin: 0 5px;
+  }
+  
+  .bb-love,
+  .social-icons {
+    text-align: center;
+  }
+  
+  @font-face {
+    font-family: 'BBSKY-OMNIBAR';
+    src: url('//blackbaud-community.github.io/developer.blackbaud.com-renxt/assets/fonts/BBSKY.woff') format('woff');
+  }
+  
+  .bbsky-char::before {
+    font-family: 'BBSKY-OMNIBAR';
+    font-size: 24px;
+  }
+
+  .bbsky-char-re::before {
+    content: "\e644";
+  }
+
+  .bbsky-char-nxt::before {
+    content: "\e643";
+  }
+&lt;/style&gt;
+</textarea></li>
+
+  <li>Click Footer widget in Footer placeholder.</li>
+  <li>Copy/paste the following into the Body (HTML) and click save:
+<textarea class="form-control" rows="8">
+<div class="footer-site">
+    <div class="row">
+      <div class="col-xs-6 col-sm-4">
+        <p>
+          <a href="/developer.blackbaud.com-renxt">
+            <span class="bbsky-char bbsky-char-re"></span>
+            <span class="bbsky-char bbsky-char-nxt"></span>
+          </a>
+        </p>
+        <ul class="list-unstyled">
+
+            <li>
+              <a href="http://blackbaud-community.github.io/developer.blackbaud.com-renxt/">Home</a>
+            </li>
+
+            <li>
+              <a href="http://blackbaud-community.github.io/developer.blackbaud.com-renxt/tutorials/">Tutorials</a>
+            </li>
+
+            <li>
+              <a href="http://blackbaud-community.github.io/developer.blackbaud.com-renxt/guide/">Developer Guide</a>
+            </li>
+
+            <li>
+              <a href="http://blackbaud-community.github.io/developer.blackbaud.com-renxt/resources/">Resources</a>
+            </li>
+
+            <li>
+              <a href="https://bbbobbyearl.portal.azure-api.net/">Portal</a>
+            </li>
+
+            <li>
+              <a href="http://blackbaud-community.github.io/developer.blackbaud.com-renxt/legal/">Legal</a>
+            </li>
+
+        </ul>  <!-- .list-unstyled -->            
+      </div>  <!-- .col-sm-4 -->
+      <div class="col-xs-6 col-sm-4">
+        &nbsp;
+      </div>  <!-- .col-sm-4 -->
+      <div class="col-sm-4">
+        <div class="row">
+          <div class="col-sm-12">
+
+            <ul class="list-inline bb-love">
+              <li>
+                <a href="http://www.blackbaud.com" target="_blank">
+                  <img src="//blackbaud-community.github.io/developer.blackbaud.com-renxt/assets/img/logo-bb-white.png" alt="Blackbaud" class="img-responsive" />
+                </a>
+              </li>
+              <li>
+                <i class="fa fa-lg fa-plus"></i>
+              </li>
+              <li>
+                <a href="http://www.github.com/blackbaud-community" target="_blank">
+                  <img src="//blackbaud-community.github.io/developer.blackbaud.com-renxt/assets/img/logo-github.png" alt="GitHub" class="img-responsive" />
+                </a>
+              </li>
+            </ul>  <!-- .list-inline -->
+
+          </div>  <!-- .col-sm-12 -->
+        </div>  <!-- .row -->
+        <div class="row">
+          <div class="col-sm-12">
+
+            <ul class="list-inline social-icons">
+              <li>
+                <a href="https://github.com/blackbaud-community" target="_blank">
+                  <i class="fa fa-github"></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://plus.google.com/113382459921828617974" target="_blank">
+                  <i class="fa fa-google-plus"></i>
+                </a>
+              </li>
+              <li>
+                <a href="http://twitter.com/blackbaud" target="_blank">
+                  <i class="fa fa-twitter"></i>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/blackbaud" target="_blank">
+                  <i class="fa fa-facebook"></i>
+                </a>
+              </li>
+              <li>
+                <a href="http://www.youtube.com/user/blackbaudinc" target="_blank">
+                  <i class="fa fa-youtube"></i>
+                </a>
+              </li>
+            </ul>  <!-- .list-inline -->
+
+          </div>  <!-- .col-sm-12 -->
+        </div>  <!-- .row -->
+      </div>  <!-- .col-sm-4 -->
+    </div>  <!-- .row -->
+</div>  <!-- .footer-site -->
+</textarea>
+  </li>
+  <li>Click Add in the Footer placeholder.</li>
+  <li>Click Html Widget</li>
+  <li>Give the widget a title of Custom JS and uncheck the render checkbox.</li>
+  <li>Set the Position to 2.</li>
+  <li>Copy/paste the following into the Body(HTML) and click save:
+<textarea class="form-control" rows="8">
+<div id="omnibar"></div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/easyXDM/2.4.17.1/easyXDM.min.js"></script>
+<script src="//signin.blackbaud.com/omnibar.js"></script> 
+<script src="//blackbaud-community.github.io/developer.blackbaud.com-renxt/assets/js/holder.js"></script>
+<script>
+;(function($, window, document, undefined) {
+  
+  $(function() {
+    $('body').addClass('bb-omnibar-height-padding'); 
+    $('#navigation .navbar-nav > li:eq(4)').addClass('active');
+    $('.zone-aside-first .navbar-nav').insertBefore($('.zone-aside-first .nav-pills'));
+    $('head').append('<link rel="icon" href="//blackbaud-community.github.io/developer.blackbaud.com-renxt/assets/img/favicon.ico" type="image/ico">');
+  });
+  
+  BBAUTH.Omnibar.load(document.getElementById("omnibar"), {
+    serviceName: 'RENXT Developer',
+    signInRedirectUrl: document.location.href,
+    signOutRedirectUrl: ''
+  });
+  
+})(jQuery, window, document);
+</script>
+</textarea>
+  </li>
+</ol>
