@@ -12,7 +12,7 @@ note: |
 
 Ready to integrate with {{ site.productname }}? We've made it easy for you to get started in a matter of minutes. Our documentation and {{ site.devportalname }} deliver a development experience that gives you the information and tools that you need to quickly integrate your apps with {{ site.productname }}.  
 
-This tutorial introduces our developer portal, developer sign up process, technical reference, and interactive API console.  By successfully completing this tutorial you will begin test driving the API by making actual API calls.
+This tutorial introduces our developer portal, developer sign up process, technical reference, and interactive API Console.  By successfully completing this tutorial you will begin test driving the API by making actual API calls.
 
 ## Step 1 - Set up your developer account ##
 Within our {{ site.devportalname }}, you can [set up] a new developer account or [log back in] if you're a returning developer.
@@ -21,35 +21,34 @@ Within our {{ site.devportalname }}, you can [set up] a new developer account or
 
 ## Step 2 - Get your API key ##
 The API key is assigned to an individual developer in order to access the API.  The API key is associated with your developer account.  To obtain an API key, you <a href="{{ site.devportalurlsubscribeproduct }}" target="_blank">subscribe to an API Product</a>. If you are new to our API, we recommend that you subscribe to the **Starter** product because it does not require approval by a Blackbaud API administrator. Partners can subscribe to the **Unlimited** product that requires approval by a Blackbaud API administrator.  
+
+{% include note.html priority='medium' note='To Do: The organization of API products and associated API endpoints are still a work in progress. This step needs to be updated as the API product(s) is organized. <p>To Do: The partner details need to be discussed with the global partnership team</p>' %}
  
  After you subscribe to a product, a primary key and a secondary key will be created.  These keys are visible in the product subscription details: 
   ![Ipsum Image][ipsum-image-00]
 
-<p class="alert alert-info">When interacting with the API console, the primary key represents the API key. For this tutorial, we will not use the secondary key.</p>
-
-> To Do: The organization of API products and associated API endpoints are still a work in progress. This step needs to be updated as the API product(s) is organized.
->
-> To Do: The partner details need to be discussed with the global partnership team
-
-![Ipsum Image][ipsum-image-01]
+<p class="alert alert-info">When interacting with the API Console within the developer portal, you will need to provide an API Key value for the subscription-key URI parameter. The primary key associated with your subscription to a particular API product represents the API key value for this URI parameter.</p>
+![Ipsum Image][ipsum-image-00]
 
 ## Step 3 - Create an {{ site.productname }} user account  ##
-Before you can use the API Console to try out the API, you'll need an API key and a valid OAuth 2.0 access token. The first step to obtain an OAuth 2.0 access token is to create a trial {{ site.productname }} user account.
 
-> To Do:  If the creation of an trial {{ site.productname }} user account is not auto provisioned, create content here that guides the reader on how to create a trial {{ site.productname }} user account. Include necessary images.
+{% include note.html priority='medium' note='As part of MVP, the creation of an trial RENXT user account may not be initially auto- provisioned, create content here that explains how the  trial RENXT user account is created. This step may be unnecessary for partners if we eventually provision an RENXT sandbox for each partner dev. The automatic creation of an RENXT user may also be done as part of this process.' %}
 
-> Note to Doc/API Team: This step may be unnecessary for partners if we eventually provision an {{ site.productname }} sandbox for each partner dev. The automatic creation of an {{ site.productname }} user may also be done as part of this process. Either way, the API Console needs an access token that represents an {{ site.productname }} user's authorization to the API Console to access protected {{ site.productname }} API resources.
+In addition to an API key, you'll need a valid OAuth 2.0 access token. The API access token represents an {{ site.productname }} user's authorization to the API Console to access protected {{ site.productname }} API resources.  The first step to obtain an OAuth 2.0 access token is to create a trial {{ site.productname }} user account.
+
 
 ![Ipsum Image][ipsum-image-00]
 
 ## Step 4 - Generate an OAuth 2.0 access token  ##
-After you create a trial {{ site.productname }} user account, you need to generate an OAuth 2.0 access token to represent that {{ site.productname }} user's authorization to the API Console. The access token allows the API Console to access the user's protected resources (data) within {{ site.productname }}.  Once you have an access token, you can provide any necessary URI parameters followed by submitting the request.  For example, use the API Console to perform a GET on the Constituent resource to retrieve Robert Hernandez. 
+After you create a trial {{ site.productname }} user account, you need to generate an OAuth 2.0 access token to represent that {{ site.productname }} user's authorization to the API Console. The access token allows the API Console to access the user's protected resources (data) within {{ site.productname }}.  Once you have an access token, you can provide any necessary URI parameters followed by submitting the request.  For example, use the API Console to perform a GET to retrieve a list of Constituent resources. 
+
+{% include note.html priority='medium' note='The best, initial call to make within the console is TBD.  GETting a list of constituent makes sense if such as endpoint is created.' %}
 
 To generate an access token, follow these steps:
 
 1. Open the <a href="{{ site.devportalurl }}" target="_blank">{{ site.devportalname }}</a>
 2. Click **APIs** in the top menu and select the **Constituent** API.
-3. Select **Constituent (Get)** resource and operation from the list. 
+3. Select **Constituent (List)** resource and operation from the list. 
 4. Click **Open Console** and then select **Authorization Code** from the drop-down. 
 5. When **Authorization Code** is selected, a pop-up window is displayed with the sign-in form of the Blackbaud OAuth 2.0 provider.  *Note:  If you have pop-ups disabled you will be prompted to enable them by the browser. After you enable them, select Authorization code again and the sign-in form will be displayed.*
 6. You should sign in the with trial {{ site.productname }} user account.  Once you have signed in, the **Request headers** are populated with the `Authorization:Bearer` header that authorizes the request.  This represents the access token for the request. 
