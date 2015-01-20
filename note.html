@@ -34,9 +34,6 @@
   </div>
 </div>
 
-<!-- Jekyll bug needs this outer wrap -->
-<div>
-  <button type="button" class="btn {% if include.isPageNote %} btn-primary btn-notes {% else %} btn-notes-inline btn-default btn-xs pull-right {% endif %}" data-toggle="modal" data-target="#modal-notes-{{ index }}">
-    <i class="fa fa-info-circle"></i>
-  </button>
-</div>
+<button type="button" class="btn {% if include.isPageNote %} btn-primary btn-notes {% else %} btn-default btn-xs pull-right {% endif %}" data-toggle="modal" data-target="#modal-notes-{{ index }}">
+  <i class="fa fa-info-circle"></i>
+</button>
