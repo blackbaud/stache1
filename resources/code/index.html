@@ -4,30 +4,16 @@ itemsPerRow: 3
 code:
   - title: Web API Authorization
     description:  This is the application code that goes with our Web API tutoroial.  It includes an example of using the Authorization Code flow.
-    repo: RENXT-WebAPI-Authorization
+    repo: /RENXT-WebAPI-Authorization/
     tutorial: /tutorials/auth/
     
   - title: Search and Retrieve a Constituent
     description: A more specific example of the constituent api where we search based on different criteria.
-    repo: RENXT-Constituent-Search
+    repo: /RENXT-Constituent-Search/
 
   - title: Updating Constituent Addresses
     description: Learn how to send information back to the API by updating a constituent address.
-    repo: RENXT-Constituent-Address
-    tutorial: /tutorials/getting-started/
-
-  - title: Search for a Constituent
-    description: A more specific example of the constituent api where we search based on different criteria.
-    repo: RENXT-Constituent-Search
-
-  - title: Constituent Endpoints Demo
-    description: Walk through some of the very basics of the constituent api.
-    repo: RENXT-Constituent-Endpoints
-    tutorial: /tutorials/auth/
-
-  - title: Updating Constituent Addresses
-    description: Learn how to send information back to the API by updating a constituent address.
-    repo: RENXT-Constituent-Address
+    repo: /RENXT-Constituent-Address/
     tutorial: /tutorials/getting-started/
 ---
 
@@ -43,10 +29,6 @@ code:
   </div>
 
   <div class="clearfix"></div>
-  
-  <p class="alert alert-info hide">
-   Get involved in our code samples by checking out our <a href="https://github.com/blackbaud-community" target="_blank" class="alert-link">Blackbaud Community GitHub organization</a>.
-  </p>
 
   {% for item in page.code %}
 
@@ -62,16 +44,16 @@ code:
         <div class="show-on-hover">
           <div class="is-table">
             <div class="is-table-cell">
-              <a href="{{ item.repo }}" class="btn btn-primary">View Code</a>
+              <a href="{{ item.repo | prepend: site.githubbase }}" target="_blank" class="btn btn-primary">View Code</a>
               {% if item.tutorial %}
-                <br /><a href="{{ item.tutorial }}" class="btn btn-white">View Tutorial</a>
+                <br /><a href="{{ item.tutorial | prepend: site.baseurl }}" class="btn btn-white">View Tutorial</a>
               {% endif %}
             </div>
           </div>
         </div>
       </div>
       <div class="">
-        <h3><a href="{{ item.repo }}">{{ item.title }}</a></h3>
+        <h3><a href="{{ item.repo | prepend: site.githubbase }}" target="_blank">{{ item.title }}</a></h3>
         <p>{{ item.description }}</p>
       </div>
     </div>

@@ -1,0 +1,14 @@
+<div class="panel panel-default">
+  <div class="panel-heading" role="tab" id="heading-{{ include.index }}">
+    <h4 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ include.index }}"  aria-expanded="{% if include.index == 1 %}true{% else %}false{% endif %}" aria-controls="collapse-{{ include.index }}">
+        {{ include.index }}. {{ include.question }}
+      </a>
+    </h4>
+  </div>
+  <div id="collapse-{{ include.index }}" class="panel-collapse collapse {% if include.index == 1 %}in{% endif %}" role="tabpanel" aria-labelledby="heading-{{ include.index }}">
+    <div class="panel-body">
+      {{ include.answer }}
+    </div>
+  </div>
+</div>

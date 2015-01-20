@@ -8,7 +8,8 @@ paginate: 3 # Purposefully low just to show pagination
 paginate_path: /resources/blog/home/:num
 
 # Used as the base in the feedback section
-github: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blob/gh-pages
+githubbase: https://github.com/blackbaud-community
+githubblob: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blob/gh-pages
 
 # Custom Site Variables
 title: RENXT Developer Portal - Prototype
