@@ -74,10 +74,17 @@ Finally, you can familiarize yourself with our documentation and {{ site.devport
 - Explore developer <a href="{{ '/support/' | prepend: site.baseurl }}">support</a> such as tutorials, code samples, and a change log.
 - Keep up to date on the latest news and changes through our <a href="{{ site.communityblogurl }}">blog</a>. 
 
-[ipsum-image-00]: holder.js/800x300
-[ipsum-image-01]: holder.js/800x800
-[ipsum-image-02]: holder.js/800x200
+
+[ipsum-image-00]: http://placehold.it/800x300
+[ipsum-image-01]: http://placehold.it/800x800
+[ipsum-image-02]: http://placehold.it/800x200
+[ipsum-image-03]: http://placehold.it/800x200
+
+[ipsum-image-00A]: holder.js/800x300
+[ipsum-image-01A]: holder.js/800x800
+[ipsum-image-02A]: holder.js/800x200
+[ipsum-image-03A]: holder.js/800x200/sky
+
 [set up]: {{ '/signup/' | prepend: site.devportalurl }}
 [log back in]: {{ '/signin/' | prepend: site.devportalurl }}
-[subscribe to an API Product]: 
-[Starter]: https://bbbobbyearl.portal.azure-api.net/Products/5485eb288f29c10414060001
+[subscribe to an API Product]:  {{ '/products/' | prepend: site.devportalurl }}[Starter]: https://
