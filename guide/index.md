@@ -15,8 +15,6 @@ The {{ site.productname }} API is designed to help you unlock your key {{ site.p
 
 <p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ '/legal/' | prepend: site.baseurl }}" class="alert-link">Developer Terms of Use</a>. </p>
 
-
-
 ## Audience
 {% include note.html priority='medium' note='TO DO:  Review with Partnership Team and Product Management<p>TO DO:  Provide email form to contact product management and global partnership team</p>' %}
 
@@ -35,35 +33,107 @@ This guide shows you how to enable your application to obtain a user’s authori
 <p class="alert alert-info">All communication with Blackbaud servers should be over SSL (https://) </p>
 
 #### Authorization Code Flow
-The {{ site.productname }} API currently only supports the Authorization Code flow.
-
-The Authorization Code flow first gets a code then exchanges it for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. This method is suitable for long-running applications which the user logs into once. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a back-end service or back-end web app, not from a client like a browser-based or mobile app.   The Authorization Code flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is the authorization flow used in our <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" >Web API Authorization Tutorial</a>.
-
-<p class="alert alert-info">As a best practice, Blackbaud recommends you use Authorization Code Flow within a Web application or service that is written in a server-side language and run on a server where the source code of the application is not available to the public. With the Authorization Code flow the token exchange involves sending your secret API key. This should happen on a secure location, like a backend service, not from code running on a client like a browser or a mobile app.
-</p>
-
 {% include note.html priority='medium' note='If new use cases require the addition of different OAuth grant types, such as Implict flow for browser-based or mobile apps, we will need to document these new grant types within this section.' %}
 
-## Using Scopes
+The {{ site.productname }} API currently only supports the Authorization Code flow.
 
+The Authorization Code flow is suitable for long-running applications which the user logs into once. It provides an access token that can be refreshed. This method first gets a code then exchanges it for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a back-end service or back-end web app, not from a client like a browser-based or mobile app.   The Authorization Code flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is the authorization flow used in our <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" >Web API Authorization Tutorial</a>.
+
+<p class="alert alert-info">As a best practice, Blackbaud recommends you use Authorization Code Flow within a web application or service that is written in a server-side language and run on a server where the source code of the application is not available to the public. With the Authorization Code flow the token exchange involves sending your secret API key. This should happen on a secure location, like a back-end service, not from code running on a client like a browser or a mobile app.
+</p>
+
+The authorization code grant type is a redirection-based flow, the application you write against our API must be capable of interacting with a web browser and capable of receiving incoming requests (via redirection) from the {{ site.authorizationservicename }}.
+
+1. Your application requests authorization
+The authorization process starts with your application sending a request to the Spotify Accounts service. (The reason your application sends this request can vary: it may be a step in the initialization of your application or in response to some user action, like a button click.) The request is sent to the /authorize endpoint of the Accounts service:
+
+    GET https://accounts.spotify.com/authorize
+
+The request will include parameters in the query string:
+
+{% include note.html priority='medium' note='TO DO: Document the max length of the client identifier (client_id) parameter issued by the Blackbaud authorization server.' %}
+
+In the Authorization request the client constructs the request URI by adding the following parameters to the query component of the authorization endpoint URI using the the "application/x-www-form-urlencoded" format. 
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+		<tr>
+			<th >Parameter </th>
+			<th >Description</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>client_id</td>
+		<td >A unique string representing the client registration information provided by the client application (client).  The client_id is issued by the Blackbaud authorization server.   The client identifier is a string with a maximum length of x.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
+	</tr>
+	<tr>
+		<td>response_type</td>
+		<td>The value must be set to "code".</td>
+	</tr>
+	<tr>
+		<td>redirect_uri</td>
+		<td>After obtaining a user’s authorization to access private {{ site.productname }} data, the authorization server will redirect your client application (user-agent) to the your redirection endpoint previously established with the authorization server during the client registration process. See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> and <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" >Web API Authorization</a> for more info.</td>
+	</tr>
+	<tr>
+		<td>state</td>
+		<td class="column-2">A value used by the client application to maintain state between the request and callback.  The Blackbaud authorization server includes the value when redirecting the user back to the client application.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+	</tr>
+	</tbody>
+  </table>
+</div>
+
+## Using Scopes
+{% include note.html priority='medium' note='This is a prototype of scopes documentation.  Scopes have not been defined for the API.' %}
 When your application seeks authorization to access user-related data, you will often need to specify one or more scopes. Here’s how.
 
-Some calls to the RE NXT Web API require prior authorization by your application’s user. To get that authorization, your application will first need to make a call to the RE NXT Accounts Service’s /authorize endpoint, passing along a list of the scopes for which access permission is sought.
+Most calls to the {{ site.productname }} API require prior authorization by your application’s user. To get that authorization, your application will first need to make a call to the {{ site.authorizationservicename }}’s `/authorize` endpoint, passing along a list of the **scopes** for which access permission is sought.
 
 Scopes let you specify exactly what types of data your application wants to access, and the set of scopes you pass in your call determines what access permissions the user is asked to grant.
 
 Example
-The following code makes a request asking for scopes ‘user-read-private’ and ‘user-read-email':
+The following code makes a request asking for scopes ‘constituent-read’:
 
-app.get('/login', function(req, res) {
-var scopes = 'user-read-private user-read-email';
-res.redirect('https://accounts.spotify.com/authorize' + 
-  '?response_type=code' +
-  '&client_id=' + my_client_id +
-  (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-  '&redirect_uri=' + encodeURIComponent(redirect_uri));
-});
-On execution, the user is redirected to a page explaining the information that is requested:	
+    code sample here
+
+On execution, the user is redirected to a page explaining the information that is requested:
+	
+![Ipsum Image][ipsum-image-04]
+
+### Determining the scopes needed
+Check an <a href="{{ 'docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb1a02' | prepend: site.devportalurl }}" >endpoint</a> within the {{site.devportalname}} to see if it does require prior authorization. Usually, authorization is only required for xyz data. For more about authorization see our <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" >Web API Authorization Guide</a>.
+
+
+List of scopes
+Here is a list of the available scopes:
+
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+		<tr>
+			<th>Scope</th>
+			<th>Access permissions sought</th>
+			<th>Prompt shown to user</th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>-</td>
+		<td>If no scope is specified, access is permitted only to publicly available information.  Such as xyz.</td>
+		<td>Read your publicly available information</td>
+	</tr>
+	<tr>
+		<td>constituent-read</td>
+		<td>Read access to all constituents and sub resources.</td>
+		<td>Access your constituents, addresses, emails...</td>
+	</tr>
+	
+	</tbody>
+  </table>
+</div>
+
 
 ## Requests
 
@@ -100,47 +170,18 @@ The {{ site.productname }} API is based on REST principles: data resources are a
 
 ### Base URL
 
-Through the {{ site.productname }} API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the {{site.authorizationservicename}} at `https://auth.blackbaud.com`.  
-
 {% include note.html priority='medium' note='TO DO: Update content for endpoints and authorization urls.<p> TO DO:  Provide a sample of a typical url and indicate the base url and other pieces such as https, resource, tenant, etc. </p>' %}
 
+Through the {{ site.productname }} API your applications can retrieve and manage Raiser's Edge content.  The endpoints for the API reside off the base url `https://api.blackbaud.com/{version}`.  The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific customer's user.   <a href="{{ '/tutorials/auth/' | prepend: site.baseurl }}" > Authorization</a> is done via the {{site.authorizationservicename}} at `https://auth.blackbaud.com`.  
+
+<!--
 ### Common Parameters and Identifiers
 
 In requests to the API and responses from it, you will frequently encounter the following parameters within  query string which is added to the base endpoint URI.
 
-####Common Authorization Request Parameters
-In the Authorization request the client constructs the request URI by adding the following parameters to the query component of the authorization endpoint URI using the the "application/x-www-form-urlencoded" format. 
-
 {% include note.html priority='medium' note='TO DO: Document the max length of the client identifier (client_id) parameter issued by the Blackbaud authorization server.' %}
 
-<div class="table-responsive">
-  <table class="table table-striped table-hover">
-    <thead>
-		<tr>
-			<th >Parameter </th>
-			<th >Description</th>
-		</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td>client_id</td>
-		<td >A unique string representing the client registration information provided by the client application (client).  The client_id is issued by the Blackbaud authorization server.   The client identifier is a string with a maximum length of x.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
-	</tr>
-	<tr>
-		<td>response_type</td>
-		<td>The value must be set to "code".</td>
-	</tr>
-	<tr>
-		<td>redirect_uri</td>
-		<td>After obtaining a user’s authorization to access private {{ site.productname }} data, the authorization server will redirect your client application (user-agent) to the your redirection endpoint previously established with the authorization server during the client registration process. See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> and <a href="{{ '/guide/#web-api-authorization' | prepend: site.baseurl }}" >Web API Authorization</a> for more info.</td>
-	</tr>
-	<tr>
-		<td>state</td>
-		<td class="column-2">A value used by the client application to maintain state between the request and callback.  The Blackbaud authorization server includes the value when redirecting the user back to the client application.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
-	</tr>
-	</tbody>
-  </table>
-</div>
+In the Authorization request the client constructs the request URI by adding the following parameters to the query component of the authorization endpoint URI using the the "application/x-www-form-urlencoded" format.
 
 ####Common Endpoint Request Parameters
 In the request to end points such as the Constituent or Address resources, the client constructs the request URI by adding the following parameters to the query component of the endpoint URI.
@@ -182,7 +223,7 @@ Because {{ site.productname }} API uses HTTP for all communication, you need to 
 	</tbody>
   </table>
 </div>
-
+-->
 ##Responses
 All data is received as a JSON object.
 
@@ -286,6 +327,7 @@ ipsum lorem
 [ipsum-image-01]: http://placehold.it/800x800
 [ipsum-image-02]: http://placehold.it/800x200
 [ipsum-image-03]: http://placehold.it/800x200
+[ipsum-image-04]: http://placehold.it/400x400
 [ipsum-image-00A]: holder.js/800x300
 [ipsum-image-01A]: holder.js/800x800
 [ipsum-image-02A]: holder.js/800x200
