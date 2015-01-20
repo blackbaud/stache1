@@ -2,13 +2,13 @@
 showHeadings: false
 ---
 
-# Community
+# Forum
 
 ## Option 1 - Small World Labs
 
 Blackbaud is currently exploring two possibilities for providing community capabilities to the {{ site.productname }}.  The entire Blackbaud product family is currently in the process of switching to an external vendor called Small World Labs for their community functionality.  We've created a presense in this community.  If this option is chosen, we could also compliment the transition between the two sites by providing a [tutorial][tutorials] for the signup and interaction process.
 
-<a href="{{ site.communityblogurl }}" target="_blank" class="btn btn-primary">Visit Small World Labs Community</a>
+<a href="{{ site.communityforumurl }}" target="_blank" class="btn btn-primary">Visit Small World Labs Community</a>
 
 ## Option 2 - Stack Exchange
 
