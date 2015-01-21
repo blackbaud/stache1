@@ -8,26 +8,19 @@ note: |
 ---
 
 <div class="row">
-  <div class="col-sm-4">
+  <div class="col-sm-6">
     <h2>
       <a href="{{ '/resources/blog/' | prepend: site.baseurl }}">Blog</a>
     </h2>
-    <p><img src="holder.js/400x150" alt="" /></p>
+    <p><img src="holder.js/600x150" alt="" /></p>
     <p>Follow along with Blackbaud developers as they elaborate on {{ site.productname }} API changes, issues, and best practices.  Join in on the discussion by leaving comments as well.</p>
   </div>
-  <div class="col-sm-4">
+  <div class="col-sm-6">
     <h2>
       <a href="{{ '/resources/forum/' | prepend: site.baseurl }}">Forum</a>
     </h2>
-    <p><img src="holder.js/400x150" alt="" /></p>
+    <p><img src="holder.js/600x150" alt="" /></p>
     <p>Get involved with other developers by visiting the community forum, which gives you the opportunity to ask, answer, vote, and subscribe to developer questions.</p>
-  </div>
-  <div class="col-sm-4">
-    <h2>
-      <a href="{{ '/resources/faq/' | prepend: site.baseurl }}">FAQ</a>
-    </h2>
-    <p><img src="holder.js/400x150" alt="" /></p>
-    <p>For particularly technical challenges and for commonly asked questions, be sure to visit the FAQ section.</p>
   </div>
 </div>
 
@@ -52,6 +45,17 @@ note: |
       </div>
     </div>
     <div class="col-sm-4">
+      <i class="fa fa-bar-chart"></i>
+      <div class="desc">
+        <h2>
+          <a href="{{ '/developer/analytics/' | prepend: site.devportalurl }}">Analytics</a>
+        </h2>
+        <p>View metrics on your {{ site.productname }} API calls, including response rates and codes.</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
       <i class="fa fa-shield"></i>
       <div class="desc">
         <h2>
@@ -60,11 +64,6 @@ note: |
         <p>See the most up-to-date {{ site.productname }} API status.  Explore historical information as well as learn more about past status changes.</p>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="resources resources-more">
-  <div class="row">
     <div class="col-sm-4">
       <i class="fa fa-3x fa-tasks"></i>
       <div class="desc">
@@ -75,7 +74,7 @@ note: |
       </div>
     </div>
     <div class="col-sm-4">
-      <i class="fa fa-bar-chart"></i>
+      <i class="fa fa-file-o"></i>
       <div class="desc">
         <h2>
           <a href="{{ '/resources/changelog/' | prepend: site.baseurl }}">Change Log</a>        
@@ -83,6 +82,10 @@ note: |
         <p>For each release, the change log provides information on additions, removals, and bug fixes of the {{ site.productname }} API.</p>
       </div>
     </div>
+  </div>
+</div>
+<div class="resources resources-more">
+  <div class="row">
     <div class="col-sm-4">
       <i class="fa fa-github"></i>
       <div class="desc">
@@ -90,6 +93,15 @@ note: |
           <a href="{{ '/resources/code/' | prepend: site.baseurl }}">Code Samples</a>        
         </h2>
         <p>We love GitHub as much as you do. All code samples are located in GitHub for maximum collaboration possibilities.</p>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <i class="fa fa-rocket"></i>
+      <div class="desc">
+        <h2>
+          <a href="{{ site.devportalurl }}">FAQ</a>
+        </h2>
+        <p>For particularly technical challenges and for commonly asked questions, be sure to visit the FAQ section.</p>
       </div>
     </div>
   </div>
