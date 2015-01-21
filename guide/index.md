@@ -23,14 +23,15 @@ Currently, the RE NXT API is only available to a select group of Blackbaud partn
 This documentation is designed for people familiar with HTTP programming and RESTful programming concepts. You should also be familiar with the Raiser's Edge from a user's and administrator's point of view. There are many HTTP RESTful tutorials available on the Web, including using cURL and Fiddler to make and test HTTP requests. If you are unfamiliar with HTTP programming and RESTful Web APIs, we recommend spending some time reviewing <a href="{{ '/guide/#web-api-fundamentals' | prepend: site.baseurl }}" >Web API Fundamentals</a>.
 
 ## Registering Your App
-{% include note.html priority='medium' note='Registering a partner application will initially be a manual process. The content within this section is a prototype.  ' %}
+{% include note.html priority='medium' note='Registering a partner application will initially be a manual process performed by Blackbaud. Over time the Blackbaud Authorization Service will provide the ability for a 3rd party dev/partner to register an application, obtain a Client ID and Client Secret, etc. The content within this section is a prototype' %}
+
 If your application seeks access to {{ site.productname }} data (constituents, gifts, etc.) it must be registered. You can register your application, even before you have created it.  
 
 Follow these steps to register an application:
 
-**1. Go to the *My Applications* page at the {{ site.authorizationservicename }} website. ** 
+**1. Go to <a href="{{ '/resources/applications/' | prepend: site.baseurl }}" target="_blank">My Applications</a>** 
 
-This page allows you manage your applications that integrate with Blackbaud using the new {{ site.productname }} Web API. 
+This site allows you to manage your applications that integrate with Blackbaud using the new {{ site.productname }} Web API. 
 
 **2. Click <i>Create a new application</i>**
 
