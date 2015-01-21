@@ -41,6 +41,6 @@ New [docs] have been created to describe how the new Management API works.
 [docs]: http://blackbaud-community.github.io/developer.blackbaud.com-renxt/
 [constituent]: https://bbbobbyearl.portal.azure-api.net/docs/services/5489b7687376d0092c2d38a1/operations/5489b76a7376d00b90cb19ff
 [option1]: http://blackbaud.smallworldlabs.com/groups/blogpost/view/29/34/38
-[option2]: {{ "/resources/blog/2015/01/14/new-constituent-field-prospect-status/" | prepend: site.baseurl }}
+[option2]: {{ "/resources/blog/home/2015/01/14/new-constituent-field-prospect-status/" | prepend: site.baseurl }}
 [issue4]: https://bbbobbyearl.portal.azure-api.net/Issues/4
-[issue4-blog]: {{ "/resources/blog/2015/10/12/date-last-changed-fixed/" | prepend: site.baseurl }}
+[issue4-blog]: {{ "/resources/blog/home/2015/10/12/date-last-changed-fixed/" | prepend: site.baseurl }}

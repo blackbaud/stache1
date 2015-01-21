@@ -92,6 +92,9 @@ links:
       - name: My Applications
         url: /resources/applications/
         
+      - name: Analytics
+        url: https://bbbobbyearl.portal.azure-api.net/developer/analytics/
+        
       - name: Status
         url: /resources/status/
         
