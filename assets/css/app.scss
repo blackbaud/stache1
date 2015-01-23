@@ -7,14 +7,12 @@
 * ========================================================================== 
 */
 
-  //Import variables and mixins from Sky and then Bootstrap
-  @import "Sky/_mixins.scss";
+  // Undoing a few things defined in _bootstrap-variable-defaults.scss
+  // I had to add '!default' to all the variables in _bootstrap-variable-defaults.scss to make this work.
+  @import "_variables";
 
-  /* Undoing a few things defined in _bootstrap-variable-defaults.scss */
-  $icon-font-path: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/';
-  $fa-font-path: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts/';
-  $grid-gutter-width: 30px;
-  $screen-lg-min: 1200px;
+  // Import variables and mixins from Sky and then Bootstrap
+  @import "Sky/_mixins.scss";
 
   //Import Bootstrap
   @import "Sky/Bootstrap/bootstrap.scss";
@@ -67,7 +65,10 @@
 * ========================================================================== 
 */
 
-  @import "_variables";
+  // SkyUI is currently using an older version of Bootstrap.  This shims that in the interim
+  @import "_bootstrap-shim";
+
+  @import "_omnibar";
   @import "_generic";
   @import "_fonts";
   @import "_sidebar";
@@ -78,4 +79,3 @@
   @import "_footer";
   @import "_copyright";
   @import "_mobile";
-

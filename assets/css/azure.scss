@@ -1,9 +1,12 @@
 ---
 ---
 
-  @import "Sky/_variables";
-  @import "Sky/Bootstrap/_variables";
+  // Undoing a few things defined in _bootstrap-variable-defaults.scss
+  // I had to add '!default' to all the variables in _bootstrap-variable-defaults.scss to make this work.
   @import "_variables";
+  @import "Sky/Bootstrap/_variables";
+
+  @import "_omnibar";
   @import "_fonts";
   @import "_footer";
 
@@ -35,28 +38,20 @@
       margin: 0 auto;
   }
 
-  @media (min-width: $screen-sm) { 
-      .navbar-collapse,
-      .layout-row-content .layout,
-      .zone-footer footer { 
-          width: $container-sm;
-      } 
-  }
+  // Mirrors Sky/Bootstrap/_grid.scss
+  .navbar-collapse,
+  .layout-row-content .layout,
+  .zone-footer footer { 
 
-  @media (min-width: $screen-md) { 
-      .navbar-collapse,
-      .layout-row-content .layout,
-      .zone-footer footer { 
-          width: $container-md;
-      } 
-  }
-
-  @media (min-width: $screen-lg) { 
-      .navbar-collapse,
-      .layout-row-content .layout,
-      .zone-footer footer { 
-          width: $container-lg;
-      } 
+    @media (min-width: $screen-sm-min) {
+      width: $container-sm;
+    }
+    @media (min-width: $screen-md-min) {
+      width: $container-md;
+    }
+    @media (min-width: $screen-lg-min) {
+      width: $container-lg;
+    }
   }
 
 /* 
