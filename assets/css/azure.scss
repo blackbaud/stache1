@@ -6,7 +6,6 @@
   @import "_variables";
   @import "_fonts";
   @import "_footer";
-  @import "_copyright";
 
 /* 
 * ==========================================================================
@@ -106,6 +105,7 @@
     color: #a7b1c2;
     display: block;
     font-weight: 600;
+    font-size: 13px;
     padding: 6px 5px 9px 16px;
   }
 
