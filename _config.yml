@@ -1,3 +1,16 @@
+##
+# Developed by Bobby Earl and Trip Ottinger
+# January 2015
+#
+# Many resources already exist for generating, creating, and updating this site.
+# The README.md and /admin/ locations are both great starts.
+#
+# NOTES:
+#   - Please be mindful of leading and trailing slashes.  Mirror the current structure used.
+#   - Unfortunately yaml doesn't have a mechanism to concat variables / strings.
+#   - This means be very mindful that you may have to update URL's in a few places, ie variables and the links section.
+##
+
 # Used to correctly link in different environments
 baseurl: /developer.blackbaud.com-renxt
 url: http://developer.blackbaud.com
@@ -17,8 +30,8 @@ productname: RE NXT
 devportalname: API management developer portal
 authorizationservicename:  Blackbaud Authorization Service
 authenticatioservicenname:  Blackbaud Authorization Service
-devportalurl: https://bbbobbyearl.portal.azure-api.net
-devportalurlsubscribeproduct: https://bbbobbyearl.portal.azure-api.net/products
+devportalurl: https://bbapidev.portal.azure-api.net
+devportalurlsubscribeproduct: https://bbapidev.portal.azure-api.net/products
 communityurl: http://blackbaud.smallworldlabs.com
 communitygroupurl:  http://blackbaud.smallworldlabs.com/groups/home/30
 communityblogurl:  http://blackbaud.smallworldlabs.com/groups/blogs/30
@@ -93,7 +106,7 @@ links:
         url: /resources/applications/
         
       - name: Analytics
-        url: https://bbbobbyearl.portal.azure-api.net/developer/analytics/
+        url: https://bbapidev.portal.azure-api.net/developer/analytics/
         
       - name: Status
         url: /resources/status/
@@ -108,7 +121,7 @@ links:
         url: /resources/code/
         
   - name: Developer Portal
-    url: https://bbbobbyearl.portal.azure-api.net/
+    url: https://bbapidev.portal.azure-api.net
         
   - name: Legal
     url: /legal/
