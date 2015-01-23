@@ -1,0 +1,80 @@
+#navigation .navbar-nav > li > a {
+    font-size: 14px;
+    font-weight: 600;
+    padding-bottom: 15px;    
+    padding-top: 15px;
+    text-transform: none;
+}
+
+#navigation .navbar-nav > li > a:hover,
+#navigation .navbar-nav > li > a:focus,
+#navigation .navbar-nav > li.active > a {
+    border-bottom: solid 4px #1ab394;
+    color: #FFF !important;
+    padding-bottom: 11px;    
+}
+
+.zone-aside-first .navbar-nav,
+.zone-aside-first .navbar-nav li {
+    float: none;
+}
+
+.zone-aside-first .nav-pills {
+    border-top: solid 1px #EFEFEF;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.zone-aside-first .navbar-nav li a,
+.zone-aside-first .nav-pills li a {
+    color: #a7b1c2;
+    display: block;
+    font-weight: 600;
+    padding: 6px 5px 9px 16px;
+}
+
+.zone-aside-first .navbar-nav li.active a,
+.zone-aside-first .nav-pills li.active a {
+    background: #293846;
+    border-left: 4px solid #19aa8d;
+}
+
+.zone-aside-first .navbar-nav li a:hover,
+.zone-aside-first .navbar-nav li a:focus,
+.zone-aside-first .navbar-nav li.active a:hover,
+.zone-aside-first .navbar-nav li.active a:focus,
+.zone-aside-first .nav-pills li.active a:hover,
+.zone-aside-first .nav-pills li.active a:focus {
+    background: #cccccc;
+    color: #293846;
+}
+
+.navbar-collapse,
+.layout-row-content .layout,
+.zone-footer footer {
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) { 
+    .navbar-collapse,
+    .layout-row-content .layout,
+    .zone-footer footer { 
+        width: 720px;
+    } 
+}
+
+@media (min-width: 992px) { 
+    .navbar-collapse,
+    .layout-row-content .layout,
+    .zone-footer footer { 
+        width: 940px;
+    } 
+}
+
+@media (min-width: 1200px) { 
+    .navbar-collapse,
+    .layout-row-content .layout,
+    .zone-footer footer { 
+        width: 1140px;
+    } 
+}
