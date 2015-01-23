@@ -4,6 +4,12 @@
 * ========================================================================== 
 */
 
+  // Solely here b/c I couldn't add the necessary padding to the Azure site
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .full-height-width {
     height: 100%;
     width: 100%;
