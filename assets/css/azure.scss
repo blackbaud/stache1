@@ -4,6 +4,7 @@
   // Undoing a few things defined in _bootstrap-variable-defaults.scss
   // I had to add '!default' to all the variables in _bootstrap-variable-defaults.scss to make this work.
   @import "_variables";
+  @import "Sky/_variables";
   @import "Sky/Bootstrap/_variables";
 
   @import "_omnibar";
