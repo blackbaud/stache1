@@ -1,4 +1,6 @@
 ---
+# TODO:
+#   - Remove content duplicated with app.scss.
 ---
 
 #navigation .navbar-nav > li > a {
@@ -81,3 +83,68 @@
         width: 1140px;
     } 
 }
+
+  .footer-site {
+      padding: 50px 0;
+  }
+
+  .footer-site a {
+    color: #949AA6;
+  }
+
+  .footer-site a:hover,
+  .footer-site a:focus {
+    color: #1ab394; 
+    text-decoration: none;
+  }
+
+  .bb-love {
+    padding: 20px 0 0 0;
+  }
+
+  .bb-love li {
+    vertical-align: middle;
+    margin-left: 0;
+    padding: 0 10px 10px 0;
+  }
+
+  .bb-love .fa-heart {
+    color: #7F0000;
+  }
+
+  .bb-love a img {
+    opacity: .7;
+  }
+
+  .bb-love a:hover img,
+  .bb-love a:focus img {
+    opacity: 1;
+  }
+
+  .social-icons a {
+    font-size: 26px;
+    margin: 0 5px;
+  }
+  
+  .bb-love,
+  .social-icons {
+    text-align: center;
+  }
+  
+  @font-face {
+    font-family: 'BBSKY-OMNIBAR';
+    src: url('../fonts/BBSKY.woff') format('woff');
+  }
+  
+  .bbsky-char::before {
+    font-family: 'BBSKY-OMNIBAR';
+    font-size: 24px;
+  }
+
+  .bbsky-char-re::before {
+    content: "\e644";
+  }
+
+  .bbsky-char-nxt::before {
+    content: "\e643";
+  }

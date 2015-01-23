@@ -126,3 +126,21 @@ Although Azure's API Management Suite provides access to the Bootstrap LESS vari
 0. Give the widget a title of Custom JS and uncheck the render checkbox.
 0. Set the Position to 2.
 0. Copy/paste the following into the Body(HTML) and click save: {% gist bbBobbyEarl/e686e88158ac2a43895d custom-js.html %}
+0. Edit the Banner widget in the Featured placeholder and click the delete button.
+0. In Azure API Management, click the Navigation link.
+0. Click Edit button for the Main menu and rename it to sidebar.
+0. Return to sidebar menu and perform the following edits
+  - Delete Home link.
+  - Edit APIs link and change Menu text to Endpoints and Url to /docs/services/54c136c272126c0990e57438/.  Be certain to replace the last digit string with that of the final deployed API.
+  - Delete Applications link.
+0. Create a new menu called main and add the same links as the documentation site, which at the time of generating this document:
+  - Home, http://blackbaud-community.github.io/developer.blackbaud.com-renxt/
+  - Tutorials, http://blackbaud-community.github.io/developer.blackbaud.com-renxt/tutorials/
+  - Developer Guide, http://blackbaud-community.github.io/developer.blackbaud.com-renxt/guide/
+  - Resources, http://blackbaud-community.github.io/developer.blackbaud.com-renxt/resources/
+  - Developer Portal, ~/
+0. In Azure API Management, click Widgets link.
+0. Click the Main widget in tihe Navigation placeholder.
+0. Change the For Menu dropdown to main and save.
+0. Add a new Menu Widget to the AsideFirst placeholder.
+0. Title the widget Sidebar, uncheck the render title, change the For Menu dropdown to sidebar, and save.
