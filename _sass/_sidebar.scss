@@ -13,7 +13,12 @@
     position: absolute;
   }
 
-  .nav > li.current {
+  .nav > li.current li {
+    border-left: 4px solid #293846;
+  }
+
+  .nav > li.current,
+  .nav > li.current li.active {
     border-left: 4px solid #19aa8d;
     background: #293846;
   }

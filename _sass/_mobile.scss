@@ -1,10 +1,12 @@
+@import "Sky/Bootstrap/_variables";
+
 /* 
 * ==========================================================================
 * MOBILE
 * ========================================================================== 
 */
 
-@media (max-width: 767px) {
+@media (max-width: $screen-sm-max) {
   
   .bb-omnibar .menuheader {
     display: block !important;
