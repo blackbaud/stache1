@@ -18,6 +18,13 @@
 * GLOBAL
 * ========================================================================== 
 */
+  html, 
+  form, 
+  body { 
+    font-size: 13px; 
+    font-family: $font-family-sans-serif;
+  }
+
   body {
     background: #FFF;
     color: #676a6c;
