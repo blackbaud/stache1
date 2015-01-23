@@ -20,8 +20,19 @@
 */
   body {
     background: #FFF;
+    color: #676a6c;
     font-family: $font-family-sans-serif;
   }
+
+  .zone-content a { 
+    color: #0088cc;
+  }
+
+  .zone-content a:hover, 
+  .zone-content a:focus { 
+    color: #005580;
+    text-decoration: none; 
+  }  
 
   #ap-container {
     max-width: none;
