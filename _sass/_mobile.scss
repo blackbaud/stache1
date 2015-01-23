@@ -1,0 +1,21 @@
+/* 
+* ==========================================================================
+* MOBILE
+* ========================================================================== 
+*/
+
+@media (max-width: 767px) {
+  
+  .bb-omnibar .menuheader {
+    display: block !important;
+  }
+  
+  .nav-sidebar {
+    position: relative !important;
+    top: 10px !important;
+  }
+  
+  .visible-on-affix {
+    display: none !important;
+  }
+}

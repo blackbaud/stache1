@@ -1,14 +1,22 @@
 ---
-# TODO:
-#   - Remove content duplicated with app.scss.
 ---
+
+  @import "Sky/_variables";
+  @import "Sky/Bootstrap/_variables";
+  @import "_variables";
+  @import "_fonts";
+  @import "_footer";
 
 /* 
 * ==========================================================================
 * LAYOUT
 * ========================================================================== 
 */
-  
+  body {
+    background: #FFF;
+    font-family: $font-family-sans-serif;
+  }
+
   #ap-container {
     max-width: none;
   }
@@ -23,27 +31,27 @@
       margin: 0 auto;
   }
 
-  @media (min-width: 768px) { 
+  @media (min-width: $screen-sm) { 
       .navbar-collapse,
       .layout-row-content .layout,
       .zone-footer footer { 
-          width: 720px;
+          width: $container-sm;
       } 
   }
 
-  @media (min-width: 992px) { 
+  @media (min-width: $screen-md) { 
       .navbar-collapse,
       .layout-row-content .layout,
       .zone-footer footer { 
-          width: 940px;
+          width: $container-md;
       } 
   }
 
-  @media (min-width: 1200px) { 
+  @media (min-width: $screen-lg) { 
       .navbar-collapse,
       .layout-row-content .layout,
       .zone-footer footer { 
-          width: 1140px;
+          width: $container-lg;
       } 
   }
 
@@ -110,85 +118,4 @@
   .zone-aside-first .nav-pills li.active a:focus {
     background: #cccccc;
     color: #293846;
-  }
-
-/* 
-* ==========================================================================
-* FOOTER
-* ========================================================================== 
-*/
-
-  .footer-site {
-      padding: 50px 0;
-  }
-
-  .footer-site a {
-    color: #949AA6;
-  }
-
-  .footer-site a:hover,
-  .footer-site a:focus {
-    color: #1ab394; 
-    text-decoration: none;
-  }
-
-  .bb-love {
-    padding: 20px 0 0 0;
-  }
-
-  .bb-love li {
-    vertical-align: middle;
-    margin-left: 0;
-    padding: 0 10px 10px 0;
-  }
-
-  .bb-love .fa-heart {
-    color: #7F0000;
-  }
-
-  .bb-love a img {
-    opacity: .7;
-  }
-
-  .bb-love a:hover img,
-  .bb-love a:focus img {
-    opacity: 1;
-  }
-
-  .social-icons a {
-    font-size: 26px;
-    margin: 0 5px;
-  }
-  
-  .bb-love,
-  .social-icons {
-    text-align: center;
-  }
-  
-/* 
-* ==========================================================================
-* FONTS
-* ========================================================================== 
-*/
-
-  @font-face {
-    font-family: 'BBSKY-OMNIBAR';
-    src: url('../fonts/BBSKY.woff') format('woff');
-  }
-
-  body {
-    font-family: 'open sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
-  
-  .bbsky-char::before {
-    font-family: 'BBSKY-OMNIBAR';
-    font-size: 24px;
-  }
-
-  .bbsky-char-re::before {
-    content: "\e644";
-  }
-
-  .bbsky-char-nxt::before {
-    content: "\e643";
   }
