@@ -175,7 +175,7 @@ $toolbar-background-color: #fff;
 
 // begin form
 $form-gray-light: #DDDDDD;
-$form-background: #F2F2F2;
+$form-background: $white;
 $form-border-color: #D9D9D9;
 $form-header-color: #333333;
 $form-textarea-color: $form-gray-light;
@@ -196,6 +196,7 @@ $z-index-control: 10000;
 
 //begin tile
 $tile-header-tool-padding: 15px;
+$tile-form-background: #F2F2F2;
 //end tile
 
 // begin omnibar/help widget

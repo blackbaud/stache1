@@ -1,0 +1,11 @@
+{
+  "name": "nxt-api-documentation",
+  "version": "0.0.1",
+  "description": "Documentation site for API surrounding Blackbaud NXT products.",
+  "private": true,
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-jekyll": "^0.4.2",
+    "grunt-shell": "^1.1.1"
+  }
+}

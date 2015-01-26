@@ -57,7 +57,7 @@ $nav-selected-border-width: 4px;
         &.selected {
             a {
                 background-color: $nav-selected-background-color;
-                border-bottom: solid $nav-selected-border-width $navy;
+                border-bottom: solid $nav-selected-border-width $blue;
                 color: $nav-selected-color;
                 padding-bottom: $nav-item-padding - $nav-selected-border-width;
             }

@@ -89,7 +89,7 @@ tiles behave within a column of tiles.*/
     color: #D1DADE;
     float: left;
     margin: 1px 0;
-    padding-right: 0;
+    padding-right: $tile-header-tool-padding;
 }
 
 .tile-content-section {
@@ -101,8 +101,26 @@ tiles behave within a column of tiles.*/
     cursor: move;
     cursor: -webkit-grab;
     cursor: -moz-grab;
-    display: inline;
+    display: none;
     font-size: 15px;
     padding: $tile-header-tool-padding;
     margin-top: $tile-header-tool-padding;
+}
+
+.page-content-multicolumn .page-content-column-sortable {
+    margin-bottom: 50px;
+}
+
+// Hide the grab handle unless the tile's in a sortable column.
+
+.page-content-column-sortable {
+    min-height: 100px;
+
+    .tile-grab-handle {
+        display: inline;
+    }
+
+    .tile-chevron {
+        padding-right: 0;
+    }
 }

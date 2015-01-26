@@ -1,0 +1,82 @@
+# Custom Site Variables
+title: FENXT Developer Portal - Prototype
+productname: FE NXT
+devportalname: API management developer portal
+authorizationservicename:  Blackbaud Authorization Service
+authenticatioservicenname:  Blackbaud Authorization Service
+devportalurl: https://bbapidev.portal.azure-api.net
+devportalurlsubscribeproduct: https://bbapidev.portal.azure-api.net/products
+communityurl: http://blackbaud.smallworldlabs.com
+communitygroupurl:  http://blackbaud.smallworldlabs.com/groups/home/30
+communityblogurl:  http://blackbaud.smallworldlabs.com/groups/blogs/30
+communityforumurl: http://blackbaud.smallworldlabs.com/groups/forums/29/85
+
+# NOTE: For consistency and performance, please begin and end all internal site URL's with a forward slash.
+links:
+  - name: Home
+    url: /
+    
+  - name: Tutorials
+    url: /tutorials/
+    links:
+    
+      - name: Getting Started
+        url: /tutorials/getting-started/
+        description: "This tutorial introduces our developer portal, developer sign up process, technical reference, and interactive API Console."
+    
+      - name: Web API Authorization
+        url: /tutorials/auth/
+        description: "This tutorial shows you how to create a small server-side application that accesses user-related data through the RE NXT API."
+    
+      - name: Search and Retrieve a Constituent
+        url: '#'
+        description:
+    
+      - name: Common Developer Use Case Tutorial 1
+        url: '#'
+        description:
+    
+      - name: Another Common Use Case Tutorial 2
+        url: '#'
+        description:
+    
+  - name: Developer Guide
+    url: /guide/
+      
+  - name: Resources
+    url: /resources/
+    links:
+        
+      - name: Blog
+        url: /resources/blog/
+        
+      - name: Forum
+        url: /resources/forum/
+        
+      - name: FAQ
+        url: /resources/faq/
+        
+      - name: My Applications
+        url: /resources/applications/
+        
+      - name: Analytics
+        url: https://bbapidev.portal.azure-api.net/developer/analytics/
+        
+      - name: Status
+        url: /resources/status/
+        
+      - name: Issues
+        url: /resources/issues/
+        
+      - name: Change Log
+        url: /resources/changelog/
+        
+      - name: Code Samples
+        url: /resources/code/
+        
+  - name: Developer Portal
+    url: https://bbapidev.portal.azure-api.net
+        
+  - name: Legal
+    url: /legal/
+    showInHeader: false

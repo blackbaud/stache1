@@ -11,6 +11,14 @@ There is no work to be done for this environment.  Their build automatically loo
 
 ### Building for Development Environment
 
+<strong>Base Requirements*:</strong>
+
+- NPM
+- git
+- <a href="http://gittf.codeplex.com">git-tf</a>
+ 
+** Please note these in turn have their own requirements for installation.
+
 <code>jekyll serve --baseurl ''</code>
 
 You will now be able to visit <a href="http://localhost:4000">http://localhost:4000</a> in your browser to view the site.  You should also notice that the site is being stored and served from the _site directory.  This directory is set to be ignored.

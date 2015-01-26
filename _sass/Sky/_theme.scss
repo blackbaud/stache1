@@ -231,6 +231,21 @@ label.error {
     }
 }
 
+.btn-primary {
+  background-color: $blue;
+  border-color: $blue;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+  background-color: darken($blue, 3%);
+  border-color: darken($blue, 3%);
+}
+
+.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus, .btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled], .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled]:active, .btn-primary.active[disabled], fieldset[disabled] .btn-primary, fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active {
+  background-color: lighten($blue, 4%);
+  border-color: lighten($blue, 4%);
+}
+
 /* End Inspinia overrides */
 
 dt {

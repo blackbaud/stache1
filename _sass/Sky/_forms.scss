@@ -3,7 +3,7 @@
 
 /* FORMS START */
 .tile-form {
-    background: $form-background;
+    background: $tile-form-background;
     border-top: 1px solid $form-border-color;
     padding: 15px 15px;
 
@@ -135,6 +135,7 @@ input.has-right-addon::-ms-clear {
 .datepicker {
     border: 1px solid #ddd !important;
     border-radius: 5px !important;
+    z-index: 9999 !important;
 
     .active {
         background-image: linear-gradient(to bottom, #8CB9E1, #5799d3) !important;

@@ -1,22 +1,18 @@
-@import "_variables.scss";
+﻿@import "_variables.scss";
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 
 $icon-font-path: 'sky/bootstrap/fonts/' !default;
 
-$screen-lg: 1028px !default;
-$nav-link-padding: 0px 5px !default;
-$alert-padding: 10px !default;
-$btn-primary-bg: $brand-alternate-light !default;
+$screen-lg: 1028px;
+$nav-link-padding: 0px 5px;
+$alert-padding: 10px;
+$btn-primary-bg: $brand-alternate-light;
 
-.test-inline {
-  width: $grid-gutter-width;
-}
+$grid-gutter-width: 0px;
 
-$grid-gutter-width: 0px !default;
-
-$modal-inner-padding: $padding !default;
-$modal-title-padding: $padding !default;
+$modal-inner-padding: $padding;
+$modal-title-padding: $padding-plus-half;
 
 /* end _bootstrap-variable-defaults */
 
