@@ -161,8 +161,8 @@
   #navigation .navbar-nav > li > a:hover,
   #navigation .navbar-nav > li > a:focus,
   #navigation .navbar-nav > li.active > a {
-    background-color: #293846;
-    border-bottom: solid 4px #1ab394;
+    background-color: $nav-bg;
+    border-bottom: solid 4px $blue;
     color: #FFF !important;
     padding-bottom: 11px;    
   }
@@ -194,7 +194,7 @@
   .zone-aside-first .navbar-nav li.active a,
   .zone-aside-first .nav-pills li.active a {
     background: #293846;
-    border-left: 4px solid #19aa8d;
+    border-left: 4px solid $blue;
   }
 
   .zone-aside-first .navbar-nav li a:hover,

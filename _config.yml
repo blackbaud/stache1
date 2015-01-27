@@ -11,16 +11,21 @@
 #   - This means be very mindful that you may have to update URL's in a few places, ie variables and the links section.
 ##
 
-# Used to correctly link in different environments
+# Jekyll configurations
+exclude:
+  - package.json
+  - gruntfile.js
+  - node_modules
+  - README.md
+sass:
+  style: compressed
+  
+# This defaults to work on github pages.
+# It should be overwritten for all over environments.
 baseurl: /developer.blackbaud.com-renxt
+
+# URL's throughout the site
 url: http://developer.blackbaud.com
-permalink: /resources/blog/home/:year/:month/:day/:title/
-
-# Blog setup
-paginate: 3 # Purposefully low just to show pagination
-paginate_path: /resources/blog/home/:num
-
-# Used as the base in the feedback section
 githubbase: https://github.com/blackbaud-community
 githubblob: https://github.com/blackbaud-community/developer.blackbaud.com-renxt/blob/gh-pages
 

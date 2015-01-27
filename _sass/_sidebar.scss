@@ -14,13 +14,13 @@
   }
 
   .nav > li.current li {
-    border-left: 4px solid #293846;
+    border-left: 4px solid $nav-bg;
   }
 
   .nav > li.current,
   .nav > li.current li.active {
-    border-left: 4px solid #19aa8d;
-    background: #293846;
+    border-left: 4px solid $blue;
+    background: $nav-bg;
   }
 
   .nav > li.current > a {
@@ -62,7 +62,7 @@
   .nav > li > a:focus {
     text-decoration: none;
     background-color: #cccccc;
-    color: #293846 !important;
+    color: $nav-bg !important;
   }
 
   .nav-sidebar .title {

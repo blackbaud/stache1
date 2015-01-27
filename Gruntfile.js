@@ -2,17 +2,23 @@
 * Grunt configuration file.
 * Bobby Earl, 2015-01-27
 *
+* TODO
+*   Copy fonts from _sass/Sky/fonts/ into assets/fonts/
+*
 * NOTES
 *   There is a current bug where 'local echo' can't be disabled when running the skyui-tfs-clone task.
 *   This means a user's password will be visible.  More investigation into the problem is necessary.
+*   The Blackbaud.SkyUI.Mixins package would generally be a better choice, but I want the font.
 **/
 module.exports = function(grunt) {
+  
+  // Private vars
+  var ns = 'blackbaud';
   
   // Load the required node modules
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-curl');
   grunt.loadNpmTasks('grunt-http');
-  grunt.loadNpmTasks('grunt-jekyll');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-zip');
 
@@ -24,22 +30,25 @@ module.exports = function(grunt) {
     
     // Paths used through this gruntfile
     paths: {
-      tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/',
-      skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/',
-      skyTfsLocal: '_sass/Sky/',
+      nuget: 'Blackbaud.SkyUI.Sass',
+      nugetDir: 'nuget/<%= paths.nuget %>',
       skyJsonRemote: [
         'http://tfs-sym.blackbaud.com:81/nuget/FindPackagesById()',
-        '?id=\'Blackbaud.SkyUI.Mixins\'',
+        '?id=\'<%= paths.nuget %>\'',
         '&$orderby=Published desc',
         '&$top=1'].join(''),
-      skyJsonLocal: '_nuget/Blackbaud.SkyUI.Mixins.json',
+      skyJsonLocal: '<%= paths.nugetDir %>.json',
+      skyTfsLocal: '_sass/Sky/',
+      skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/',
+      skyZipExpanded: '<%= paths.nugetDir %>/',
+      skyZipLocal: '<%+ paths.nugetDir %>.zip',
       skyZipRemote: '', // Set by http:skyui-json
-      skyZipLocal: '_nuget/Blackbaud.SkyUI.Mixins.zip',
-      skyZipExpanded: '_nuget/Blackbaud.SkyUI.Mixins/',
+      tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/',
       renxtConfig: '_config.yml,_config.renxt.yml',
       fenxtConfig: '_config.yml,_config.fenxt.yml'
     },
     
+    // Downloads the latest metadata for a package and finds the download url.
     http: {
       'skyui-nuget-json': {
         options: {
@@ -59,7 +68,7 @@ module.exports = function(grunt) {
       }
     },
     
-    // Expose our CURL / SkyUI NuGet tasks
+    // Downloads the latest nuget package, saving it as a zip file.
     curl: {
       'skyui-nuget-download': {
         src: '<%= paths.skyZipRemote %>',
@@ -67,7 +76,7 @@ module.exports = function(grunt) {
       }
     },
     
-    // Expose our zip tasks
+    // Unzips our nuget package
     unzip: {
       'skyui-nuget-unzip': {
         src: '<%= paths.skyZipLocal %>',
@@ -75,7 +84,7 @@ module.exports = function(grunt) {
       }
     },
     
-    // Expose our copy tasks
+    // Copies the contents of unzipped nuget package to our _sass directory.
     copy: {
       'skyui-nuget-copy': {
         files: [{
@@ -87,52 +96,40 @@ module.exports = function(grunt) {
       }
     },
     
-    // Expose our TFS / SkyUI tasks
+    // Tasks to clone and fetch the latest SkyUI from TFS.
     shell: {
       'skyui-tfs-clone': {
         command: 'git tf clone <%= paths.tfs %> <%= paths.skyTfsRemote %> <%= paths.skyTfsLocal %>'
       },
       'skyui-tfs-fetch': {
         command: 'git fetch <%= paths.skyLocal %>'
-      }
-    },
-    
-    // Expose jekyll tasks
-    jekyll: {
+      },
       'renxt-serve': {
-        options: {
-          serve: true,
-          baseurl: '""',
-          config: '<%= paths.renxtConfig %>'
-        }
+        command: 'jekyll serve --config _config.yml,<%= paths.renxtConfig %> --baseurl ""' 
       },
       'renxt-build': {
-        options: {
-          serve: false,
-          config: '<%= paths.renxtConfig %>'
-        }
+        command: 'jekyll build --config _config.yml,<%= paths.renxtConfig %>' 
       },
       'fenxt-serve': {
-        options: {
-          serve: true,
-          baseurl: '""',
-          config: '<%= paths.fenxtConfig %>'
-        }
+        command: 'jekyll serve --config _config.yml,<%= paths.fenxtConfig %> --baseurl ""' 
       },
-      'fenxt-build': {
-        options: {
-          serve: false,
-          config: '<%= paths.fenxtConfig %>'
-        }
+      'fenxt-serve': {
+        command: 'jekyll build --config _config.yml,<%= paths.fenxtConfig %>' 
       }
     }
   });
   
   // Possibly not necessary in this context, but I'm namespacing all our commands.
+  // I do like this approach as it also abstracts the original grunt task.
+  // Meaning if we need to change a task, the command and our documentation don't have to change.
   // It's obviously still possible to call the original grunt commands.
-  grunt.registerTask('blackbaud:skyui-tfs-clone', 'shell:skyui-tfs-clone');
-  grunt.registerTask('blackbaud:skyui-tfs-fetch', 'shell:skyui-tfs-fetch');
-  grunt.registerTask('blackbaud:skyui-nuget', [
+  grunt.registerTask(ns + ':renxt-serve', 'shell:renxt-serve');
+  grunt.registerTask(ns + ':renxt-build', 'shell:renxt-build');
+  grunt.registerTask(ns + ':fenxt-serve', 'shell:fenxt-serve');
+  grunt.registerTask(ns + ':fenxt-build', 'shell:fenxt-build');
+  grunt.registerTask(ns + ':skyui-tfs-clone', 'shell:skyui-tfs-clone');
+  grunt.registerTask(ns + ':skyui-tfs-fetch', 'shell:skyui-tfs-fetch');
+  grunt.registerTask(ns + ':skyui-nuget', [
     'http:skyui-nuget-json', 
     'curl:skyui-nuget-download', 
     'unzip:skyui-nuget-unzip',

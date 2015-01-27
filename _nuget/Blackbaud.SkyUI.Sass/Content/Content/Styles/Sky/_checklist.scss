@@ -1,0 +1,51 @@
+﻿@import '_mixins.scss';
+
+.checklist-wrapper {
+    border: 1px solid $gray-lighter;
+    overflow-y: auto;
+
+    table {
+        margin: 0;
+
+        thead {
+            th:first-child, th:last-child {
+                @include rounded-corners(0, 0, 0, 0);
+            }
+        }
+    }
+}
+
+.checklist-checkbox-column {
+    width: 30px;
+}
+
+.checklist-filter-bar {
+    background-color: $gray-lightest;
+    border: 1px solid $gray-lighter;
+    border-bottom: 0;
+    padding: $padding-half;
+
+    .btn {
+        margin: 0 $margin-half 0 $margin-half;
+        min-width: 65px;
+    }
+
+    input {
+        @include rounded-corners();
+        height: 26px;
+        width: 100%;
+        outline: none;
+        border: 1px solid $gray-lighter;
+        -webkit-appearance: none;
+    }
+}
+
+.checklist-link {
+    margin-right: $margin;
+}
+
+.checklist-no-items {
+    text-align: center;
+    margin-top: $margin;
+    margin-bottom: $margin;
+}

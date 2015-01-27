@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Blackbaud.SkyUI.Sass</id>
+    <version>1.1.494.2</version>
+    <title>Blackbaud Sky UI Sass</title>
+    <authors>Blackbaud, Inc.</authors>
+    <owners>Blackbaud, Inc.</owners>
+    <iconUrl>http://tfs-sym.blackbaud.com/icons/rex/b.green.32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Includes sass files used for generating Sky UI style sheets.</description>
+    <copyright>Copyright © Blackbaud 2014</copyright>
+    <language>en-US</language>
+  </metadata>
+</package>
