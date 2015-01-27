@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Blackbaud.SkyUI.Mixins</id>
+    <version>1.1.494.2</version>
+    <title>Blackbaud Sky UI Mixins</title>
+    <authors>Blackbaud, Inc.</authors>
+    <owners>Blackbaud, Inc.</owners>
+    <iconUrl>http://tfs-sym.blackbaud.com/icons/rex/b.green.32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Includes SASS variables and mixins used by the Sky UI theme.</description>
+    <copyright>Copyright © Blackbaud 2014</copyright>
+    <language>en-US</language>
+  </metadata>
+</package>
