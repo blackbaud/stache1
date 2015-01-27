@@ -11,7 +11,7 @@
 #   - This means be very mindful that you may have to update URL's in a few places, ie variables and the links section.
 ##
 
-# Jekyll configurations
+# Jekyll configurations (files/folders beginning with underscore are automatically excluded)
 exclude:
   - package.json
   - gruntfile.js

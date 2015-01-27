@@ -6,24 +6,31 @@ RENXT Developer
 
 <strong>Base Requirements*:</strong>
 
-- NPM
+- [NodeJS & NPM][node]
 - git
-- <a href="http://gittf.codeplex.com">git-tf</a>
-- Jekyll
+- [git-tf][git-tf]
+- [Jekyll][jekyll]
  
 ** Please note these in turn have their own requirements for installation.
 
-You will now be able to visit <a href="http://localhost:4000">http://localhost:4000</a> in your browser to view the site.  You should also notice that the site is being stored and served from the _site directory.  This directory is set to be ignored.
+You will now be able to visit [localhost] in your browser to view the site.  You should also notice that the site is being stored and served from the _site directory.  This directory is set to be ignored from git updates.
 
 ### Available Grunt Commands
 
-- grunt shell:skyui-clone
-- grunt shell:skyui-fetch
-- grunt jekyll:renxt-serve
-- grunt jekyll:renxt-build
-- grunt jekyll:fenxt-serve
-- grunt jekyll:fenxt-build
+- grunt blackbaud:skyui-clone
+- grunt blackbaud:skyui-fetch
+- grunt blackbaud:renxt-serve
+- grunt blackbaud:renxt-build
+- grunt blackbaud:fenxt-serve
+- grunt blackbaud:fenxt-build
 
 ### Contributing 
 
-If you would like to contribute to this code sample, please carefully read the [contributing documentation](https://github.com/blackbaud-community/Blackbaud-CRM/blob/master/CONTRIBUTING.md), which details the necessary workflow.  Included in those requirements is [signing the Contributor License Agreement](http://developer.blackbaud.com/cla).
+If you would like to contribute to this code sample, please carefully read the [contributing documentation][contributing], which details the necessary workflow.  Included in those requirements is [signing the Contributor License Agreement][cla].
+
+[node]: http://nodejs.org
+[git-tf]: http://gittf.codeplex.com
+[jekyll]: http://jekyllrb.com
+[localhost]: http://localhost:4000/
+[contributing]: https://github.com/blackbaud-community/Blackbaud-CRM/blob/master/CONTRIBUTING.md
+[cla]: http://developer.blackbaud.com/cla
