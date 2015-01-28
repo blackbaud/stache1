@@ -31,7 +31,7 @@ module.exports = function(grunt) {
     // Paths used through this gruntfile
     paths: {
       nuget: 'Blackbaud.SkyUI.Sass',
-      nugetDir: 'nuget/<%= paths.nuget %>',
+      nugetDir: '_nuget/<%= paths.nuget %>',
       skyJsonRemote: [
         'http://tfs-sym.blackbaud.com:81/nuget/FindPackagesById()',
         '?id=\'<%= paths.nuget %>\'',
@@ -105,13 +105,13 @@ module.exports = function(grunt) {
         command: 'git fetch <%= paths.skyLocal %>'
       },
       'renxt-serve': {
-        command: 'jekyll serve --config _config.yml,<%= paths.renxtConfig %> --baseurl ""' 
+        command: 'jekyll serve --config _config.yml,<%= paths.renxtConfig %> --baseurl "" --dest _site' 
       },
       'renxt-build': {
         command: 'jekyll build --config _config.yml,<%= paths.renxtConfig %>' 
       },
       'fenxt-serve': {
-        command: 'jekyll serve --config _config.yml,<%= paths.fenxtConfig %> --baseurl ""' 
+        command: 'jekyll serve --config _config.yml,<%= paths.fenxtConfig %> --baseurl "" --dest _site' 
       },
       'fenxt-serve': {
         command: 'jekyll build --config _config.yml,<%= paths.fenxtConfig %>' 

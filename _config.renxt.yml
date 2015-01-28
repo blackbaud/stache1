@@ -1,3 +1,7 @@
+# Jekyll Config
+destination: renxt
+baseurl: renxt
+
 # Custom Site Variables
 title: RENXT Developer Portal - Prototype
 productname: RE NXT

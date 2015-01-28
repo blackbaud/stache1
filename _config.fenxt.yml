@@ -1,3 +1,7 @@
+# Jekyll Config
+destination: fenxt
+baseurl: fenxt
+
 # Custom Site Variables
 title: FENXT Developer Portal - Prototype
 productname: FE NXT
