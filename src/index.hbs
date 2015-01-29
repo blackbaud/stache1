@@ -1,0 +1,59 @@
+---
+name: <%= pkg.name %>
+homepage:  <%= pkg.homepage %>
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{uppercase name}}</title>
+    <link rel="stylesheet" href="{{assets}}/assemble.css">
+    <link rel="stylesheet" href="{{assets}}/github.css">
+  </head>
+  <body>
+
+    {{! Navbar
+    ================================================== }}
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="navbar-brand" href="{{relative this.dest "index.html"}}">{{uppercase name}}</a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="nav-collapse collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav pull-right">
+              <li> <a href="{{homepage}}">GitHub Repo</a> </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{! Subhead
+    ================================================== }}
+    <header class="masthead subhead">
+      <div class="container">
+        <div class="row">
+          <div class="col col-lg-12">
+            <h1> DOCUMENTATION </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+
+    {{! Page content from README.md
+    ================================================== }}
+    <div class="container">
+      <div class="panel panel-docs">
+        {{md 'README.md'}}
+      </div>
+    </div>
+
+    <script src="{{assets}}/highlight.js"></script>
+    <script src="{{assets}}/holder.js"></script>
+  </body>
+</html>

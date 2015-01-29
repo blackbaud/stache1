@@ -1,9 +1,0 @@
-/* 
-* ==========================================================================
-* I know we're not supposed to do this, but I absolutely hated seeing the page jump down when the omnibar finally loads.
-* I'm risking setting that height here.  Worst case is you would see the page jump slightly if they ever change the height of the omnibar.
-* ========================================================================== 
-*/
-.bb-omnibar-height-padding {
-  padding-top: $omnibar-height;
-}
