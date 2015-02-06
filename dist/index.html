@@ -43,7 +43,26 @@
     
     <div class="container">
       <div class="panel panel-docs">
-        
+        <h1 id="documentation-workflow-with-npm-grunt-and-assemble">Documentation Workflow with NPM, Grunt, and Assemble</h1>
+<h2 id="setting-up-this-repo-current-">Setting up this repo (Current)</h2>
+<ol>
+<li>Requires Node (NPM) and grunt-cli</li>
+<li>Clone from GitHub</li>
+<li>Run npm i</li>
+<li>Run grunt, which lists the available tasks.</li>
+</ol>
+<h2 id="setting-up-this-repo-goal-">Setting up this repo (Goal)</h2>
+<ol>
+<li>Developer has their project checked out - RE, FE, etc.</li>
+<li>Install Blackbaud.Documentation.StaticAssemble NuGet package.</li>
+<li>npm i is automatically ran.</li>
+<li>Grunt file includes default locations for documentation, but developer has opportunity to override these with config.</li>
+<li>Active development, developer runs grunt serve.</li>
+<li>Just building, developer runs grunt build.</li>
+<li>Ready to publish, developer runs grunt publish which uses grunt-prompt to ask for pre-defined locations (internal, external, github, digital-ocean, etc).</li>
+<li>Automation ready to publish, runs grunt autopublish which reads team&#39;s config file for location, etc.</li>
+</ol>
+
       </div>
     </div>
 

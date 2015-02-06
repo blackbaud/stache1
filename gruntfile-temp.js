@@ -15,7 +15,11 @@ module.exports = function(grunt) {
   
   // Private vars
   var NS = 'blackbaud:',
-      NS_INTERNAL = 'internal:' + NS;
+      NS_INTERNAL = 'internal:' + NS,
+      asciifyOptions = {
+        font: 'cybermedium',
+        log: true
+      };
   
   // Disable grunt headers
   grunt.log.header = function() {} 
@@ -41,12 +45,11 @@ module.exports = function(grunt) {
     paths: {
       nuget: 'Blackbaud.SkyUI.Sass',
       nugetDir: '_nuget/<%= paths.nuget %>',
-      skyJsonRemote: [
-        'http://tfs-sym.blackbaud.com:81/nuget/FindPackagesById()',
-        '?id=\'<%= paths.nuget %>\'',
-        '&$orderby=Published desc',
-        '&$top=1'].join(''),
-      skyJsonLocal: '<%= paths.nugetDir %>.json',
+      nugetServer: 'http://tfs-sym.blackbaud.com:81/nuget/',
+      nugetVersion: '',  // Set by blackbaud:skyui-nuget
+      skyJsonRemote: '', // Set by blackbaud:skyui-nuget
+      skyJsonRemoteById: '<%= paths.nugetServer %>FindPackagesById()?id=\'<%= paths.nuget %>\'&$orderby=Published desc&$top=1',
+      skyJsonRemoteByVersion: '<%= paths.nugetServer %>/Packages(Id=\'<%= paths.nuget %>\',Version=\'<%= paths.nugetVersion %>\')',
       skyTfsLocal: '_sass/Sky/',
       skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/',
       skyZipExpanded: '<%= paths.nugetDir %>/',
@@ -60,24 +63,15 @@ module.exports = function(grunt) {
     asciify: {
       one: {
         text: 'Blackbaud',
-        options: {
-          font: 'cybersmall',
-          log: true
-        }
+        options: asciifyOptions
       },
       two: {
         text: 'Documentation',
-        options: {
-          font: 'cybersmall',
-          log: true
-        }
+        options: asciifyOptions
       },
       three: {
-        text: 'Builder',
-        options: {
-          font: 'cybersmall',
-          log: true
-        }
+        text: 'Builder ',
+        options: asciifyOptions
       },
     },
     
@@ -130,16 +124,17 @@ module.exports = function(grunt) {
           url: '<%= paths.skyJsonRemote %>',
           json: true,
           callback: function(error, response, body) {
+            console.log(body);
             try {
-              grunt.config.set('paths.skyZipRemote', body.d[0].__metadata.media_src);
-              console.log('Found latest SkyUI nuget: %s', grunt.config('paths.skyZipRemote'));
+              var parent = grunt.config('paths.nugetVersion') ? body.d : body.d[0];
+              grunt.config.set('paths.skyZipRemote', parent.__metadata.media_src);
+              grunt.log.writeln('Found latest SkyUI nuget: %s', grunt.config('paths.skyZipRemote'));
             } catch(err) {
-              console.log('Error parsing NuGet response.');
-              console.log(err);
+              grunt.log.writeln('Error parsing NuGet response.');
+              grunt.log.writeln(err);
             }
           }
-        },
-        dest: '<%= paths.skyJsonLocal %>'
+        }
       }
     },
     
@@ -150,18 +145,6 @@ module.exports = function(grunt) {
       },
       'skyui-tfs-fetch': {
         command: 'git fetch <%= paths.skyLocal %>'
-      },
-      'renxt-serve': {
-        command: 'jekyll serve --config _config.yml,<%= paths.renxtConfig %> --baseurl "" --dest _site' 
-      },
-      'renxt-build': {
-        command: 'jekyll build --config _config.yml,<%= paths.renxtConfig %>' 
-      },
-      'fenxt-serve': {
-        command: 'jekyll serve --config _config.yml,<%= paths.fenxtConfig %> --baseurl "" --dest _site' 
-      },
-      'fenxt-build': {
-        command: 'jekyll build --config _config.yml,<%= paths.fenxtConfig %>' 
       }
     },    
     
@@ -177,12 +160,7 @@ module.exports = function(grunt) {
   // Current showing help message as default task
   grunt.registerTask(NS_INTERNAL + 'welcome', function() {
 
-    var spacer = '----------------------------------------';
-    
-    grunt.log.writeln(spacer);
-    grunt.log.writeln('The "default" grunt task is intentionally blank.');
-    grunt.log.writeln('Listed below are available tasks.');
-    grunt.log.writeln(spacer);
+    grunt.log.writeln('Listed below are available grunt commands in version %s:'.green.bold, grunt.config('pkg.version'));
     grunt.log.writeln('');
     
     // Filter BB tasks.  Saving to array to sort them by name.
@@ -208,13 +186,11 @@ module.exports = function(grunt) {
   // I do like this approach as it also abstracts the original grunt task.
   // Meaning if we need to change a task, the command and our documentation don't have to change.
   // It's obviously still possible to call the original grunt commands.
-  grunt.registerTask(NS + 'renxt-serve', 'Serve the RENXT documentation', 'shell:renxt-serve');
-  grunt.registerTask(NS + 'renxt-build', 'Build the RENXT documentation', 'shell:renxt-build');
-  grunt.registerTask(NS + 'fenxt-serve', 'Serve the FENXT documentation', 'shell:fenxt-serve');
-  grunt.registerTask(NS + 'fenxt-build', 'Build the FENXT documentation', 'shell:fenxt-build');
+  grunt.registerTask(NS + 'serve', 'Serve the documentation', ['assemble','connect']);
+  grunt.registerTask(NS + 'build', 'Build the documentation', 'assemble');
   grunt.registerTask(NS + 'skyui-tfs-clone', 'Clones the latest version of SkyUI from TFS', 'shell:skyui-tfs-clone');
   grunt.registerTask(NS + 'skyui-tfs-fetch', 'Fetches the latest version of SkyUI from TFS', 'shell:skyui-tfs-fetch');
-  grunt.registerTask(NS + 'skyui-nuget', 'Downloads the latest SkyUI nuget package', [
+  grunt.registerTask(NS + 'skyui-nuget', 'Downloads the latest (or specified) SkyUI nuget package', [
     'http:skyui-nuget-json', 
     'curl:skyui-nuget-download', 
     'unzip:skyui-nuget-unzip',
