@@ -1,0 +1,49 @@
+---
+itemsPerRow: 3
+---
+
+<div class="code">
+  <h1>Tutorials</h1>
+  <p>
+  We provide a set of short, simple tutorials with code snippets that show you how to use the RE NXT API to authenticate and manage your constituent fundraising data. Our <a href="{{ '/tutorials/getting-started' | prepend: site.baseurl }}" >Getting Started</a> and <a href="{{ '/tutorials/auth' | prepend: site.baseurl }}" >Web API Authorization</a> tutorials gets you up to speed fast.  These will guide you through the process of signing up for an API key, trying out our API console, and negotiating OAuth.    You will be writing code against our API in no time.  
+  </p>
+
+  {% assign itemsPerRow = page.itemsPerRow %}
+  {% assign width = 12 | divided_by: itemsPerRow %}
+  {% assign remainder = itemsPerRow | minus: 1 %}
+
+  {% for parent in site.links %}
+    {% if parent.url == '/tutorials/' %}
+
+      {% for child in parent.links %}
+
+        {% assign mod = forloop.index0 | modulo: itemsPerRow %}
+
+        {% if mod == 0 or forloop.first %}
+          <div class="row">
+        {% endif %}
+            
+        <div class="col-sm-{{ width }}">
+          <div class="has-hover">
+            <img src="holder.js/300x150" alt="" />
+            <div class="show-on-hover">
+              <div class="is-table">
+                <div class="is-table-cell">
+                  <a href="{{ child.url | prepend: site.baseurl }}" class="btn btn-primary">View Tutorial</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3><a href="{{ child.url | prepend: site.baseurl }}">{{ child.name }}</a></h3>
+          <p>{{ child.description }}</p>
+        </div>
+
+        {% if mod == remainder or forloop.last %}
+          </div>
+        {% endif %}
+
+      {% endfor %}
+
+    {% endif %}
+  {% endfor %}
+</div>
