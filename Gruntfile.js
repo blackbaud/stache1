@@ -14,10 +14,15 @@ module.exports = function(grunt) {
   'use strict';
   
   // Private vars
-  var ns = 'blackbaud';
+  var NS = 'blackbaud:',
+      NS_INTERNAL = 'internal:' + NS;
+  
+  // Disable grunt headers
+  grunt.log.header = function() {} 
   
   // Load the required node modules
   grunt.loadNpmTasks('assemble');
+  grunt.loadNpmTasks('grunt-asciify');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-curl');
@@ -50,6 +55,30 @@ module.exports = function(grunt) {
       tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/',
       renxtConfig: '_config.yml,_config.renxt.yml',
       fenxtConfig: '_config.yml,_config.fenxt.yml'
+    },
+    
+    asciify: {
+      one: {
+        text: 'Blackbaud',
+        options: {
+          font: 'cybersmall',
+          log: true
+        }
+      },
+      two: {
+        text: 'Documentation',
+        options: {
+          font: 'cybersmall',
+          log: true
+        }
+      },
+      three: {
+        text: 'Builder',
+        options: {
+          font: 'cybersmall',
+          log: true
+        }
+      },
     },
     
     assemble: {
@@ -145,32 +174,11 @@ module.exports = function(grunt) {
     }
   });
   
-  // Possibly not necessary in this context, but I'm namespacing all our commands.
-  // I do like this approach as it also abstracts the original grunt task.
-  // Meaning if we need to change a task, the command and our documentation don't have to change.
-  // It's obviously still possible to call the original grunt commands.
-  grunt.registerTask(ns + ':renxt-serve', 'Serve the RENXT documentation', 'shell:renxt-serve');
-  grunt.registerTask(ns + ':renxt-build', 'Build the RENXT documentation', 'shell:renxt-build');
-  grunt.registerTask(ns + ':fenxt-serve', 'Serve the FENXT documentation', 'shell:fenxt-serve');
-  grunt.registerTask(ns + ':fenxt-build', 'Build the FENXT documentation', 'shell:fenxt-build');
-  grunt.registerTask(ns + ':skyui-tfs-clone', 'Clones the latest version of SkyUI from TFS', 'shell:skyui-tfs-clone');
-  grunt.registerTask(ns + ':skyui-tfs-fetch', 'Fetches the latest version of SkyUI from TFS', 'shell:skyui-tfs-fetch');
-  grunt.registerTask(ns + ':skyui-nuget', 'Downloads the latest SkyUI nuget package', [
-    'http:skyui-nuget-json', 
-    'curl:skyui-nuget-download', 
-    'unzip:skyui-nuget-unzip',
-    'copy:skyui-nuget-copy'
-  ]);
-  
-  // Default task is to build the documentation and serve it
-  //grunt.registerTask('default', ['assemble', 'connect']);
-  grunt.registerTask('default', function() {
-    
+  // Current showing help message as default task
+  grunt.registerTask(NS_INTERNAL + 'welcome', function() {
+
     var spacer = '----------------------------------------';
     
-    grunt.log.writeln('');
-    grunt.log.writeln('Blackbaud Documentation Build Tool'.green.bold);
-    grunt.log.writeln('');
     grunt.log.writeln(spacer);
     grunt.log.writeln('The "default" grunt task is intentionally blank.');
     grunt.log.writeln('Listed below are available tasks.');
@@ -180,7 +188,7 @@ module.exports = function(grunt) {
     // Filter BB tasks.  Saving to array to sort them by name.
     var tasks = [];
     for ( var task in grunt.task._tasks) {
-      if (task.indexOf(ns) == 0) {
+      if (task.indexOf(NS) == 0) {
         tasks.push(task);
       }
     }
@@ -195,4 +203,30 @@ module.exports = function(grunt) {
       grunt.log.writeln('');
     }
   });
+  
+  // Possibly not necessary in this context, but I'm namespacing all our commands.
+  // I do like this approach as it also abstracts the original grunt task.
+  // Meaning if we need to change a task, the command and our documentation don't have to change.
+  // It's obviously still possible to call the original grunt commands.
+  grunt.registerTask(NS + 'renxt-serve', 'Serve the RENXT documentation', 'shell:renxt-serve');
+  grunt.registerTask(NS + 'renxt-build', 'Build the RENXT documentation', 'shell:renxt-build');
+  grunt.registerTask(NS + 'fenxt-serve', 'Serve the FENXT documentation', 'shell:fenxt-serve');
+  grunt.registerTask(NS + 'fenxt-build', 'Build the FENXT documentation', 'shell:fenxt-build');
+  grunt.registerTask(NS + 'skyui-tfs-clone', 'Clones the latest version of SkyUI from TFS', 'shell:skyui-tfs-clone');
+  grunt.registerTask(NS + 'skyui-tfs-fetch', 'Fetches the latest version of SkyUI from TFS', 'shell:skyui-tfs-fetch');
+  grunt.registerTask(NS + 'skyui-nuget', 'Downloads the latest SkyUI nuget package', [
+    'http:skyui-nuget-json', 
+    'curl:skyui-nuget-download', 
+    'unzip:skyui-nuget-unzip',
+    'copy:skyui-nuget-copy'
+  ]);
+  
+  // Current showing help message as default task
+  grunt.registerTask('default', [
+    'asciify:one', 
+    'asciify:two', 
+    'asciify:three', 
+    NS_INTERNAL + 'welcome'
+  ]);
+  
 };
