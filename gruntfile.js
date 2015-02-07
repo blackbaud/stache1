@@ -27,12 +27,15 @@ module.exports = function(grunt) {
   // Load the required node modules
   grunt.loadNpmTasks('assemble');
   grunt.loadNpmTasks('grunt-asciify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-curl');
   grunt.loadNpmTasks('grunt-http');
+  grunt.loadNpmTasks('grunt-newer');
   grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-usemin');
   grunt.loadNpmTasks('grunt-zip');
 
   // Initialize our configuration
@@ -41,10 +44,13 @@ module.exports = function(grunt) {
     
     // Reads our configuration files
     pkg: grunt.file.readJSON('package.json'),
-    config: grunt.file.readYAML('_config.yml'),
+    site: grunt.file.readYAML('_config.yml'),
     
     // Paths used through this gruntfile
     paths: {
+      appSrc: 'app-src/',
+      appDist: 'app-dist/',
+      appData: '<%= paths.appSrc %>_data/',
       portalName: 'bbapidev',
       portalApi: 'https://<%= paths.portalName %>.management.azure-api.net',
       portalQueryString: {
@@ -84,20 +90,21 @@ module.exports = function(grunt) {
     // The meat and potatoes of our application.
     assemble: {
       options: {
-        data: 'src/_data/*.*',
-		helpers: ['src/_helpers/**/*.js'],
-        layoutdir: 'src/_layouts',
+        assets: '<%= paths.appDist %>assets/',        
+        data: '<%= paths.appData %>*.*',
+		helpers: ['<%= paths.appSrc %>_helpers/**/*.js'],
+        layoutdir: '<%= paths.appSrc %>_layouts/',
         layout: 'base.hbs',
         pkg: '<%= pkg %>'
       },
       pages: {
-        options: {
-          flatten: true,
-          assets: 'bower_components'
-        },
-        files: {
-          'dist/index.html': ['src/index.hbs']
-        }
+        options: {},
+        files: [{
+          expand: true,
+          cwd: '<%= paths.appSrc %>',
+          dest: '<%= paths.appDist %>',
+          src: ['*.hbs']
+        }]
       }
     },
     
@@ -105,7 +112,7 @@ module.exports = function(grunt) {
     connect: {
       dev: {
         options: {
-          base: 'dist/',
+          base: '<%= paths.appDist %>',
           livereload: true,
           port: 4000
         }
@@ -165,7 +172,7 @@ module.exports = function(grunt) {
             if (error) {
               grunt.log.writeln(error);
             } else {
-              grunt.file.write('src/_data/operations.json', JSON.stringify(body.value)); 
+              grunt.file.write('<%= paths.appData %>operations.json', JSON.stringify(body.value)); 
             }
           }
         }
@@ -186,7 +193,22 @@ module.exports = function(grunt) {
       'npm-install': {
         command: 'npm install'
       }
-    },    
+    },
+    
+    useminPrepare: {
+      html: '<%= paths.appSrc %>_layouts/base.hbs',
+      options: {
+          dest: '<%= paths.appSrc %>'
+      }
+    },
+    
+    usemin: {
+      options: {
+        dirs: ['<%= paths.appSrc %>assets/']
+      },
+      html: ['<%= paths.appDest %>_layouts/base.hbs']
+    },
+    
     
     // Unzips our nuget package
     unzip: {
@@ -208,6 +230,8 @@ module.exports = function(grunt) {
     }
   });
   
+  grunt.registerTask('debug', ['useminPrepare', 'concat', 'usemin']);
+  
   // Current showing help message as default task
   grunt.registerTask(NS_INTERNAL + 'welcome', function() {
 
@@ -224,7 +248,7 @@ module.exports = function(grunt) {
     }
     
     // Sorting the tasks by name
-    tasks.sort();
+    //tasks.sort();
     
     // Display our tasks
     for (var i = 0, j = tasks.length; i < j; i++) {
@@ -242,7 +266,7 @@ module.exports = function(grunt) {
     NS + 'serve', 
     'Serve the documentation', 
     [
-      'assemble', 
+      'assemble',
       'connect', 
       'watch'
     ]

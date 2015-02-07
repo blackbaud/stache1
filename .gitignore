@@ -1,3 +1,6 @@
 .DS_Store
+.tmp/
+Thumbs.db
+vendor/
 bower_components/
 node_modules/
