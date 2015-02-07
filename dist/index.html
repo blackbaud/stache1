@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en" class="full-height-width">
   <head>
@@ -18,77 +16,167 @@
     <div id="top"></div>
     
     
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>NXT-API-DOCUMENTATION</title>
-    <link rel="stylesheet" href="../bower_components/assemble.css">
-    <link rel="stylesheet" href="../bower_components/github.css">
-  </head>
-  <body>
+     <ul>
+  <li>Using helper withOperation:  /apis/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d69 </li>
+  <li>Using helper getOperation: Adds an address to the constituent with the specified ID.</li>
+</ul>
 
-    
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="navbar-brand" href="index.html">NXT-API-DOCUMENTATION</a>
-          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <div class="nav-collapse collapse bs-navbar-collapse">
-            <ul class="nav navbar-nav pull-right">
-              <li> <a href="">GitHub Repo</a> </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+<header class="welcome" data-stellar-background-ratio="0.5">
+  <div class="text-vertical-center">
+    <h1>Welcome to the Open Blackbaud</h1>
+    <h2>Connect your app to the power of the  API.</h2>
+    <ul class="list-inline">
+      <li>
+        <a href="https://bbapidev.portal.azure-api.net/signup/" class="btn btn-lg btn-primary">Sign Up</a>
+      </li>
+      <li>
+        <a href="#about" class="btn btn-lg btn-white smooth-scroll">Learn More</a>
+      </li>
+    </ul>
+    <p class="text-muted">Already have an account?  <a href="https://bbapidev.portal.azure-api.net/signin/">Sign In</a></p>
+  </div>
+</header>
 
-    
-    <header class="masthead subhead">
-      <div class="container">
+<section id="about" class="about section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <h2>Our RESTful API is built for today&#39;s web.</h2>
+        <p class="lead">The Blackbaud  REST APIs allow you to manage constituent data such as contact info, education, relationships, attributes and constituent codes. Since the API is based on REST principles, it&#39;s very easy to write and test applications.</p>
+        <p><a href="http://localhost:4000/tutorials/getting-started/" class="btn btn-lg btn-primary">Getting Started</a></p>
+      </div>  <!-- .col-sm-12 -->
+    </div>  <!-- .row -->
+  </div>  <!-- .container -->
+</section>  <!-- .about -->
+
+<section id="learn" class="learn section-padding bg-primary">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-lg-10 col-lg-offset-1">
+
+        <h2>Learn</h2>
+
         <div class="row">
-          <div class="col col-lg-12">
-            <h1> DOCUMENTATION </h1>
-          </div>
-        </div>
-      </div>
-    </header>
 
+          <div class="col-md-3 col-sm-6">
+            <a href="http://localhost:4000/tutorials/" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-graduation-cap fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Guided Tutorials</strong></h4>
+            <p>Short, simple guides intended to help you get started using our  APIs.</p>
+          </div>  <!-- .col-md-3 -->
 
-    
-    <div class="container">
-      <div class="panel panel-docs">
-        <h1 id="documentation-workflow-with-npm-grunt-and-assemble">Documentation Workflow with NPM, Grunt, and Assemble</h1>
-<h2 id="setting-up-this-repo-current-">Setting up this repo (Current)</h2>
-<ol>
-<li>Requires Node (NPM) and grunt-cli</li>
-<li>Clone from GitHub</li>
-<li>Run npm i</li>
-<li>Run grunt, which lists the available tasks.</li>
-</ol>
-<h2 id="setting-up-this-repo-goal-">Setting up this repo (Goal)</h2>
-<ol>
-<li>Developer has their project checked out - RE, FE, etc.</li>
-<li>Install Blackbaud.Documentation.StaticAssemble NuGet package.</li>
-<li>npm i is automatically ran.</li>
-<li>Grunt file includes default locations for documentation, but developer has opportunity to override these with config.</li>
-<li>Active development, developer runs grunt serve.</li>
-<li>Just building, developer runs grunt build.</li>
-<li>Ready to publish, developer runs grunt publish which uses grunt-prompt to ask for pre-defined locations (internal, external, github, digital-ocean, etc).</li>
-<li>Automation ready to publish, runs grunt autopublish which reads team&#39;s config file for location, etc.</li>
-</ol>
+          <div class="col-md-3 col-sm-6">
+            <a href="http://localhost:4000/guide/" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-file-text fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Developer Guide</strong></h4>
+            <p>Deeper documentation for topics such as auth, pagination, quotas, versions... </p>
+          </div>  <!-- .col-md-3 -->
 
-      </div>
-    </div>
+          <div class="clearfix visible-sm-block"></div>
 
-    <script src="../bower_components/highlight.js"></script>
-    <script src="../bower_components/holder.js"></script>
-  </body>
-</html>    
+          <div class="col-md-3 col-sm-6">
+            <a href="http://localhost:4000/resources/" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-cubes fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Resources</strong></h4>
+            <p>Stay connected by using our developer blog, community forum, and other tools.</p>
+          </div>  <!-- .col-md-3 -->
+
+          <div class="col-md-3 col-sm-6">
+            <a href="http://localhost:4000/resources/code/" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-github fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Code</strong></h4>
+            <p>Follow along within our developer guides and tutorials with code samples that are available within our GitHub repos.</p>
+          </div>  <!-- .col-md-3 -->
+        </div>  <!-- .row -->
+      </div>  <!-- .col-lg-10 -->
+    </div>  <!-- .row -->
+  </div>  <!-- .container -->
+</section>  <!-- .learn -->
+
+<section id="services" class="services section-padding bg-secondary">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-lg-10 col-lg-offset-1">
+
+        <h2>Our API</h2>
+        <div class="row">
+
+          <div class="col-sm-3">
+            <a href="https://bbapidev.portal.azure-api.net//apis/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d69" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-users fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Constituents</strong></h4>
+            <p>Get your constituent details by learning about the API endpoints.</p>
+          </div>  <!-- .col-md-4 -->
+
+          <div class="col-sm-3"><br>            <a href="###########" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-terminal fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Interactive API Console</strong></h4>
+            <p>Our technical reference includes an interactive API console which allows you to directly interact with the API while you learn!</p>
+          </div>  <!-- .col-md-4 -->
+
+          <div class="col-sm-3">
+            <a href="http://localhost:4000/resources/status/" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-tachometer fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Real-time Status</strong></h4>
+            <p>Get real-time status updates, including historical references and explanations of any status changes.</p>
+          </div>  <!-- .col-md-4 -->
+
+          <div class="col-sm-3">
+            <a href="https://bbapidev.portal.azure-api.net/analytics/" class="btn-fa-link">
+              <span class="fa-stack fa-4x">
+                <i class="fa fa-square fa-stack-2x"></i>
+                <i class="fa fa-bar-chart fa-stack-1x text-primary"></i>
+              </span>  <!-- .fa-stack -->
+            </a>  <!-- .btn-fa-link -->
+            <h4><strong>Analytics</strong></h4>
+            <p>View metrics on all your API calls, including response rates and codes.</p>
+          </div>  <!-- .col-md-4 -->
+
+        </div>  <!-- .row -->
+      </div>  <!-- .col-lg-10 -->
+    </div>  <!-- .row -->
+  </div>  <!-- .container -->
+</section>  <!-- .services -->
+
+<section id="start" class="start section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h2>Get Help the Way You Want</h2>
+        <p>We want our help to be just as available as our API.  Use the 
+          <a href="http://stackoverflow.com/questions/tagged/renxt">forum</a>, check out <a href="http://localhost:4000/resources/faq/">frequently asked questions</a>, view the <a href="http://localhost:4000/resources/changelog/">change log</a>, or explore <a href="https://bbapidev.portal.azure-api.net/issues/">active issues</a> to stay connected.</p>
+      </div>  <!-- .col-sm-12 -->
+    </div>  <!-- .row -->
+  </div>  <!-- .container -->
+</section>  
     
     <!-- Omnibar Placeholder -->
     <div id="omnibar"></div>

@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       };
   
   // Disable grunt headers
-  grunt.log.header = function() {} 
+  //grunt.log.header = function() {} 
   
   // Load the required node modules
   grunt.loadNpmTasks('assemble');
@@ -39,26 +39,30 @@ module.exports = function(grunt) {
   // For my sanity, please alphabetize any tasks after pkg and paths.
   grunt.initConfig({
     
-    // Reads package information
+    // Reads our configuration files
     pkg: grunt.file.readJSON('package.json'),
+    config: grunt.file.readYAML('_config.yml'),
     
     // Paths used through this gruntfile
     paths: {
+      portalName: 'bbapidev',
+      portalApi: 'https://<%= paths.portalName %>.management.azure-api.net',
+      portalQueryString: {
+        'api-version': '2014-02-14-preview'
+      },
       nuget: 'Blackbaud.SkyUI.Sass',
       nugetDir: '_nuget/<%= paths.nuget %>',
       nugetServer: 'http://tfs-sym.blackbaud.com:81/nuget/',
       nugetVersion: '',  // Set by blackbaud:skyui-nuget
       skyJsonRemote: '', // Set by blackbaud:skyui-nuget
       skyJsonRemoteById: '<%= paths.nugetServer %>FindPackagesById()?id=\'<%= paths.nuget %>\'&$orderby=Published desc&$top=1',
-      skyJsonRemoteByVersion: '<%= paths.nugetServer %>/Packages(Id=\'<%= paths.nuget %>\',Version=\'<%= paths.nugetVersion %>\')',
+      skyJsonRemoteByVersion: '<%= paths.nugetServer %>Packages(Id=\'<%= paths.nuget %>\',Version=\'<%= paths.nugetVersion %>\')',
       skyTfsLocal: '_sass/Sky/',
       skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/',
       skyZipExpanded: '<%= paths.nugetDir %>/',
       skyZipLocal: '<%+ paths.nugetDir %>.zip',
       skyZipRemote: '', // Set by http:skyui-json
-      tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/',
-      renxtConfig: '_config.yml,_config.renxt.yml',
-      fenxtConfig: '_config.yml,_config.fenxt.yml'
+      tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/'
     },
     
     // Displays our title all fancy-like
@@ -80,8 +84,11 @@ module.exports = function(grunt) {
     // The meat and potatoes of our application.
     assemble: {
       options: {
+        data: 'src/_data/*.*',
+		helpers: ['src/_helpers/**/*.js'],
         layoutdir: 'src/_layouts',
-        layout: 'base.hbs'
+        layout: 'base.hbs',
+        pkg: '<%= pkg %>'
       },
       pages: {
         options: {
@@ -99,7 +106,7 @@ module.exports = function(grunt) {
       dev: {
         options: {
           base: 'dist/',
-          keepalive: true,
+          livereload: true,
           port: 4000
         }
       }
@@ -132,7 +139,6 @@ module.exports = function(grunt) {
           url: '<%= paths.skyJsonRemote %>',
           json: true,
           callback: function(error, response, body) {
-            console.log(body);
             try {
               var parent = grunt.config('paths.nugetVersion') ? body.d : body.d[0];
               grunt.config.set('paths.skyZipRemote', parent.__metadata.media_src);
@@ -140,6 +146,26 @@ module.exports = function(grunt) {
             } catch(err) {
               grunt.log.writeln('Error parsing NuGet response.');
               grunt.log.writeln(err);
+            }
+          }
+        }
+      },
+      'portal-get-operations': {
+        options: {
+          url: '<%= paths.portalApi %>/apis/54c136c272126c0990e57438/operations',
+          qs: '<%= paths.portalQueryString %>',
+          headers: {
+            Authorization: 'SharedAccessSignature uid=54c12d71ce82280329030003&ex=2016-02-06T22:41:00.0000000Z&sn=SuypLuSQqpGI3MEhiGNHcwIkEQQIswUxWsmoh54mpyYXt0U27lOyAapkYHxtnDxIak9JyUskfplQT9iTmBm2yg=='
+          },
+          
+          // Instead of being able to use dest, I'm having to remove '{ value: [...]}'
+          // This caused errors in assemble.
+          json: true,
+          callback: function(error, response, body) {
+            if (error) {
+              grunt.log.writeln(error);
+            } else {
+              grunt.file.write('src/_data/operations.json', JSON.stringify(body.value)); 
             }
           }
         }
@@ -153,6 +179,12 @@ module.exports = function(grunt) {
       },
       'skyui-tfs-fetch': {
         command: 'git fetch <%= paths.skyLocal %>'
+      },
+      'bower-install': {
+        command: 'bower install'
+      },
+      'npm-install': {
+        command: 'npm install'
       }
     },    
     
@@ -167,8 +199,11 @@ module.exports = function(grunt) {
     // When serving, watch for file changes
     watch: {
       serve: {
-        files: ['src/**'],
-        tasks: ['assemble']
+        files: ['src/**/*.*'],
+        tasks: ['assemble'],
+        options: {
+          livereload: true
+        }
       }
     }
   });
@@ -176,7 +211,8 @@ module.exports = function(grunt) {
   // Current showing help message as default task
   grunt.registerTask(NS_INTERNAL + 'welcome', function() {
 
-    grunt.log.writeln('Listed below are available grunt commands in version %s:'.green.bold, grunt.config('pkg.version'));
+    var msg = 'Listed below are available grunt commands in version %s:';
+    grunt.log.writeln(msg.green.bold, grunt.config('pkg.version'));
     grunt.log.writeln('');
     
     // Filter BB tasks.  Saving to array to sort them by name.
@@ -202,18 +238,66 @@ module.exports = function(grunt) {
   // I do like this approach as it also abstracts the original grunt task.
   // Meaning if we need to change a task, the command and our documentation don't have to change.
   // It's obviously still possible to call the original grunt commands.
-  grunt.registerTask(NS + 'serve', 'Serve the documentation', ['assemble', 'connect']);
-  grunt.registerTask(NS + 'build', 'Build the documentation', 'assemble');
-  grunt.registerTask(NS + 'skyui-tfs-clone', 'Clones the latest version of SkyUI from TFS', 'shell:skyui-tfs-clone');
-  grunt.registerTask(NS + 'skyui-tfs-fetch', 'Fetches the latest version of SkyUI from TFS', 'shell:skyui-tfs-fetch');
-  grunt.registerTask(NS + 'skyui-nuget', 'Downloads the latest (or specified) SkyUI nuget package', [
-    'http:skyui-nuget-json', 
-    'curl:skyui-nuget-download', 
-    'unzip:skyui-nuget-unzip',
-    'copy:skyui-nuget-copy'
-  ]);
+  grunt.registerTask(
+    NS + 'serve', 
+    'Serve the documentation', 
+    [
+      'assemble', 
+      'connect', 
+      'watch'
+    ]
+  );
   
-  // Current showing help message as default task
+  grunt.registerTask(
+    NS + 'build', 
+    'Build the documentation', 
+    'assemble'
+  );
+  
+  grunt.registerTask(
+    NS + 'update',
+    'Updates ALL external dependencies. (SkyUI, Azure, Bower, NPM)',
+    [
+      'shell:npm-install',
+      'shell:bower-install',
+      NS + 'skyui-nuget',
+      NS + 'portal-get-operations',
+    ]
+  );
+
+  grunt.registerTask(
+    NS + 'portal-get-operations', 
+    'Downloads the list of operations for the default (or specified) API.', 
+    'http:portal-get-operations'
+  );
+  
+  grunt.registerTask(
+    NS + 'skyui-tfs-clone', 
+    'Clones the latest version of SkyUI from TFS', 
+    'shell:skyui-tfs-clone'
+  );
+  
+  grunt.registerTask(
+    NS + 'skyui-tfs-fetch', 
+    'Fetches the latest version of SkyUI from TFS', 
+    'shell:skyui-tfs-fetch'
+  );
+  
+  grunt.registerTask(
+    NS + 'skyui-nuget', 
+    'Downloads the latest (or specified) SkyUI nuget package', 
+    function(version) {
+      var url = version ? 'paths.skyJsonRemoteByVersion' : 'paths.skyJsonRemoteById';
+      grunt.config.set('paths.nugetVersion', version);
+      grunt.config.set('paths.skyJsonRemote', grunt.config(url));    
+      grunt.task.run('http:skyui-nuget-json');
+      grunt.task.run('curl:skyui-nuget-download');
+      grunt.task.run('unzip:skyui-nuget-unzip');
+      grunt.task.run('copy:skyui-nuget-copy');
+    }
+  );
+  
+  // Display help message as default task
   grunt.registerTask('default', [
     'asciify:one', 
     'asciify:two', 

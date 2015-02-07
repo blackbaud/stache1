@@ -4,7 +4,8 @@
 
 0. Requires Node (NPM) and grunt-cli
 0. Clone from GitHub
-0. Run npm i
+0. Run npm install
+0. Run bower install
 0. Run grunt, which lists the available tasks.
 
 ## Setting up this repo (Goal)

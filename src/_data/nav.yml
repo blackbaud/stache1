@@ -1,0 +1,24 @@
+# NOTES:
+#
+# This navigation file is purposefully flat.  Structure of the nav is described in sitemap.xml.
+# When adding new links, please follow the convention below:
+#   - Include trailing slashes
+#   - Use the Lo-Dash syntax to build nested links
+#
+
+base: http://localhost:4000/
+portal: https://bbapidev.portal.azure-api.net/
+portal-analytics: <%= nav.portal %>analytics/
+portal-issues: <%= nav.portal %>issues/
+portal-signin: <%= nav.portal %>signin/
+portal-signup: <%= nav.portal %>signup/
+tutorials: <%= nav.base %>tutorials/
+tutorials-getting-started: <%= nav.tutorials %>getting-started/
+guide: <%= nav.base %>guide/
+resources: <%= nav.base %>resources/
+resources-changelog: <%= nav.resources %>changelog/
+resources-code: <%= nav.resources %>code/
+resources-faq: <%= nav.resources %>faq/
+resources-status: <%= nav.resources %>status/
+community: http://blackbaud.smallworldlabs.com
+community-forum: http://stackoverflow.com/questions/tagged/renxt
