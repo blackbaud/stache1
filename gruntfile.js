@@ -3,35 +3,35 @@
 * Bobby Earl, 2015-01-27
 *
 * TODO
-*   Copy fonts from _sass/Sky/fonts/ into assets/fonts/
+*   Copy fonts from _sass/Sky/fonts/ into assets/fonts/.
+*   Implement grunt-filerev when performing blackbaud:build.
 *
 * NOTES
 *   There is a current bug where 'local echo' can't be disabled when running the skyui-tfs-clone task.
 *   This means a user's password will be visible.  More investigation into the problem is necessary.
-*   The Blackbaud.SkyUI.Mixins package would generally be a better choice, but I want the font.
 **/
 module.exports = function(grunt) {
   'use strict';
   
-  // Private vars
+  // Blackbaud Namespace
   var NS = 'blackbaud:',
-      NS_INTERNAL = 'internal:' + NS,
-      asciifyOptions = {
-        font: 'cybermedium',
-        log: true
-      };
+      NS_INTERNAL = 'internal:' + NS;
   
   // Disable grunt headers
-  //grunt.log.header = function() {} 
+  grunt.log.header = function() {} 
   
   // Load the required node modules
   grunt.loadNpmTasks('assemble');
   grunt.loadNpmTasks('grunt-asciify');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-curl');
+  grunt.loadNpmTasks('grunt-filerev');
   grunt.loadNpmTasks('grunt-http');
   grunt.loadNpmTasks('grunt-newer');
   grunt.loadNpmTasks('grunt-shell');
@@ -75,15 +75,24 @@ module.exports = function(grunt) {
     asciify: {
       one: {
         text: 'Blackbaud',
-        options: asciifyOptions
+        options: {
+          font: 'cybermedium',
+          log: true
+        }
       },
       two: {
         text: 'Documentation',
-        options: asciifyOptions
+        options: {
+          font: 'cybermedium',
+          log: true
+        }
       },
       three: {
         text: 'Builder ',
-        options: asciifyOptions
+        options: {
+          font: 'cybermedium',
+          log: true
+        }
       },
     },
     
@@ -108,13 +117,23 @@ module.exports = function(grunt) {
       }
     },
     
+    // Cleans the dist folder before serve/build
+    clean: {
+      build: {
+        src: ['<%= paths.appDist %>']
+      }
+    },
+    
     // Creates a server
     connect: {
       dev: {
         options: {
-          base: '<%= paths.appDist %>',
+          base: [
+            '<%= paths.appDist %>',
+            '<%= paths.appSrc %>'
+          ],
           livereload: true,
-          port: 4000
+          port: 4000 
         }
       }
     },
@@ -136,6 +155,18 @@ module.exports = function(grunt) {
       'skyui-nuget-download': {
         src: '<%= paths.skyZipRemote %>',
         dest: '<%= paths.skyZipLocal %>'
+      }
+    },
+    
+    // Adds timestamp to the assets
+    filerev: {
+      site: {
+        files: [{
+          src: [
+            '<%= paths.appDist %>assets/css/*.css',
+            '<%= paths.appDist %>assets/js/*.js'
+          ]
+        }]
       }
     },
     
@@ -196,17 +227,16 @@ module.exports = function(grunt) {
     },
     
     useminPrepare: {
-      html: '<%= paths.appSrc %>_layouts/base.hbs',
+      html: '<%= paths.appDist %>index.html',
       options: {
-          dest: '<%= paths.appSrc %>'
+        assetsDirs: ['<%= paths.appDist %>assets/'],
+        dest: '<%= paths.appDist %>assets/',
+        root: '<%= paths.appSrc %>'
       }
     },
     
     usemin: {
-      options: {
-        dirs: ['<%= paths.appSrc %>assets/']
-      },
-      html: ['<%= paths.appDest %>_layouts/base.hbs']
+      html: '<%= paths.appDist %>index.html'
     },
     
     
@@ -229,8 +259,6 @@ module.exports = function(grunt) {
       }
     }
   });
-  
-  grunt.registerTask('debug', ['useminPrepare', 'concat', 'usemin']);
   
   // Current showing help message as default task
   grunt.registerTask(NS_INTERNAL + 'welcome', function() {
@@ -266,7 +294,7 @@ module.exports = function(grunt) {
     NS + 'serve', 
     'Serve the documentation', 
     [
-      'assemble',
+      'newer:assemble',
       'connect', 
       'watch'
     ]
@@ -275,7 +303,16 @@ module.exports = function(grunt) {
   grunt.registerTask(
     NS + 'build', 
     'Build the documentation', 
-    'assemble'
+    [
+      'clean',
+      'assemble',
+      'useminPrepare',
+      'concat:generated',
+      'cssmin:generated',
+      'uglify:generated',
+      //'filerev',
+      'usemin'
+    ]
   );
   
   grunt.registerTask(
