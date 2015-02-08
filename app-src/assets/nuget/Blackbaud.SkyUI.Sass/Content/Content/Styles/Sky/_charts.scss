@@ -1,0 +1,22 @@
+﻿@import '_mixins.scss';
+
+.bb-chart-rendering {
+    visibility: hidden;
+}
+
+.bb-chart-popup-mobile {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    @include transform(translate(-50%, -50%));
+}
+
+.bb-chart-popup {
+    position: absolute;
+}
+
+.bb-chart-pan {
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+}
