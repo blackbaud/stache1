@@ -1,0 +1,94 @@
+@import "_mixins.scss";
+
+/* NAVIGATION START */
+
+$nav-color: #a7b1c2;
+$nav-selected-color: $selected-text-color;
+$nav-selected-background-color: #293846;
+$nav-item-padding: 15px;
+$nav-selected-border-width: 4px;
+
+.nav-wrap {
+    width: 100%;
+    padding: $padding-plus-half $padding;
+    margin-bottom: $margin-double;
+    border-bottom: 1px solid $light-gray;
+    background-color: $nav-bg;
+
+    @media (max-width: $screen-xs-max) {
+        &:not(.nav-wrap-showmobile) {
+            display: none;
+        }
+    }
+}
+
+.nav-items {
+    font-family: $font-family-alternate;
+    padding: 0;
+    margin: 0;
+    font-size: 0;
+    color: $nav-color;
+
+    li {
+        cursor: pointer;
+        display: inline;
+        list-style: none;
+        font-size: 14px;
+        white-space: nowrap;
+
+        a {
+            padding: $nav-item-padding $nav-item-padding * 0.75;
+            text-decoration: none;
+            color: $nav-color;
+            font-weight: 600;
+        }
+
+        &:after {
+            content: "";
+            position: relative;
+            left: ($margin-plus-half / 2);
+        }
+
+        &:last-child:after {
+            content: normal;
+        }
+
+        &:hover,
+        &.selected {
+            a {
+                background-color: $nav-selected-background-color;
+                border-bottom: solid $nav-selected-border-width $blue;
+                color: $nav-selected-color;
+                padding-bottom: $nav-item-padding - $nav-selected-border-width;
+            }
+        }
+
+        &.disabled {
+            pointer-events: none;
+
+            a {
+                background-color: transparent;
+                border-bottom: none;
+                cursor: default;
+                color: darken($nav-color, 20%);
+                padding-bottom: 0;
+            }
+        }
+    }
+}
+
+@media (min-width: $screen-sm-min) {
+    ul.nav-items {
+        li {
+            a {
+                padding: $nav-item-padding;
+            }
+
+            &:after {
+                left: ($margin + $padding-half);
+            }
+        }
+    }
+}
+
+/* NAVIGATION END */

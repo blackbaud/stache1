@@ -52,6 +52,7 @@ module.exports = function(grunt) {
       appDist: 'app-dist/',
       appData: '<%= paths.appSrc %>_data/',
       appAssets: '<%= paths.appSrc %>assets/',
+      appTemp: '.tmp/',
       portalName: 'bbapidev',
       portalApi: 'https://<%= paths.portalName %>.management.azure-api.net',
       portalQueryString: {
@@ -64,10 +65,10 @@ module.exports = function(grunt) {
       skyJsonRemote: '', // Set by blackbaud:skyui-nuget
       skyJsonRemoteById: '<%= paths.nugetServer %>FindPackagesById()?id=\'<%= paths.nuget %>\'&$orderby=Published desc&$top=1',
       skyJsonRemoteByVersion: '<%= paths.nugetServer %>Packages(Id=\'<%= paths.nuget %>\',Version=\'<%= paths.nugetVersion %>\')',
-      skyTfsLocal: '_sass/Sky/',
+      skyTfsLocal: '<%= paths.appSrc %>_sass/',
       skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/',
       skyZipExpanded: '<%= paths.nugetDir %>/',
-      skyZipLocal: '.tmp/<%+ paths.nuget %>.zip',
+      skyZipLocal: '<%= paths.appTemp %><%= paths.nuget %>.zip',
       skyZipRemote: '', // Set by http:skyui-json
       tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/'
     },
@@ -178,21 +179,31 @@ module.exports = function(grunt) {
           url: '<%= paths.skyJsonRemote %>',
           json: true,
           ignoreErrors: true,
-          callback: function(error, response, body) {
-            if (error) {
+          callback: function(possibleError, response, body) {
+            var error, message;
+            
+            if (possibleError) {
+              error = possibleError;
               if (error.code == 'ENOTFOUND') {
-                grunt.log.writeln('Blackbaud NuGet server requires LAN / VPN access.'.green.bold)
+                message = 'Blackbaud NuGet server requires LAN / VPN access.'.green.bold;
               }
-              grunt.fail.fatal(error);
             } else {
               try {
                 var parent = grunt.config('paths.nugetVersion') ? body.d : body.d[0];
                 grunt.config.set('paths.skyZipRemote', parent.__metadata.media_src);
-                grunt.log.writeln('Found latest SkyUI nuget: %s', grunt.config('paths.skyZipRemote'));
-              } catch(err) {
-                grunt.log.writeln('Error parsing NuGet response.');
-                grunt.log.writeln(err);
+                message = 'Found latest SkyUI nuget: ' + grunt.config('paths.skyZipRemote');
+              } catch(e) {
+                message = 'Error parsing nuget response.';
+                error = err;
               }
+            }
+            
+            if (message) {
+              grunt.log.writeln(message);
+            }
+            
+            if (error) {
+              grunt.fail.fatal(error);
             }
           }
         }
@@ -363,7 +374,7 @@ module.exports = function(grunt) {
       grunt.task.run('http:skyui-nuget-json');
       grunt.task.run('curl:skyui-nuget-download');
       grunt.task.run('unzip:skyui-nuget-unzip');
-      grunt.task.run('copy:skyui-nuget-copy');
+      //grunt.task.run('copy:skyui-nuget-copy');
     }
   );
   
