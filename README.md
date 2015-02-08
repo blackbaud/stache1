@@ -18,3 +18,6 @@
 0. Just building, developer runs grunt build.
 0. Ready to publish, developer runs grunt publish which uses grunt-prompt to ask for pre-defined locations (internal, external, github, digital-ocean, etc).
 0. Automation ready to publish, runs grunt autopublish which reads team's config file for location, etc.
+
+## Site Organization
+
