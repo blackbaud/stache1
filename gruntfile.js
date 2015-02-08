@@ -51,13 +51,14 @@ module.exports = function(grunt) {
       appSrc: 'app-src/',
       appDist: 'app-dist/',
       appData: '<%= paths.appSrc %>_data/',
+      appAssets: '<%= paths.appSrc %>assets/',
       portalName: 'bbapidev',
       portalApi: 'https://<%= paths.portalName %>.management.azure-api.net',
       portalQueryString: {
         'api-version': '2014-02-14-preview'
       },
       nuget: 'Blackbaud.SkyUI.Sass',
-      nugetDir: '_nuget/<%= paths.nuget %>',
+      nugetDir: '<%= paths.appAssets %>nuget/<%= paths.nuget %>',
       nugetServer: 'http://tfs-sym.blackbaud.com:81/nuget/',
       nugetVersion: '',  // Set by blackbaud:skyui-nuget
       skyJsonRemote: '', // Set by blackbaud:skyui-nuget
@@ -66,7 +67,7 @@ module.exports = function(grunt) {
       skyTfsLocal: '_sass/Sky/',
       skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/',
       skyZipExpanded: '<%= paths.nugetDir %>/',
-      skyZipLocal: '<%+ paths.nugetDir %>.zip',
+      skyZipLocal: '.tmp/<%+ paths.nuget %>.zip',
       skyZipRemote: '', // Set by http:skyui-json
       tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/'
     },
@@ -176,14 +177,22 @@ module.exports = function(grunt) {
         options: {
           url: '<%= paths.skyJsonRemote %>',
           json: true,
+          ignoreErrors: true,
           callback: function(error, response, body) {
-            try {
-              var parent = grunt.config('paths.nugetVersion') ? body.d : body.d[0];
-              grunt.config.set('paths.skyZipRemote', parent.__metadata.media_src);
-              grunt.log.writeln('Found latest SkyUI nuget: %s', grunt.config('paths.skyZipRemote'));
-            } catch(err) {
-              grunt.log.writeln('Error parsing NuGet response.');
-              grunt.log.writeln(err);
+            if (error) {
+              if (error.code == 'ENOTFOUND') {
+                grunt.log.writeln('Blackbaud NuGet server requires LAN / VPN access.'.green.bold)
+              }
+              grunt.fail.fatal(error);
+            } else {
+              try {
+                var parent = grunt.config('paths.nugetVersion') ? body.d : body.d[0];
+                grunt.config.set('paths.skyZipRemote', parent.__metadata.media_src);
+                grunt.log.writeln('Found latest SkyUI nuget: %s', grunt.config('paths.skyZipRemote'));
+              } catch(err) {
+                grunt.log.writeln('Error parsing NuGet response.');
+                grunt.log.writeln(err);
+              }
             }
           }
         }
