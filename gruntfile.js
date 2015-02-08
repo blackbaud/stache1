@@ -39,39 +39,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-zip');
 
   // Initialize our configuration
-  // For my sanity, please alphabetize any tasks after pkg and paths.
+  // For my sanity, please alphabetize any tasks after pkg and site.
   grunt.initConfig({
     
     // Reads our configuration files
     pkg: grunt.file.readJSON('package.json'),
     site: grunt.file.readYAML('_config.yml'),
-    
-    // Paths used through this gruntfile
-    paths: {
-      appSrc: 'app-src/',
-      appDist: 'app-dist/',
-      appData: '<%= paths.appSrc %>_data/',
-      appAssets: '<%= paths.appSrc %>assets/',
-      appTemp: '.tmp/',
-      portalName: 'bbapidev',
-      portalApi: 'https://<%= paths.portalName %>.management.azure-api.net',
-      portalQueryString: {
-        'api-version': '2014-02-14-preview'
-      },
-      nuget: 'Blackbaud.SkyUI.Sass',
-      nugetDir: '<%= paths.appAssets %>nuget/<%= paths.nuget %>',
-      nugetServer: 'http://tfs-sym.blackbaud.com:81/nuget/',
-      nugetVersion: '',  // Set by blackbaud:skyui-nuget
-      skyJsonRemote: '', // Set by blackbaud:skyui-nuget
-      skyJsonRemoteById: '<%= paths.nugetServer %>FindPackagesById()?id=\'<%= paths.nuget %>\'&$orderby=Published desc&$top=1',
-      skyJsonRemoteByVersion: '<%= paths.nugetServer %>Packages(Id=\'<%= paths.nuget %>\',Version=\'<%= paths.nugetVersion %>\')',
-      skyTfsLocal: '<%= paths.appSrc %>_sass/',
-      skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/',
-      skyZipExpanded: '<%= paths.nugetDir %>/',
-      skyZipLocal: '<%= paths.appTemp %><%= paths.nuget %>.zip',
-      skyZipRemote: '', // Set by http:skyui-json
-      tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/'
-    },
     
     // Displays our title all fancy-like
     asciify: {
@@ -101,10 +74,10 @@ module.exports = function(grunt) {
     // The meat and potatoes of our application.
     assemble: {
       options: {
-        assets: '<%= paths.appDist %>assets/',        
-        data: '<%= paths.appData %>*.*',
-		helpers: ['<%= paths.appSrc %>_helpers/**/*.js'],
-        layoutdir: '<%= paths.appSrc %>_layouts/',
+        assets: '<%= site.appDist %>assets/',        
+        data: '<%= site.appData %>*.*',
+		helpers: ['<%= site.appSrc %>_helpers/**/*.js'],
+        layoutdir: '<%= site.appSrc %>_layouts/',
         layout: 'base.hbs',
         pkg: '<%= pkg %>'
       },
@@ -112,8 +85,8 @@ module.exports = function(grunt) {
         options: {},
         files: [{
           expand: true,
-          cwd: '<%= paths.appSrc %>',
-          dest: '<%= paths.appDist %>',
+          cwd: '<%= site.appSrc %>',
+          dest: '<%= site.appDist %>',
           src: ['*.hbs']
         }]
       }
@@ -122,7 +95,7 @@ module.exports = function(grunt) {
     // Cleans the dist folder before serve/build
     clean: {
       build: {
-        src: ['<%= paths.appDist %>']
+        src: ['<%= site.appDist %>']
       }
     },
     
@@ -131,8 +104,8 @@ module.exports = function(grunt) {
       dev: {
         options: {
           base: [
-            '<%= paths.appDist %>',
-            '<%= paths.appSrc %>'
+            '<%= site.appDist %>',
+            '<%= site.appSrc %>'
           ],
           livereload: true,
           port: 4000 
@@ -145,9 +118,9 @@ module.exports = function(grunt) {
       'skyui-nuget-copy': {
         files: [{
           expand: true,
-          cwd: '<%= paths.skyZipExpanded %>/Content/Content/Styles/Sky/',
+          cwd: '<%= site.skyZipExpanded %>/Content/Content/Styles/Sky/',
           src: ['**'],
-          dest: '<%= paths.skyTfsLocal %>'
+          dest: '<%= site.skyTfsLocal %>'
         }]
       }
     },
@@ -155,8 +128,8 @@ module.exports = function(grunt) {
     // Downloads the latest nuget package, saving it as a zip file.
     curl: {
       'skyui-nuget-download': {
-        src: '<%= paths.skyZipRemote %>',
-        dest: '<%= paths.skyZipLocal %>'
+        src: '<%= site.skyZipRemote %>',
+        dest: '<%= site.skyZipLocal %>'
       }
     },
     
@@ -165,8 +138,8 @@ module.exports = function(grunt) {
       site: {
         files: [{
           src: [
-            '<%= paths.appDist %>assets/css/*.css',
-            '<%= paths.appDist %>assets/js/*.js'
+            '<%= site.appDist %>assets/css/*.css',
+            '<%= site.appDist %>assets/js/*.js'
           ]
         }]
       }
@@ -176,7 +149,7 @@ module.exports = function(grunt) {
     http: {
       'skyui-nuget-json': {
         options: {
-          url: '<%= paths.skyJsonRemote %>',
+          url: '<%= site.skyJsonRemote %>',
           json: true,
           ignoreErrors: true,
           callback: function(possibleError, response, body) {
@@ -194,7 +167,7 @@ module.exports = function(grunt) {
                 message = 'Found latest SkyUI nuget: ' + grunt.config('paths.skyZipRemote');
               } catch(e) {
                 message = 'Error parsing nuget response.';
-                error = err;
+                error = e;
               }
             }
             
@@ -210,8 +183,8 @@ module.exports = function(grunt) {
       },
       'portal-get-operations': {
         options: {
-          url: '<%= paths.portalApi %>/apis/54c136c272126c0990e57438/operations',
-          qs: '<%= paths.portalQueryString %>',
+          url: '<%= site.portalApi %>/apis/54c136c272126c0990e57438/operations',
+          qs: '<%= site.portalQueryString %>',
           headers: {
             Authorization: 'SharedAccessSignature uid=54c12d71ce82280329030003&ex=2016-02-06T22:41:00.0000000Z&sn=SuypLuSQqpGI3MEhiGNHcwIkEQQIswUxWsmoh54mpyYXt0U27lOyAapkYHxtnDxIak9JyUskfplQT9iTmBm2yg=='
           },
@@ -223,7 +196,7 @@ module.exports = function(grunt) {
             if (error) {
               grunt.log.writeln(error);
             } else {
-              grunt.file.write('<%= paths.appData %>operations.json', JSON.stringify(body.value)); 
+              grunt.file.write('<%= site.appData %>operations.json', JSON.stringify(body.value)); 
             }
           }
         }
@@ -233,10 +206,10 @@ module.exports = function(grunt) {
     // Tasks to clone and fetch the latest SkyUI from TFS.
     shell: {
       'skyui-tfs-clone': {
-        command: 'git tf clone <%= paths.tfs %> <%= paths.skyTfsRemote %> <%= paths.skyTfsLocal %>'
+        command: 'git tf clone <%= site.tfs %> <%= site.skyTfsRemote %> <%= site.skyTfsLocal %>'
       },
       'skyui-tfs-fetch': {
-        command: 'git fetch <%= paths.skyLocal %>'
+        command: 'git fetch <%= site.skyLocal %>'
       },
       'bower-install': {
         command: 'bower install'
@@ -247,24 +220,24 @@ module.exports = function(grunt) {
     },
     
     useminPrepare: {
-      html: '<%= paths.appDist %>index.html',
+      html: '<%= site.appDist %>index.html',
       options: {
-        assetsDirs: ['<%= paths.appDist %>assets/'],
-        dest: '<%= paths.appDist %>assets/',
-        root: '<%= paths.appSrc %>'
+        assetsDirs: ['<%= site.appDist %>assets/'],
+        dest: '<%= site.appDist %>assets/',
+        root: '<%= site.appSrc %>'
       }
     },
     
     usemin: {
-      html: '<%= paths.appDist %>index.html'
+      html: '<%= site.appDist %>index.html'
     },
     
     
     // Unzips our nuget package
     unzip: {
       'skyui-nuget-unzip': {
-        src: '<%= paths.skyZipLocal %>',
-        dest: '<%= paths.skyZipExpanded %>'
+        src: '<%= site.skyZipLocal %>',
+        dest: '<%= site.skyZipExpanded %>'
       }
     },
     
@@ -368,9 +341,9 @@ module.exports = function(grunt) {
     NS + 'skyui-nuget', 
     'Downloads the latest (or specified) SkyUI nuget package', 
     function(version) {
-      var url = version ? 'paths.skyJsonRemoteByVersion' : 'paths.skyJsonRemoteById';
-      grunt.config.set('paths.nugetVersion', version);
-      grunt.config.set('paths.skyJsonRemote', grunt.config(url));    
+      var url = version ? 'site.skyJsonRemoteByVersion' : 'site.skyJsonRemoteById';
+      grunt.config.set('site.nugetVersion', version);
+      grunt.config.set('site.skyJsonRemote', grunt.config(url));    
       grunt.task.run('http:skyui-nuget-json');
       grunt.task.run('curl:skyui-nuget-download');
       grunt.task.run('unzip:skyui-nuget-unzip');
