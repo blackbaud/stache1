@@ -1,9 +1,9 @@
 # =============================================
 # App config
 # =============================================
-app: BOBBY
-app_build: app-build/
-app_src: app-src/
+app: app-
+app_build: <%= site.app %><%= status %>/
+app_src: <%= site.app %>src/
 app_content: <%= site.app_src %>content/
 app_assets: <%= site.app_src %>assets/
 app_sass: <%= site.app_assets %>sass/
@@ -13,6 +13,7 @@ app_nuget: <%= site.app_assets %>nuget/
 app_helpers: <%= site.app_assets %>helpers/
 app_partials: <%= site.app_partials %>partials/
 app_layouts: <%= site.app_assets %>layouts/
+
 
 # =============================================
 # Portal config
