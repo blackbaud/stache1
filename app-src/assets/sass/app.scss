@@ -1,0 +1,78 @@
+/* 
+* ==========================================================================
+* SKY UI
+* ========================================================================== 
+*/
+
+  // Undoing a few things defined in _bootstrap-variable-defaults.scss
+  // I had to add '!default' to all the variables in _bootstrap-variable-defaults.scss to make this work.
+  @import "_variables.scss";
+
+  // Import variables and mixins from Sky and then Bootstrap
+  @import "Sky/_mixins.scss";
+
+  //Import Bootstrap
+  @import "Sky/Bootstrap/bootstrap.scss";
+
+  // Import Font Awesome
+  @import "Sky/FontAwesome/font-awesome.scss";
+
+  // Variables, Mixins
+  @import "Sky/Inspinia/variables";
+  @import "Sky/Inspinia/mixins";
+
+  // INSPINIA Theme Elements
+  @import "Sky/Inspinia/typography";
+  @import "Sky/Inspinia/navigation";
+  @import "Sky/Inspinia/buttons";
+  @import "Sky/Inspinia/badgets_labels";
+  @import "Sky/Inspinia/elements";
+  @import "Sky/Inspinia/sidebar";
+  @import "Sky/Inspinia/base";
+  @import "Sky/Inspinia/pages";
+
+  // Media query style
+  @import "Sky/Inspinia/media";
+
+  //Load Sky styles
+  @import 'Sky/_jqgrid.scss';
+  @import 'Sky/_checklist.scss';
+  @import 'Sky/_grid.scss';
+  @import "Sky/_tables.scss";
+  @import "Sky/_spinning.scss";
+  @import "Sky/_imports.scss";
+  @import "Sky/_navigation.scss";
+  @import "Sky/_pagination.scss";
+  @import "Sky/_tile.scss";
+  @import "Sky/_toolbars.scss";
+  @import "Sky/_forms.scss";
+  @import "Sky/_modals.scss";
+  @import "Sky/_viewkeeper.scss";
+  @import "Sky/_responsivetabs.scss";
+  @import "Sky/_charts.scss";
+  @import "Sky/_omnibar.scss";
+  @import "Sky/_helpbutton.scss";
+
+  // Default Sky Theme
+  @import "Sky/_theme.scss";
+
+/* 
+* ==========================================================================
+* DOCUMENTATION
+* ========================================================================== 
+*/
+
+  // SkyUI is currently using an older version of Bootstrap.  This shims that in the interim
+  @import "_bootstrap-shim";
+
+  @import "_omnibar";
+  @import "_generic";
+  @import "_fonts";
+  @import "_sidebar";
+  @import "_pages";
+  @import "_feedback";
+  @import "_comments";
+  @import "_notes";
+  @import "_footer";
+  @import "_copyright";
+  @import "_mobile";

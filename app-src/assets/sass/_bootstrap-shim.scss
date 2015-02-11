@@ -1,0 +1,19 @@
+/* 
+* ==========================================================================
+* SHIMMING LATEST BOOTSTRAP
+* ========================================================================== 
+*/
+
+  .visible-sm-block{
+    display: none !important;
+  }
+
+  .visible-sm-block {
+    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+      display: block !important;
+    }
+  }
+
+.text-center {
+  text-align: center;
+}

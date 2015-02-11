@@ -1,0 +1,498 @@
+@charset "UTF-8";
+/* 
+* ==========================================================================
+* SASS
+* ========================================================================== 
+*/
+/* 
+* ==========================================================================
+* VARIABLE DECLARATION
+* ========================================================================== 
+*/
+/* 
+* ==========================================================================
+* I know we're not supposed to do this, but I absolutely hated seeing the page jump down when the omnibar finally loads.
+* I'm risking setting that height here.  Worst case is you would see the page jump slightly if they ever change the height of the omnibar.
+* ========================================================================== 
+*/
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amplang=en");
+.bb-omnibar-height-padding {
+  padding-top: 50px; }
+
+/* 
+* ==========================================================================
+* BBSKY CHAR
+* ========================================================================== 
+*/
+@font-face {
+  font-family: 'BBSKY-OMNIBAR';
+  src: url("../fonts/BBSKY.woff") format("woff"); }
+.bbsky-char::before {
+  font-family: 'BBSKY-OMNIBAR';
+  font-size: 24px; }
+
+.bbsky-char-re::before {
+  content: ""; }
+
+.bbsky-char-nxt::before {
+  content: ""; }
+
+/* 
+* ==========================================================================
+* GENERIC
+* ========================================================================== 
+*/
+.container {
+  padding-left: 0;
+  padding-right: 0; }
+
+.full-height-width {
+  height: 100%;
+  width: 100%; }
+
+body {
+  background: #FFF;
+  position: relative; }
+
+h1, .h1, h2, .h2, h3, .h3 {
+  margin-top: 20px;
+  margin-bottom: 10px; }
+
+h4, .h4, h5, .h5, h6, .h6 {
+  margin-top: 10px;
+  margin-bottom: 10px; }
+
+h2 {
+  padding-top: 40px; }
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin-bottom: 20px;
+  margin-top: 20px; }
+
+hr.small {
+  max-width: 100px;
+  margin-left: auto;
+  margin-right: auto; }
+
+.text-primary {
+  color: #006699; }
+
+.bg-primary {
+  background: #006699;
+  color: #FFF; }
+
+.bg-secondary {
+  background: #D5E3EA; }
+
+.btn-fa-link {
+  color: #FFF; }
+
+.btn-fa-link:hover,
+.btn-fa-link:focus {
+  color: #EFEFEF; }
+
+.content img,
+.zone-content img {
+  max-width: 100%;
+  height: auto; }
+
+.header-with-button:before, .header-with-button:after {
+  content: " ";
+  display: table; }
+.header-with-button:after {
+  clear: both; }
+
+.header-with-button h1,
+.header-with-button h2,
+.header-with-button h3 {
+  float: left; }
+
+.header-with-button a,
+.header-with-button button {
+  float: right;
+  margin-top: 35px; }
+
+.alert {
+  margin-top: 18px; }
+
+.post-footer {
+  margin-top: 40px; }
+
+.section-padding {
+  padding: 50px 0; }
+
+.section-padding h2 {
+  padding: 20px 0; }
+
+.table thead tr th {
+  background-color: #19aa8d;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  color: #FFF; }
+
+.modal-footer {
+  text-align: right; }
+
+.nav-tabs > li.active > a {
+  border-bottom: solid 1px #FFF; }
+
+.tab-content {
+  margin-top: 20px; }
+
+/* 
+* ==========================================================================
+* PAGE - HOME
+* ========================================================================== 
+*/
+.welcome {
+  display: table;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: url(../img/bridge-sunset.jpg) no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover; }
+
+.welcome p {
+  padding-top: 10px; }
+
+.text-vertical-center {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle; }
+
+.text-vertical-center h1 {
+  font-size: 4.5em;
+  font-weight: 700;
+  margin: 0;
+  padding: 0; }
+
+.text-vertical-center h2 {
+  padding: 5px 0 30px 0; }
+
+.about h2 {
+  color: #333333;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 33px;
+  margin: 20px 0 10px 0; }
+
+.service-item {
+  margin-bottom: 30px; }
+
+/* 
+* ==========================================================================
+* PAGE - MY APPLICATIONS
+* ========================================================================== 
+*/
+.status-apps {
+  padding: 20px 0 40px 0; }
+
+.status-apps .application {
+  padding-bottom: 20px; }
+
+.status-apps h2 {
+  margin-top: 0;
+  padding-top: 10px; }
+
+/* 
+* ==========================================================================
+* PAGE - RESOURCES
+* ========================================================================== 
+*/
+.resources {
+  padding: 80px 0 0 0; }
+
+.resources-more {
+  padding: 30px 0 50px 0; }
+
+.resources .fa {
+  float: left;
+  font-size: 28px;
+  text-align: center;
+  padding: 0 10px 10px 0; }
+
+.resources .desc {
+  padding: 0 15px;
+  overflow: hidden; }
+
+.resources h2 {
+  padding-top: 0;
+  margin-top: 0; }
+
+.resources-more {
+  padding: 20px 0 50px 0; }
+
+/* 
+* ==========================================================================
+* PAGE - CODE SAMPLES
+* ========================================================================== 
+*/
+.code h2 {
+  margin: 0 0 20px 0;
+  padding: 0; }
+
+.code .row {
+  padding: 30px 0; }
+
+.row-striped {
+  background: #EFEFEF; }
+
+.code .has-hover {
+  display: block;
+  position: relative; }
+
+.code .show-on-hover {
+  background: rgba(0, 0, 0, 0.5);
+  display: block;
+  left: 0;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  visibility: hidden;
+  width: 100%;
+  transition: opacity .3s; }
+
+.code .show-on-hover .is-table {
+  display: table;
+  height: 100%;
+  width: 100%; }
+
+.code .show-on-hover .is-table-cell {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle; }
+
+.code .has-hover.is-hover .show-on-hover {
+  opacity: 1;
+  visibility: visible; }
+
+.code .show-on-hover .btn-white {
+  margin-top: 10px; }
+
+/* 
+* ==========================================================================
+* FOOTER - SITE
+* ========================================================================== 
+*/
+.footer-site {
+  background: #50535a;
+  color: #787D87;
+  font-size: 13px;
+  padding: 50px 0;
+  margin-top: 30px; }
+
+.footer-site a {
+  color: #949AA6; }
+
+.footer-site a:hover,
+.footer-site a:focus {
+  color: #1ab394;
+  text-decoration: none; }
+
+.bb-love {
+  padding: 20px 0 0 0; }
+
+.bb-love li {
+  vertical-align: middle;
+  margin-left: 0;
+  padding: 0 10px 10px 0; }
+
+.bb-love .fa-heart {
+  color: #7F0000; }
+
+.bb-love a img {
+  opacity: .7; }
+
+.bb-love a:hover img,
+.bb-love a:focus img {
+  opacity: 1; }
+
+.social-icons a {
+  font-size: 26px;
+  margin: 0 5px; }
+
+.bb-love,
+.social-icons {
+  text-align: center; }
+
+/* 
+* ==========================================================================
+* AZURE
+* ========================================================================== 
+*/
+#account-menu,
+.ap-account-applications {
+  display: none; }
+
+/* 
+* ==========================================================================
+* GLOBAL
+* ========================================================================== 
+*/
+html,
+form,
+body {
+  font-size: 13px;
+  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+body {
+  background: #FFF;
+  color: #676a6c;
+  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 100; }
+
+h1 {
+  font-size: 30px; }
+
+h2 {
+  font-size: 24px; }
+
+h3 {
+  font-size: 16px; }
+
+h4 {
+  font-size: 14px; }
+
+h5 {
+  font-size: 12px; }
+
+h6 {
+  font-size: 10px; }
+
+h3,
+h4,
+h5 {
+  font-weight: 600;
+  margin-top: 5px; }
+
+.zone-content a {
+  color: #0088cc; }
+
+.zone-content a:hover,
+.zone-content a:focus {
+  color: #005580;
+  text-decoration: none; }
+
+#ap-container {
+  max-width: none; }
+
+.zone-header {
+  display: none; }
+
+.zone-footer {
+  background: #50535a; }
+
+.navbar-collapse {
+  padding: 0; }
+
+/* 
+* ==========================================================================
+* LAYOUT
+* ========================================================================== 
+*/
+.navbar-collapse,
+.layout-row-content .layout,
+.zone-footer footer {
+  margin: 0 auto; }
+
+@media (min-width: 768px) {
+  .navbar-collapse,
+  .layout-row-content .layout,
+  .zone-footer footer {
+    width: 750px; } }
+@media (min-width: 992px) {
+  .navbar-collapse,
+  .layout-row-content .layout,
+  .zone-footer footer {
+    width: 970px; } }
+@media (min-width: 1200px) {
+  .navbar-collapse,
+  .layout-row-content .layout,
+  .zone-footer footer {
+    width: 1170px; } }
+
+/* 
+* ==========================================================================
+* NAVIGATION
+* ========================================================================== 
+*/
+.navbar {
+  border: 0;
+  min-height: 0; }
+
+.navbar-default {
+  background-color: #2f4050; }
+
+#navigation .nav > li {
+  padding-right: 4px; }
+
+#navigation .navbar-nav > li > a {
+  color: #a7b1c2;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 15px;
+  text-transform: none; }
+
+#navigation .navbar-nav > li > a:hover,
+#navigation .navbar-nav > li > a:focus,
+#navigation .navbar-nav > li.active > a {
+  background-color: #293846;
+  border-bottom: solid 4px #1ab394;
+  color: #FFF !important;
+  padding-bottom: 11px; }
+
+.zone-aside-first {
+  background: #FFF; }
+
+.zone-aside-first .navbar-nav,
+.zone-aside-first .navbar-nav li {
+  float: none; }
+
+.zone-aside-first .nav-pills {
+  border-top: solid 1px #EFEFEF;
+  margin-top: 10px;
+  padding-top: 10px; }
+
+.zone-aside-first .navbar-nav li a,
+.zone-aside-first .nav-pills li a {
+  color: #a7b1c2;
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 6px 5px 9px 16px; }
+
+.zone-aside-first .navbar-nav li.active a,
+.zone-aside-first .nav-pills li.active a {
+  background: #293846;
+  border-left: 4px solid #19aa8d; }
+
+.zone-aside-first .navbar-nav li a:hover,
+.zone-aside-first .navbar-nav li a:focus,
+.zone-aside-first .navbar-nav li.active a:hover,
+.zone-aside-first .navbar-nav li.active a:focus,
+.zone-aside-first .nav-pills li.active a:hover,
+.zone-aside-first .nav-pills li.active a:focus {
+  background: #cccccc;
+  color: #293846; }
+
+/*# sourceMappingURL=azure.css.map */

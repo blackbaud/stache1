@@ -10,6 +10,9 @@ module.exports.register = function(Handlebars, options, params) {
     * Get an operation from data.operations.
     * @param {string} [property] - Returns a specific property of the operation.
     * @param {string} [name] - Search the list of operations on any property.
+    * @example
+    * {{# withOperation name="Address (Create)" }} {{ id }} {{/ withOperation }}
+    * {{ getOperation name="Address (Create)" property="description" }}
     **/
     getOperation: function(context) {
       

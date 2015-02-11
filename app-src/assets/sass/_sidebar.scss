@@ -1,0 +1,70 @@
+/* 
+* ==========================================================================
+* SIDEBAR
+* ========================================================================== 
+*/
+
+  .nav-sidebar.affix {
+    top: 50px;
+    z-index: 1;
+  }
+
+  .nav-sidebar.affix-bottom {
+    position: absolute;
+  }
+
+  .nav-sidebar > li.current li {
+    border-left: 4px solid #293846;
+  }
+
+  .nav-sidebar > li.current,
+  .nav-sidebar > li.current li.active {
+    border-left: 4px solid #19aa8d;
+    background: #293846;
+  }
+
+  .nav-sidebar > li.current > a {
+    color: white;
+  }
+
+  .nav-sidebar .visible-on-affix {
+    opacity: 0;
+    transition: opacity .4s;
+    visibility: hidden;
+  }
+
+  .nav-sidebar.affix .visible-on-affix,
+  .nav-sidebar.affix-bottom .visible-on-affix {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .visible-on-affix {
+    background: none !important;
+    border: none !important;
+  }
+
+  .visible-on-affix a {
+    background: none !important;
+    color: #a7b1c2 !important;
+  }
+
+  .visible-on-affix a:focus,
+  .visible-on-affix a:hover {
+    color: #777 !important;
+  }
+
+  .nav-sidebar > li > a {
+    padding: 6px 5px 9px 16px;
+  }
+
+  .nav-sidebar > li > a:hover, 
+  .nav-sidebar > li > a:focus {
+    text-decoration: none;
+    background-color: #cccccc;
+    color: #293846 !important;
+  }
+
+  .nav-sidebar .title {
+    border-bottom: solid 1px #EFEFEF;
+  }

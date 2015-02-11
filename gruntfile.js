@@ -79,7 +79,7 @@ module.exports = function(grunt) {
         assets: '<%= site.app_build %>assets/',        
         data: '<%= site.app_data %>*.*',
 		helpers: ['<%= site.app_helpers %>**/*.js'],
-        partials: ['<%= site.app_partials %>**/*.*'],
+        //partials: ['<%= site.app_partials %>**/*.*'],
         layoutdir: '<%= site.app_layouts %>',
         layout: 'base.hbs',
         pkg: '<%= pkg %>'
@@ -91,7 +91,7 @@ module.exports = function(grunt) {
             expand: true,
             cwd: '<%= site.app_content %>',
             dest: '<%= site.app_build %>',
-            src: ['**/*.hbs']
+            src: ['**/*.*']
           }
         ]
       }
@@ -155,14 +155,31 @@ module.exports = function(grunt) {
     },
     
     nugetter: {
-      options: {
-        server: 'http://tfs-sym.blackbaud.com:81/nuget/',
-        packages: [
-          {
-            id: 'Blackbaud.SkyUI.Mixins',
-            dest: '<%= site.app_assets %>%(id)'
-          }
-        ]
+      'skyui': {
+        options: {
+          server: 'http://tfs-sym.blackbaud.com:81/nuget/',
+          packages: [
+            {
+              id: 'Blackbaud.SkyUI.Sass',
+              dest: '<%= site.app_assets %>nuget/%(id)s'
+            }
+          ]
+        }
+      }
+    },
+    
+    sass: {
+      dist: {
+        options: {
+          loadPath: '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/'
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= site.app_sass %>',
+          src: ['*.scss'],
+          dest: '<%= site.app_css %>',
+          ext: '.css'
+        }]
       }
     },
     
@@ -198,8 +215,11 @@ module.exports = function(grunt) {
     // When serving, watch for file changes
     watch: {
       serve: {
-        files: ['<%= site.app_content %>**/*.*'],
-        tasks: ['assemble'],
+        files: [
+          '<%= site.app_content %>**/*.*',
+          '<%= site.app_layouts %>**/*.*'
+        ],
+        tasks: ['sass', 'assemble'],
         options: {
           livereload: true
         }
@@ -237,6 +257,7 @@ module.exports = function(grunt) {
     NS + 'serve', 
     'Serve the documentation', 
     [
+      'clean',
       'newer:assemble',
       'connect', 
       'watch'

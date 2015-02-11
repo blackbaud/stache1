@@ -20,7 +20,7 @@
     "grunt-filerev": "^2.1.2",
     "grunt-http": "^1.5.0",
     "grunt-newer": "^1.1.0",
-    "grunt-nugetter": "^0.2.0",
+    "grunt-nugetter": "^0.3.0",
     "grunt-shell": "^1.1.1",
     "grunt-usemin": "^3.0.0",
     "handlebars-helpers": "^0.5.8"

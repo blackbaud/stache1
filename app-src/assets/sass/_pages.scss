@@ -1,0 +1,162 @@
+/* 
+* ==========================================================================
+* PAGE - HOME
+* ========================================================================== 
+*/
+
+  .welcome {
+    display: table;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url(../img/bridge-sunset.jpg) no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+  }
+
+  .welcome p {
+    padding-top: 10px;
+  }
+
+  .text-vertical-center {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .text-vertical-center h1 {
+    font-size: 4.5em;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+  }
+
+  .text-vertical-center h2 {
+    padding: 5px 0 30px 0;
+  }
+
+  .about h2 {
+    color: rgb(51, 51, 51);
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 33px;
+    margin: 20px 0 10px 0;
+  }
+
+  .service-item {
+    margin-bottom: 30px;
+  }
+
+/* 
+* ==========================================================================
+* PAGE - MY APPLICATIONS
+* ========================================================================== 
+*/
+  .status-apps {
+    padding: 20px 0 40px 0;
+  }
+
+  .status-apps .application {
+    padding-bottom: 20px;
+  }
+
+  .status-apps h2 {
+    margin-top: 0;
+    padding-top: 10px;
+  }
+
+
+/* 
+* ==========================================================================
+* PAGE - RESOURCES
+* ========================================================================== 
+*/
+
+  .resources {
+    padding: 80px 0 0 0;
+  }
+
+  .resources-more {
+    padding: 30px 0 50px 0;
+  }
+
+  .resources .fa {
+    float: left;
+    font-size: 28px;
+    text-align: center;
+    padding: 0 10px 10px 0;
+  }
+
+  .resources .desc {
+    padding: 0 15px;
+    overflow: hidden;
+  }
+
+  .resources h2 {
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .resources-more {
+    padding: 20px 0 50px 0;
+  }
+
+/* 
+* ==========================================================================
+* PAGE - CODE SAMPLES
+* ========================================================================== 
+*/
+
+  .code h2 {
+    margin: 0 0 20px 0;
+    padding: 0;
+  }
+
+  .code .row {
+    padding: 30px 0;
+  }
+
+  .row-striped {
+    background: #EFEFEF;
+  }
+
+  .code .has-hover {
+    display: block;
+    position: relative; 
+  }
+
+  .code .show-on-hover {
+    background: rgba(0, 0, 0, .5);
+    display: block;
+    left: 0;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+    width: 100%;
+    transition: opacity .3s;
+  }
+
+  .code .show-on-hover .is-table {
+    display: table;
+    height: 100%;
+    width: 100%;
+  }
+
+  .code .show-on-hover .is-table-cell {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .code .has-hover.is-hover .show-on-hover {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .code .show-on-hover .btn-white {
+    margin-top: 10px;
+  }
