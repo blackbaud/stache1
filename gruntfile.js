@@ -10,33 +10,34 @@
 *   There is a current bug where 'local echo' can't be disabled when running the skyui-tfs-clone task.
 *   This means a user's password will be visible.  More investigation into the problem is necessary.
 **/
+
+'use strict';
 module.exports = function(grunt) {
-  'use strict';
   
   // Blackbaud Namespace
   var NS = 'blackbaud:',
-      NS_INTERNAL = 'internal:' + NS;
+      tasks = [
+        'assemble',
+        'grunt-asciify',
+        'grunt-contrib-clean',
+        'grunt-contrib-concat',
+        'grunt-contrib-connect',
+        'grunt-contrib-cssmin',
+        'grunt-contrib-sass',
+        'grunt-contrib-uglify',
+        'grunt-contrib-watch',
+        'grunt-filerev',
+        'grunt-newer',
+        'grunt-nugetter',
+        'grunt-shell',
+        'grunt-usemin'
+      ];
+  
+  // Load the required node modules
+  tasks.forEach(grunt.loadNpmTasks);
   
   // Disable grunt headers
   grunt.log.header = function() {} 
-  
-  // Load the required node modules
-  grunt.loadNpmTasks('assemble');
-  grunt.loadNpmTasks('grunt-asciify');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-curl');
-  grunt.loadNpmTasks('grunt-filerev');
-  grunt.loadNpmTasks('grunt-http');
-  grunt.loadNpmTasks('grunt-newer');
-  grunt.loadNpmTasks('grunt-shell');
-  grunt.loadNpmTasks('grunt-usemin');
-  grunt.loadNpmTasks('grunt-zip');
 
   // Initialize our configuration
   // For my sanity, please alphabetize any tasks after pkg and site.
@@ -45,6 +46,7 @@ module.exports = function(grunt) {
     // Reads our configuration files
     pkg: grunt.file.readJSON('package.json'),
     site: grunt.file.readYAML('_config.yml'),
+    nav: grunt.file.readYAML('app-src/assets/data/nav.yml'),
     
     // Displays our title all fancy-like
     asciify: {
@@ -71,31 +73,34 @@ module.exports = function(grunt) {
       },
     },
     
-    // The meat and potatoes of our application.
+    // Static site gen
     assemble: {
       options: {
-        assets: '<%= site.appDist %>assets/',        
-        data: '<%= site.appData %>*.*',
-		helpers: ['<%= site.appSrc %>_helpers/**/*.js'],
-        layoutdir: '<%= site.appSrc %>_layouts/',
+        assets: '<%= site.app_build %>assets/',        
+        data: '<%= site.app_data %>*.*',
+		helpers: ['<%= site.app_helpers %>**/*.js'],
+        partials: ['<%= site.app_partials %>**/*.*'],
+        layoutdir: '<%= site.app_layouts %>',
         layout: 'base.hbs',
         pkg: '<%= pkg %>'
       },
-      pages: {
+      site: {
         options: {},
-        files: [{
-          expand: true,
-          cwd: '<%= site.appSrc %>',
-          dest: '<%= site.appDist %>',
-          src: ['*.hbs']
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: '<%= site.app_content %>',
+            dest: '<%= site.app_build %>',
+            src: ['**/*.hbs']
+          }
+        ]
       }
     },
     
     // Cleans the dist folder before serve/build
     clean: {
       build: {
-        src: ['<%= site.appDist %>']
+        src: ['<%= site.app_build %>']
       }
     },
     
@@ -104,32 +109,12 @@ module.exports = function(grunt) {
       dev: {
         options: {
           base: [
-            '<%= site.appDist %>',
-            '<%= site.appSrc %>'
+            '<%= site.app_build %>',
+            '<%= site.app_src %>'
           ],
           livereload: true,
           port: 4000 
         }
-      }
-    },
-    
-    // Copies the contents of unzipped nuget package to our _sass directory.
-    copy: {
-      'skyui-nuget-copy': {
-        files: [{
-          expand: true,
-          cwd: '<%= site.skyZipExpanded %>/Content/Content/Styles/Sky/',
-          src: ['**'],
-          dest: '<%= site.skyTfsLocal %>'
-        }]
-      }
-    },
-    
-    // Downloads the latest nuget package, saving it as a zip file.
-    curl: {
-      'skyui-nuget-download': {
-        src: '<%= site.skyZipRemote %>',
-        dest: '<%= site.skyZipLocal %>'
       }
     },
     
@@ -138,8 +123,8 @@ module.exports = function(grunt) {
       site: {
         files: [{
           src: [
-            '<%= site.appDist %>assets/css/*.css',
-            '<%= site.appDist %>assets/js/*.js'
+            '<%= site.app_assets %>/css/*.css',
+            '<%= site.app_assets %>/js/*.js'
           ]
         }]
       }
@@ -147,46 +132,12 @@ module.exports = function(grunt) {
     
     // Downloads the latest metadata for a package and finds the download url.
     http: {
-      'skyui-nuget-json': {
-        options: {
-          url: '<%= site.skyJsonRemote %>',
-          json: true,
-          ignoreErrors: true,
-          callback: function(possibleError, response, body) {
-            var error, message;
-            
-            if (possibleError) {
-              error = possibleError;
-              if (error.code == 'ENOTFOUND') {
-                message = 'Blackbaud NuGet server requires LAN / VPN access.'.green.bold;
-              }
-            } else {
-              try {
-                var parent = grunt.config('paths.nugetVersion') ? body.d : body.d[0];
-                grunt.config.set('paths.skyZipRemote', parent.__metadata.media_src);
-                message = 'Found latest SkyUI nuget: ' + grunt.config('paths.skyZipRemote');
-              } catch(e) {
-                message = 'Error parsing nuget response.';
-                error = e;
-              }
-            }
-            
-            if (message) {
-              grunt.log.writeln(message);
-            }
-            
-            if (error) {
-              grunt.fail.fatal(error);
-            }
-          }
-        }
-      },
       'portal-get-operations': {
         options: {
-          url: '<%= site.portalApi %>/apis/54c136c272126c0990e57438/operations',
-          qs: '<%= site.portalQueryString %>',
+          url: '<%= site.portal-api %>/apis/54c136c272126c0990e57438/operations',
+          qs: '<%= site.portal-qs %>',
           headers: {
-            Authorization: 'SharedAccessSignature uid=54c12d71ce82280329030003&ex=2016-02-06T22:41:00.0000000Z&sn=SuypLuSQqpGI3MEhiGNHcwIkEQQIswUxWsmoh54mpyYXt0U27lOyAapkYHxtnDxIak9JyUskfplQT9iTmBm2yg=='
+            
           },
           
           // Instead of being able to use dest, I'm having to remove '{ value: [...]}'
@@ -196,10 +147,22 @@ module.exports = function(grunt) {
             if (error) {
               grunt.log.writeln(error);
             } else {
-              grunt.file.write('<%= site.appData %>operations.json', JSON.stringify(body.value)); 
+              grunt.file.write('<%= site.app_data %>operations.json', JSON.stringify(body.value)); 
             }
           }
         }
+      }
+    },
+    
+    nugetter: {
+      options: {
+        server: 'http://tfs-sym.blackbaud.com:81/nuget/',
+        packages: [
+          {
+            id: 'Blackbaud.SkyUI.Mixins',
+            dest: '<%= site.app_assets %>%(id)'
+          }
+        ]
       }
     },
     
@@ -220,31 +183,22 @@ module.exports = function(grunt) {
     },
     
     useminPrepare: {
-      html: '<%= site.appDist %>index.html',
+      html: '<%= site.app_build %>index.html',
       options: {
-        assetsDirs: ['<%= site.appDist %>assets/'],
-        dest: '<%= site.appDist %>assets/',
-        root: '<%= site.appSrc %>'
+        assetsDirs: ['<%= site.app_assets %>'],
+        dest: '<%= site.app_assets %>',
+        root: '<%= site.app_src %>'
       }
     },
     
     usemin: {
-      html: '<%= site.appDist %>index.html'
-    },
-    
-    
-    // Unzips our nuget package
-    unzip: {
-      'skyui-nuget-unzip': {
-        src: '<%= site.skyZipLocal %>',
-        dest: '<%= site.skyZipExpanded %>'
-      }
+      html: '<%= site.app_build %>index.html'
     },
     
     // When serving, watch for file changes
     watch: {
       serve: {
-        files: ['src/**/*.*'],
+        files: ['<%= site.app_content %>**/*.*'],
         tasks: ['assemble'],
         options: {
           livereload: true
@@ -254,7 +208,7 @@ module.exports = function(grunt) {
   });
   
   // Current showing help message as default task
-  grunt.registerTask(NS_INTERNAL + 'welcome', function() {
+  grunt.registerTask('welcome', function() {
 
     var msg = 'Listed below are available grunt commands in version %s:';
     grunt.log.writeln(msg.green.bold, grunt.config('pkg.version'));
@@ -279,10 +233,6 @@ module.exports = function(grunt) {
     }
   });
   
-  // Possibly not necessary in this context, but I'm namespacing all our commands.
-  // I do like this approach as it also abstracts the original grunt task.
-  // Meaning if we need to change a task, the command and our documentation don't have to change.
-  // It's obviously still possible to call the original grunt commands.
   grunt.registerTask(
     NS + 'serve', 
     'Serve the documentation', 
@@ -338,17 +288,9 @@ module.exports = function(grunt) {
   );
   
   grunt.registerTask(
-    NS + 'skyui-nuget', 
-    'Downloads the latest (or specified) SkyUI nuget package', 
-    function(version) {
-      var url = version ? 'site.skyJsonRemoteByVersion' : 'site.skyJsonRemoteById';
-      grunt.config.set('site.nugetVersion', version);
-      grunt.config.set('site.skyJsonRemote', grunt.config(url));    
-      grunt.task.run('http:skyui-nuget-json');
-      grunt.task.run('curl:skyui-nuget-download');
-      grunt.task.run('unzip:skyui-nuget-unzip');
-      //grunt.task.run('copy:skyui-nuget-copy');
-    }
+    NS + 'skyui-nuget',
+    'Fetches the latest version of SkyUI from the INTERNAL NuGet Server',
+    'nugetter'
   );
   
   // Display help message as default task
@@ -356,7 +298,7 @@ module.exports = function(grunt) {
     'asciify:one', 
     'asciify:two', 
     'asciify:three', 
-    NS_INTERNAL + 'welcome'
+    'welcome'
   ]);
   
 };

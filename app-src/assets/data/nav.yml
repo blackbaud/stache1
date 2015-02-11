@@ -7,18 +7,30 @@
 #
 
 base: http://localhost:4000/
+
 portal: https://bbapidev.portal.azure-api.net/
-portal-analytics: <%= nav.portal %>analytics/
-portal-issues: <%= nav.portal %>issues/
-portal-signin: <%= nav.portal %>signin/
-portal-signup: <%= nav.portal %>signup/
+portal_analytics: <%= nav.portal %>analytics/
+portal_issues: <%= nav.portal %>issues/
+portal_signin: <%= nav.portal %>signin/
+portal_signup: <%= nav.portal %>signup/
+portal_applications: <%= nav.portal %>applications/
+
 tutorials: <%= nav.base %>tutorials/
-tutorials-getting-started: <%= nav.tutorials %>getting-started/
+tutorials_getting_started: <%= nav.tutorials %>getting-started/
+tutorials_auth: <%= nav.tutorials %>auth/
+
 guide: <%= nav.base %>guide/
+guide_using_scopes: <%= nav.guide %>#using_scopes
+guide_web_api_fundamentals: <%= nav.guide %>#web-api-fundamentals
+guide_constituents: <%= nav.guide %>#constituents
+
 resources: <%= nav.base %>resources/
-resources-changelog: <%= nav.resources %>changelog/
-resources-code: <%= nav.resources %>code/
-resources-faq: <%= nav.resources %>faq/
-resources-status: <%= nav.resources %>status/
+resources_changelog: <%= nav.resources %>changelog/
+resources_code: <%= nav.resources %>code/
+resources_faq: <%= nav.resources %>faq/
+resources_status: <%= nav.resources %>status/
+
 community: http://blackbaud.smallworldlabs.com
-community-forum: http://stackoverflow.com/questions/tagged/renxt
+community_forum: http://stackoverflow.com/questions/tagged/renxt
+
+legal: <%= nav.base %>legal/

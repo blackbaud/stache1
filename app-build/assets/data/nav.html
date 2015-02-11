@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" class="full-height-width">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- build:css css/app.css -->
+    <link rel="stylesheet" href="../vendor/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../vendor/bootstrap/dist/css/bootstrap-theme.min.css">
+    <!-- endbuild -->
+    
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body class="bb-omnibar-height-padding">
+    
+    <div id="top"></div>
+    
+    
+    <h1 id="notes-">NOTES:</h1>
+<p>#</p>
+<h1 id="this-navigation-file-is-purposefully-flat-structure-of-the-nav-is-described-in-sitemap-xml-">This navigation file is purposefully flat.  Structure of the nav is described in sitemap.xml.</h1>
+<h1 id="when-adding-new-links-please-follow-the-convention-below-">When adding new links, please follow the convention below:</h1>
+<h1 id="-include-trailing-slashes">- Include trailing slashes</h1>
+<h1 id="-use-the-lo-dash-syntax-to-build-nested-links">- Use the Lo-Dash syntax to build nested links</h1>
+<p>#</p>
+<p>base: <a href="http://localhost:4000/">http://localhost:4000/</a></p>
+<p>portal: <a href="https://bbapidev.portal.azure-api.net/">https://bbapidev.portal.azure-api.net/</a>
+portal_analytics: &lt;%= nav.portal %&gt;analytics/
+portal_issues: &lt;%= nav.portal %&gt;issues/
+portal_signin: &lt;%= nav.portal %&gt;signin/
+portal_signup: &lt;%= nav.portal %&gt;signup/
+portal_applications: &lt;%= nav.portal %&gt;applications/</p>
+<p>tutorials: &lt;%= nav.base %&gt;tutorials/
+tutorials_getting_started: &lt;%= nav.tutorials %&gt;getting-started/
+tutorials_auth: &lt;%= nav.tutorials %&gt;auth/</p>
+<p>guide: &lt;%= nav.base %&gt;guide/
+guide_using_scopes: &lt;%= nav.guide %&gt;#using_scopes
+guide_web_api_fundamentals: &lt;%= nav.guide %&gt;#web-api-fundamentals
+guide_constituents: &lt;%= nav.guide %&gt;#constituents</p>
+<p>resources: &lt;%= nav.base %&gt;resources/
+resources_changelog: &lt;%= nav.resources %&gt;changelog/
+resources_code: &lt;%= nav.resources %&gt;code/
+resources_faq: &lt;%= nav.resources %&gt;faq/
+resources_status: &lt;%= nav.resources %&gt;status/</p>
+<p>community: <a href="http://blackbaud.smallworldlabs.com">http://blackbaud.smallworldlabs.com</a>
+community_forum: <a href="http://stackoverflow.com/questions/tagged/renxt">http://stackoverflow.com/questions/tagged/renxt</a></p>
+<p>legal: &lt;%= nav.base %&gt;legal/ </p>
+ 
+    
+    <!-- Omnibar Placeholder -->
+    <div id="omnibar"></div>
+  
+    <!-- build:js js/app.js -->
+    <script src="../vendor/jquery/dist/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../vendor/easyXDM.min.js"></script>
+    <script src="../vendor/holderjs/holder.min.js"></script>
+    <script src="../vendor/stellar/jquery.stellar.min.js"></script>
+    <script src="../js/app.js"></script>
+    <!-- endbuild -->
+    
+    <script src="//signin.blackbaud.com/omnibar.js"></script> 
+    
+  </body>
+</html>

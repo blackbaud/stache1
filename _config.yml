@@ -1,25 +1,54 @@
 # =============================================
-# Build config
+# App config
 # =============================================
+app: BOBBY
+app_build: app-build/
+app_src: app-src/
+app_content: <%= site.app_src %>content/
+app_assets: <%= site.app_src %>assets/
+app_data: <%= site.app_assets %>data/
+app_nuget: <%= site.app_assets %>nuget/
+app_helpers: <%= site.app_assets %>helpers/
+app_layouts: <%= site.app_assets %>layouts/
 
-appSrc: 'app-src/'
-appDist: 'app-dist/'
-appData: '<%= paths.appSrc %>_data/'
-portalName: 'bbapidev'
-portalApi: 'https://<%= paths.portalName %>.management.azure-api.net'
-#portalQueryString: {
-#  'api-version': '2014-02-14-preview'
-#}
-nuget: 'Blackbaud.SkyUI.Sass'
-nugetDir: '_nuget/<%= paths.nuget %>'
-nugetServer: 'http://tfs-sym.blackbaud.com:81/nuget/'
-nugetVersion: ''  # Set by blackbaud:skyui-nuget
-skyJsonRemote: '' # Set by blackbaud:skyui-nuget
-skyJsonRemoteById: '<%= paths.nugetServer %>FindPackagesById()?id=\'<%= paths.nuget %>\'&$orderby=Published desc&$top=1'
-skyJsonRemoteByVersion: '<%= paths.nugetServer %>Packages(Id=\'<%= paths.nuget %>\',Version=\'<%= paths.nugetVersion %>\')'
-skyTfsLocal: '_sass/Sky/'
-skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/'
-skyZipExpanded: '<%= paths.nugetDir %>/'
-skyZipLocal: '<%+ paths.nugetDir %>.zip'
-skyZipRemote: '' # Set by http:skyui-json
-tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/'
+# =============================================
+# Portal config
+# =============================================
+portal_url: https://bbapidev.azure-api.net/
+portal_name: API management developer portal
+portal_api: https://bbapidev.management.azure-api.net/
+portal_qs: 
+  - api_version: 2014-02-14-preview
+portal_header:
+  - authorization: 'SharedAccessSignature uid=54c12d71ce82280329030003&ex=2016-02-06T22:41:00.0000000Z&sn=SuypLuSQqpGI3MEhiGNHcwIkEQQIswUxWsmoh54mpyYXt0U27lOyAapkYHxtnDxIak9JyUskfplQT9iTmBm2yg=='
+  
+# =============================================
+# Product config
+# =============================================
+product_name_long: Raiser's Edge NXT
+product_name_short: RENXT
+authorization_service_name:  Blackbaud Authorization Service
+authentication_service_name:  Blackbaud Authentication Service
+
+
+#appSrc: 'app-src/'
+#appDist: 'app-dist/'
+#appAssets: '<%= site.appSrc %>assets/'
+#appData: '<%= site.appSrc %>data/'
+#portalApi: 'https://bbapidev.management.azure-api.net'
+##portalQueryString: {
+##  'api-version': '2014-02-14-preview'
+##}
+#nuget: 'Blackbaud.SkyUI.Sass'
+#nugetDir: '_nuget/<%= paths.nuget %>'
+#nugetServer: 'http://tfs-sym.blackbaud.com:81/nuget/'
+#nugetVersion: ''  # Set by blackbaud:skyui-nuget
+#skyJsonRemote: '' # Set by blackbaud:skyui-nuget
+#skyJsonRemoteById: '<%= paths.nugetServer %>FindPackagesById()?id=\'<%= paths.nuget %>\'&$orderby=Published desc&$top=1'
+#skyJsonRemoteByVersion: '<%= paths.nugetServer %>Packages(Id=\'<%= paths.nuget %>\',Version=\'<%= paths.nugetVersion %>\')'
+#skyTfsLocal: '_sass/Sky/'
+#skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/'
+#skyZipExpanded: '<%= paths.nugetDir %>/'
+#skyZipLocal: '<%+ paths.nugetDir %>.zip'
+#skyZipRemote: '' # Set by http:skyui-json
+#tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/'
