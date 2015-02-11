@@ -8,6 +8,8 @@
 0. Run bower install
 0. Run grunt, which lists the available tasks.
 
+Please note that bower components and node modules are ignored.  NuGet packages are tracked.
+
 ## Setting up this repo (Goal)
 
 0. Developer has their project checked out - RE, FE, etc.
