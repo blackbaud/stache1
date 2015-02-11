@@ -1,6 +1,7 @@
-.DS_Store
 .tmp/
+.sass-cache
+.DS_Store
 Thumbs.db
 vendor/
-bower_components/
 node_modules/
+app-serve/*
