@@ -48,6 +48,7 @@ module.exports = function (grunt) {
     
     // Reads our configuration files
     pkg: grunt.file.readJSON('package.json'),
+    bower: grunt.file.readJSON('.bowerrc'),
     site: grunt.file.readYAML('_config.yml'),
 
     // Need to figure out why <%= site.app_assets_src %> doesn't work here
@@ -136,6 +137,24 @@ module.exports = function (grunt) {
             cwd: '<%= site.app_assets_src %>img/',
             src: '**',
             dest: '<%= site.app_assets_build %>img/'
+          },
+          {
+            expand: true,
+            cwd: '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/Bootstrap/fonts/',
+            src: '*',
+            dest: '<%= site.app_assets_build %>fonts/'
+          },
+          {
+            expand: true,
+            cwd: '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/FontAwesome/fonts/',
+            src: '*',
+            dest: '<%= site.app_assets_build %>fonts/'
+          },
+          {
+            expand: true,
+            cwd: '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/fonts/',
+            src: '*',
+            dest: '<%= site.app_assets_build %>fonts/'
           }
         ]
       }
@@ -190,13 +209,16 @@ module.exports = function (grunt) {
     },
     
     nugetter: {
-      'skyui': {
+      skyui: {
         options: {
           server: 'http://tfs-sym.blackbaud.com:81/nuget/',
+          dest: '<%= site.app_assets_src %>nuget/%(id)s',
           packages: [
             {
               id: 'Blackbaud.SkyUI.Sass',
-              dest: '<%= site.app_assets_src %>nuget/%(id)s'
+            },
+            {
+              id: 'Blackbaud.SkyUI.Scripts',
             }
           ]
         }
@@ -303,7 +325,9 @@ module.exports = function (grunt) {
     [
       'status:serve',
       'clean',
+      'copy',
       'newer:assemble',
+      'newer:sass',
       'connect',
       'watch'
     ]
@@ -316,24 +340,12 @@ module.exports = function (grunt) {
       'status:build',
       'clean',
       'assemble',
+      'sass',
       'useminPrepare',
       'concat:generated',
       'cssmin:generated',
       'uglify:generated',
       'copy:build',
-      //'filerev',
-      'usemin'
-    ]
-  );
-
-  grunt.registerTask(
-    'test',
-    [
-      'status:build',
-      'useminPrepare',
-      'concat:generated',
-      'cssmin:generated',
-      'uglify:generated',
       //'filerev',
       'usemin'
     ]

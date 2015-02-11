@@ -168,7 +168,6 @@
         }
 
         .toolbar-button-icon {
-            margin-right: 5px;
             position: relative;
             top: 1px;
 
@@ -189,6 +188,7 @@
 
         .toolbar-button-label {
             display: none;
+            margin-left: 5px;
 
             @media (min-width: ($screen-md-min)) {
                 display: inline;

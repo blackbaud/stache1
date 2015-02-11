@@ -1,0 +1,46 @@
+﻿@import '_mixins.scss';
+
+/* Customizations to iCheck styles. */
+
+.bb-check-checkbox,
+.bb-check-radio {
+    border: 1px solid $light-gray;
+    cursor: pointer;
+    display: inline-block;
+    *display: inline;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+    width: 22px;
+}
+
+.bb-check-radio {
+    border-radius: 50%;
+}
+
+.bb-check-checkbox.hover,
+.bb-check-radio.hover {
+    border: 2px solid $blue;
+}
+
+.bb-check-checkbox.checked,
+.bb-check-radio.checked {
+    background-color: $blue;
+    border: none;
+
+    &:before {
+        color: $white;
+        content: $bbsky-char-check-nostroke;
+        font-family: BBSKY;
+        font-size: $font-size-sm;
+        padding-left: 5px;
+        vertical-align: middle;
+    }
+}
+
+.bb-check-checkbox.disabled,
+.bb-check-radio.disabled {
+    background-color: $light-gray;
+    cursor: default;
+}

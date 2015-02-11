@@ -4,13 +4,14 @@
 * ========================================================================== 
 */
 
-  // Undo some Bootstrap variables
-  $icon-font-path: '//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/';
-  $fa-font-path: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts/';
-  $grid-gutter-width: 30px;
-  $screen-lg-min: 1200px;
+// Set Bootstrap + FontAwesome fonts
+$icon-font-path: '../fonts/';
+$fa-font-path: '../fonts/';
 
-  $section-padding: 50px 0;
+// Undo some Bootstrap variables
+$grid-gutter-width: 30px;
+$screen-lg-min: 1200px;
+$section-padding: 50px 0;
 
-  // Needed to azure footer parent
-  $footer-bg: #50535a;
+// Needed to azure footer parent
+$footer-bg: #50535a;

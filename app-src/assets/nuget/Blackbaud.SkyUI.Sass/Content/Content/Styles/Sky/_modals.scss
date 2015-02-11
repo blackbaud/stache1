@@ -1,8 +1,14 @@
+@import 'Bootstrap/_variables.scss';
+@import '_mixins.scss';
+
+
 .modal-header {
     min-height: 45px;
 
     .dialogHeader {
         white-space: nowrap;
+        -ms-text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
         overflow: hidden;
         width: 90%;
@@ -24,12 +30,8 @@
     }
 }
 
-.modal-open {
-    -webkit-overflow-scrolling: auto;
-}
-
 .modal {
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: auto;
 }
 
 .modal-footer {

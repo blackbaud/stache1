@@ -2146,8 +2146,8 @@ input[type="button"].btn-block {
 
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.eot");
-  src: url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.woff") format("woff"), url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.ttf") format("truetype"), url("//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
+  src: url("../fonts/glyphicons-halflings-regular.eot");
+  src: url("../fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("../fonts/glyphicons-halflings-regular.woff") format("woff"), url("../fonts/glyphicons-halflings-regular.ttf") format("truetype"), url("../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 .glyphicon, .pagination .first a,
 .pagination .previous a,
 .pagination .next a,
@@ -5012,8 +5012,8 @@ button.close {
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url("//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts//fontawesome-webfont.eot?v=4.2.0");
-  src: url("//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts//fontawesome-webfont.eot?#iefix&v=4.2.0") format("embedded-opentype"), url("//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts//fontawesome-webfont.woff?v=4.2.0") format("woff"), url("//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts//fontawesome-webfont.ttf?v=4.2.0") format("truetype"), url("//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/fonts//fontawesome-webfont.svg?v=4.2.0#fontawesomeregular") format("svg");
+  src: url("../fonts//fontawesome-webfont.eot?v=4.2.0");
+  src: url("../fonts//fontawesome-webfont.eot?#iefix&v=4.2.0") format("embedded-opentype"), url("../fonts//fontawesome-webfont.woff?v=4.2.0") format("woff"), url("../fonts//fontawesome-webfont.ttf?v=4.2.0") format("truetype"), url("../fonts//fontawesome-webfont.svg?v=4.2.0#fontawesomeregular") format("svg");
   font-weight: normal;
   font-style: normal; }
 .fa {
@@ -9871,6 +9871,14 @@ body:not(.viewkeeper-ignore-fixed) .grid-filters.viewkeeper-fixed, body:not(.vie
 .grid-action-bar-mobile-cancel {
   padding-left: 15px; }
 
+.grid-toolbar-container .toolbar .add-button {
+  float: left;
+  margin: 0 10px 0 0;
+  height: 26px;
+  padding: 4px 10px; }
+  .grid-toolbar-container .toolbar .add-button .toolbar-button-icon:before {
+    color: #fff; }
+
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -9997,7 +10005,6 @@ body:not(.viewkeeper-ignore-fixed) .grid-filters.viewkeeper-fixed, body:not(.vie
       border: 1px solid #FC6;
       border-radius: 4px; }
   .toolbar.table-toolbar .toolbar-button-icon {
-    margin-right: 5px;
     position: relative;
     top: 1px; }
     .toolbar.table-toolbar .toolbar-button-icon:before {
@@ -10009,7 +10016,8 @@ body:not(.viewkeeper-ignore-fixed) .grid-filters.viewkeeper-fixed, body:not(.vie
     .toolbar.table-toolbar .toolbar-button-icon.filter-button-icon:before {
       content: ""; }
   .toolbar.table-toolbar .toolbar-button-label {
-    display: none; }
+    display: none;
+    margin-left: 5px; }
     @media (min-width: 992px) {
       .toolbar.table-toolbar .toolbar-button-label {
         display: inline; } }
@@ -10443,10 +10451,16 @@ select, select.form-control {
   display: none; }
 
 /* FORMS END */
+/* begin _bootstrap-variable-defaults */
+/* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
+/* end _bootstrap-variable-defaults */
+/* Font Awesome defaults */
 .modal-header {
   min-height: 45px; }
   .modal-header .dialogHeader {
     white-space: nowrap;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
     overflow: hidden;
     width: 90%; }
@@ -10461,11 +10475,8 @@ select, select.form-control {
     border: 1px solid #ccc;
     -webkit-appearance: none; }
 
-.modal-open {
-  -webkit-overflow-scrolling: auto; }
-
 .modal {
-  -webkit-overflow-scrolling: touch; }
+  -webkit-overflow-scrolling: auto; }
 
 .modal-footer {
   padding: 15px;

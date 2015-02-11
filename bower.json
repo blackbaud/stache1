@@ -6,6 +6,7 @@
     "holderjs": "~2.5.0",
     "stellar": "~0.6.2",
     "bootbox": "~4.3.0",
-    "easyXDM": "~2.4.17"
+    "easyXDM": "~2.4.17",
+    "bootstrap": "~3.3.2"
   }
 }

@@ -181,3 +181,16 @@ body:not(.viewkeeper-ignore-fixed) {
 .grid-action-bar-mobile-cancel {
     padding-left: 15px;
 }
+
+.grid-toolbar-container .toolbar {
+    .add-button {
+        float: left;
+        margin: 0 10px 0 0;
+        height: 26px;
+        padding: 4px 10px;
+
+        .toolbar-button-icon:before {
+            color: $white;
+        }
+    }
+}
