@@ -226,7 +226,7 @@ module.exports = function (grunt) {
     },
     
     sass: {
-      dist: {
+      build: {
         options: {
           loadPath: '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/'
         },
@@ -271,14 +271,27 @@ module.exports = function (grunt) {
     
     // When serving, watch for file changes
     watch: {
-      serve: {
+      content: {
         files: [
           '<%= site.app_content %>**/*.*',
-          '<%= site.app_layouts %>**/*.*',
-          '<%= site.app_data %>**/*.*',
-          '_config.yml'
+          '_config.yml',
+          'package.json',
+          'gruntfile.js'
         ],
-        tasks: ['sass', 'assemble'],
+        tasks: [
+          'assemble'
+        ],
+        options: {
+          livereload: true
+        }
+      },
+      sass: {
+        files: [
+          '<%= site.app_assets_src %>**'
+        ],
+        tasks: [
+          'sass'
+        ],
         options: {
           livereload: true
         }
@@ -326,8 +339,8 @@ module.exports = function (grunt) {
       'status:serve',
       'clean',
       'copy',
-      'newer:assemble',
-      'newer:sass',
+      'assemble',
+      'sass',
       'connect',
       'watch'
     ]

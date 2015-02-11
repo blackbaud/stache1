@@ -5,7 +5,6 @@ app: app-
 app_src: <%= site.app %>src/
 app_build: <%= site.app %><%= status %>/
 app_content: <%= site.app_src %>content/
-
 app_assets_src: <%= site.app_src %>assets/
 app_assets_build: <%= site.app_build %>assets/
 app_sass: <%= site.app_assets_src %>sass/
@@ -15,7 +14,6 @@ app_nuget: <%= site.app_assets_src %>nuget/
 app_helpers: <%= site.app_assets_src %>helpers/
 app_partials: <%= site.app_assets_src %>partials/
 app_layouts: <%= site.app_assets_src %>layouts/
-
 
 # =============================================
 # Portal config
