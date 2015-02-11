@@ -1,14 +1,12 @@
----
-layout: blank
----
-  
-;(function($, window, document, undefined) {
-  
-  {% include_relative _shared-omnibar.js isAzure=false %}
+/*jslint browser: true, es5: true*/
+/*global jQuery */
+(function ($, window, document, undefined) {
+  'use strict';
   
   var body = $('body'),
-      sidebar = $('.sidebar'),
-      sidebarNav = $('.nav-sidebar');
+    sidebar = $('.sidebar'),
+    sidebarNav = $('.nav-sidebar'),
+    height = 0;
   
   // No need to start these if there's no sidebar
   if (sidebar.length) {
@@ -22,7 +20,7 @@ layout: blank
     });
 
     // Catch our window resizing
-    $(window).resize(function() {
+    $(window).resize(function () {
       sidebarNav.css('width', sidebar.width() + 'px');
     }).trigger('resize');
 
@@ -39,26 +37,25 @@ layout: blank
   });
   
   // Equal Height
-  var height = 0;
-  $('.equal-height').each(function() {
+  $('.equal-height').each(function () {
     var h = $(this).outerHeight();
     height = h > height ? h : height;
   }).css('min-height', height + 'px');
   
   // Show on Hover
-  $('.has-hover').each(function() {
-    $(this).hover(function() {
+  $('.has-hover').each(function () {
+    $(this).hover(function () {
       $(this).toggleClass('is-hover');
     });
   });
   
   // Smooth scroll
-  $('a.smooth-scroll').click(function(e) {
+  $('a.smooth-scroll').click(function (e) {
     e.preventDefault();
 
     // Manually making #top = 0
     var href = $(this).attr('href'),
-        top = href == '#top' ? 0 : $($(this).attr('href')).offset().top;
+      top = href === '#top' ? 0 : $($(this).attr('href')).offset().top;
     
     $('html, body').animate({
       scrollTop: top
@@ -67,7 +64,7 @@ layout: blank
   
   // Tooltips
   $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  });  
+    $('[data-toggle="tooltip"]').tooltip();
+  });
   
-})(jQuery, window, document);
+}(jQuery, window, document));
