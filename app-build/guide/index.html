@@ -20,7 +20,11 @@
     <div id="top"></div>
     
     
-    <h1 id="developer-guide">Developer Guide</h1>
+    <div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1 id="developer-guide">Developer Guide</h1>
 <p>The  Web API is designed to help you unlock your key  data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes, etc.  Since the  Web API is organized around REST, it&#39;s very easy to write and test applications. You can use your browser and pretty much any HTTP client in any programming language to interact with the Web API.  Our Web API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients, and we support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website&#39;s client-side code). JSON will be returned in all responses from the API, including errors.</p>
 <p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="http://localhost:4000/legal/" class="alert-link">Developer Terms of Use</a>. </p>
 
@@ -51,7 +55,7 @@
 
 <p><strong>5.  Add any Redirect URIs</strong> </p>
 <ul>
-<li>Add the Redirect URI that the  could call when the authentication process completes. (e.g. <a href="http://mysite.com/callback/">http://mysite.com/callback/</a>).  For the purposes of this tutorial, add this URI to the Redirect URIs whitelist:   <code>http://localhost:8888/callback</code>.  At a later time, you can come back  and edit this URI. </li>
+<li>Add the Redirect URI that the  could call when the authentication process completes. (e.g. <a href="http://mysite.com/callback/"><a href="http://mysite.com/callback/">http://mysite.com/callback/</a></a>).  For the purposes of this tutorial, add this URI to the Redirect URIs whitelist:   <code><a href="http://localhost:8888/callback">http://localhost:8888/callback</a></code>.  At a later time, you can come back  and edit this URI. </li>
 </ul>
 <p class="alert alert-warning">Important: When you call the  from your application, you will send a redirect-uri in the call. The redirect-uri is the address that the  redirects to after authorization succeeds or fails. If you do not white-list that URI here, authorization will fail. Any URI you enter here must exactly match the value you later use in the calls to the , including upper/lowercase characters, terminating slashes, and so on.</p>
 
@@ -70,7 +74,7 @@
 
 <p>The authorization code grant type is a redirection-based flow, the application you write against our Web API must be capable of interacting with a web browser and capable of receiving incoming requests (via redirection) from the .</p>
 <p><strong>1. Your application requests authorization</strong></p>
-<p>The authorization process starts with your application sending a request to the . (The reason your application sends this request can vary: it may be a step in the initialization of your application or in response to some user action, like a button click.) The request is sent to the <code>/authorize</code> endpoint of the Accounts service: <code>GET https://accounts.blackbaud.com/authorize</code></p>
+<p>The authorization process starts with your application sending a request to the . (The reason your application sends this request can vary: it may be a step in the initialization of your application or in response to some user action, like a button click.) The request is sent to the <code>/authorize</code> endpoint of the Accounts service: <code>GET <a href="https://accounts.blackbaud.com/authorize">https://accounts.blackbaud.com/authorize</a></code></p>
 <p>The request will include parameters in the query string:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -106,12 +110,12 @@
 </div>
 
 <p>A typical request looks like this:</p>
-<pre><code>GET https://accounts.blackbaud.com/authorize/?client_id=5fe01282e44241328a84e7c5cc169165&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&amp;scope=constituent-read&amp;state=34fFs29kd09</code></pre>
+<pre><code>GET <a href="https://accounts.blackbaud.com/authorize/?client_id=5fe01282e44241328a84e7c5cc169165&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&amp;scope=constituent-read&amp;state=34fFs29kd09">https://accounts.blackbaud.com/authorize/?client_id=5fe01282e44241328a84e7c5cc169165&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&amp;scope=constituent-read&amp;state=34fFs29kd09</a></code></pre>
 <p><strong>2.  The user is asked to authorize access within the scopes.</strong></p>
 <p>The  presents details of the scopes for which access is being sought. If the user is not logged in, they are prompted to do so using their Blackbaud credentials.</p>
 <p>When the user is logged in, they are asked to authorize access to the data sets defined in the scopes.</p>
 <p><strong>3.  The user is redirected back to your specified URI</strong></p>
-<p>After the user accepts (or denies) your request, the  redirects back to the redirect_uri. For our example, this would be the address: <code><a href="https://example.com/callback">https://example.com/callback</a></code></p>
+<p>After the user accepts (or denies) your request, the  redirects back to the redirect_uri. For our example, this would be the address: <code><a href="https://example.com/callback"><a href="https://example.com/callback">https://example.com/callback</a></a></code></p>
 <p>If the user has accepted your request, the response query string contains the following parameters:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -135,7 +139,7 @@
 </div>
 
 <p>For example:</p>
-<pre><code>https://example.com/callback?code=NApCCg..BkWtQ&amp;state=profile%2Factivity</code></pre>
+<pre><code><a href="https://example.com/callback?code=NApCCg..BkWtQ&amp;state=profile%2Factivity">https://example.com/callback?code=NApCCg..BkWtQ&amp;state=profile%2Factivity</a></code></pre>
 <p>If the user has not accepted your request or an error has occurred, the response query string contains the following parameters:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -159,10 +163,10 @@
 </div>
 
 <p>For example:</p>
-<pre><code>https://example.com/callback?error=access_denied&amp;state=STATE</code></pre>
+<pre><code><a href="https://example.com/callback?error=access_denied&amp;state=STATE">https://example.com/callback?error=access_denied&amp;state=STATE</a></code></pre>
 <p><strong>4. Your application requests refresh and access tokens</strong></p>
 <p>When the authorization code has been received, you will need to exchange it with an access token by making a POST request to the , this time to its /token endpoint:</p>
-<pre><code>POST https://accounts.blackbaud.com/token</code></pre>
+<pre><code>POST <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a></code></pre>
 <p>The <em>body</em> of this POST request must contain the following parameters:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -245,7 +249,7 @@
 </div>
 
 <p>An example <a href="http://en.wikipedia.org/wiki/CURL">cURL</a> request and response from the token endpoint will look something like this:</p>
-<pre><code>curl -H &quot;Authorization: Basic ZjM...zE=&quot; -d grant_type=authorization_code -d code=MQCbtKe...44KN -d redirect_uri=https%3A%2F%2Fwww.foo.com%2Fauth https://accounts.blackbaud.com/token
+<pre><code>curl -H &quot;Authorization: Basic ZjM...zE=&quot; -d grant_type=authorization_code -d code=MQCbtKe...44KN -d redirect_uri=https%3A%2F%2Fwww.foo.com%2Fauth <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a>
 {
    &quot;access_token&quot;: &quot;NgCXRK...MzYjw&quot;,
    &quot;token_type&quot;: &quot;Bearer&quot;,
@@ -254,11 +258,11 @@
 }</code></pre>
 <p><strong>6. Use the access token to access the  Web API</strong></p>
 <p>The access token allows you to make requests to the  Web API on a behalf of a user, for example:</p>
-<pre><code>curl -H &quot;Authorization: Bearer NgCXRK...MzYjw&quot; https://api.blackbaud.com/v1/constituent/342jsdsaq2wqw</code></pre>
+<pre><code>curl -H &quot;Authorization: Bearer NgCXRK...MzYjw&quot; <a href="https://api.blackbaud.com/v1/constituent/342jsdsaq2wqw">https://api.blackbaud.com/v1/constituent/342jsdsaq2wqw</a></code></pre>
 <p><strong>7. Requesting access token from refresh token</strong></p>
 <p>Access tokens are deliberately set to expire after a short time, after which new tokens may be granted by supplying the refresh token originally obtained during the authorization code exchange.</p>
 <p>The request is sent to the token endpoint of the :</p>
-<pre><code>POST https://accounts.blackbaud.com/token</code></pre>
+<pre><code>POST <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a></code></pre>
 <p>The body of this POST request must contain the following parameters:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -301,7 +305,7 @@
 </div>
 
 <p>For example:</p>
-<pre><code>curl -H &quot;Authorization: Basic ZjM4Zj...Y0MzE=&quot; -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo https://accounts.blackbaud.com/token
+<pre><code>curl -H &quot;Authorization: Basic ZjM4Zj...Y0MzE=&quot; -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a>
 {
    &quot;access_token&quot;: &quot;NgA6ZcYI...ixn8bUQ&quot;,
    &quot;token_type&quot;: &quot;Bearer&quot;,
@@ -311,7 +315,7 @@
 <p>The Client Credentials flow is used by the developer to access data that is related to their partner client application. This flow is used the <strong>xyz</strong> end points. </p>
 <p class="alert alert-info">The Client Credentials flow does not include authorization and therefore cannot be used to access or manage a user’s private data. This flow is described in <a href="http://tools.ietf.org/html/rfc6749#section-4.4">RFC-6749</a>.</p>
 
-<h3 id="implicit-grant-flow">Implicit Grant Flow</h3>
+<p><h3 id="implicit-grant-flow">Implicit Grant Flow</h3></p>
 <p>Implicit grant flow is for clients that are implemented entirely using JavaScript and running in the resource owner’s (partner client application user&#39;s) browser. You do not need any server-side code to use it.</p>
 <h2 id="using-scopes">Using Scopes</h2>
 <p>When your application seeks authorization to access user-related data, you will often need to specify one or more scopes. Here’s how.</p>
@@ -430,15 +434,15 @@ Here is a list of the available scopes:</p>
 <p class="alert alert-info">BEST PRACTICE Use this workflow for creating a new constituent to prevent receiving an unnecessary 409 return by verifying whether or not the proposed new constituent already exists prior to issuing a POST to create it.</p>
 
 
-<ol>
-<li>Verify that the constituent does not already exist in the Constituents collection:
+<p><ol></p>
+<p><li>Verify that the constituent does not already exist in the Constituents collection:
  Search for the constituent in the user&#39;s constituent collection by <a href="" >email address</a> :
- <code>GET: <a href="https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com">https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com</a></code>
+ <code>GET: <a href="https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com"><a href="https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com">https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com</a></a></code>
  <br>or <a href="" >lookup id</a>:
- <code>GET: <a href="https://api.constantconstituent.com/v2/constituents?lookupID=(value">https://api.constantconstituent.com/v2/constituents?lookupID=(value</a>)</code></li>
-<li>If the constituent does not exist, then proceed with <a href="">creating them</a>. </li>
-</ol>
-<h2 id="requests">Requests</h2>
+ <code>GET: <a href="https://api.constantconstituent.com/v2/constituents?lookupID=(value"><a href="https://api.constantconstituent.com/v2/constituents?lookupID=(value">https://api.constantconstituent.com/v2/constituents?lookupID=(value</a></a>)</code></li></p>
+<p><li>If the constituent does not exist, then proceed with <a href="">creating them</a>. </li>
+</ol></p>
+<p><h2 id="requests">Requests</h2></p>
 <p>The  Web API is based on REST principles: data resources are accessed via standard HTTPS requests in UTF-8 format to a Web API endpoint. Where possible, the Web API strives to use appropriate HTTP verbs for each action:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -491,12 +495,16 @@ Here is a list of the available scopes:</p>
 <p>Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with zero offset: YYYY-MM-DDTHH:MM:SSZ. </p>
 <h2 id="pagination">Pagination</h2>
 <p>Some endpoints support a way of paging the dataset, taking an offset and limit as query parameters:</p>
-<pre><code>$ curl &quot;https://api.blackbaud.com/v1/constituents?offset=20&amp;limit=10&quot;</code></pre>
+<pre><code>$ curl &quot;<a href="https://api.blackbaud.com/v1/constituents?offset=20&amp;limit=10&amp;quot">https://api.blackbaud.com/v1/constituents?offset=20&amp;limit=10&amp;quot</a>;</code></pre>
 <p>Note that offset numbering is zero-based and that omitting the offset parameter will return the first X elements. Check the technical reference for the specific endpoint to see the default limit value. Requests that return an array of items are automatically paginated if the number of items vary (for example, addresses for a constituent). </p>
 <h2 id="response-status-codes">Response Status Codes</h2>
 <p>The API uses the following response status codes, as defined in the RFC 2616 and RFC 6585:</p>
 <h2 id="web-api-fundamentals">Web API Fundamentals</h2>
 <p>ipsum lorem</p>
+
+<pre><code>&lt;/div&gt;</code></pre>
+<p>  </div>
+</div> </p>
  
     
     <!-- Omnibar Placeholder -->
