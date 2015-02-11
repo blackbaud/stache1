@@ -24,6 +24,7 @@ module.exports = function (grunt) {
       'grunt-contrib-clean',
       'grunt-contrib-concat',
       'grunt-contrib-connect',
+      'grunt-contrib-copy',
       'grunt-contrib-cssmin',
       'grunt-contrib-sass',
       'grunt-contrib-uglify',
@@ -39,7 +40,7 @@ module.exports = function (grunt) {
   tasks.forEach(grunt.loadNpmTasks);
   
   // Disable grunt headers
-  grunt.log.header = function () {};
+  //grunt.log.header = function () {};
 
   // Initialize our configuration
   // For my sanity, please alphabetize any tasks after pkg and site.
@@ -48,8 +49,15 @@ module.exports = function (grunt) {
     // Reads our configuration files
     pkg: grunt.file.readJSON('package.json'),
     site: grunt.file.readYAML('_config.yml'),
+
+    // Need to figure out why <%= site.app_assets_src %> doesn't work here
     nav: grunt.file.readYAML('app-src/assets/data/nav.yml'),
     
+    // Used to determine file locations, build or serve
+    // This means when a user calls build or serve, the assembled files
+    // will go into app-build or app-serve.
+    status: 'serve',
+
     // Displays our title all fancy-like
     asciify: {
       one: {
@@ -78,7 +86,7 @@ module.exports = function (grunt) {
     // Static site gen
     assemble: {
       options: {
-        assets: '<%= site.app_build %>assets/',
+        assets: '<%= site.app_assets_build %>',
         data: '<%= site.app_data %>*.*',
         helpers: ['<%= site.app_helpers %>**/*.js'],
         //partials: ['<%= site.app_partials %>**/*.*'],
@@ -99,7 +107,7 @@ module.exports = function (grunt) {
       }
     },
     
-    // Cleans the dist folder before serve/build
+    // Cleans the specified folder before serve/build
     clean: {
       build: {
         src: ['<%= site.app_build %>']
@@ -120,13 +128,38 @@ module.exports = function (grunt) {
       }
     },
     
+    copy: {
+      build: {
+        files: [
+          {
+            expand: true,
+            cwd: '<%= site.app_assets_src %>img/',
+            src: '**',
+            dest: '<%= site.app_assets_build %>img/'
+          }
+        ]
+      }
+    },
+
+    cssmin: {
+      target: {
+        files: [{
+          expand: true,
+          cwd: '<%= site.app_assets_build %>',
+          src: ['*.css', '!*.min.css'],
+          dest: '<%= site.app_assets_build %>',
+          ext: '.min.css'
+        }]
+      }
+    },
+
     // Adds timestamp to the assets
     filerev: {
       site: {
         files: [{
           src: [
-            '<%= site.app_assets %>/css/*.css',
-            '<%= site.app_assets %>/js/*.js'
+            '<%= site.app_assets_build %>/css/*.css',
+            '<%= site.app_assets_build %>/js/*.js'
           ]
         }]
       }
@@ -136,10 +169,10 @@ module.exports = function (grunt) {
     http: {
       'portal-get-operations': {
         options: {
-          url: '<%= site.portal-api %>/apis/54c136c272126c0990e57438/operations',
-          qs: '<%= site.portal-qs %>',
+          url: '<%= site.portal_api %>apis/54c136c272126c0990e57438/operations',
+          qs: '<%= site.portal_qs %>',
           headers: {
-            
+            'authorization': '<%= site.portal_header.authorization %>'
           },
           
           // Instead of being able to use dest, I'm having to remove '{ value: [...]}'
@@ -163,7 +196,7 @@ module.exports = function (grunt) {
           packages: [
             {
               id: 'Blackbaud.SkyUI.Sass',
-              dest: '<%= site.app_assets %>nuget/%(id)s'
+              dest: '<%= site.app_assets_src %>nuget/%(id)s'
             }
           ]
         }
@@ -204,8 +237,8 @@ module.exports = function (grunt) {
     useminPrepare: {
       html: '<%= site.app_build %>index.html',
       options: {
-        assetsDirs: ['<%= site.app_assets %>'],
-        dest: '<%= site.app_assets %>',
+        assetsDirs: ['<%= site.app_assets_src %>'],
+        dest: '<%= site.app_build %>',
         root: '<%= site.app_src %>'
       }
     },
@@ -219,7 +252,9 @@ module.exports = function (grunt) {
       serve: {
         files: [
           '<%= site.app_content %>**/*.*',
-          '<%= site.app_layouts %>**/*.*'
+          '<%= site.app_layouts %>**/*.*',
+          '<%= site.app_data %>**/*.*',
+          '_config.yml'
         ],
         tasks: ['sass', 'assemble'],
         options: {
@@ -229,13 +264,18 @@ module.exports = function (grunt) {
     }
   });
   
-  // Current showing help message as default task
+  // Internal task - sets current build/serve status
+  grunt.registerTask('status', function (status) {
+    grunt.config('status', status);
+  });
+
+  // Internal task - showing welcome message and available tasks
   grunt.registerTask('welcome', function () {
 
     var msg = 'Listed below are available grunt commands in version %s:',
       tasks = [],
       task,
-      i,
+      i = 0,
       j;
     
     grunt.log.writeln(msg.green.bold, grunt.config('pkg.version'));
@@ -247,10 +287,7 @@ module.exports = function (grunt) {
         tasks.push(task);
       }
     }
-    
-    // Sorting the tasks by name
-    //tasks.sort();
-    
+
     // Display our tasks
     j = tasks.length;
     for (i; i < j; i++) {
@@ -264,6 +301,7 @@ module.exports = function (grunt) {
     NS + 'serve',
     'Serve the documentation',
     [
+      'status:serve',
       'clean',
       'newer:assemble',
       'connect',
@@ -275,8 +313,23 @@ module.exports = function (grunt) {
     NS + 'build',
     'Build the documentation',
     [
+      'status:build',
       'clean',
       'assemble',
+      'useminPrepare',
+      'concat:generated',
+      'cssmin:generated',
+      'uglify:generated',
+      'copy:build',
+      //'filerev',
+      'usemin'
+    ]
+  );
+
+  grunt.registerTask(
+    'test',
+    [
+      'status:build',
       'useminPrepare',
       'concat:generated',
       'cssmin:generated',
