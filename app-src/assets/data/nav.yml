@@ -7,7 +7,22 @@
 #
 
 base: http://localhost:4000/
-
+tutorials: <%= nav.base %>tutorials/
+tutorials_getting_started: <%= nav.tutorials %>getting-started/
+tutorials_auth: <%= nav.tutorials %>auth/
+guide: <%= nav.base %>guide/
+guide_using_scopes: <%= nav.guide %>#using_scopes
+guide_web_api_fundamentals: <%= nav.guide %>#web-api-fundamentals
+guide_constituents: <%= nav.guide %>#constituents
+resources: <%= nav.base %>resources/
+resources_changelog: <%= nav.resources %>changelog/
+resources_code: <%= nav.resources %>code/
+resources_faq: <%= nav.resources %>faq/
+resources_status: <%= nav.resources %>status/
+community: http://blackbaud.smallworldlabs.com
+community_blog: http://blackbaud.smallworldlabs.com/groups/blogs/30
+community_forum: http://stackoverflow.com/questions/tagged/renxt
+legal: <%= nav.base %>legal/
 portal: https://bbapidev.portal.azure-api.net/
 portal_analytics: <%= nav.portal %>analytics/
 portal_issues: <%= nav.portal %>issues/
@@ -15,22 +30,51 @@ portal_signin: <%= nav.portal %>signin/
 portal_signup: <%= nav.portal %>signup/
 portal_applications: <%= nav.portal %>applications/
 
-tutorials: <%= nav.base %>tutorials/
-tutorials_getting_started: <%= nav.tutorials %>getting-started/
-tutorials_auth: <%= nav.tutorials %>auth/
+# SITEMAP
+links:
+  - name: Home
+    url: <%= site.base %>
 
-guide: <%= nav.base %>guide/
-guide_using_scopes: <%= nav.guide %>#using_scopes
-guide_web_api_fundamentals: <%= nav.guide %>#web-api-fundamentals
-guide_constituents: <%= nav.guide %>#constituents
+  - name: Tutorials
+    url: <%= site.tutorials %>
+    links:
 
-resources: <%= nav.base %>resources/
-resources_changelog: <%= nav.resources %>changelog/
-resources_code: <%= nav.resources %>code/
-resources_faq: <%= nav.resources %>faq/
-resources_status: <%= nav.resources %>status/
+      - name: Getting Started
+        url: <%= site.tutorials_getting_started %>
+        description: "This tutorial introduces our developer portal, developer sign up process, technical reference, and interactive API Console."
 
-community: http://blackbaud.smallworldlabs.com
-community_forum: http://stackoverflow.com/questions/tagged/renxt
+      - name: Web API Authorization
+        url: <%= site.tutorials_auth %>
+        description: "This tutorial shows you how to create a small server-side application that accesses user-related data through the RE NXT API."
 
-legal: <%= nav.base %>legal/
+  - name: Developer Guide
+    url: <%= site.guide %>
+
+  - name: Resources
+    url: <%= site.resources %>
+    links:
+
+      - name: Blog
+        url: <%= site.community_blog %>
+
+      - name: Forum
+        url: <%= site.community_forum %>
+
+      - name: FAQ
+        url: <%= site.resources_faq %>
+
+      - name: Status
+        url: <%= site.resources_status %>
+
+      - name: Change Log
+        url: <%= site.resources_changelog %>
+
+      - name: Code Samples
+        url: <%= site.resources_code %>
+
+  - name: Developer Portal
+    url: <%= site.portal %>
+
+  - name: Legal
+    url: <%= site.legal %>
+    showInHeader: false

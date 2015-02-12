@@ -88,12 +88,16 @@ module.exports = function (grunt) {
     assemble: {
       options: {
         assets: '<%= site.app_assets_build %>',
-        data: '<%= site.app_data %>*.*',
+        data: '<%= site.app_data %>**/*.*',
         helpers: ['<%= site.app_helpers %>**/*.js'],
-        //partials: ['<%= site.app_partials %>**/*.*'],
+        partials: ['<%= site.app_partials %>**/*.hbs'],
         layoutdir: '<%= site.app_layouts %>',
         layout: 'base.hbs',
-        pkg: '<%= pkg %>'
+        pkg: '<%= pkg %>',
+
+        // Make some data always available
+        operations: grunt.file.readJSON('app-src/assets/data/operations.json')
+
       },
       site: {
         options: {},
@@ -215,10 +219,10 @@ module.exports = function (grunt) {
           dest: '<%= site.app_assets_src %>nuget/%(id)s',
           packages: [
             {
-              id: 'Blackbaud.SkyUI.Sass',
+              id: 'Blackbaud.SkyUI.Sass'
             },
             {
-              id: 'Blackbaud.SkyUI.Scripts',
+              id: 'Blackbaud.SkyUI.Scripts'
             }
           ]
         }
@@ -274,6 +278,7 @@ module.exports = function (grunt) {
       content: {
         files: [
           '<%= site.app_content %>**/*.*',
+          '<%= site.app_assets_build %>**/*.*',
           '_config.yml',
           'package.json',
           'gruntfile.js'
@@ -284,7 +289,8 @@ module.exports = function (grunt) {
         options: {
           livereload: true
         }
-      },
+      }
+      /* THIS NEEDS FIXING,
       sass: {
         files: [
           '<%= site.app_assets_src %>**'
@@ -296,6 +302,7 @@ module.exports = function (grunt) {
           livereload: true
         }
       }
+      */
     }
   });
   
@@ -337,10 +344,10 @@ module.exports = function (grunt) {
     'Serve the documentation',
     [
       'status:serve',
-      'clean',
+      //'clean',
       'copy',
       'assemble',
-      'sass',
+      //'sass',
       'connect',
       'watch'
     ]

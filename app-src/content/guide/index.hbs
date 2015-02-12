@@ -370,7 +370,7 @@ On execution, the user is redirected to a page explaining the information that i
 ![Ipsum Image][ipsum-image-04]
 
 ### Determining the scopes needed
-Check an <a href="{{ getOperation name='Address (Get)' property='id' }}">endpoint</a> within the {{ site.portal_name }} to see if it does require prior authorization. Usually, authorization is only required for xyz data. For more about authorization see our <a href="{{ nav.guide_web_api_fundamentals }}" >Web API Authorization Guide</a>.
+Check an <a href="{{ getOperationUri name='Address (Get)' }}">endpoint</a> within the {{ site.portal_name }} to see if it does require prior authorization. Usually, authorization is only required for xyz data. For more about authorization see our <a href="{{ nav.guide_web_api_fundamentals }}" >Web API Authorization Guide</a>.
 
 
 List of scopes
@@ -431,50 +431,26 @@ The {{ site.product_name_short }} Web API currently accesses the following top l
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
-		<tr>
-			<th>Task</th>
-			<th>Endpoint</th>
-		</tr>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Endpoint</th>
+        <th>Method</th>
+      </tr>
 	</thead>
 	<tbody>
-	<tr>
-		<td>Retrieve a specific constituent using the <b>constituentId</b> path parameter</td>
-		<td><a href="{{ getOperation name='Constituent (Get)' property='id' }}" >GET {{ site.portal_url }}constituents/(constituentId)</a></td>
 
-	</tr>
-	<tr>
-		<td>Update a Constituent sing the <b>constituentId</b> path parameter</td>
-		<td><a href="{{ getOperation name='Constituent (Update)' property='id' }}" >PUT {{ site.portal_url }}constituents/(constituentId)</a></td>
-	</tr>
-	<tr>
-		<td>Delete a Constituent sing the <b>constituentId</b> path parameter</td>
-		<td><a href="{{ getOperation name='Constituent (Delete)' property='id' }}" >DELETE {{ site.portal_url }}constituents/(constituentId)</a></td>
-	</tr>
-	<tr>
-		<td>Adding a Constituent</td>
-		<td><a href="">POST {{ site.portal_url }}constituents/(constituentId)</a></td>
-	</tr>
-	<tr>
-		<td>Searching for a Constituent using <b>lookupID</b> URI parameter</td>
-		<td><a href="">GET {{ site.portal_url }}/constituents?lookupID=(value)</a></td>
+      {{# each operations }}
+        <tr>
+          <td>{{ name }}</td>
+          <td>{{ description }}</td>
+          <td>
+            <a href="{{ ../nav.portal }}{{ getOperationUri name=name }}">{{ urlTemplate }}</a>
+          </td>
+          <td>{{ method }}</td>
+        </tr>
+      {{/ each }}
 
-	</tr>
-	<tr>
-		<td>Searching for a Constituent using <b>email</b> URI parameter</td>
-        <td><a href="">GET {{ site.portal_url }}/constituents?email=(value)</a></td>
-	</tr>
-	<tr>
-		<td>More...</td>
-		<td>More...</td>
-	</tr>
-	<tr>
-		<td>More...</td>
-		<td>More...</td>
-	</tr>
-	<tr>
-		<td>More...</td>
-		<td>More...</td>
-	</tr>
 	</tbody>
   </table>
 </div>

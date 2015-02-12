@@ -1,0 +1,7 @@
+<ul class="nav-items">
+  {{# each nav.links }}
+    {{# is showInHeader false }} {{ else }}
+      <li><a href="{{ uri }}">{{ name }}</a></li>
+    {{/ is }}
+  {{/ each }}
+</ul>
