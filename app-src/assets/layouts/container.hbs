@@ -5,8 +5,8 @@ layout: base.hbs
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-      {{! Tabbing this incorrectly causes markdown rendering to fail }}
-      {{#markdown}} {{> body }} {{/markdown}}
+      {{! Spaces, tabs and new lines cause markdown helper to fail }}
+      {{#markdown}}{{> body }}{{/markdown}}
     </div>
   </div>
 </div>

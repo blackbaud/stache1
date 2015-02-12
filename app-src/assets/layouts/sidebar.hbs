@@ -7,6 +7,7 @@ layout: container.hbs
 
   </div>
   <div class="col-sm-9">
-    {{#markdown}} {{> body }} {{/markdown}}
+    {{! Spaces, tabs and new lines cause markdown helper to fail }}
+    {{#markdown}}{{> body }}{{/markdown}}
   </div>
 </div>
