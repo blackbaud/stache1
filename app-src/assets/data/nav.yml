@@ -33,48 +33,48 @@ portal_applications: <%= nav.portal %>applications/
 # SITEMAP
 links:
   - name: Home
-    url: <%= site.base %>
+    url: <%= nav.base %>
 
   - name: Tutorials
-    url: <%= site.tutorials %>
+    url: <%= nav.tutorials %>
     links:
 
       - name: Getting Started
-        url: <%= site.tutorials_getting_started %>
+        url: <%= nav.tutorials_getting_started %>
         description: "This tutorial introduces our developer portal, developer sign up process, technical reference, and interactive API Console."
 
       - name: Web API Authorization
-        url: <%= site.tutorials_auth %>
+        url: <%= nav.tutorials_auth %>
         description: "This tutorial shows you how to create a small server-side application that accesses user-related data through the RE NXT API."
 
   - name: Developer Guide
-    url: <%= site.guide %>
+    url: <%= nav.guide %>
 
   - name: Resources
-    url: <%= site.resources %>
+    url: <%= nav.resources %>
     links:
 
       - name: Blog
-        url: <%= site.community_blog %>
+        url: <%= nav.community_blog %>
 
       - name: Forum
-        url: <%= site.community_forum %>
+        url: <%= nav.community_forum %>
 
       - name: FAQ
-        url: <%= site.resources_faq %>
+        url: <%= nav.resources_faq %>
 
       - name: Status
-        url: <%= site.resources_status %>
+        url: <%= nav.resources_status %>
 
       - name: Change Log
-        url: <%= site.resources_changelog %>
+        url: <%= nav.resources_changelog %>
 
       - name: Code Samples
-        url: <%= site.resources_code %>
+        url: <%= nav.resources_code %>
 
   - name: Developer Portal
-    url: <%= site.portal %>
+    url: <%= nav.portal %>
 
   - name: Legal
-    url: <%= site.legal %>
+    url: <%= nav.legal %>
     showInHeader: false

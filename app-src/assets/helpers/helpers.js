@@ -10,6 +10,29 @@
 
 module.exports.register = function (Handlebars, options, params) {
   
+  /**
+  * Utility function to get the basename
+  **/
+  function basename(path, toReplace) {
+
+    if (arguments.length !== 2) {
+      return '';
+    }
+
+    var dot = path.lastIndexOf('.'),
+      i = 0,
+      j = toReplace.length;
+
+    path = dot === -1 ? path : path.substr(0, dot);
+
+    for (i; i < j; i++) {
+      path = path.replace(toReplace[i].replace, toReplace[i].replaceWith);
+    }
+
+    return path;
+  }
+
+
   Handlebars.registerHelper({
 
     /**
@@ -63,6 +86,33 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     withOperation: function (context) {
       return context.fn(Handlebars.helpers.getOperation(context));
+    },
+
+    /**
+    * Compares "uri" in the current context (or the first parameter) to the current URL
+    * Accounts for basename helper returning source folder.
+    * http://assemble.io/docs/FAQ.html
+    **/
+    isActiveNav: function (page, uri, context) {
+      var toReplace = [
+          {
+            replace: params.assemble.options.data.nav.base,
+            replaceWith: ''
+          },
+          {
+            replace: params.assemble.options.site.app_build,
+            replaceWith: ''
+          },
+          {
+            replace: 'index',
+            replaceWith: ''
+          }
+        ],
+        basePage = basename(page, toReplace),
+        baseUri = basename(uri, toReplace),
+        r = baseUri !== '' ? basePage.indexOf(baseUri) > -1 : baseUri === basePage;
+
+      return r ? context.fn(this) : context.inverse(this);
     }
   
   });

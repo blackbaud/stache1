@@ -14,6 +14,8 @@ app_nuget: <%= site.app_assets_src %>nuget/
 app_helpers: <%= site.app_assets_src %>helpers/
 app_partials: <%= site.app_assets_src %>partials/
 app_layouts: <%= site.app_assets_src %>layouts/
+app_error:
+  404: <%= site.app_build %>404/index.html
 
 # =============================================
 # Portal config

@@ -1,5 +1,5 @@
 ---
-layout: container.hbs
+layout: sidebar.hbs
 ---
 
 # Developer Guide

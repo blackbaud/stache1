@@ -19,7 +19,13 @@
     
     <div id="top"></div>
     
-    {{> nav }}
+    <div class="nav-wrap">
+      <div class="container">
+        <div class="col-sm-12">
+          {{> nav }}
+        </div>
+      </div>
+    </div>
 
     {{! Tabbing this incorrectly causes markdown rendering to fail }}
     {{#markdown}} {{> body }} {{/markdown}} 

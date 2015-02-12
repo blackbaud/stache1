@@ -3,8 +3,11 @@
 * Bobby Earl, 2015-01-27
 *
 * TODO
-*   Copy fonts from _sass/Sky/fonts/ into assets/fonts/.
-*   Implement grunt-filerev when performing blackbaud:build.
+*   - Copy fonts from _sass/Sky/fonts/ into assets/fonts/.
+*   - Implement grunt-filerev when performing blackbaud:build.
+*   - Work on error codes when serving.  Maybe not even necessary since it's just local.
+*       If we do it, it needs to handle relative asset linking outside of Assemble.
+*       Inspiration: https://github.com/gruntjs/grunt-contrib-connect/issues/30
 *
 * NOTES
 *   There is a current bug where 'local echo' can't be disabled when running the skyui-tfs-clone task.
@@ -96,7 +99,9 @@ module.exports = function (grunt) {
         pkg: '<%= pkg %>',
 
         // Make some data always available
-        operations: grunt.file.readJSON('app-src/assets/data/operations.json')
+        operations: grunt.file.readJSON('app-src/assets/data/operations.json'),
+        site: '<%= site %>',
+        status: '<%= status %>'
 
       },
       site: {
@@ -278,7 +283,7 @@ module.exports = function (grunt) {
       content: {
         files: [
           '<%= site.app_content %>**/*.*',
-          '<%= site.app_assets_build %>**/*.*',
+          '<%= site.app_assets_src %>**/*.*',
           '_config.yml',
           'package.json',
           'gruntfile.js'
