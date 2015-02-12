@@ -18,29 +18,10 @@
 'use strict';
 
 module.exports = function (grunt) {
+  require('jit-grunt')(grunt);
   
   // Blackbaud Namespace
-  var NS = 'blackbaud:',
-    tasks = [
-      'assemble',
-      'grunt-asciify',
-      'grunt-contrib-clean',
-      'grunt-contrib-concat',
-      'grunt-contrib-connect',
-      'grunt-contrib-copy',
-      'grunt-contrib-cssmin',
-      'grunt-contrib-sass',
-      'grunt-contrib-uglify',
-      'grunt-contrib-watch',
-      'grunt-filerev',
-      'grunt-newer',
-      'grunt-nugetter',
-      'grunt-shell',
-      'grunt-usemin'
-    ];
-  
-  // Load the required node modules
-  tasks.forEach(grunt.loadNpmTasks);
+  var NS = 'blackbaud:';
   
   // Disable grunt headers
   //grunt.log.header = function () {};
@@ -284,9 +265,7 @@ module.exports = function (grunt) {
         files: [
           '<%= site.app_content %>**/*.*',
           '<%= site.app_assets_src %>**/*.*',
-          '_config.yml',
-          'package.json',
-          'gruntfile.js'
+          '_config.yml'
         ],
         tasks: [
           'assemble'
@@ -294,11 +273,10 @@ module.exports = function (grunt) {
         options: {
           livereload: true
         }
-      }
-      /* THIS NEEDS FIXING,
+      },
       sass: {
         files: [
-          '<%= site.app_assets_src %>**'
+          '<%= site.app_assets_src %>sass/**/*.*'
         ],
         tasks: [
           'sass'
@@ -307,7 +285,6 @@ module.exports = function (grunt) {
           livereload: true
         }
       }
-      */
     }
   });
   
@@ -349,10 +326,10 @@ module.exports = function (grunt) {
     'Serve the documentation',
     [
       'status:serve',
-      //'clean',
+      'clean',
       'copy',
       'assemble',
-      //'sass',
+      'sass',
       'connect',
       'watch'
     ]
