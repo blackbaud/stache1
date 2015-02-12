@@ -4,7 +4,25 @@ layout: container.hbs
 
 <div class="row">
   <div class="col-sm-3">
-
+    <div class="sidebar">
+      <ul class="nav nav-stacked nav-sidebar">
+        {{# each nav.links }}
+          {{# isActiveNav ../page.dest url }}
+            {{# if links }}
+              <ul class="">
+                {{# each links }}
+                  <li>
+                    <a href="url">{{ name }}</a>
+                  </li>
+                {{/ each }}
+              </ul>
+            {{ else }}
+              <p>TODO: Show Page Headings</p>
+            {{/ if }}
+          {{/ isActiveNav }}
+        {{/ each }}
+      </ul>
+    </div>
   </div>
   <div class="col-sm-9">
     {{! Spaces, tabs and new lines cause markdown helper to fail }}

@@ -19,6 +19,7 @@
 
 module.exports = function (grunt) {
   require('jit-grunt')(grunt);
+  require('time-grunt')(grunt);
   
   // Blackbaud Namespace
   var NS = 'blackbaud:';
