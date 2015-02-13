@@ -132,7 +132,7 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     eachHeading: function (context, options) {
       var r = '';
-      cheerio(options.hash.selector || 'h2', Handlebars.compile(context)(this)).each(function() {
+      cheerio(options.hash.selector || 'h2', Handlebars.compile(context)(this)).each(function () {
         var el = cheerio(this);
         r = r + options.fn({
           text: el.text(),
