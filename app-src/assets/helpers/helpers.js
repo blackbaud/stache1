@@ -8,6 +8,9 @@
 /*jslint node: true, nomen: true, plusplus: true */
 'use strict';
 
+var cheerio = require('cheerio');
+var fs = require('fs');
+
 module.exports.register = function (Handlebars, options, params) {
   
   /**
@@ -113,6 +116,39 @@ module.exports.register = function (Handlebars, options, params) {
         r = baseUri !== '' ? basePage.indexOf(baseUri) > -1 : baseUri === basePage;
 
       return r ? context.fn(this) : context.inverse(this);
+    },
+
+    /**
+    * Debugging JSON content
+    **/
+    json: function (context) {
+      return JSON.stringify(context);
+    },
+
+    /**
+    * This innocuous looking helper took quite a long time to figure out.
+    * It takes the current pages entire RAW source, compiles it, and loads it in cheerio (jQuery).
+    * Then it parses for the relevant headers and executes the template for each one.
+    **/
+    eachHeading: function (context, options) {
+      var r = '';
+      cheerio(options.hash.selector || 'h2', Handlebars.compile(context)(this)).each(function() {
+        var el = cheerio(this);
+        r = r + options.fn({
+          text: el.text(),
+          id: el.attr('id')
+        });
+      });
+
+
+      return r;
+    },
+
+    /**
+    * Includes a relative file
+    **/
+    include: function (file, options) {
+      return fs.readFileSync(this.page.src.substr(0, this.page.src.lastIndexOf('/')) + '/' + file);
     }
   
   });

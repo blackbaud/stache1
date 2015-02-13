@@ -8,6 +8,7 @@
     "assemble": "^0.4.42",
     "async": "^0.9.0",
     "bower": "^1.3.12",
+    "cheerio": "^0.18.0",
     "grunt": "^0.4.5",
     "grunt-asciify": "^0.2.2",
     "grunt-contrib-clean": "^0.6.0",

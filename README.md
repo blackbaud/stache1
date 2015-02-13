@@ -23,3 +23,8 @@ Please note that bower components and node modules are ignored.  NuGet packages 
 
 ## Site Organization
 
+## Notes
+
+These will be formalized and organized better as the project grows.
+
+- If manually specifying a sidebar in a page / layouts YFM (YAML Front Matter), please realize it must be a partial and exist in the partials directory.

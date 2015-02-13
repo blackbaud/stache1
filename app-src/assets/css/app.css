@@ -11109,6 +11109,9 @@ hr.small {
 * SIDEBAR
 * ========================================================================== 
 */
+.sidebar {
+  margin-top: 20px; }
+
 .nav-sidebar.affix {
   top: 50px;
   z-index: 1; }

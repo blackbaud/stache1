@@ -5,23 +5,48 @@ layout: container.hbs
 <div class="row">
   <div class="col-sm-3">
     <div class="sidebar">
-      <ul class="nav nav-stacked nav-sidebar">
-        {{# each nav.links }}
-          {{# isActiveNav ../page.dest url }}
-            {{# if links }}
-              <ul class="">
-                {{# each links }}
+
+      {{! Process a page / layout specified template first }}
+      {{# if sidebar }}
+
+        {{ include sidebar}}
+
+      {{ else }}
+        <ul class="nav nav-stacked nav-sidebar">
+          {{# each nav.links }}
+            {{# isActiveNav ../page.dest url }}
+              {{# if links }}
+
+                <ul class="">
+                  {{# each links }}
+                    <li>
+                      <a href="url">{{ name }}</a>
+                    </li>
+                  {{/ each }}
+                </ul>
+
+              {{ else }}
+
+                {{# eachHeading ../../../page.page }}
                   <li>
-                    <a href="url">{{ name }}</a>
+                    <a href="#{{ id }}" class="smooth-scroll">
+                      {{ text }}
+                    </a>
                   </li>
-                {{/ each }}
-              </ul>
-            {{ else }}
-              <p>TODO: Show Page Headings</p>
-            {{/ if }}
-          {{/ isActiveNav }}
-        {{/ each }}
-      </ul>
+                {{/ eachHeading }}
+
+                <li class="visible-on-affix">
+                  <a href="#top" class="smooth-scroll">
+                    <i class="fa fa-caret-square-o-up"></i>
+                  </a>
+                </li>
+
+              {{/ if }}
+            {{/ isActiveNav }}
+          {{/ each }}
+        </ul>
+      {{/ if }}
+
     </div>
   </div>
   <div class="col-sm-9">
