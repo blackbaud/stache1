@@ -1,8 +1,8 @@
 <ul class="nav-items">
   {{# each nav.links }}
     {{# is showInHeader false }} {{ else }}
-      <li {{# isActiveNav ../../page.dest ../url }}class="selected"{{/ isActiveNav }}>
-        <a href="{{ ../url }}">{{ name }}</a>
+      <li {{# isActiveNav ../../page.dest ../uri }}class="selected"{{/ isActiveNav }}>
+        <a href="{{ ../uri }}">{{ name }}</a>
       </li>
     {{/ is }}
   {{/ each }}

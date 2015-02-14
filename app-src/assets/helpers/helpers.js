@@ -3,6 +3,7 @@
 * Bobby Earl, 2015-02-12
 *
 * NOTES
+*   - This file needs to be better structured.
 **/
 
 /*jslint node: true, nomen: true, plusplus: true */
@@ -11,30 +12,76 @@
 var cheerio = require('cheerio');
 var fs = require('fs');
 
+// This is such a hack just to handle nested markdown blocks.
+var marked = require('marked');
+var renderer = new marked.Renderer();
+renderer.code = function (code, language) {
+  return code;
+};
+
 module.exports.register = function (Handlebars, options, params) {
   
   /**
   * Utility function to get the basename
   **/
-  function basename(path, toReplace) {
+  function basename(path, clean) {
 
     if (arguments.length !== 2) {
       return '';
     }
 
-    var dot = path.lastIndexOf('.'),
-      i = 0,
-      j = toReplace.length;
+    if (clean) {
+      var dot = path.lastIndexOf('.'),
+        toReplace = [
+          {
+            replace: params.assemble.options.data.nav.base,
+            replaceWith: ''
+          },
+          {
+            replace: params.assemble.options.site.app_build,
+            replaceWith: ''
+          },
+          {
+            replace: 'index',
+            replaceWith: ''
+          }
+        ],
+        i = 0,
+        j = toReplace.length;
 
-    path = dot === -1 ? path : path.substr(0, dot);
-
-    for (i; i < j; i++) {
-      path = path.replace(toReplace[i].replace, toReplace[i].replaceWith);
+      path = dot === -1 ? path : path.substr(0, dot);
+      for (i; i < j; i++) {
+        path = path.replace(toReplace[i].replace, toReplace[i].replaceWith);
+      }
     }
 
     return path;
   }
 
+  /**
+  * Compares two links to determine if it's active
+  **/
+  function isActiveNav(page, uri) {
+    var basePage = basename(page, true),
+      baseUri = basename(uri, true);
+    return baseUri !== '' ? basePage.indexOf(baseUri) > -1 : baseUri === basePage;
+  }
+
+  /**
+  * Recursively searches the nav array to find the active link
+  **/
+  function getActiveNav(links, dest) {
+    var j = links.length,
+      i = 0;
+
+    for (i; i < j; i++) {
+      if (isActiveNav(dest, links[i].uri)) {
+        return links[i];
+      } else if (links[i].links) {
+        return getActiveNav(links[i].links, dest);
+      }
+    }
+  }
 
   Handlebars.registerHelper({
 
@@ -97,25 +144,7 @@ module.exports.register = function (Handlebars, options, params) {
     * http://assemble.io/docs/FAQ.html
     **/
     isActiveNav: function (page, uri, context) {
-      var toReplace = [
-          {
-            replace: params.assemble.options.data.nav.base,
-            replaceWith: ''
-          },
-          {
-            replace: params.assemble.options.site.app_build,
-            replaceWith: ''
-          },
-          {
-            replace: 'index',
-            replaceWith: ''
-          }
-        ],
-        basePage = basename(page, toReplace),
-        baseUri = basename(uri, toReplace),
-        r = baseUri !== '' ? basePage.indexOf(baseUri) > -1 : baseUri === basePage;
-
-      return r ? context.fn(this) : context.inverse(this);
+      return isActiveNav(page, uri) ? context.fn(this) : context.inverse(this);
     },
 
     /**
@@ -139,7 +168,25 @@ module.exports.register = function (Handlebars, options, params) {
           id: el.attr('id')
         });
       });
+      return r;
+    },
 
+    /**
+    * Finds the current page in the nav and iterates its child links
+    **/
+    eachChildLink: function (options) {
+
+      var active = getActiveNav(this.nav.links, this.page.dest),
+        i = 0,
+        j = 0,
+        r = '';
+
+      if (active && active.links) {
+        j = active.links.length;
+        for (i; i < j; i++) {
+          r += options.fn(active.links[i]);
+        }
+      }
 
       return r;
     },
@@ -149,6 +196,18 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     include: function (file, options) {
       return fs.readFileSync(this.page.src.substr(0, this.page.src.lastIndexOf('/')) + '/' + file);
+    },
+
+    /**
+    * I'm overriding the default markdown helper.
+    * The original had problems with nested markdown helpers.
+    * It would basically treat any previously nested and converted markdown as <code>.
+    * This was because of the lexer here: https://github.com/chjj/marked/blob/master/lib/marked.js#L15
+    **/
+    markdown: function (options) {
+      return marked(options.fn(this), {
+        renderer: renderer
+      });
     }
   
   });
