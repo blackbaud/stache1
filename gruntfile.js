@@ -35,14 +35,12 @@ module.exports = function (grunt) {
     pkg: grunt.file.readJSON('package.json'),
     bower: grunt.file.readJSON('.bowerrc'),
     site: grunt.file.readYAML('_config.yml'),
-
-    // Need to figure out why <%= site.app_assets_src %> doesn't work here
-    nav: grunt.file.readYAML('app-src/assets/data/nav.yml'),
     
     // Used to determine file locations, build or serve
     // This means when a user calls build or serve, the assembled files
     // will go into app-build or app-serve.
     status: 'serve',
+    draft: true,
 
     // Displays our title all fancy-like
     asciify: {
@@ -83,7 +81,8 @@ module.exports = function (grunt) {
         // Make some data always available
         operations: grunt.file.readJSON('app-src/assets/data/operations.json'),
         site: '<%= site %>',
-        status: '<%= status %>'
+        status: '<%= status %>',
+        draft: '<%= draft %>'
 
       },
       site: {

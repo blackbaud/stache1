@@ -34,7 +34,7 @@ module.exports.register = function (Handlebars, options, params) {
       var dot = path.lastIndexOf('.'),
         toReplace = [
           {
-            replace: params.assemble.options.data.nav.base,
+            replace: params.assemble.options.site.base,
             replaceWith: ''
           },
           {
@@ -176,7 +176,7 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     eachChildLink: function (options) {
 
-      var active = getActiveNav(this.nav.links, this.page.dest),
+      var active = getActiveNav(this.site.links, this.page.dest),
         i = 0,
         j = 0,
         r = '';
@@ -208,6 +208,13 @@ module.exports.register = function (Handlebars, options, params) {
       return marked(options.fn(this), {
         renderer: renderer
       });
+    },
+
+    draft: function (options) {
+      var m = marked(options.fn(this), {
+        renderer: renderer
+      });
+      return params.assemble.options.draft ? ('<div class="draft"><div class="draft-title">Draft</div>' + m + '</div>') : '';
     }
   
   });

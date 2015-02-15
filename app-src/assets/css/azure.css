@@ -144,6 +144,25 @@ hr.small {
 .nav-wrap {
   margin-bottom: 0; }
 
+.draft {
+  background: #f5f5f5;
+  border: solid 1px #CCC;
+  padding: 10px;
+  position: relative; }
+
+.draft-title {
+  color: #880000;
+  font-weight: bold;
+  text-transform: uppercase;
+  left: -10px;
+  position: absolute;
+  top: 0;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg); }
+
 /* 
 * ==========================================================================
 * PAGE - HOME

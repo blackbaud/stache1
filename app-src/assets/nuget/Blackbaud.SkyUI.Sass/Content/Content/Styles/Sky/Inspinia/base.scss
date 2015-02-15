@@ -266,7 +266,7 @@ body.body-small .footer.fixed {
   cursor: default;
 }
 
-.nav.nav-tabs li {
+.site.nav-tabs li {
   background: none;
   border: none;
 }
@@ -325,7 +325,7 @@ body.body-small .footer.fixed {
   padding: 10px;
 }
 
-.nav.navbar-top-links .link-block a {
+.site.navbar-top-links .link-block a {
   font-size: 12px;
 }
 
@@ -690,11 +690,11 @@ table.table-mail tr td {
   color: #888888;
 }
 
-.dashboard_2 nav.navbar,
-.dashboard_3 nav.navbar,
-.inbox nav.navbar,
-.email_view nav.navbar,
-.email_compose nav.navbar {
+.dashboard_2 site.navbar,
+.dashboard_3 site.navbar,
+.inbox site.navbar,
+.email_view site.navbar,
+.email_compose site.navbar {
   background: white;
 }
 

@@ -27,8 +27,10 @@
       </div>
     </div>
 
-    {{! Spaces, tabs and new lines cause markdown helper to fail }}
-    {{# markdown }}{{> body }}{{/ markdown }}
+    <div class="content">
+      {{! Spaces, tabs and new lines cause markdown helper to fail }}
+      {{# markdown }}{{> body }}{{/ markdown }}
+    </div>
     
     <!-- Omnibar Placeholder -->
     <div id="omnibar"></div>

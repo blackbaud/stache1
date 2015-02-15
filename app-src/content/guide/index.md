@@ -1,26 +1,68 @@
 ---
 layout: sidebar.hbs
+priority: high
+note: |  
+  <p>Problem -  You don’t make it easy.</p>
+  <p>Best Practice -  A developer guide provides details surrounding various API topics.</p>
+  <p>Benchmarks -  <a href="https://developer.spotify.com/web-api/user-guide/" target="_blank">Spotify Web API User Guide</a> and <a href="https://developer.spotify.com/web-api/authorization-guide/" target="_blank">Spotify Web API Authorization Guide</a></p> 
+  <p>TO DO:</p>
+  <ul>
+  <li>Work with BB legal to develop a Developer Terms of Use.</li>
+  <li>Audience: Review content with Partnership Team and Product Management</li>
+  <li>Registering Your App:  If we want manual instructions, may need a Blackbaud email address for manual registering of client application.  Devs must have a way to receive their <b>client id</b> and <b>secret</b>.  Devs must have way to regenerate secret. </li>
+  <li>Registering Your App: Not MVP for CTP. New web app needed to allow for 3rd party dev/partner self service application registration.</li>
+  <li>Common Request Headers: Document the standard/typical HTTP request response headers returned by the API such as Content-type and Content-length. Engineering should work with documentation to identify and explain any significant and important HTTP headers such as Cache-control or Authorization</li>
+  <li>Versioning:  Versioning strategy and backwards-compatible changes policy are TBD.</li>
+  <li>Changelog:  API engineers should track changes, fixes, issues and place into Change log.</li>
+  <li>Timestamp:  Verify format of all dates and times with the API team</li>
+  <li>Pagination:  Functionality is TBD</li>
+  <li>Response Status Codes:  Codes returned by API will be determined by engineering and listed here.   May require automated doc process.</li>
+  <li>Get input to backwards-compatible changes from  API Team engineers</li>
+  </ul>
 ---
+<p class="alert alert-danger">Draft: This content is a work in progress.  For a list of dependencies and To Do list, click the bottom right info icon.</p>
+
+
+
 
 # Developer Guide
 
 The {{ site.product_name_short }} Web API is designed to help you unlock your key {{ site.product_name_short }} data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes, etc.  Since the {{ site.product_name_short }} Web API is organized around REST, it's very easy to write and test applications. You can use your browser and pretty much any HTTP client in any programming language to interact with the Web API.  Our Web API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients, and we support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website's client-side code). JSON will be returned in all responses from the API, including errors.
 
-<p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ nav.legal }}" class="alert-link">Developer Terms of Use</a>. </p>
+<p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ site.legal }}" class="alert-link">Developer Terms of Use</a>. </p>
 
 ## Audience
 
-Currently, the RE NXT API is only available to a select group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you are an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to constituent our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ nav.tutorials_getting_started }}" > Getting Started</a> tutorial. 
+Currently, the RE NXT API is only available to a select group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you are an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to constituent our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ site.tutorials_getting_started }}" > Getting Started</a> tutorial. 
 
-This documentation is designed for people familiar with HTTP programming and RESTful programming concepts. You should also be familiar with the Raiser's Edge from a user's and administrator's point of view. There are many HTTP RESTful tutorials available on the Web, including using cURL and Fiddler to make and test HTTP requests. If you are unfamiliar with HTTP programming and RESTful Web APIs, we recommend spending some time reviewing <a href="{{ nav.guide_web_api_fundamentals }}" >Web API Fundamentals</a>.
+This documentation is designed for people familiar with HTTP programming and RESTful programming concepts. You should also be familiar with the Raiser's Edge from a user's and administrator's point of view. There are many HTTP RESTful tutorials available on the Web, including using cURL and Fiddler to make and test HTTP requests. 
+
+{{# draft }}
+If you are unfamiliar with HTTP programming and RESTful Web APIs, we recommend spending some time reviewing <a href="{{ site.guide_web_api_fundamentals }}" >Web API Fundamentals</a>.
+{{/ draft }}
 
 ## Registering Your App
+If your application seeks access to {{ site.product_name_short }} data (constituents, gifts, etc.) it must be registered. You can register your application, even before you have created it. 
 
-If your application seeks access to {{ site.product_name_short }} data (constituents, gifts, etc.) it must be registered. You can register your application, even before you have created it.  
-
+{{# draft }}
 Follow these steps to register an application:
 
-**1. Go to <a href="{{ nav.portal_applications }}" target="_blank">My Applications</a>** 
+**1.  Send an email to {{ site.register_app_email }}**.
+
+- Be sure the email subject reads "{{ site.product_name_short }}-Register My App"
+- Within the email body, provide the following information:
+	- Application Name:  Your application name. Maximum 60 characters.
+	- Application Description:  A short description of your application. Maximum 250 characters.
+	- Website URL: Where the user may obtain more information about this application (e.g. http://mysite.com).
+	- Redirects:  A listing of White-listed addresses to redirect to after authorization success or failure occurs  (e.g. http://mysite.com/callback/)
+   
+**2. Check your email inbox**
+You will receive an email that will provide you with your **Client ID** and **Client Secret**.  This information will be needed for Web API Authorization.  
+
+<p class="alert alert-warning">Always store keys securely! Regenerate your client secret if you suspect it has been compromised!</p>
+
+## Registering Your App (Self Service)
+**1. Go to <a href="{{ site.portal_applications }}" target="_blank">My Applications</a>** 
 
 This site allows you to manage your applications that integrate with Blackbaud using the new {{ site.product_name_short }} Web API. 
 
@@ -40,7 +82,7 @@ After your application has been successfully created, you will be directed to a 
 
 - Write these down and keep them safe!
 
-<p class="alert alert-warning">Important: Always store keys securely! <b>Regenerate</b> your client secret if you suspect it has been compromised!</p>
+<p class="alert alert-warning">Important: Always store keys securely! Regenerate your client secret if you suspect it has been compromised!</p>
 
 **5.  Add any Redirect URIs** 
 
@@ -51,26 +93,74 @@ After your application has been successfully created, you will be directed to a 
 **6. Click Save to complete the registration of your application.**
 
 **7.  Your application will now be shown, along with any other applications you have registered, in the main list on the <i>My Applications</i> page:**
+
 ![Ipsum Image][ipsum-image-02]
 
+
+## Regenerating your client secret (Manual)
+If your client secret has be compromised, you will need to follow these steps to regenerate the secret:
+
+**1.  Send an email to {{ site.register_app_email }}**.
+
+- Be sure the email subject reads "{{ site.product_name_short }}-Regenerate my client secret"
+- Within the email body, provide the following information:
+	- Client ID:  This is the client id value you received from Blackbaud when you registered your application.
+	- Application Name:  Your application name. Maximum 60 characters.  The value you provide must match the application name you originally provided when you registered your app.
+	- Redirect:  The value you provide must match at least one redirect URL you originally provided when you registered your application.
+
+**2. Check your email inbox**
+<p class="alert alert-warning">Blackbaud will send the email to the email address associated with your registered application.  You provided this email address when you registered your application.</p>
+ 
+The email will contain your regenerated **Client Secret**.    
+
+## Regenerating your client secret (Self-service)
+If your client secret has be compromised, you will need to follow these steps to regenerate the secret:
+
+**1. Go to <a href="{{ site.portal_applications }}" target="_blank">My Applications</a>** 
+
+This site allows you to manage your applications that integrate with Blackbaud using the new {{ site.product_name_short }} Web API. 
+
+**2. Select the app from list of registered applications.**
+
+**3. Underneath Client Secret, select the Regenerate link.**
+
+**4. Securely store the new Client Secret value.**
+
+{{/ draft }}
+
 ## Web API Authorization	
-This guide shows you how to enable your application to obtain a user’s authorization to access private {{ site.product_name_short }} data through the {{ site.product_name_short }} Web API. <a href="https://tools.ietf.org/html/rfc6749" > OAuth 2.0</a> is an authorization framework commonly used to grant client applications limited access to a  user's resources without exposing the users credentials to the client application. Nearly all requests to the {{ site.product_name_short }} Web API require authorization; that is, the user of your client application must have granted permission for your client application to access their requested {{ site.product_name_short }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is passed to subsequent Web API calls to do things such as searching or adding a constituent.
+This guide shows you how to enable your application to obtain a user’s authorization to access private {{ site.product_name_short }} data through the {{ site.product_name_short }} Web API. <a href="https://tools.ietf.org/html/rfc6749" > OAuth 2.0</a> is an authorization framework commonly used to grant client applications limited access to a  user's resources without exposing the users credentials to the client application. Nearly all requests to the {{ site.product_name_short }} Web API require authorization; that is, the user of your client application must have granted permission for your client application to access their requested {{ site.product_name_short }} data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is passed to subsequent Web API calls to do things such as searching a constituent or listing constituent addresses.
 
 <p class="alert alert-info">All communication with Blackbaud servers should be over SSL (https://) </p>
 
-### Authorization Code Flow
-The {{ site.product_name_short }} Web API currently supports the Authorization Code, Client Credentials, and Implicit Grant flows. 
+### Supported Authorization Flows
+The {{ site.product_name_short }} Web API currently supports three authorization flows:
 
-The Authorization Code flow is suitable for long-running applications which the user logs into once. It provides an access token that can be refreshed. This method first gets a code then exchanges it for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a back-end service or back-end web app, not from a client like a browser-based or mobile app.   The Authorization Code flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is the authorization flow used in our <a href="{{ nav.tutorials_auth }}" >Web API Authorization Tutorial</a>.
+- The <a href="{{ site.guide_authorization_code_flow }}" >Authorization Code</a> flow first gets a code then exchanges it for an access token and a refresh token. Since the exchange uses your client secret key, you should make that request server-side to keep the integrity of the key. An advantage of this flow is that you can use refresh tokens to extend the validity of the access token.
+- The <a href="{{ site.guide_implicit_grant_flow }}" >Implicit Grant</a> flow is carried out client-side and does not involve secret keys. The access tokens that are issued are short-lived and there are no refresh tokens to extend them when they expire.
 
-<p class="alert alert-info">As a best practice, Blackbaud recommends you use Authorization Code Flow within a web application or service that is written in a server-side language and run on a server where the source code of the application is not available to the public. With the Authorization Code flow the OAuth 2.0 access token exchange involves sending your secret API key. The access token exchange should happen on a secure location, like a back-end service, not from code running on a client like a browser or a mobile app.
-</p>
+{{# draft }}
+- The <a href="{{ site.guide_client_credentials_flow }}" >Client Credentials</a> flow allows you to get an access token by supplying your client credentials (client ID and secret key).  This flow is used when your application is acting on its own behalf to access protected resources that your application controls.  For example, when your application needs to retrieve a list of customers (tenants) that have approved your application.  This flow is used in server-to-server authentication. Only endpoints that do not access user information can be accessed. 
+{{/ draft }}
 
-The authorization code grant type is a redirection-based flow, the application you write against our Web API must be capable of interacting with a web browser and capable of receiving incoming requests (via redirection) from the {{ site.authorization_service_name }}.
+## Authorization Code Flow
+
+The Authorization Code is suitable for applications than run from a secure location such as a server-side web application or a back-end service.   It is a redirection-based flow that involves first obtaining an authorization code and then exchanging that code for an access token and a refresh token. The authorization code is obtained by using the {{ site.authorization_service_name }} as an intermediary between your application and the {{ site.product_name_short }} user's data. Your application does not directly obtain credentials and request authorization from the {{ site.product_name_short }} user. Instead, your application directs the  {{ site.product_name_short }} user to the {{ site.authorization_service_name }} for authorization.  After authorization occurs, the {{ site.authorization_service_name }} redirects the {{ site.product_name_short }} user back to your application with an authorization code.  Because the {{ site.product_name_short }} user only authenticates with the {{ site.authorization_service_name }}, user's credentials are never shared with your application.  This relieves you from the responsibility of keeping the user's {{ site.product_name_short }} credentials secure.  
+
+<p class="alert alert-info">Since this is a redirection-based flow, the application you write must be capable of interacting with a web browser and capable of receiving incoming requests (via redirection) from the {{ site.authorization_service_name }}.</p>
+
+After receiving an authorization code, your application must exchange the code for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. As long as you have a valid access token for a RE NXT user, that user does not have to keep logging in with {{ site.authorization_service_name }}.  The token exchange involves sending your <b>Client Secret</b> which you obtained when you registered your application. You should send your <b>Client Secret</b> from secure location, like your back-end service or your server-side web app, not from a client like a browser-based or mobile app.   The Authorization Code flow is described in [RFC-6749](http://tools.ietf.org/html/rfc6749#section-4.1). This flow is the authorization flow used in our <a href="{{ site.tutorials_auth }}" >Web API Authorization Tutorial</a>.
+
+<p class="alert alert-warning"> With the Authorization Code flow the OAuth 2.0 access token exchange involves sending your <b>Client Secret</b>. The access token exchange should happen on a secure location.  As a best practice, Blackbaud recommends you use the Authorization Code flow within a web application or back-end service that is written in a server-side language and run on a server where the source code of the application is not available to the public. The access token exchange should not occur from code running on a client like a browser or a mobile app.</p>
+
+
+
 
 **1. Your application requests authorization**
 
-The authorization process starts with your application sending a request to the {{ site.authorization_service_name }}. (The reason your application sends this request can vary: it may be a step in the initialization of your application or in response to some user action, like a button click.) The request is sent to the `/authorize` endpoint of the Accounts service: `GET https://accounts.blackbaud.com/authorize`
+Authorization begins with your application sending a request to the <code>{{ site.authorization_endpoint }}</code> endpoint of the {{ site.authorization_service_name }}.  Exactly when you decide to make this request is up to you.  You may decide to request authorization when your application gathers initial information from the user.  Alternatively, you may decide to authorize when the user first attempts to access a protected resource (user data) managed by the {{ site.product_name_short }} Web API. 
+
+    GET {{ site.authorization_endpoint }}
 
 The request will include parameters in the query string:
  
@@ -85,23 +175,24 @@ The request will include parameters in the query string:
 	<tbody>
 	<tr>
 		<td>client_id</td>
-		<td >Required.  The client ID provided to you by Blackbaud when you register your application.See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
-	</tr>
-	<tr>
-		<td>state</td>
-		<td class="column-2">A value used by the client application to maintain state between the request and callback.  The {{ site.authorization_service_name }} includes the value when redirecting the user back to the client application.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
-	</tr>
-	<tr>
-		<td>response_type</td>
-		<td>Required.  The value must be set to "code".</td>
+		<td><i>Required</i>.  The <b>Client ID</b> value provided to you by Blackbaud when you <a href="{{ site.guide_registering_your_app }}" >register your application</a>.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
 	</tr>
 	<tr>
 		<td>redirect_uri</td>
-		<td>Required.  The URI to redirect to after the user grants/denies permission. This URI needs to have been entered in the Redirect URI whitelist that you specified when you registered your application. The value of redirect_uri here must exactly match one of the values you entered when you registered your application, including upper/lowercase, terminating slashes, etc. See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a>.</td>
+		<td><i>Required</i>.  The URI to redirect to after the user grants/denies permission. This URI needs to have been entered in the Redirect URI whitelist that you specified when you registered your application. The value of redirect_uri here must exactly match one of the values you entered when you registered your application, including upper/lowercase, terminating slashes, etc. See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a>.</td>
 	</tr>
 	<tr>
+		<td>state</td>
+		<td class="column-2"><i>Recommended Best Practice</i>.  An opaque value used by the client application to maintain state between the request and callback.  The {{ site.authorization_service_name }} includes the value when redirecting the user back to the client application.  The <b>state</b> parameter is intended to preserve some state object set by the client in the{{ site.authorization_service_name }} request, and make it available to the client in the response.  The main security reason for this is to stop Cross Site Request Forgery (XRSF) by including something in the request that the client can verify in the response but that an attacker could not know.  An example of this would be a hash of the session cookie or a random value stored in the server linked to the session.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+	</tr>
+	<tr>
+		<td>response_type</td>
+		<td><i>Required</i>.  The value must be set to <code>code</code>.</td>
+	</tr>
+	
+	<tr>
 		<td>scope</td>
-		<td>Optional. A space-separated list of scopes: see <a href="{{ nav.guide_using_scopes }}" >Using Scopes</a>. If no scopes are specified, authorization will be granted to TBD.</td>
+		<td>Optional. A space-separated list of scopes: see <a href="{{ site.guide_using_scopes }}" >Using Scopes</a>. If no scopes are specified, authorization will be granted to TBD.</td>
 	</tr>
 	</tbody>
   </table>
@@ -109,7 +200,7 @@ The request will include parameters in the query string:
 
 A typical request looks like this:
 
-    GET https://accounts.blackbaud.com/authorize/?client_id=5fe01282e44241328a84e7c5cc169165&response_type=code&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&scope=constituent-read&state=34fFs29kd09
+`GET {{ site.authorization_endpoint }}/?client_id=5fe01282e44241328a84e7c5cc169165&response_type=code&redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&scope=constituent-read&state=34fFs29kd09`
 
 **2.  The user is asked to authorize access within the scopes.**
 
@@ -343,17 +434,24 @@ For example:
        "expires_in": 3600
     }
 
-### Client Credentials Flow
+
+## Implicit Grant Flow
+
+Implicit grant flow is for clients that are implemented entirely using JavaScript and running in your application user's browser. You do not need any server-side code to use it.
+
+
+
+{{# draft }}
+## Client Credentials Flow
+{% include note.html priority='medium' note='This needs more work.' %}
 
 The Client Credentials flow is used by the developer to access data that is related to their partner client application. This flow is used the **xyz** end points. 
 
 <p class="alert alert-info">The Client Credentials flow does not include authorization and therefore cannot be used to access or manage a user’s private data. This flow is described in <a href="http://tools.ietf.org/html/rfc6749#section-4.4">RFC-6749</a>.</p>
-
-### Implicit Grant Flow
-
-Implicit grant flow is for clients that are implemented entirely using JavaScript and running in the resource owner’s (partner client application user's) browser. You do not need any server-side code to use it.
+{{/ draft }}
 
 ## Using Scopes
+{% include note.html priority='medium' note='This is a prototype of scopes documentation.  Scopes have not been defined for the Web API.' %}
 When your application seeks authorization to access user-related data, you will often need to specify one or more scopes. Here’s how.
 
 Most calls to the {{ site.product_name_short }} Web API require prior authorization by your application’s user. To get that authorization, your application will first need to make a call to the {{ site.authorization_service_name }}’s `/authorize` endpoint, passing along a list of the **scopes** for which access permission is sought.
@@ -370,7 +468,7 @@ On execution, the user is redirected to a page explaining the information that i
 ![Ipsum Image][ipsum-image-04]
 
 ### Determining the scopes needed
-Check an <a href="{{ getOperationUri name='Address (Get)' }}">endpoint</a> within the {{ site.portal_name }} to see if it does require prior authorization. Usually, authorization is only required for xyz data. For more about authorization see our <a href="{{ nav.guide_web_api_fundamentals }}" >Web API Authorization Guide</a>.
+Check an <a href="{{ getOperationUri name='Constituent (Get)' }}" >endpoint</a> within the {{ site.portal_name }} to see if it does require prior authorization. Usually, authorization is only required for xyz data. For more about authorization see our <a href="{{ site.guide_web_api_authorization }}" >Web API Authorization Guide</a>.
 
 
 List of scopes
@@ -407,17 +505,17 @@ Here is a list of the available scopes:
 
 URLs referenced in the documentation to have the following base:
 
-<code>{{ site.portal_url }}</code>
+<code>{{ site.portal_base }}</code>
 
-The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific tenant's {{ site.product_name_short }} user.  <a href="{{ site.web_api_authorization }}" > Web API Authorization</a> is done via the {{ site.authorization_service_name }} at the following URL: 
+The majority of endpoints access *private* data, such as constituent data.  To access private data an application must get permission from a specific tenant's {{ site.product_name_short }} user.  <a href="{{ site.guide_web_api_authorization }}" > Web API Authorization</a> is done via the {{ site.authorization_service_name }} at the following URL: 
 
-<code>NEEDS UPDATING</code>  
+<code>{{ site.authorization_url }}</code>  
 
 ## Endpoints
 
 The {{ site.product_name_short }} Web API currently accesses the following top level resource groupings. Click on a link to read the documentation for accessing or modifying each resource:
 
-- <a href="{{ nav.guide_constituents }}" >Constituents</a> - Manage a constituent's biographical and constituent information for a specific Blackbaud tenant which includes addresses, email addresses, phones, web addresses, name formats ...
+- <a href="{{ site.guide_constituents }}" >Constituents</a> - Manage a constituent's biographical and constituent information for a specific Blackbaud tenant which includes addresses, email addresses, phones, web addresses, name formats ...
 - Solicitor - Manage and list the solicitors for a specific Blackbaud tenant.  Solicitors request contributions to a tenant's organization.  
 - Relationships - Manage and list a constituent's familial and social associations.  
 - Spouse - Returns spouse and domestic partner information for the specified constituent
@@ -425,8 +523,7 @@ The {{ site.product_name_short }} Web API currently accesses the following top l
 - Education - Returns information about the education record with the specified constituent.
 
 ## Constituents
- Manage a constituent's biographical and constituent information for a specific Blackbaud tenant which includes addresses, email addresses, phones, web addresses, name formats ...
-
+Manage a constituent's biographical and constituent information for a specific Blackbaud tenant which includes addresses, email addresses, phones, web addresses, name formats ...
 
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -445,7 +542,7 @@ The {{ site.product_name_short }} Web API currently accesses the following top l
           <td>{{ name }}</td>
           <td>{{ description }}</td>
           <td>
-            <a href="{{ ../nav.portal }}{{ getOperationUri name=name }}">{{ urlTemplate }}</a>
+            <a href="{{ ../site.portal }}{{ getOperationUri name=name }}">{{ urlTemplate }}</a>
           </td>
           <td>{{ method }}</td>
         </tr>
@@ -511,49 +608,66 @@ The {{ site.product_name_short }} Web API is based on REST principles: data reso
 
 ### Common Request Headers
 
+{{# draft }}
 ipsum lorem
+{{/ draft }}
 
-##Responses
+## Responses
 
 All data is received as a JSON object.
 
 ## Version
 
+{{# draft }}
 When we change the Web API in a backwards-incompatible way, we release a new  version.
 
 For the {{ site.product_name_short }} Web API, the URL has a major version number (v1), but the Web API has date based sub-versions which can be chosen using a custom HTTP request header. In this case, the major version provides structural stability of the Web API as a whole while the dated versions account for smaller changes (field deprecation, endpoint changes, etc). 
+{{/ draft }}
 
-### What changes does Blackbaud consider to be “backwards-compatible”?
+## Backwards-compatible changes
 
+{{# draft }}
 - Adding new Web API resources.
 - Adding new optional request parameters to existing Web API methods.
 - Adding new properties to existing Web API responses.
 - Changing the order of properties in existing Web API responses.
 - Changing the length or format of object IDs or other opaque strings. This includes adding or removing fixed prefixes. 
 - You can safely assume IDs we generate will never exceed x characters, but you should be able to handle IDs of up to that length. 
+{{/ draft }}
 
-### API Changelog
+## API Changelog
 
-The  <a href="{{ nav.resources_changelog }}" >Change Log</a> reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.
+{{# draft }}
+The  <a href="{{ site.resources_changelog }}" >Change Log</a> reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.
+{{/ draft }}
 
 ##Timestamps
 
+{{# draft }}
 Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with zero offset: YYYY-MM-DDTHH:MM:SSZ. 
+{{/ draft }}
 
 ##Pagination
 
+{{# draft }}
 Some endpoints support a way of paging the dataset, taking an offset and limit as query parameters:
 
     $ curl "https://api.blackbaud.com/v1/constituents?offset=20&limit=10"
 
 Note that offset numbering is zero-based and that omitting the offset parameter will return the first X elements. Check the technical reference for the specific endpoint to see the default limit value. Requests that return an array of items are automatically paginated if the number of items vary (for example, addresses for a constituent). 
+{{/ draft }}
 
 ##Response Status Codes
-The API uses the following response status codes, as defined in the RFC 2616 and RFC 6585:
 
+{{# draft }}
+The API uses the following response status codes, as defined in the RFC 2616 and RFC 6585:
+{{/ draft }}
 
 ## Web API Fundamentals
+
+{{# draft }}
 ipsum lorem
+{{/ draft }}
 
 [sign up]: https://bbbobbyearl.portal.azure-api.net/
 [signing up]: https://bbbobbyearl.portal.azure-api.net/

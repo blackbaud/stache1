@@ -1,5 +1,5 @@
 <ul class="nav-items">
-  {{# each nav.links }}
+  {{# each site.links }}
     {{# is showInHeader false }} {{ else }}
       <li {{# isActiveNav ../../page.dest ../uri }}class="selected"{{/ isActiveNav }}>
         <a href="{{ ../uri }}">{{ name }}</a>

@@ -6695,7 +6695,7 @@ h3, h4, h5 {
   font-weight: 600;
   padding: 14px 20px 14px 25px; }
 
-.nav.navbar-right > li > a {
+.site.navbar-right > li > a {
   color: #999c9e; }
 
 .nav > li.active > a {
@@ -6705,7 +6705,7 @@ h3, h4, h5 {
   background-color: #293846;
   color: white; }
 
-.nav.navbar-top-links > li > a:hover, .nav.navbar-top-links > li > a:focus {
+.site.navbar-top-links > li > a:hover, .site.navbar-top-links > li > a:focus {
   background-color: #ececec; }
 
 .nav > li > a i {
@@ -6796,7 +6796,7 @@ h3, h4, h5 {
 .dropdown-messages li em, .dropdown-alerts li em {
   font-size: 10px; }
 
-.nav.navbar-top-links .dropdown-alerts a {
+.site.navbar-top-links .dropdown-alerts a {
   font-size: 12px; }
 
 .nav-header {
@@ -6810,10 +6810,10 @@ h3, h4, h5 {
   border-left: 4px solid #19aa8d;
   background: #293846; }
 
-.nav.nav-second-level > li.active {
+.site.nav-second-level > li.active {
   border: none; }
 
-.nav.nav-second-level.collapse[style] {
+.site.nav-second-level.collapse[style] {
   height: auto !important; }
 
 .nav-header a {
@@ -6838,7 +6838,7 @@ h3, h4, h5 {
 .navbar-form-custom .form-group {
   margin-bottom: 0; }
 
-.nav.navbar-top-links a {
+.site.navbar-top-links a {
   font-size: 14px; }
 
 .navbar-form-custom .form-control {
@@ -8356,7 +8356,7 @@ body.body-small .footer.fixed {
   color: #555555;
   cursor: default; }
 
-.nav.nav-tabs li {
+.site.nav-tabs li {
   background: none;
   border: none; }
 
@@ -8402,7 +8402,7 @@ body.body-small .footer.fixed {
   font-size: 12px;
   padding: 10px; }
 
-.nav.navbar-top-links .link-block a {
+.site.navbar-top-links .link-block a {
   font-size: 12px; }
 
 .link-block a {
@@ -8693,11 +8693,11 @@ table.table-mail tr td {
 .text-muted {
   color: #888888; }
 
-.dashboard_2 nav.navbar,
-.dashboard_3 nav.navbar,
-.inbox nav.navbar,
-.email_view nav.navbar,
-.email_compose nav.navbar {
+.dashboard_2 site.navbar,
+.dashboard_3 site.navbar,
+.inbox site.navbar,
+.email_view site.navbar,
+.email_compose site.navbar {
   background: white; }
 
 /* MARGINS & PADDINGS */
@@ -9559,7 +9559,7 @@ dd.project-people {
     padding-top: 10px;
     min-height: 100px; }
 
-  .nav.navbar-top-links li.dropdown {
+  .site.navbar-top-links li.dropdown {
     display: none; } }
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
@@ -11085,6 +11085,25 @@ hr.small {
 
 .nav-wrap {
   margin-bottom: 0; }
+
+.draft {
+  background: #f5f5f5;
+  border: solid 1px #CCC;
+  padding: 10px;
+  position: relative; }
+
+.draft-title {
+  color: #880000;
+  font-weight: bold;
+  text-transform: uppercase;
+  left: -10px;
+  position: absolute;
+  top: 0;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg); }
 
 /* 
 * ==========================================================================

@@ -1,6 +1,15 @@
+# NOTES:
+#
+# This navigation file is purposefully flat.  Structure of the nav is described in sitemap.xml.
+# When adding new links, please follow the convention below:
+#   - Include trailing slashes
+#   - Use the Lo-Dash syntax to build nested links
+
+
 # =============================================
-# App config
+# STACHE
 # =============================================
+base: http://localhost:4000/
 app: app-
 app_src: <%= site.app %>src/
 app_build: <%= site.app %><%= status %>/
@@ -17,24 +26,153 @@ app_layouts: <%= site.app_assets_src %>layouts/
 app_error:
   404: <%= site.app_build %>404/index.html
 
+
 # =============================================
-# Portal config
+# PRODUCT
 # =============================================
-portal_url: https://bbapidev.azure-api.net/
+product_name_long: Raiser's Edge NXT
+product_name_short: RENXT
+authentication_service_name:  Blackbaud Authentication Service
+authorization_service_name:  Blackbaud Authorization Service
+authorization_url:  https://authorize.blackbaud.com/
+authorization_endpoint: <%= site.authorization_url %>authorize/
+register_app_email: apis@blackbaud.com
+
+
+# =============================================
+# GITHUB config
+# =============================================
+github: https://github.com/blackbaud-community/
+github_repo_web_api_authorization: <%= site.github %>RENXT-WebAPI-Authorization/
+
+
+# =============================================
+# TUTORIALS
+# =============================================
+tutorials: <%= site.base %>tutorials/
+tutorials_getting_started: <%= site.tutorials %>getting-started/
+tutorials_auth: <%= site.tutorials %>auth/
+
+
+# =============================================
+# GUIDE
+# =============================================
+guide: <%= site.base %>guide/
+guide_using_scopes: <%= site.guide %>#using_scopes
+guide_web_api_fundamentals: <%= site.guide %>#web-api-fundamentals
+guide_constituents: <%= site.guide %>#constituents
+guide_authorization_code_flow: <%= site.guide %>#authorization-code-flow
+guide_client_credentials_flow: <%= site.guide %>#client-credentials-flow
+guide_implicit_grant_flow: <%= site.guide %>#implicit-grant-flow
+guide_registering_your_app: <%= site.guide %>#registering-your-app
+
+
+# =============================================
+# RESOURCES
+# =============================================
+resources: <%= site.base %>resources/
+resources_changelog: <%= site.resources %>changelog/
+resources_code: <%= site.resources %>code/
+resources_faq: <%= site.resources %>faq/
+resources_status: <%= site.resources %>status/
+
+
+# =============================================
+# COMMUNITY
+# =============================================
+community: http://blackbaud.smallworldlabs.com
+community_blog: http://blackbaud.smallworldlabs.com/groups/blogs/30
+community_forum: http://stackoverflow.com/questions/tagged/renxt
+
+
+# =============================================
+# PORTAL
+# =============================================
+portal_user: bbapidev
+portal: https://<%= site.portal_user %>.portal.azure-api.net/
+portal_analytics: <%= site.portal %>analytics/
+portal_issues: <%= site.portal %>issues/
+portal_signin: <%= site.portal %>signin/
+portal_signup: <%= site.portal %>signup/
+portal_products: <%= site.portal %>products/
+portal_applications: <%= site.portal %>applications/
 portal_name: API management developer portal
-portal_api: https://bbapidev.management.azure-api.net/
+portal_base: https://<%= portal_user %>.azure-api.net
+portal_api: https://<%= portal_user %>.management.azure-api.net/
 portal_qs: 
   - api_version: 2014-02-14-preview
 portal_header:
   - authorization: 'SharedAccessSignature uid=54c12d71ce82280329030003&ex=2016-02-06T22:41:00.0000000Z&sn=SuypLuSQqpGI3MEhiGNHcwIkEQQIswUxWsmoh54mpyYXt0U27lOyAapkYHxtnDxIak9JyUskfplQT9iTmBm2yg=='
-  
+
+
 # =============================================
-# Product config
+# LEGAL
 # =============================================
-product_name_long: Raiser's Edge NXT
-product_name_short: RENXT
-authorization_service_name:  Blackbaud Authorization Service
-authentication_service_name:  Blackbaud Authentication Service
+legal: <%= site.base %>legal/
+
+
+# =============================================
+# SITEMAP
+# =============================================
+links:
+  - name: Home
+    uri: <%= site.base %>
+
+  - name: Tutorials
+    uri: <%= site.tutorials %>
+    links:
+
+      - name: Getting Started
+        uri: <%= site.tutorials_getting_started %>
+        description: "This tutorial introduces our developer portal, developer sign up process, technical reference, and interactive API Console."
+
+      - name: Web API Authorization
+        uri: <%= site.tutorials_auth %>
+        description: "This tutorial shows you how to create a small server-side application that accesses user-related data through the RE NXT API."
+
+  - name: Developer Guide
+    uri: <%= site.guide %>
+
+  - name: Resources
+    uri: <%= site.resources %>
+    links:
+
+      - name: Blog
+        uri: <%= site.community_blog %>
+
+      - name: Forum
+        uri: <%= site.community_forum %>
+
+      - name: FAQ
+        uri: <%= site.resources_faq %>
+
+      - name: Status
+        uri: <%= site.resources_status %>
+
+      - name: Change Log
+        uri: <%= site.resources_changelog %>
+
+      - name: Code Samples
+        uri: <%= site.resources_code %>
+
+  - name: Developer Portal
+    uri: <%= site.portal %>
+
+  - name: Legal
+    uri: <%= site.legal %>
+    showInHeader: false
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #appSrc: 'app-src/'
