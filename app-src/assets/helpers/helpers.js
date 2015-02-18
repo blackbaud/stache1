@@ -235,6 +235,14 @@ module.exports.register = function (Handlebars, options, params) {
     },
 
     /**
+    * Loop through a certain number of times.
+    **/
+    loop: function (options) {
+      var arr = new Array(options.hash.end);
+      return Handlebars.helpers.each(arr, options);
+    },
+
+    /**
     * Includes a relative file
     **/
     include: function (file, options) {

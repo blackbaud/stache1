@@ -1,5 +1,6 @@
 ---
 layout: sidebar
+days: 7
 ---
 
 # System Status
@@ -8,36 +9,56 @@ layout: sidebar
   Please note this page is a mockup.  The API Management suite or another third party would most likely provide this information.
 </p>
 
-<p class="text-right">Last Updated: BUILD_TIME</p>
+<p class="text-right">Last Updated: yesterday</p>
 
 <div class="table-responsive">
   <table class="table table-bordered table-hover">
     <thead>
       <tr>
         <th></th>
-        {% for i in (0...6) %}
-          <th class="text-center">NEEDS UPDATING</th>
-        {% endfor %}
+        {{# loop start=0 end=days }}
+          <th class="text-center">{{ @index }}</th>
+        {{/ loop }}
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>Authorization</td>
-        {% for i in (0...6) %}
-          {% include status.html api="authorization" %}
-        {% endfor %}
+        {{# loop start=0 end=days }}
+          <td class="text-center">
+            <a href="#" data-toggle="tooltip" title="Fatal Error">
+              <i class="fa fa-times-circle text-danger"></i>
+             </a>
+          </td>
+        {{/ loop }}
       </tr>
       <tr>
         <td>Constituent</td>
-        {% for i in (0...6) %}
-          {% include status.html api="constituent" %}
-        {% endfor %}
+        {{# loop start=0 end=days }}
+          <td class="text-center">
+            <a href="#" data-toggle="tooltip" title="Warning">
+              <i class="fa fa-exclamation-triangle text-warning"></i>
+             </a>
+          </td>
+        {{/ loop }}
       </tr>
       <tr>
         <td>RENXT</td>
-        {% for i in (0...6) %}
-          {% include status.html api="renxt" %}
-        {% endfor %}
+        {{# loop start=0 end=days }}
+          <td class="text-center">
+            <a href="#" data-toggle="tooltip" title="Informational">
+              <i class="fa fa-info-circle text-info"></i>
+             </a>
+          </td>
+        {{/ loop }}
+      </tr>
+      <tr>
+        <td>FENXT</td>
+        {{# loop start=0 end=days }}
+          <td class="text-center">
+            <i class="fa fa-check-circle text-success"></i>
+          </td>
+        {{/ loop }}
       </tr>
     </tbody>
   </table>
