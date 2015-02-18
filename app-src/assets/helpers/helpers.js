@@ -27,7 +27,7 @@ module.exports.register = function (Handlebars, options, params) {
   function basename(path, clean) {
 
     if (arguments.length !== 2) {
-      return '';
+      clean = true;
     }
 
     if (clean && path) {
@@ -60,20 +60,25 @@ module.exports.register = function (Handlebars, options, params) {
     return path;
   }
 
+  function isActiveNav(dest, uri) {
+    dest = basename(dest);
+    uri = basename(uri);
+    return uri !== '' ? dest.indexOf(uri) > -1 : uri === dest;
+  }
+
   /**
   * Recursively searches the nav array to find the active link
   **/
-  function getActiveNav(links, dest) {
+  function getActiveNav(dest, links) {
     var j = links.length,
       i = 0;
 
-    return '';
-
     for (i; i < j; i++) {
+      console.log(dest + ' vs ' + links[i].uri);
       if (isActiveNav(dest, links[i].uri)) {
         return links[i];
       } else if (links[i].links) {
-        return getActiveNav(links[i].links, dest);
+        return getActiveNav(dest, links[i].links);
       }
     }
   }
@@ -144,16 +149,10 @@ module.exports.register = function (Handlebars, options, params) {
 
     /**
     * Compares "uri" in the current context (or the first parameter) to the current URL
-    * Accounts for basename helper returning source folder.
     * http://assemble.io/docs/FAQ.html
     **/
     isActiveNav: function (options) {
-
-      var dest = basename(options.hash.dest || this.dest || '', true),
-        uri = basename(options.hash.uri || this.uri || '', true),
-        r = uri !== '' ? dest.indexOf(uri) > -1 : uri === dest;
-
-      return r ? options.fn(this) : options.inverse(this);
+      return isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '') ? options.fn(this) : options.inverse(this);
     },
 
     /**
@@ -196,9 +195,7 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     eachChildLink: function (options) {
 
-      return '';
-
-      var active = getActiveNav(this.site.links, this.page.dest),
+      var active = getActiveNav(options.hash.dest || this.page.dest || '', options.hash.links || this.site.links || ''),
         i = 0,
         j = 0,
         r = '';
