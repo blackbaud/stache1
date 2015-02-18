@@ -35,3 +35,9 @@ The <b>client id</b> is used within various OAuth 2.0 authorization flows.  The 
 ### Oops, my client secret has been compromized, how do I regenerate my client secret?
 
 See Regenerating the Client Secret?
+
+{{# draft }}
+### Do you support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application?
+
+TBD
+{{/ draft }}

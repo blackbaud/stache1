@@ -27,7 +27,7 @@ note: |
 
 # Developer Guide
 
-The {{ site.product_name_short }} Web API is designed to help you unlock your key {{ site.product_name_short }} data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes, etc.  Since the {{ site.product_name_short }} Web API is organized around REST, it's very easy to write and test applications. You can use your browser and pretty much any HTTP client in any programming language to interact with the Web API.  Our Web API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients, and we support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website's client-side code). JSON will be returned in all responses from the API, including errors.
+The {{ site.product_name_short }} Web API is designed to help you unlock your key {{ site.product_name_short }} data by allowing developers to create applications that manage constituents data.  Since the {{ site.product_name_short }} Web API is organized around REST, it's very easy to write and test applications. You can use your browser and pretty much any HTTP client in any programming language to interact with the Web API.  Our Web API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients. JSON will be returned in all responses from the API, including errors.
 
 <p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ site.legal }}" class="alert-link">Developer Terms of Use</a>. </p>
 
@@ -500,6 +500,12 @@ Here is a list of the available scopes:
   </table>
 </div>
 
+
+## CORS
+
+{{# draft }}
+We support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website's client-side code).
+{{/ draft }}
 
 ## Base URLs
 

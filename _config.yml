@@ -96,6 +96,7 @@ portal_signin: <%= site.portal %>signin/
 portal_signup: <%= site.portal %>signup/
 portal_products: <%= site.portal %>products/
 portal_applications: <%= site.portal %>applications/
+portal_endpoints: <%= site.portal %>docs/services/
 portal_name: API management developer portal
 portal_base: https://<%= portal_user %>.azure-api.net
 portal_api: https://<%= portal_user %>.management.azure-api.net/

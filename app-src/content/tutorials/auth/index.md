@@ -21,9 +21,7 @@ note: |
 
 -->
 
-# Web API Authorization Tutorial #
-
-This tutorial shows you how to create a small server-side application that accesses user-related data through the  {{ site.product_name_short }} Web API.
+# Web API Authorization Tutorial
 
 <p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ site.legal }}" >Developer Terms of Use</a>. </p>
 
