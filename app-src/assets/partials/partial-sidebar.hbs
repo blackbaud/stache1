@@ -1,3 +1,4 @@
+{{! No real reason to have this as a partial currently.  It was meant to be nested.  Leaving as is for now. }}
 <ul class="nav nav-stacked nav-sidebar">
   {{! Finds our current page }}
   {{# each site.links }}
@@ -5,7 +6,7 @@
       {{# if showTitle }}
         <li class="title">
           <a href="{{ uri }}">
-            {{ name }}
+            {{ name }} {{# if draft }}<small>DRAFT</small>{{/ if }}
           </a>
         </li>
       {{/ if}}
@@ -15,7 +16,7 @@
           {{# isActiveNav dest=../../../../page.dest }}
             <li class="current">
               <a href="{{ uri }}">
-                {{ name }}
+                {{ name }} {{# if draft }}<small>(DRAFT)</small>{{/ if }}
               </a>
               {{# if ../../../../../showHeadings }}
                 {{> partial-page-headings ../../../../../../pagination.index.page }}
@@ -24,7 +25,7 @@
           {{ else }}
             <li>
               <a href="{{ uri }}">
-                {{ name }}
+                {{ name }} {{# if draft }}<small>(DRAFT)</small>{{/ if }}
               </a>
             </li>
           {{/ isActiveNav }}

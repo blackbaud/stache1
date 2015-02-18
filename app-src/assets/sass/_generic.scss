@@ -139,8 +139,10 @@ hr.small {
   position: relative;
 }
 
-.draft-title {
+.draft:before {
   color: #880000;
+  content: 'draft';
+  display: block;
   font-weight: bold;
   text-transform: uppercase;
   left: -10px;

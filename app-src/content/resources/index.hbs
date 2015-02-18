@@ -12,12 +12,14 @@ layout: container
     {{/ if }}
 
     <div class="col-sm-4">
-      <i class="fa {{ icon }}"></i>
-      <div class="desc">
-        <h2>
-          <a href="{{ uri }}">{{ name }}</a>
-        </h2>
-        <p>{{ description }}</p>
+      <div class="{{# if draft }}draft{{/ if }}">
+        <i class="fa {{ icon }}"></i>
+        <div class="desc">
+          <h2>
+            <a href="{{ uri }}">{{ name }}</a>
+          </h2>
+          <p>{{ description }}</p>
+        </div>
       </div>
     </div>
 

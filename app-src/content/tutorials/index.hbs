@@ -1,6 +1,5 @@
 ---
-layout: sidebar
-itemsPerRow: 3
+layout: container
 ---
 
 <div class="code">
@@ -9,9 +8,12 @@ itemsPerRow: 3
   We provide a set of short, simple tutorials with code snippets that show you how to use the RE NXT API to authenticate and manage your constituent fundraising data. Our <a href="{{ site.tutorials_getting_started }}" >Getting Started</a> and <a href="{{ site.tutorials_auth }}" >Web API Authorization</a> tutorials gets you up to speed fast.  These will guide you through the process of signing up for an API key, trying out our API console, and negotiating OAuth.    You will be writing code against our API in no time.
   </p>
 
-  <div class="row">
-  {{! Find the tutorials }}
-  {{# eachChildLink }}
+  {{# eachChildLink mod=3 }}
+
+    {{# if firstOrMod0 }}
+      <div class="row {{# unless first }}resources-more{{/ unless }}">
+    {{/ if }}
+
     <div class="col-sm-4">
       <div class="has-hover">
         <img src="holder.js/300x150" alt="" />
@@ -28,6 +30,10 @@ itemsPerRow: 3
         <p>{{ description }}</p>
       {{/ if }}
     </div>
+
+    {{# if lastOrMod1 }}
+      </div>
+    {{/ if }}
+
   {{/ eachChildLink }}
-  </div>
 </div>

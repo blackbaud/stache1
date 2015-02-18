@@ -256,7 +256,7 @@ module.exports.register = function (Handlebars, options, params) {
       var m = marked(options.fn(this), {
         renderer: renderer
       });
-      return params.assemble.options.draft ? ('<div class="draft"><div class="draft-title">Draft</div>' + m + '</div>') : '';
+      return params.assemble.options.draft ? ('<div class="draft">' + m + '</div>') : '';
     }
   
   });
