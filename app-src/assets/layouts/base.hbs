@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="full-height-width">
+<html lang="en" class="{{# is layout 'base' }}full-height-width{{/ is }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
 
     <!-- build:css {{ assets }}css/app.css -->
     <link rel="stylesheet" href="{{ assets }}css/app.css">
@@ -15,7 +16,7 @@
     <![endif]-->
     
   </head>
-  <body class="full-height-width bb-omnibar-height-padding">
+  <body class="bb-omnibar-height-padding {{# is layout 'base' }}full-height-width{{/ is }}">
     
     <div id="top"></div>
     
@@ -27,8 +28,8 @@
       </div>
     </div>
 
-      {{! Spaces, tabs and new lines cause markdown helper to fail }}
-      {{# markdown }}{{> body }}{{/ markdown }}
+    {{! Spaces, tabs and new lines cause markdown helper to fail }}
+    {{# markdown }}{{> body }}{{/ markdown }}
     
     <!-- Omnibar Placeholder -->
     <div id="omnibar"></div>
