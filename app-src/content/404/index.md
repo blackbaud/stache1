@@ -1,5 +1,5 @@
 ---
-layout: container.hbs
+layout: container
 ---
 
 # Page Not Found

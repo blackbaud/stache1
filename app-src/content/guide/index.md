@@ -1,5 +1,5 @@
 ---
-layout: sidebar.hbs
+layout: sidebar
 priority: high
 note: |  
   <p>Problem -  You don’t make it easy.</p>

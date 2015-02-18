@@ -75,7 +75,8 @@ module.exports = function (grunt) {
         helpers: ['<%= site.app_helpers %>**/*.js'],
         partials: ['<%= site.app_partials %>**/*.hbs'],
         layoutdir: '<%= site.app_layouts %>',
-        layout: 'base.hbs',
+        layoutext: '.hbs',
+        layout: 'base',
         pkg: '<%= pkg %>',
 
         // Make some data always available

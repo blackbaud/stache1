@@ -17,7 +17,9 @@
               <a href="{{ uri }}">
                 {{ name }}
               </a>
-              {{> partial-page-headings ../../../../../pagination.index.page }}
+              {{# if ../../../../../showHeadings }}
+                {{> partial-page-headings ../../../../../../pagination.index.page }}
+              {{/ if }}
             </li>
           {{ else }}
             <li>
@@ -29,8 +31,9 @@
         {{/ each }}
       {{ else }}
 
-        {{> partial-page-headings ../../../pagination.index.page }}
-
+        {{# if showHeadings }}
+          {{> partial-page-headings ../../../pagination.index.page }}
+        {{/ if }}
       {{/ if }}
 
     {{/ isActiveNav }}
