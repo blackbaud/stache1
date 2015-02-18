@@ -30,7 +30,7 @@ module.exports.register = function (Handlebars, options, params) {
       return '';
     }
 
-    if (clean) {
+    if (clean && path) {
       var dot = path.lastIndexOf('.'),
         toReplace = [
           {
@@ -53,18 +53,11 @@ module.exports.register = function (Handlebars, options, params) {
       for (i; i < j; i++) {
         path = path.replace(toReplace[i].replace, toReplace[i].replaceWith);
       }
+    } else {
+      path = '';
     }
 
     return path;
-  }
-
-  /**
-  * Compares two links to determine if it's active
-  **/
-  function isActiveNav(page, uri) {
-    var basePage = basename(page, true),
-      baseUri = basename(uri, true);
-    return baseUri !== '' ? basePage.indexOf(baseUri) > -1 : baseUri === basePage;
   }
 
   /**
@@ -74,6 +67,8 @@ module.exports.register = function (Handlebars, options, params) {
     var j = links.length,
       i = 0;
 
+    return '';
+
     for (i; i < j; i++) {
       if (isActiveNav(dest, links[i].uri)) {
         return links[i];
@@ -81,6 +76,15 @@ module.exports.register = function (Handlebars, options, params) {
         return getActiveNav(links[i].links, dest);
       }
     }
+  }
+
+  /**
+  * Light wrapper for our custom markdown processor.
+  **/
+  function getMarked(md) {
+    return marked(md, {
+      renderer: renderer
+    });
   }
 
   Handlebars.registerHelper({
@@ -143,8 +147,13 @@ module.exports.register = function (Handlebars, options, params) {
     * Accounts for basename helper returning source folder.
     * http://assemble.io/docs/FAQ.html
     **/
-    isActiveNav: function (page, uri, context) {
-      return isActiveNav(page, uri) ? context.fn(this) : context.inverse(this);
+    isActiveNav: function (options) {
+
+      var dest = basename(options.hash.dest || this.dest || '', true),
+        uri = basename(options.hash.uri || this.uri || '', true),
+        r = uri !== '' ? dest.indexOf(uri) > -1 : uri === dest;
+
+      return r ? options.fn(this) : options.inverse(this);
     },
 
     /**
@@ -155,19 +164,30 @@ module.exports.register = function (Handlebars, options, params) {
     },
 
     /**
+    * Does the current page have headings?
+    **/
+    hasHeadings: function(options) {
+      return Handlebars.helpers.eachHeading(options) !== '' ? options.fn(this) : options.inverse(this);
+    },
+
+    /**
     * This innocuous looking helper took quite a long time to figure out.
     * It takes the current pages entire RAW source, compiles it, and loads it in cheerio (jQuery).
     * Then it parses for the relevant headers and executes the template for each one.
     **/
-    eachHeading: function (context, options) {
-      var r = '';
-      cheerio(options.hash.selector || 'h2', Handlebars.compile(context)(this)).each(function () {
+    eachHeading: function (options) {
+
+      var html = getMarked(Handlebars.compile(options.hash.page || this.pagination.index.page)(params.assemble.options)),
+        r = '';
+
+      cheerio(options.hash.selector || 'h2', html).each(function () {
         var el = cheerio(this);
         r = r + options.fn({
-          text: el.text(),
+          name: el.text(),
           id: el.attr('id')
         });
       });
+
       return r;
     },
 
@@ -175,6 +195,8 @@ module.exports.register = function (Handlebars, options, params) {
     * Finds the current page in the nav and iterates its child links
     **/
     eachChildLink: function (options) {
+
+      return '';
 
       var active = getActiveNav(this.site.links, this.page.dest),
         i = 0,
@@ -205,9 +227,7 @@ module.exports.register = function (Handlebars, options, params) {
     * This was because of the lexer here: https://github.com/chjj/marked/blob/master/lib/marked.js#L15
     **/
     markdown: function (options) {
-      return marked(options.fn(this), {
-        renderer: renderer
-      });
+      return getMarked(options.fn(this));
     },
 
     draft: function (options) {

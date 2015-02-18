@@ -22,15 +22,13 @@
     <div class="nav-wrap">
       <div class="container">
         <div class="col-sm-12">
-          {{> nav }}
+          {{> partial-nav }}
         </div>
       </div>
     </div>
 
-    <div class="content">
       {{! Spaces, tabs and new lines cause markdown helper to fail }}
       {{# markdown }}{{> body }}{{/ markdown }}
-    </div>
     
     <!-- Omnibar Placeholder -->
     <div id="omnibar"></div>

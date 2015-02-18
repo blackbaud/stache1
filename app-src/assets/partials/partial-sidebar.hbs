@@ -1,0 +1,39 @@
+<ul class="nav nav-stacked nav-sidebar">
+  {{! Finds our current page }}
+  {{# each site.links }}
+    {{# isActiveNav dest=../page.dest }}
+      {{# if showTitle }}
+        <li class="title">
+          <a href="{{ uri }}">
+            {{ name }}
+          </a>
+        </li>
+      {{/ if}}
+
+      {{# if links }}
+        {{# each links }}
+          {{# isActiveNav dest=../../../../page.dest }}
+            <li class="current">
+              <a href="{{ uri }}">
+                {{ name }}
+              </a>
+              {{> partial-page-headings ../../../../../pagination.index.page }}
+            </li>
+          {{ else }}
+            <li>
+              <a href="{{ uri }}">
+                {{ name }}
+              </a>
+            </li>
+          {{/ isActiveNav }}
+        {{/ each }}
+      {{ else }}
+
+        {{> partial-page-headings ../../../pagination.index.page }}
+
+      {{/ if }}
+
+    {{/ isActiveNav }}
+  {{/ each }}
+
+</ul>

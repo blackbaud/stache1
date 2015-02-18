@@ -1,7 +1,7 @@
 <ul class="nav-items">
   {{# each site.links }}
     {{# is showInHeader false }} {{ else }}
-      <li {{# isActiveNav ../../page.dest ../uri }}class="selected"{{/ isActiveNav }}>
+      <li {{# isActiveNav dest=../../page.dest }}class="selected"{{/ isActiveNav }}>
         <a href="{{ ../uri }}">{{ name }}</a>
       </li>
     {{/ is }}
