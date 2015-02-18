@@ -32,11 +32,12 @@ app_error:
 # =============================================
 product_name_long: Raiser's Edge NXT
 product_name_short: RENXT
-authentication_service_name:  Blackbaud Authentication Service
-authorization_service_name:  Blackbaud Authorization Service
-authorization_url:  https://authorize.blackbaud.com/
+authentication_service_name: Blackbaud Authentication Service
+authorization_service_name: Blackbaud Authorization Service
+authorization_url: https://authorize.blackbaud.com/
 authorization_endpoint: <%= site.authorization_url %>authorize/
 register_app_email: apis@blackbaud.com
+title: <%= site.product_name_short %> Developer
 
 
 # =============================================
