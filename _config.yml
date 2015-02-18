@@ -139,21 +139,35 @@ links:
 
       - name: Blog
         uri: <%= site.community_blog %>
+        icon: fa-comments
+        description: "Follow along with Blackbaud developers as they elaborate on API changes, issues, and best practices. Join in on the discussion by leaving comments as well."
 
       - name: Forum
         uri: <%= site.community_forum %>
+        icon: fa-users
+        description: "Get involved with other developers by visiting the community forum, which gives you the opportunity to ask, answer, vote, and subscribe to developer questions."
 
       - name: FAQ
         uri: <%= site.resources_faq %>
+        icon: fa-question
+        description: "For particularly technical challenges and for commonly asked questions, be sure to visit the FAQ section."
 
       - name: Status
         uri: <%= site.resources_status %>
+        icon: fa-shield
+        description: "See the most up-to-date API status. Explore historical information as well as learn more about past status changes."
+        draft: true
 
       - name: Change Log
         uri: <%= site.resources_changelog %>
+        icon: fa-file-o
+        description: "For each release, the change log provides information on additions, removals, and bug fixes of the API."
+        draft: true
 
       - name: Code Samples
         uri: <%= site.resources_code %>
+        icon: fa-github
+        description: "We love GitHub as much as you do. All code samples are located in GitHub for maximum collaboration possibilities."
 
   - name: Developer Portal
     uri: <%= site.portal %>

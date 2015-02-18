@@ -1,0 +1,29 @@
+---
+layout: container
+---
+
+<h1>Resources</h1>
+
+<div class="resources">
+  {{# eachChildLink mod=3 }}
+
+    {{# if firstOrMod0 }}
+      <div class="row {{# unless first }}resources-more{{/ unless }}">
+    {{/ if }}
+
+    <div class="col-sm-4">
+      <i class="fa {{ icon }}"></i>
+      <div class="desc">
+        <h2>
+          <a href="{{ uri }}">{{ name }}</a>
+        </h2>
+        <p>{{ description }}</p>
+      </div>
+    </div>
+
+    {{# if lastOrMod1 }}
+      </div>
+    {{/ if }}
+
+  {{/ eachChildLink }}
+</div>

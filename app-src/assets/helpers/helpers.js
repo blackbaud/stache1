@@ -1,9 +1,6 @@
 /**
 * Stache Helpers
 * Bobby Earl, 2015-02-12
-*
-* NOTES
-*   - This file needs to be better structured.
 **/
 
 /*jslint node: true, nomen: true, plusplus: true */
@@ -71,16 +68,23 @@ module.exports.register = function (Handlebars, options, params) {
   **/
   function getActiveNav(dest, links) {
     var j = links.length,
-      i = 0;
+      i = 0,
+      r = '';
 
     for (i; i < j; i++) {
-      console.log(dest + ' vs ' + links[i].uri);
+
       if (isActiveNav(dest, links[i].uri)) {
-        return links[i];
+        r = links[i];
       } else if (links[i].links) {
-        return getActiveNav(dest, links[i].links);
+        r = getActiveNav(dest, links[i].links);
+      }
+
+      if (r !== '') {
+        break;
       }
     }
+
+    return r;
   }
 
   /**
@@ -192,21 +196,41 @@ module.exports.register = function (Handlebars, options, params) {
 
     /**
     * Finds the current page in the nav and iterates its child links
+    * Supports optional modulus parameters.
     **/
     eachChildLink: function (options) {
-
-      var active = getActiveNav(options.hash.dest || this.page.dest || '', options.hash.links || this.site.links || ''),
-        i = 0,
-        j = 0,
-        r = '';
-
+      var active = getActiveNav(options.hash.dest || this.page.dest || '', options.hash.links || this.site.links || '');
       if (active && active.links) {
-        j = active.links.length;
+        active = active.links;
+      }
+      return Handlebars.helpers.eachWithMod(active, options);
+    },
+
+    /**
+    * A supplement to the normal each.  Adds modulus parameters:
+    *   - firstOrMod0
+    *   - lastOrMod1
+    **/
+    eachWithMod: function (context, options) {
+      var r = '',
+        i = 0,
+        m = 0,
+        mod = options.hash.mod || 0,
+        j;
+
+      if (context && context.length) {
+        j = context.length;
         for (i; i < j; i++) {
-          r += options.fn(active.links[i]);
+          m = i % mod;
+          context[i].first = i === 0;
+          context[i].last = i === j - 1;
+          context[i].mod0 = m === 0;
+          context[i].mod1 = m === mod - 1;
+          context[i].firstOrMod0 = context[i].first || context[i].mod0;
+          context[i].lastOrMod1 = context[i].last || context[i].mod1;
+          r += options.fn(context[i]);
         }
       }
-
       return r;
     },
 
@@ -224,7 +248,8 @@ module.exports.register = function (Handlebars, options, params) {
     * This was because of the lexer here: https://github.com/chjj/marked/blob/master/lib/marked.js#L15
     **/
     markdown: function (options) {
-      return getMarked(options.fn(this));
+      var o = options.fn(this);
+      return this.page.src.indexOf('.md') > -1 ? getMarked(o) : o;
     },
 
     draft: function (options) {
