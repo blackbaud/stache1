@@ -5,3 +5,4 @@ Thumbs.db
 vendor/
 node_modules/
 app-serve/*
+app-build/*
