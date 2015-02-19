@@ -9,7 +9,7 @@
 # =============================================
 # STACHE
 # =============================================
-base: http://localhost:4000/
+base: /
 app: app-
 app_src: <%= site.app %>src/
 app_build: <%= site.app %><%= status %>/
