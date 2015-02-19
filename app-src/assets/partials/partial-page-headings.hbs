@@ -1,11 +1,9 @@
 {{# hasHeadings page=this }}
-  <ul class="nav">
-    {{# eachHeading page=../this }}
-      <li>
-        <a href="#{{ id }}" class="smooth-scroll">
-          {{ name }}
-        </a>
-      </li>
-    {{/ eachHeading }}
-  </ul>
+  {{# eachHeading page=../this }}
+    <li>
+      <a href="#{{ id }}" class="smooth-scroll">
+        {{ name }}
+      </a>
+    </li>
+  {{/ eachHeading }}
 {{/ hasHeadings }}

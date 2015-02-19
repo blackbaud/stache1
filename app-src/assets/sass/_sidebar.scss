@@ -58,7 +58,8 @@
     color: #777 !important;
   }
 
-  .nav-sidebar > li > a {
+  .nav-sidebar > li > a,
+  .nav-sidebar .nav > li > a {
     padding: 6px 5px 9px 16px;
   }
 

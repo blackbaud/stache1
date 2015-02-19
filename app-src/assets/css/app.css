@@ -10414,7 +10414,7 @@ hr.small {
 .visible-on-affix a:focus, .visible-on-affix a:hover {
   color: #777 !important; }
 
-.nav-sidebar > li > a {
+.nav-sidebar > li > a, .nav-sidebar .nav > li > a {
   padding: 6px 5px 9px 16px; }
 
 .nav-sidebar > li > a:hover, .nav-sidebar > li > a:focus {
