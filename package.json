@@ -27,6 +27,7 @@
     "grunt-usemin": "^3.0.0",
     "handlebars-helpers": "^0.5.8",
     "jit-grunt": "^0.9.1",
+    "marked": "^0.3.3",
     "time-grunt": "^1.0.0"
   }
 }
