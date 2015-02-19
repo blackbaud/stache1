@@ -217,10 +217,12 @@ module.exports = function (grunt) {
     },
     
     sass: {
+      options: {
+        includePaths: [
+          '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/'
+        ]
+      },
       build: {
-        options: {
-          loadPath: '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/'
-        },
         files: [{
           expand: true,
           cwd: '<%= site.app_sass %>',

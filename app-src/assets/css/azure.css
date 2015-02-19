@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amplang=en");
 /* 
 * ==========================================================================
 * SASS
@@ -15,7 +15,6 @@
 * I'm risking setting that height here.  Worst case is you would see the page jump slightly if they ever change the height of the omnibar.
 * ========================================================================== 
 */
-@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amplang=en");
 .bb-omnibar-height-padding {
   padding-top: 50px; }
 
@@ -26,16 +25,17 @@
 */
 @font-face {
   font-family: 'BBSKY-OMNIBAR';
-  src: url("../fonts/BBSKY.woff") format("woff"); }
+  src: url('../fonts/BBSKY.woff') format('woff'); }
+
 .bbsky-char::before {
   font-family: 'BBSKY-OMNIBAR';
   font-size: 24px; }
 
 .bbsky-char-re::before {
-  content: ""; }
+  content: "\e644"; }
 
 .bbsky-char-nxt::before {
-  content: ""; }
+  content: "\e643"; }
 
 /* 
 * ==========================================================================
@@ -89,12 +89,10 @@ hr.small {
 .btn-fa-link {
   color: #FFF; }
 
-.btn-fa-link:hover,
-.btn-fa-link:focus {
+.btn-fa-link:hover, .btn-fa-link:focus {
   color: #EFEFEF; }
 
-.content img,
-.zone-content img {
+.content img, .zone-content img {
   max-width: 100%;
   height: auto; }
 
@@ -104,13 +102,10 @@ hr.small {
 .header-with-button:after {
   clear: both; }
 
-.header-with-button h1,
-.header-with-button h2,
-.header-with-button h3 {
+.header-with-button h1, .header-with-button h2, .header-with-button h3 {
   float: left; }
 
-.header-with-button a,
-.header-with-button button {
+.header-with-button a, .header-with-button button {
   float: right;
   margin-top: 35px; }
 
@@ -314,8 +309,7 @@ hr.small {
 .footer-site a {
   color: #949AA6; }
 
-.footer-site a:hover,
-.footer-site a:focus {
+.footer-site a:hover, .footer-site a:focus {
   color: #1ab394;
   text-decoration: none; }
 
@@ -333,16 +327,14 @@ hr.small {
 .bb-love a img {
   opacity: .7; }
 
-.bb-love a:hover img,
-.bb-love a:focus img {
+.bb-love a:hover img, .bb-love a:focus img {
   opacity: 1; }
 
 .social-icons a {
   font-size: 26px;
   margin: 0 5px; }
 
-.bb-love,
-.social-icons {
+.bb-love, .social-icons {
   text-align: center; }
 
 /* 
@@ -350,8 +342,7 @@ hr.small {
 * AZURE
 * ========================================================================== 
 */
-#account-menu,
-.ap-account-applications {
+#account-menu, .ap-account-applications {
   display: none; }
 
 /* 
@@ -359,9 +350,7 @@ hr.small {
 * GLOBAL
 * ========================================================================== 
 */
-html,
-form,
-body {
+html, form, body {
   font-size: 13px;
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
@@ -370,18 +359,7 @@ body {
   color: #676a6c;
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 100; }
 
@@ -403,17 +381,14 @@ h5 {
 h6 {
   font-size: 10px; }
 
-h3,
-h4,
-h5 {
+h3, h4, h5 {
   font-weight: 600;
   margin-top: 5px; }
 
 .zone-content a {
   color: #0088cc; }
 
-.zone-content a:hover,
-.zone-content a:focus {
+.zone-content a:hover, .zone-content a:focus {
   color: #005580;
   text-decoration: none; }
 
@@ -434,25 +409,17 @@ h5 {
 * LAYOUT
 * ========================================================================== 
 */
-.navbar-collapse,
-.layout-row-content .layout,
-.zone-footer footer {
+.navbar-collapse, .layout-row-content .layout, .zone-footer footer {
   margin: 0 auto; }
 
 @media (min-width: 768px) {
-  .navbar-collapse,
-  .layout-row-content .layout,
-  .zone-footer footer {
+  .navbar-collapse, .layout-row-content .layout, .zone-footer footer {
     width: 750px; } }
 @media (min-width: 992px) {
-  .navbar-collapse,
-  .layout-row-content .layout,
-  .zone-footer footer {
+  .navbar-collapse, .layout-row-content .layout, .zone-footer footer {
     width: 970px; } }
 @media (min-width: 1200px) {
-  .navbar-collapse,
-  .layout-row-content .layout,
-  .zone-footer footer {
+  .navbar-collapse, .layout-row-content .layout, .zone-footer footer {
     width: 1170px; } }
 
 /* 
@@ -477,9 +444,7 @@ h5 {
   padding: 15px;
   text-transform: none; }
 
-#navigation .navbar-nav > li > a:hover,
-#navigation .navbar-nav > li > a:focus,
-#navigation .navbar-nav > li.active > a {
+#navigation .navbar-nav > li > a:hover, #navigation .navbar-nav > li > a:focus, #navigation .navbar-nav > li.active > a {
   background-color: #293846;
   border-bottom: solid 4px #1ab394;
   color: #FFF !important;
@@ -488,8 +453,7 @@ h5 {
 .zone-aside-first {
   background: #FFF; }
 
-.zone-aside-first .navbar-nav,
-.zone-aside-first .navbar-nav li {
+.zone-aside-first .navbar-nav, .zone-aside-first .navbar-nav li {
   float: none; }
 
 .zone-aside-first .nav-pills {
@@ -497,26 +461,17 @@ h5 {
   margin-top: 10px;
   padding-top: 10px; }
 
-.zone-aside-first .navbar-nav li a,
-.zone-aside-first .nav-pills li a {
+.zone-aside-first .navbar-nav li a, .zone-aside-first .nav-pills li a {
   color: #a7b1c2;
   display: block;
   font-weight: 600;
   font-size: 13px;
   padding: 6px 5px 9px 16px; }
 
-.zone-aside-first .navbar-nav li.active a,
-.zone-aside-first .nav-pills li.active a {
+.zone-aside-first .navbar-nav li.active a, .zone-aside-first .nav-pills li.active a {
   background: #293846;
   border-left: 4px solid #19aa8d; }
 
-.zone-aside-first .navbar-nav li a:hover,
-.zone-aside-first .navbar-nav li a:focus,
-.zone-aside-first .navbar-nav li.active a:hover,
-.zone-aside-first .navbar-nav li.active a:focus,
-.zone-aside-first .nav-pills li.active a:hover,
-.zone-aside-first .nav-pills li.active a:focus {
+.zone-aside-first .navbar-nav li a:hover, .zone-aside-first .navbar-nav li a:focus, .zone-aside-first .navbar-nav li.active a:hover, .zone-aside-first .navbar-nav li.active a:focus, .zone-aside-first .nav-pills li.active a:hover, .zone-aside-first .nav-pills li.active a:focus {
   background: #cccccc;
   color: #293846; }
-
-/*# sourceMappingURL=azure.css.map */
