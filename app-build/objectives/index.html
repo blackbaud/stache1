@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RENXT Developer</title>
+
+    <!-- build:css ../assets/css/app.css -->
+    <link rel="stylesheet" href="../assets/css/app.css">
+    <!-- endbuild -->
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+  <body class="bb-omnibar-height-padding ">
+
+    <div id="top"></div>
+
+    <div class="nav-wrap">
+      <div class="container">
+        <div class="col-sm-12">
+          <ul class="nav-items">
+
+
+      <li >
+        <a href="http://localhost:4000/">Home</a>
+      </li>
+
+
+
+      <li >
+        <a href="http://localhost:4000/tutorials/">Tutorials</a>
+      </li>
+
+
+
+      <li >
+        <a href="http://localhost:4000/guide/">Developer Guide</a>
+      </li>
+
+
+
+      <li >
+        <a href="http://localhost:4000/resources/">Resources</a>
+      </li>
+
+
+
+      <li >
+        <a href="https://bbapidev.portal.azure-api.net/">Developer Portal</a>
+      </li>
+
+
+
+
+</ul>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 id="site-objectives">Site Objectives</h1>
+<p>This content serves to communicate the objectives of thee
+developer.blackbaud.com\renxt website which aligns with industry best practice for an API program.  The result is a general departure from how Blackbaud has documented and supported it&#39;s SDK and API efforts in the past.  See  <a href="#resources" class="alert-link">Resources</a>. This content is for internal use only.  </p>
+<h2 id="make-it-easy">Make it easy</h2>
+<ol>
+<li>Provide an easy way to sign up for the API. Provide single sign on for as many of the pieces of the developer ecosystem, as possible.</li>
+<li>Provide a <a href="http://localhost:4000/tutorials/getting-started/" >Getting Started Tutorial</a>.  Explain how to set up a developer account, get an API key, introduce authorization, and start learning the API via the API console.</li>
+<li>Get them over the Authorization hump.  Authorization and security is the first major hurdle outside developer encounter.  Document <a href="" >authorization</a> and provide a <a href="http://localhost:4000/tutorials/auth/" >tutorial</a> with associated <a href="https://github.com/blackbaud-community/RENXT-WebAPI-Authorization/">code sample</a> to speed learning.  </li>
+<li>Add additional tutorials and associated code samples over time as the API endpoints mature. </li>
+<li>API providers should have a GitHub presence to house code samples and any future SDK library wrappers.</li>
+<li>Azure API Management will provide <a href="https://bbapidev.portal.azure-api.net/analytics/" >analytics</a> on API usage, health, and activity.</li>
+</ol>
+<h2 id="big-picture">Big Picture</h2>
+<ol>
+<li>SDK Docs will provide the big picture.  Within the developer web site, we will make it clear, simple and bold.
+Examples:</li>
+<li><a href="https://www.twilio.com/voice/api">https://www.twilio.com/voice/api</a></li>
+<li><a href="https://www.twilio.com/api">https://www.twilio.com/api</a>  </li>
+<li>SDK Docs team will explain the purpose and goal of the API (we will iterate on the messaging as the endpoints are created).  </li>
+<li>As various OAuth flows are supported, SDK Docs describes who can use the API and the types of client software that can be created using the API.</li>
+</ol>
+<h2 id="get-developers-up-to-speed">Get developers up to speed</h2>
+<ol>
+<li>We will get the developer’s up to speed.  Engineering will provide the ability to register a client application, provision an environment, etc.  SDK Docs will need to document whatever experience engineering enables.</li>
+<li>SDK Docs can provide clarity around the structure of the API with <a href="http://localhost:4000/guide/#constituents">logically grouped resources and operations</a></li>
+<li>SDK Docs and Engineering can provide ways for developers to learn the API through:</li>
+<li><a href="http://localhost:4000/tutorials/getting-started/" > Getting Started</a> and <a href="http://localhost:4000/tutorials/auth/" >Web API Authorization</a> tutorials</li>
+</ol>
+<p class="alert alert-info">The technical references that appears within the APIM console will require documentation from the API Engineers for items such as endpoint , operations, URI parameters, response codes and application error codes (if applicable).</p>
+
+<h2 id="make-things-findable">Make things findable</h2>
+<ol>
+<li>SDK Docs will provide easy to use navigation to tutorials, developer guides, resources (Blog, FAQ, Q and A forums, code samples, etc), and developer portal. </li>
+<li>As the API endpoints are developed, the <a href="" >endpoints</a> will be organized and logically grouped. </li>
+</ol>
+<h2 id="documentation-and-technical-reference-will-be-accurate-complete-and-up-to-date-">Documentation and Technical Reference will be accurate, complete and up to date.</h2>
+<ol>
+<li>SDK Docs and Engineering will ensure the static site documentation is accurate, complete, and up to date.  </li>
+<li>Any Engineer who creates API endpoints will need to document the endpoints for the <a href="https://bbapidev.portal.azure-api.net/docs/services/" >technical reference<a> by providing detailed descriptions of the end point, parameters, response codes, and application error codes (if any).   </li>
+<li>Engineering should collaborate with documentation on the creation of the developer guide.<br>Examples:</li>
+<li><a href="" >Web API Authorization Guide</a></li>
+<li><a href="">Version Strategy</a></li>
+<li>Engineering should provide <a href="" >Best Practices</a> to ensure we provide the best experience possible, and make integrations as efficient as possible</li>
+</ol>
+<p class="alert alert-info">Any Engineer who creates API endpoints will need to document the endpoints for the <a href="https://bbapidev.portal.azure-api.net/docs/services/" >technical reference</a> </p>
+<p class="alert alert-info">Engineering should contribute heavily to best practices.</p>
+
+<h2 id="keep-developers-informed">Keep developers informed</h2>
+<ol>
+<li>When a new version of the API is released, it is very important to tell developers when you are:</li>
+<li>breaking their code</li>
+<li>adding features</li>
+<li>resolving issues</li>
+<li>notifying of issues within the release.  </li>
+<li>Use a <a href="http://localhost:4000/resources/changelog/" >Change Log</a> to keep up with what&#39;s been going on by enabling developers to see curated, chronologically ordered list of notable changes for each released (or version) of the API. Examples:</li>
+<li><a href="https://stripe.com/docs/upgrades">Stripe</a></li>
+<li><a href="https://developer.github.com/changes/">GitHub</a> </li>
+<li>Use a  <a href="http://localhost:4000/resources/" >blog</a> to communicate planed changes, unplanned changes, API outages, bugs, performance or other issues. </li>
+<li>Provide a <a href="http://localhost:4000/resources/status/" >Status</a> application which notifies the developer with API related service issues such as performance degradation (Warning), service disruption (Alert).  Provide historical status pages.  Provide ability to subscribe to and RSS feed of the status page.  <strong>Note</strong>:  any future creation of a Status page would have to be prioritized in the backlog. </li>
+<li>Use <a href="http://stackoverflow.com/questions/tagged/renxt">Stack Overflow</a> as the technical forum. Seed the initial forum with questions and answers from early adoption partners, such as Zeidman Development.  The forum will require a community manager to ensure questions are answered in a timely fashion.  </li>
+<li>Automated email notifications.  Developers who use the API actually want to be communicated with via email.  Small World Labs (SWL) provides group notification and subscription settings.  Members of the group can select to have instant, daily or weekly notifications sent to their email.</li>
+<li>Azure APIM generated  <a href="https://bbapidev.portal.azure-api.net/docs/services/" >technical reference</a> and associated interactive console, code samples in multiple languages. <p class="alert alert-info">API Team engineers and QA should capture any <a href="http://localhost:4000/resources/changelog/" >Change Log</a> related information against work items.  API team developers and testers should provide a plain English description of changes. We will need to develop a mechanism to capture and categorize information related to the <a href="http://localhost:4000/resources/changelog/" >Change Log</a>.</p>
+<p class="alert alert-info">API Team engineers should create blog posts for issues as they arise.  Blogs and forums will need a community manager. </p>
+<p class="alert alert-info">API Team engineers would create status page:  such as UTC date time, issue details, root cause, and action to prevent future occurrences.  Additional details may be placed into a blog post and referenced from the status page, if necessary. </p>
+<p class="alert alert-info">API Team engineers should be responsible for answering questions on the forum.   </p>
+
+</li>
+</ol>
+<h2 id="resources">Resources</h2>
+<p>This web site was inspired from industry best practice.  You are encouraged to review the following materials and API providers used to benchmark our developer website:</p>
+<ul>
+<li><a href="http://www.infoq.com/presentations/API-design-mistakes">10 Reasons Developers Hate Your API (and what to do about it)</a></li>
+<li><a href="http://john-sheehan.com/blog/the-api-developer-experience-baseline">http://john-sheehan.com/blog/the-api-developer-experience-baseline</a></li>
+<li><a href="http://developer.constantcontact.com/get-started.html">http://developer.constantcontact.com/get-started.html</a></li>
+<li><a href="https://developer.spotify.com/web-api/">https://developer.spotify.com/web-api/</a></li>
+<li><a href="https://developers.google.com/maps/web/">https://developers.google.com/maps/web/</a></li>
+<li><a href="https://stripe.com/"> https://stripe.com/</a></li>
+<li><a href="https://developer.uber.com/">https://developer.uber.com/</a></li>
+</ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Omnibar Placeholder -->
+    <div id="omnibar"></div>
+
+    <!-- build:js ../assets/js/lib.js -->
+    <script src="../assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../assets/vendor/easyXDM/easyXDM.min.js"></script>
+    <script src="../assets/vendor/holderjs/holder.min.js"></script>
+    <script src="../assets/vendor/stellar/jquery.stellar.min.js"></script>
+    <!-- endbuild -->
+
+    <script src="//signin.blackbaud.com/omnibar.min.js"></script>
+
+    <!-- build:js ../assets/js/app.js -->
+    <script src="../assets/js/omnibar-init.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <!-- endbuild -->
+
+
+
+  </body>
+</html>

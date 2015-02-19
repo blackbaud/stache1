@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="full-height-width">
+<html lang="en" class="">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RENXT Developer</title>
 
     <!-- build:css ../assets/css/app.css -->
     <link rel="stylesheet" href="../assets/css/app.css">
@@ -15,30 +16,275 @@
     <![endif]-->
     
   </head>
-  <body class="full-height-width bb-omnibar-height-padding">
+  <body class="bb-omnibar-height-padding ">
     
     <div id="top"></div>
     
-    
-    <div class="container">
-  <div class="row">
-    <div class="col-sm-12">
+    <div class="nav-wrap">
+      <div class="container">
+        <div class="col-sm-12">
+          <ul class="nav-items">
 
-      <h1 id="developer-guide">Developer Guide</h1>
-<p>The  Web API is designed to help you unlock your key  data by allowing developers to create applications that manage constituents, addresses, email addresses, attributes, etc.  Since the  Web API is organized around REST, it&#39;s very easy to write and test applications. You can use your browser and pretty much any HTTP client in any programming language to interact with the Web API.  Our Web API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients, and we support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website&#39;s client-side code). JSON will be returned in all responses from the API, including errors.</p>
+    
+      <li >
+        <a href="http://localhost:4000/">Home</a>
+      </li>
+
+
+
+      <li >
+        <a href="http://localhost:4000/tutorials/">Tutorials</a>
+      </li>
+
+
+
+      <li class="selected">
+        <a href="http://localhost:4000/guide/">Developer Guide</a>
+      </li>
+
+
+
+      <li >
+        <a href="http://localhost:4000/resources/">Resources</a>
+      </li>
+
+
+
+      <li >
+        <a href="https://bbapidev.portal.azure-api.net/">Developer Portal</a>
+      </li>
+
+
+
+
+</ul>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+  <div class="col-sm-3">
+    <div class="sidebar">
+
+<ul class="nav nav-stacked nav-sidebar">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul class="nav">
+
+      <li>
+        <a href="#audience" class="smooth-scroll">
+          Audience
+        </a>
+      </li>
+
+      <li>
+        <a href="#registering-your-app" class="smooth-scroll">
+          Registering Your App
+        </a>
+      </li>
+
+      <li>
+        <a href="#registering-your-app-self-service-" class="smooth-scroll">
+          Registering Your App (Self Service)
+        </a>
+      </li>
+
+      <li>
+        <a href="#regenerating-your-client-secret-manual-" class="smooth-scroll">
+          Regenerating your client secret (Manual)
+        </a>
+      </li>
+
+      <li>
+        <a href="#regenerating-your-client-secret-self-service-" class="smooth-scroll">
+          Regenerating your client secret (Self-service)
+        </a>
+      </li>
+
+      <li>
+        <a href="#web-api-authorization" class="smooth-scroll">
+          Web API Authorization
+        </a>
+      </li>
+
+      <li>
+        <a href="#authorization-code-flow" class="smooth-scroll">
+          Authorization Code Flow
+        </a>
+      </li>
+
+      <li>
+        <a href="#implicit-grant-flow" class="smooth-scroll">
+          Implicit Grant Flow
+        </a>
+      </li>
+
+      <li>
+        <a href="#client-credentials-flow" class="smooth-scroll">
+          Client Credentials Flow
+        </a>
+      </li>
+
+      <li>
+        <a href="#using-scopes" class="smooth-scroll">
+          Using Scopes
+        </a>
+      </li>
+
+      <li>
+        <a href="#cors" class="smooth-scroll">
+          CORS
+        </a>
+      </li>
+
+      <li>
+        <a href="#base-urls" class="smooth-scroll">
+          Base URLs
+        </a>
+      </li>
+
+      <li>
+        <a href="#endpoints" class="smooth-scroll">
+          Endpoints
+        </a>
+      </li>
+
+      <li>
+        <a href="#constituents" class="smooth-scroll">
+          Constituents
+        </a>
+      </li>
+
+      <li>
+        <a href="#requests" class="smooth-scroll">
+          Requests
+        </a>
+      </li>
+
+      <li>
+        <a href="#responses" class="smooth-scroll">
+          Responses
+        </a>
+      </li>
+
+      <li>
+        <a href="#version" class="smooth-scroll">
+          Version
+        </a>
+      </li>
+
+      <li>
+        <a href="#backwards-compatible-changes" class="smooth-scroll">
+          Backwards-compatible changes
+        </a>
+      </li>
+
+      <li>
+        <a href="#api-changelog" class="smooth-scroll">
+          API Changelog
+        </a>
+      </li>
+
+      <li>
+        <a href="#timestamps" class="smooth-scroll">
+          Timestamps
+        </a>
+      </li>
+
+      <li>
+        <a href="#pagination" class="smooth-scroll">
+          Pagination
+        </a>
+      </li>
+
+      <li>
+        <a href="#response-status-codes" class="smooth-scroll">
+          Response Status Codes
+        </a>
+      </li>
+
+      <li>
+        <a href="#web-api-fundamentals" class="smooth-scroll">
+          Web API Fundamentals
+        </a>
+      </li>
+
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+
+    </div>
+  </div>
+  <div class="col-sm-9">
+    <p class="alert alert-danger">Draft: This content is a work in progress.  For a list of dependencies and To Do list, click the bottom right info icon.</p>
+
+
+
+
+<h1 id="developer-guide">Developer Guide</h1>
+<p>The RENXT Web API is designed to help you unlock your key RENXT data by allowing developers to create applications that manage constituents data.  Since the RENXT Web API is organized around REST, it&#39;s very easy to write and test applications. You can use your browser and pretty much any HTTP client in any programming language to interact with the Web API.  Our Web API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients. JSON will be returned in all responses from the API, including errors.</p>
 <p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="http://localhost:4000/legal/" class="alert-link">Developer Terms of Use</a>. </p>
 
 <h2 id="audience">Audience</h2>
 <p>Currently, the RE NXT API is only available to a select group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you are an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to constituent our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="http://localhost:4000/tutorials/getting-started/" > Getting Started</a> tutorial. </p>
-<p>This documentation is designed for people familiar with HTTP programming and RESTful programming concepts. You should also be familiar with the Raiser&#39;s Edge from a user&#39;s and administrator&#39;s point of view. There are many HTTP RESTful tutorials available on the Web, including using cURL and Fiddler to make and test HTTP requests. If you are unfamiliar with HTTP programming and RESTful Web APIs, we recommend spending some time reviewing <a href="http://localhost:4000/guide/#web-api-fundamentals" >Web API Fundamentals</a>.</p>
-<h2 id="registering-your-app">Registering Your App</h2>
-<p>If your application seeks access to  data (constituents, gifts, etc.) it must be registered. You can register your application, even before you have created it.  </p>
-<p>Follow these steps to register an application:</p>
+<p>This documentation is designed for people familiar with HTTP programming and RESTful programming concepts. You should also be familiar with the Raiser&#39;s Edge from a user&#39;s and administrator&#39;s point of view. There are many HTTP RESTful tutorials available on the Web, including using cURL and Fiddler to make and test HTTP requests. </p>
+<div class="draft"><p>If you are unfamiliar with HTTP programming and RESTful Web APIs, we recommend spending some time reviewing <a href="http://localhost:4000/guide/#web-api-fundamentals" >Web API Fundamentals</a>.</p>
+</div>
+
+<p><h2 id="registering-your-app">Registering Your App</h2></p>
+<p>If your application seeks access to RENXT data (constituents, gifts, etc.) it must be registered. You can register your application, even before you have created it. </p>
+<div class="draft"><p>Follow these steps to register an application:</p>
+<p><strong>1.  Send an email to apis@blackbaud.com</strong>.</p>
+<ul>
+<li>Be sure the email subject reads &quot;RENXT-Register My App&quot;</li>
+<li>Within the email body, provide the following information:<ul>
+<li>Application Name:  Your application name. Maximum 60 characters.</li>
+<li>Application Description:  A short description of your application. Maximum 250 characters.</li>
+<li>Website URL: Where the user may obtain more information about this application (e.g. <a href="http://mysite.com">http://mysite.com</a>).</li>
+<li>Redirects:  A listing of White-listed addresses to redirect to after authorization success or failure occurs  (e.g. <a href="http://mysite.com/callback/">http://mysite.com/callback/</a>)</li>
+</ul>
+</li>
+</ul>
+<p><strong>2. Check your email inbox</strong>
+You will receive an email that will provide you with your <strong>Client ID</strong> and <strong>Client Secret</strong>.  This information will be needed for Web API Authorization.  </p>
+<p class="alert alert-warning">Always store keys securely! Regenerate your client secret if you suspect it has been compromised!</p>
+
+<p><h2 id="registering-your-app-self-service-">Registering Your App (Self Service)</h2></p>
 <p><strong>1. Go to <a href="https://bbapidev.portal.azure-api.net/applications/" target="_blank">My Applications</a></strong> </p>
-<p>This site allows you to manage your applications that integrate with Blackbaud using the new  Web API. </p>
+<p>This site allows you to manage your applications that integrate with Blackbaud using the new RENXT Web API. </p>
 <p><strong>2. Click <i>Create a new application</i></strong></p>
 <ul>
-<li>Enter the name of your application (for example, “My Test Application”.) Note that this name will be shown in the pop-up that asks the user for authorization to access their Blackbaud  data.</li>
+<li>Enter the name of your application (for example, “My Test Application”.) Note that this name will be shown in the pop-up that asks the user for authorization to access their Blackbaud RENXT data.</li>
 <li>Enter an application description.</li>
 <li>Click the <strong>Create</strong> button.  </li>
 </ul>
@@ -51,31 +297,70 @@
 <ul>
 <li>Write these down and keep them safe!</li>
 </ul>
-<p class="alert alert-warning">Important: Always store keys securely! <b>Regenerate</b> your client secret if you suspect it has been compromised!</p>
+<p class="alert alert-warning">Important: Always store keys securely! Regenerate your client secret if you suspect it has been compromised!</p>
 
 <p><strong>5.  Add any Redirect URIs</strong> </p>
 <ul>
-<li>Add the Redirect URI that the  could call when the authentication process completes. (e.g. <a href="http://mysite.com/callback/"><a href="http://mysite.com/callback/">http://mysite.com/callback/</a></a>).  For the purposes of this tutorial, add this URI to the Redirect URIs whitelist:   <code><a href="http://localhost:8888/callback">http://localhost:8888/callback</a></code>.  At a later time, you can come back  and edit this URI. </li>
+<li>Add the Redirect URI that the Blackbaud Authorization Service could call when the authentication process completes. (e.g. <a href="http://mysite.com/callback/">http://mysite.com/callback/</a>).  For the purposes of this tutorial, add this URI to the Redirect URIs whitelist:   <code><a href="http://localhost:8888/callback">http://localhost:8888/callback</a></code>.  At a later time, you can come back  and edit this URI. </li>
 </ul>
-<p class="alert alert-warning">Important: When you call the  from your application, you will send a redirect-uri in the call. The redirect-uri is the address that the  redirects to after authorization succeeds or fails. If you do not white-list that URI here, authorization will fail. Any URI you enter here must exactly match the value you later use in the calls to the , including upper/lowercase characters, terminating slashes, and so on.</p>
+<p class="alert alert-warning">Important: When you call the Blackbaud Authorization Service from your application, you will send a redirect-uri in the call. The redirect-uri is the address that the Blackbaud Authorization Service redirects to after authorization succeeds or fails. If you do not white-list that URI here, authorization will fail. Any URI you enter here must exactly match the value you later use in the calls to the Blackbaud Authorization Service, including upper/lowercase characters, terminating slashes, and so on.</p>
 
 <p><strong>6. Click Save to complete the registration of your application.</strong></p>
-<p><strong>7.  Your application will now be shown, along with any other applications you have registered, in the main list on the <i>My Applications</i> page:</strong>
-<img src="http://placehold.it/800x200" alt="Ipsum Image"></p>
+<p><strong>7.  Your application will now be shown, along with any other applications you have registered, in the main list on the <i>My Applications</i> page:</strong></p>
+<p><img src="http://placehold.it/800x200" alt="Ipsum Image"></p>
+<h2 id="regenerating-your-client-secret-manual-">Regenerating your client secret (Manual)</h2>
+<p>If your client secret has be compromised, you will need to follow these steps to regenerate the secret:</p>
+<p><strong>1.  Send an email to apis@blackbaud.com</strong>.</p>
+<ul>
+<li>Be sure the email subject reads &quot;RENXT-Regenerate my client secret&quot;</li>
+<li>Within the email body, provide the following information:<ul>
+<li>Client ID:  This is the client id value you received from Blackbaud when you registered your application.</li>
+<li>Application Name:  Your application name. Maximum 60 characters.  The value you provide must match the application name you originally provided when you registered your app.</li>
+<li>Redirect:  The value you provide must match at least one redirect URL you originally provided when you registered your application.</li>
+</ul>
+</li>
+</ul>
+<p><strong>2. Check your email inbox</strong></p>
+<p class="alert alert-warning">Blackbaud will send the email to the email address associated with your registered application.  You provided this email address when you registered your application.</p>
+
+<p>The email will contain your regenerated <strong>Client Secret</strong>.    </p>
+<h2 id="regenerating-your-client-secret-self-service-">Regenerating your client secret (Self-service)</h2>
+<p>If your client secret has be compromised, you will need to follow these steps to regenerate the secret:</p>
+<p><strong>1. Go to <a href="https://bbapidev.portal.azure-api.net/applications/" target="_blank">My Applications</a></strong> </p>
+<p>This site allows you to manage your applications that integrate with Blackbaud using the new RENXT Web API. </p>
+<p><strong>2. Select the app from list of registered applications.</strong></p>
+<p><strong>3. Underneath Client Secret, select the Regenerate link.</strong></p>
+<p><strong>4. Securely store the new Client Secret value.</strong></p>
+</div>
+
 <h2 id="web-api-authorization">Web API Authorization</h2>
-<p>This guide shows you how to enable your application to obtain a user’s authorization to access private  data through the  Web API. <a href="https://tools.ietf.org/html/rfc6749" > OAuth 2.0</a> is an authorization framework commonly used to grant client applications limited access to a  user&#39;s resources without exposing the users credentials to the client application. Nearly all requests to the  Web API require authorization; that is, the user of your client application must have granted permission for your client application to access their requested  data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is passed to subsequent Web API calls to do things such as searching or adding a constituent.</p>
+<p>This guide shows you how to enable your application to obtain a user’s authorization to access private RENXT data through the RENXT Web API. <a href="https://tools.ietf.org/html/rfc6749" > OAuth 2.0</a> is an authorization framework commonly used to grant client applications limited access to a  user&#39;s resources without exposing the users credentials to the client application. Nearly all requests to the RENXT Web API require authorization; that is, the user of your client application must have granted permission for your client application to access their requested RENXT data. To prove that the user has granted permission, the request header sent by the client application must include a valid OAuth 2.0 access token.  An access token is a string representing an authorization issued to the client application by Blackbaud. The access token is passed to subsequent Web API calls to do things such as searching a constituent or listing constituent addresses.</p>
 <p class="alert alert-info">All communication with Blackbaud servers should be over SSL (https://) </p>
 
-<h3 id="authorization-code-flow">Authorization Code Flow</h3>
-<p>The  Web API currently supports the Authorization Code, Client Credentials, and Implicit Grant flows. </p>
-<p>The Authorization Code flow is suitable for long-running applications which the user logs into once. It provides an access token that can be refreshed. This method first gets a code then exchanges it for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. Since the token exchange involves sending your secret API key, this should happen on a secure location, like a back-end service or back-end web app, not from a client like a browser-based or mobile app.   The Authorization Code flow is described in <a href="http://tools.ietf.org/html/rfc6749#section-4.1">RFC-6749</a>. This flow is the authorization flow used in our <a href="http://localhost:4000/tutorials/auth/" >Web API Authorization Tutorial</a>.</p>
-<p class="alert alert-info">As a best practice, Blackbaud recommends you use Authorization Code Flow within a web application or service that is written in a server-side language and run on a server where the source code of the application is not available to the public. With the Authorization Code flow the OAuth 2.0 access token exchange involves sending your secret API key. The access token exchange should happen on a secure location, like a back-end service, not from code running on a client like a browser or a mobile app.
-</p>
+<p><h3 id="supported-authorization-flows">Supported Authorization Flows</h3></p>
+<p>The RENXT Web API currently supports three authorization flows:</p>
+<ul>
+<li>The <a href="http://localhost:4000/guide/#authorization-code-flow" >Authorization Code</a> flow first gets a code then exchanges it for an access token and a refresh token. Since the exchange uses your client secret key, you should make that request server-side to keep the integrity of the key. An advantage of this flow is that you can use refresh tokens to extend the validity of the access token.</li>
+<li>The <a href="http://localhost:4000/guide/#implicit-grant-flow" >Implicit Grant</a> flow is carried out client-side and does not involve secret keys. The access tokens that are issued are short-lived and there are no refresh tokens to extend them when they expire.</li>
+</ul>
+<div class="draft"><ul>
+<li>The <a href="http://localhost:4000/guide/#client-credentials-flow" >Client Credentials</a> flow allows you to get an access token by supplying your client credentials (client ID and secret key).  This flow is used when your application is acting on its own behalf to access protected resources that your application controls.  For example, when your application needs to retrieve a list of customers (tenants) that have approved your application.  This flow is used in server-to-server authentication. Only endpoints that do not access user information can be accessed. </li>
+</ul>
+</div>
 
-<p>The authorization code grant type is a redirection-based flow, the application you write against our Web API must be capable of interacting with a web browser and capable of receiving incoming requests (via redirection) from the .</p>
+<h2 id="authorization-code-flow">Authorization Code Flow</h2>
+<p>The Authorization Code is suitable for applications than run from a secure location such as a server-side web application or a back-end service.   It is a redirection-based flow that involves first obtaining an authorization code and then exchanging that code for an access token and a refresh token. The authorization code is obtained by using the Blackbaud Authorization Service as an intermediary between your application and the RENXT user&#39;s data. Your application does not directly obtain credentials and request authorization from the RENXT user. Instead, your application directs the  RENXT user to the Blackbaud Authorization Service for authorization.  After authorization occurs, the Blackbaud Authorization Service redirects the RENXT user back to your application with an authorization code.  Because the RENXT user only authenticates with the Blackbaud Authorization Service, user&#39;s credentials are never shared with your application.  This relieves you from the responsibility of keeping the user&#39;s RENXT credentials secure.  </p>
+<p class="alert alert-info">Since this is a redirection-based flow, the application you write must be capable of interacting with a web browser and capable of receiving incoming requests (via redirection) from the Blackbaud Authorization Service.</p>
+
+<p>After receiving an authorization code, your application must exchange the code for an access token and a refresh token.  An advantage of this flow is that you can use refresh tokens to extend the validity of the access token. As long as you have a valid access token for a RE NXT user, that user does not have to keep logging in with Blackbaud Authorization Service.  The token exchange involves sending your <b>Client Secret</b> which you obtained when you registered your application. You should send your <b>Client Secret</b> from secure location, like your back-end service or your server-side web app, not from a client like a browser-based or mobile app.   The Authorization Code flow is described in <a href="http://tools.ietf.org/html/rfc6749#section-4.1">RFC-6749</a>. This flow is the authorization flow used in our <a href="http://localhost:4000/tutorials/auth/" >Web API Authorization Tutorial</a>.</p>
+<p class="alert alert-warning"> With the Authorization Code flow the OAuth 2.0 access token exchange involves sending your <b>Client Secret</b>. The access token exchange should happen on a secure location.  As a best practice, Blackbaud recommends you use the Authorization Code flow within a web application or back-end service that is written in a server-side language and run on a server where the source code of the application is not available to the public. The access token exchange should not occur from code running on a client like a browser or a mobile app.</p>
+
+
+
+
 <p><strong>1. Your application requests authorization</strong></p>
-<p>The authorization process starts with your application sending a request to the . (The reason your application sends this request can vary: it may be a step in the initialization of your application or in response to some user action, like a button click.) The request is sent to the <code>/authorize</code> endpoint of the Accounts service: <code>GET <a href="https://accounts.blackbaud.com/authorize">https://accounts.blackbaud.com/authorize</a></code></p>
-<p>The request will include parameters in the query string:</p>
+<p>Authorization begins with your application sending a request to the <code><a href="https://authorize.blackbaud.com/authorize/">https://authorize.blackbaud.com/authorize/</a></code> endpoint of the Blackbaud Authorization Service.  Exactly when you decide to make this request is up to you.  You may decide to request authorization when your application gathers initial information from the user.  Alternatively, you may decide to authorize when the user first attempts to access a protected resource (user data) managed by the RENXT Web API. </p>
+GET <a href="https://authorize.blackbaud.com/authorize/">https://authorize.blackbaud.com/authorize/</a><p>The request will include parameters in the query string:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
@@ -87,20 +372,21 @@
     <tbody>
     <tr>
         <td>client_id</td>
-        <td >Required.  The client ID provided to you by Blackbaud when you register your application.See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
-    </tr>
-    <tr>
-        <td>state</td>
-        <td class="column-2">A value used by the client application to maintain state between the request and callback.  The  includes the value when redirecting the user back to the client application.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
-    </tr>
-    <tr>
-        <td>response_type</td>
-        <td>Required.  The value must be set to &quot;code&quot;.</td>
+        <td><i>Required</i>.  The <b>Client ID</b> value provided to you by Blackbaud when you <a href="http://localhost:4000/guide/#registering-your-app" >register your application</a>.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a> for more info.</td>
     </tr>
     <tr>
         <td>redirect_uri</td>
-        <td>Required.  The URI to redirect to after the user grants/denies permission. This URI needs to have been entered in the Redirect URI whitelist that you specified when you registered your application. The value of redirect_uri here must exactly match one of the values you entered when you registered your application, including upper/lowercase, terminating slashes, etc. See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a>.</td>
+        <td><i>Required</i>.  The URI to redirect to after the user grants/denies permission. This URI needs to have been entered in the Redirect URI whitelist that you specified when you registered your application. The value of redirect_uri here must exactly match one of the values you entered when you registered your application, including upper/lowercase, terminating slashes, etc. See <a href="https://tools.ietf.org/html/rfc6749#section-4.1.1"> rfc6749 section 4.1.1</a>.</td>
     </tr>
+    <tr>
+        <td>state</td>
+        <td class="column-2"><i>Recommended Best Practice</i>.  An opaque value used by the client application to maintain state between the request and callback.  The Blackbaud Authorization Service includes the value when redirecting the user back to the client application.  The <b>state</b> parameter is intended to preserve some state object set by the client in theBlackbaud Authorization Service request, and make it available to the client in the response.  The main security reason for this is to stop Cross Site Request Forgery (XRSF) by including something in the request that the client can verify in the response but that an attacker could not know.  An example of this would be a hash of the session cookie or a random value stored in the server linked to the session.  See <a href="https://tools.ietf.org/html/rfc6749#section-4.2.1"> rfc6749 section 4.2.1</a> for more info.</td>
+    </tr>
+    <tr>
+        <td>response_type</td>
+        <td><i>Required</i>.  The value must be set to <code>code</code>.</td>
+    </tr>
+
     <tr>
         <td>scope</td>
         <td>Optional. A space-separated list of scopes: see <a href="http://localhost:4000/guide/#using_scopes" >Using Scopes</a>. If no scopes are specified, authorization will be granted to TBD.</td>
@@ -110,12 +396,12 @@
 </div>
 
 <p>A typical request looks like this:</p>
-<pre><code>GET <a href="https://accounts.blackbaud.com/authorize/?client_id=5fe01282e44241328a84e7c5cc169165&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&amp;scope=constituent-read&amp;state=34fFs29kd09">https://accounts.blackbaud.com/authorize/?client_id=5fe01282e44241328a84e7c5cc169165&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&amp;scope=constituent-read&amp;state=34fFs29kd09</a></code></pre>
+<p><code>GET <a href="https://authorize.blackbaud.com/authorize//?client_id=5fe01282e44241328a84e7c5cc169165&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&amp;scope=constituent-read&amp;state=34fFs29kd09">https://authorize.blackbaud.com/authorize//?client_id=5fe01282e44241328a84e7c5cc169165&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&amp;scope=constituent-read&amp;state=34fFs29kd09</a></code></p>
 <p><strong>2.  The user is asked to authorize access within the scopes.</strong></p>
-<p>The  presents details of the scopes for which access is being sought. If the user is not logged in, they are prompted to do so using their Blackbaud credentials.</p>
+<p>The Blackbaud Authorization Service presents details of the scopes for which access is being sought. If the user is not logged in, they are prompted to do so using their Blackbaud credentials.</p>
 <p>When the user is logged in, they are asked to authorize access to the data sets defined in the scopes.</p>
 <p><strong>3.  The user is redirected back to your specified URI</strong></p>
-<p>After the user accepts (or denies) your request, the  redirects back to the redirect_uri. For our example, this would be the address: <code><a href="https://example.com/callback"><a href="https://example.com/callback">https://example.com/callback</a></a></code></p>
+<p>After the user accepts (or denies) your request, the Blackbaud Authorization Service redirects back to the redirect_uri. For our example, this would be the address: <code><a href="https://example.com/callback">https://example.com/callback</a></code></p>
 <p>If the user has accepted your request, the response query string contains the following parameters:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
@@ -139,8 +425,7 @@
 </div>
 
 <p>For example:</p>
-<pre><code><a href="https://example.com/callback?code=NApCCg..BkWtQ&amp;state=profile%2Factivity">https://example.com/callback?code=NApCCg..BkWtQ&amp;state=profile%2Factivity</a></code></pre>
-<p>If the user has not accepted your request or an error has occurred, the response query string contains the following parameters:</p>
+<a href="https://example.com/callback?code=NApCCg..BkWtQ&amp;state=profile%2Factivity">https://example.com/callback?code=NApCCg..BkWtQ&amp;state=profile%2Factivity</a><p>If the user has not accepted your request or an error has occurred, the response query string contains the following parameters:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
@@ -163,11 +448,9 @@
 </div>
 
 <p>For example:</p>
-<pre><code><a href="https://example.com/callback?error=access_denied&amp;state=STATE">https://example.com/callback?error=access_denied&amp;state=STATE</a></code></pre>
-<p><strong>4. Your application requests refresh and access tokens</strong></p>
-<p>When the authorization code has been received, you will need to exchange it with an access token by making a POST request to the , this time to its /token endpoint:</p>
-<pre><code>POST <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a></code></pre>
-<p>The <em>body</em> of this POST request must contain the following parameters:</p>
+<a href="https://example.com/callback?error=access_denied&amp;state=STATE">https://example.com/callback?error=access_denied&amp;state=STATE</a><p><strong>4. Your application requests refresh and access tokens</strong></p>
+<p>When the authorization code has been received, you will need to exchange it with an access token by making a POST request to the Blackbaud Authorization Service, this time to its /token endpoint:</p>
+POST <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a><p>The <em>body</em> of this POST request must contain the following parameters:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
@@ -213,7 +496,7 @@
 
 <p>An alternative way of sending the client id and secret is as request parameters <code>client_id</code> and <code>client_secret</code> in the POST body, instead of sending them base64-encoded in the header.</p>
 <p><strong>5. The tokens are returned to your application</strong></p>
-<p>On success, the response from the  has the status code 200 OK in the response header, and the following JSON data in the response body:</p>
+<p>On success, the response from the Blackbaud Authorization Service has the status code 200 OK in the response header, and the following JSON data in the response body:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
@@ -227,7 +510,7 @@
         <tr>
             <td>access_token</td>
             <td>string</td>
-            <td>An access token that can be provided in subsequent calls, for example to  Web API services. </td>
+            <td>An access token that can be provided in subsequent calls, for example to RENXT Web API services. </td>
         </tr>
         <tr>
             <td>token_type </td>
@@ -242,28 +525,25 @@
         <tr>
             <td>refresh_token</td>
             <td>string</td>
-            <td>A token that can be sent to the  in place of an authorization code. (When the access code expires, send a POST request to the Accounts service <code>/token</code> endpoint, but use this code in place of an authorization code. A new access token will be returned. A new refresh token might be returned too.) </td>
+            <td>A token that can be sent to the Blackbaud Authorization Service in place of an authorization code. (When the access code expires, send a POST request to the Accounts service <code>/token</code> endpoint, but use this code in place of an authorization code. A new access token will be returned. A new refresh token might be returned too.) </td>
         </tr>
     </tbody>
   </table>
 </div>
 
 <p>An example <a href="http://en.wikipedia.org/wiki/CURL">cURL</a> request and response from the token endpoint will look something like this:</p>
-<pre><code>curl -H &quot;Authorization: Basic ZjM...zE=&quot; -d grant_type=authorization_code -d code=MQCbtKe...44KN -d redirect_uri=https%3A%2F%2Fwww.foo.com%2Fauth <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a>
+curl -H &quot;Authorization: Basic ZjM...zE=&quot; -d grant_type=authorization_code -d code=MQCbtKe...44KN -d redirect_uri=https%3A%2F%2Fwww.foo.com%2Fauth <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a>
 {
    &quot;access_token&quot;: &quot;NgCXRK...MzYjw&quot;,
    &quot;token_type&quot;: &quot;Bearer&quot;,
    &quot;expires_in&quot;: 3600,
    &quot;refresh_token&quot;: &quot;NgAagA...Um_SHo&quot;
-}</code></pre>
-<p><strong>6. Use the access token to access the  Web API</strong></p>
-<p>The access token allows you to make requests to the  Web API on a behalf of a user, for example:</p>
-<pre><code>curl -H &quot;Authorization: Bearer NgCXRK...MzYjw&quot; <a href="https://api.blackbaud.com/v1/constituent/342jsdsaq2wqw">https://api.blackbaud.com/v1/constituent/342jsdsaq2wqw</a></code></pre>
-<p><strong>7. Requesting access token from refresh token</strong></p>
+}<p><strong>6. Use the access token to access the RENXT Web API</strong></p>
+<p>The access token allows you to make requests to the RENXT Web API on a behalf of a user, for example:</p>
+curl -H &quot;Authorization: Bearer NgCXRK...MzYjw&quot; <a href="https://api.blackbaud.com/v1/constituent/342jsdsaq2wqw">https://api.blackbaud.com/v1/constituent/342jsdsaq2wqw</a><p><strong>7. Requesting access token from refresh token</strong></p>
 <p>Access tokens are deliberately set to expire after a short time, after which new tokens may be granted by supplying the refresh token originally obtained during the authorization code exchange.</p>
-<p>The request is sent to the token endpoint of the :</p>
-<pre><code>POST <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a></code></pre>
-<p>The body of this POST request must contain the following parameters:</p>
+<p>The request is sent to the token endpoint of the Blackbaud Authorization Service:</p>
+POST <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a><p>The body of this POST request must contain the following parameters:</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
@@ -305,29 +585,30 @@
 </div>
 
 <p>For example:</p>
-<pre><code>curl -H &quot;Authorization: Basic ZjM4Zj...Y0MzE=&quot; -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a>
+curl -H &quot;Authorization: Basic ZjM4Zj...Y0MzE=&quot; -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo <a href="https://accounts.blackbaud.com/token">https://accounts.blackbaud.com/token</a>
 {
    &quot;access_token&quot;: &quot;NgA6ZcYI...ixn8bUQ&quot;,
    &quot;token_type&quot;: &quot;Bearer&quot;,
    &quot;expires_in&quot;: 3600
-}</code></pre>
-<h3 id="client-credentials-flow">Client Credentials Flow</h3>
+}<h2 id="implicit-grant-flow">Implicit Grant Flow</h2>
+<p>Implicit grant flow is for clients that are implemented entirely using JavaScript and running in your application user&#39;s browser. You do not need any server-side code to use it.</p>
+<div class="draft"><h2 id="client-credentials-flow">Client Credentials Flow</h2>
+<p>{% include note.html priority=&#39;medium&#39; note=&#39;This needs more work.&#39; %}</p>
 <p>The Client Credentials flow is used by the developer to access data that is related to their partner client application. This flow is used the <strong>xyz</strong> end points. </p>
 <p class="alert alert-info">The Client Credentials flow does not include authorization and therefore cannot be used to access or manage a user’s private data. This flow is described in <a href="http://tools.ietf.org/html/rfc6749#section-4.4">RFC-6749</a>.</p>
+</div>
 
-<p><h3 id="implicit-grant-flow">Implicit Grant Flow</h3></p>
-<p>Implicit grant flow is for clients that are implemented entirely using JavaScript and running in the resource owner’s (partner client application user&#39;s) browser. You do not need any server-side code to use it.</p>
 <h2 id="using-scopes">Using Scopes</h2>
-<p>When your application seeks authorization to access user-related data, you will often need to specify one or more scopes. Here’s how.</p>
-<p>Most calls to the  Web API require prior authorization by your application’s user. To get that authorization, your application will first need to make a call to the ’s <code>/authorize</code> endpoint, passing along a list of the <strong>scopes</strong> for which access permission is sought.</p>
+<p>{% include note.html priority=&#39;medium&#39; note=&#39;This is a prototype of scopes documentation.  Scopes have not been defined for the Web API.&#39; %}
+When your application seeks authorization to access user-related data, you will often need to specify one or more scopes. Here’s how.</p>
+<p>Most calls to the RENXT Web API require prior authorization by your application’s user. To get that authorization, your application will first need to make a call to the Blackbaud Authorization Service’s <code>/authorize</code> endpoint, passing along a list of the <strong>scopes</strong> for which access permission is sought.</p>
 <p>Scopes let you specify exactly what types of data your application wants to access, and the set of scopes you pass in your call determines what access permissions the user is asked to grant.</p>
 <p>Example
 The following code makes a request asking for scopes ‘constituent-read’:</p>
-<pre><code>code sample here</code></pre>
-<p>On execution, the user is redirected to a page explaining the information that is requested:</p>
+code sample here<p>On execution, the user is redirected to a page explaining the information that is requested:</p>
 <p><img src="http://placehold.it/400x400" alt="Ipsum Image"></p>
 <h3 id="determining-the-scopes-needed">Determining the scopes needed</h3>
-<p>Check an <a href="/apis/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d6b">endpoint</a> within the  to see if it does require prior authorization. Usually, authorization is only required for xyz data. For more about authorization see our <a href="http://localhost:4000/guide/#web-api-fundamentals" >Web API Authorization Guide</a>.</p>
+<p>Check an <a href="docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d66" >endpoint</a> within the API management developer portal to see if it does require prior authorization. Usually, authorization is only required for xyz data. For more about authorization see our <a href="" >Web API Authorization Guide</a>.</p>
 <p>List of scopes
 Here is a list of the available scopes:</p>
 <div class="table-responsive">
@@ -356,13 +637,17 @@ Here is a list of the available scopes:</p>
 </div>
 
 
+<h2 id="cors">CORS</h2>
+<div class="draft"><p>We support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website&#39;s client-side code).</p>
+</div>
+
 <h2 id="base-urls">Base URLs</h2>
 <p>URLs referenced in the documentation to have the following base:</p>
-<p><code></code></p>
-<p>The majority of endpoints access <em>private</em> data, such as constituent data.  To access private data an application must get permission from a specific tenant&#39;s  user.  <a href="" > Web API Authorization</a> is done via the  at the following URL: </p>
-<p><code>NEEDS UPDATING</code>  </p>
+<p><code><a href="https://.azure-api.net">https://.azure-api.net</a></code></p>
+<p>The majority of endpoints access <em>private</em> data, such as constituent data.  To access private data an application must get permission from a specific tenant&#39;s RENXT user.  <a href="" > Web API Authorization</a> is done via the Blackbaud Authorization Service at the following URL: </p>
+<p><code><a href="https://authorize.blackbaud.com/">https://authorize.blackbaud.com/</a></code>  </p>
 <h2 id="endpoints">Endpoints</h2>
-<p>The  Web API currently accesses the following top level resource groupings. Click on a link to read the documentation for accessing or modifying each resource:</p>
+<p>The RENXT Web API currently accesses the following top level resource groupings. Click on a link to read the documentation for accessing or modifying each resource:</p>
 <ul>
 <li><a href="http://localhost:4000/guide/#constituents" >Constituents</a> - Manage a constituent&#39;s biographical and constituent information for a specific Blackbaud tenant which includes addresses, email addresses, phones, web addresses, name formats ...</li>
 <li>Solicitor - Manage and list the solicitors for a specific Blackbaud tenant.  Solicitors request contributions to a tenant&#39;s organization.  </li>
@@ -372,54 +657,579 @@ Here is a list of the available scopes:</p>
 <li>Education - Returns information about the education record with the specified constituent.</li>
 </ul>
 <h2 id="constituents">Constituents</h2>
-<p> Manage a constituent&#39;s biographical and constituent information for a specific Blackbaud tenant which includes addresses, email addresses, phones, web addresses, name formats ...</p>
+<p>Manage a constituent&#39;s biographical and constituent information for a specific Blackbaud tenant which includes addresses, email addresses, phones, web addresses, name formats ...</p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
-        <tr>
-            <th>Task</th>
-            <th>Endpoint</th>
-        </tr>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Endpoint</th>
+        <th>Method</th>
+      </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>Retrieve a specific constituent using the <b>constituentId</b> path parameter</td>
-        <td><a href="/apis/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d66" >GET constituents/(constituentId)</a></td>
 
-    </tr>
-    <tr>
-        <td>Update a Constituent sing the <b>constituentId</b> path parameter</td>
-        <td><a href="/apis/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d67" >PUT constituents/(constituentId)</a></td>
-    </tr>
-    <tr>
-        <td>Delete a Constituent sing the <b>constituentId</b> path parameter</td>
-        <td><a href="/apis/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d65" >DELETE constituents/(constituentId)</a></td>
-    </tr>
-    <tr>
-        <td>Adding a Constituent</td>
-        <td><a href="">POST constituents/(constituentId)</a></td>
-    </tr>
-    <tr>
-        <td>Searching for a Constituent using <b>lookupID</b> URI parameter</td>
-        <td><a href="">GET /constituents?lookupID=(value)</a></td>
 
-    </tr>
-    <tr>
-        <td>Searching for a Constituent using <b>email</b> URI parameter</td>
-        <td><a href="">GET /constituents?email=(value)</a></td>
-    </tr>
-    <tr>
-        <td>More...</td>
-        <td>More...</td>
-    </tr>
-    <tr>
-        <td>More...</td>
-        <td>More...</td>
-    </tr>
-    <tr>
-        <td>More...</td>
-        <td>More...</td>
-    </tr>
+        <tr>
+          <td>Address (Create)</td>
+          <td>Adds an address to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d69">/{constituentId}/addresses?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Address (Delete)</td>
+          <td>Deletes the address with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d6a">/{constituentId}/addresses/{addressId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Address (Get list)</td>
+          <td>Returns the list of addresses for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d68">/{constituentId}/addresses?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Address (Get)</td>
+          <td>Returns information about the address with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d6b">/{constituentId}/addresses/{addressId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Address (Update)</td>
+          <td>Updates the address with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d6c">/{constituentId}/addresses/{addressId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Attribute (Create)</td>
+          <td>Adds an attribute to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d6e">/{constituentId}/attributes?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Attribute (Delete)</td>
+          <td>Deletes the attribute with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d6f">/{constituentId}/attributes/{attributeId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Attribute (Get list)</td>
+          <td>Returns the list of attributes for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d6d">/{constituentId}/attributes?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Attribute (Get)</td>
+          <td>Returns information about the attribute with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d70">/{constituentId}/attributes/{attributeId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Attribute (Update)</td>
+          <td>Updates the attribute with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d71">/{constituentId}/attributes/{attributeId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Constituent (Delete)</td>
+          <td>Deletes the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d65">/{constituentId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Constituent (Get)</td>
+          <td>Returns information about the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d66">/{constituentId}?tenantid={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Constituent (Update)</td>
+          <td>Updates the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d67">/{constituentId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Constituent code (Create)</td>
+          <td>Adds a constituent code to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d73">/{constituentId}/constituentcodes?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Constituent code (Delete)</td>
+          <td>Deletes the constituent code with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d74">/{constituentId}/constituentcodes/{constituentCodeId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Constituent code (Get list)</td>
+          <td>Returns the list of constituent codes for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d72">/{constituentId}/constituentcodes?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Constituent code (Get)</td>
+          <td>Returns information about the constituent code with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d75">/{constituentId}/constituentcodes/{constituentCodeId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Constituent code (Update)</td>
+          <td>Updates the constituent code with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d76">/{constituentId}/constituentcodes/{constituentCodeId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Education (Create)</td>
+          <td>Adds an education record to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d78">/{constituentId}/educations?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Education (Delete)</td>
+          <td>Deletes the education record with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d79">/{constituentId}/educations/{educationId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Education (Get list)</td>
+          <td>Returns the list of education records for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d77">/{constituentId}/educations?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Education (Get)</td>
+          <td>Returns information about the education record with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d7a">/{constituentId}/educations/{educationId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Education (Update)</td>
+          <td>Updates the education record with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d7b">/{constituentId}/educations/{educationId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Email address (Create)</td>
+          <td>Adds an email address to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d7d">/{constituentId}/emailaddresses?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Email address (Delete)</td>
+          <td>Deletes the email address with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d7e">/{constituentId}/emailaddresses/{emailAddressId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Email address (Get list)</td>
+          <td>Returns the list of email addresses for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d7c">/{constituentId}/emailaddresses?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Email address (Get)</td>
+          <td>Returns information about the email address with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d7f">/{constituentId}/emailaddresses/{emailAddressId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Email address (Update)</td>
+          <td>Updates the email address with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d80">/{constituentId}/emailaddresses/{emailAddressId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Name format (Create)</td>
+          <td>Adds a name format to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d82">/{constituentId}/nameformats?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Name format (Delete)</td>
+          <td>Deletes the name format with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d83">/{constituentId}/nameformats/{nameFormatId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Name format (Get list)</td>
+          <td>Returns the list of name formats for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d81">/{constituentId}/nameformats?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Name format (Get)</td>
+          <td>Returns information about the name format with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d84">/{constituentId}/nameformats/{nameFormatId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Name format (Update)</td>
+          <td>Updates the name format with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d85">/{constituentId}/nameformats/{nameFormatId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Note (Create)</td>
+          <td>Adds a note to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d87">/{constituentId}/notes?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Note (Delete)</td>
+          <td>Deletes the note with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d88">/{constituentId}/notes/{noteId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Note (Get list)</td>
+          <td>Returns the list of notes for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d86">/{constituentId}/notes?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Note (Get)</td>
+          <td>Returns information about the note with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d89">/{constituentId}/notes/{noteId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Note (Update)</td>
+          <td>Updates the note with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d8a">/{constituentId}/notes/{noteId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Phone (Create)</td>
+          <td>Adds a phone to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d8c">/{constituentId}/phones?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Phone (Delete)</td>
+          <td>Deletes the phone with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d8d">/{constituentId}/phones/{phoneId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Phone (Get list)</td>
+          <td>Returns the list of phones for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d8b">/{constituentId}/phones?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Phone (Get)</td>
+          <td>Returns information about the phone with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d8e">/{constituentId}/phones/{phoneId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Phone (Update)</td>
+          <td>Updates the phone with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d8f">/{constituentId}/phones/{phoneId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Primary Business (Get)</td>
+          <td>Returns the primary business information for the specified constituent.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d90">/{constituentId}/primarybusiness?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Relationship (Create)</td>
+          <td>Adds a relationship to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d94">/{constituentId}/relationships?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Relationship (Delete)</td>
+          <td>Deletes the relationship with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d95">/{constituentId}/relationships/{relationshipId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Relationship (Get list)</td>
+          <td>Returns the list of relationships for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d93">/{constituentId}/relationships?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Relationship (Get)</td>
+          <td>Returns information about the relationship with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d96">/{constituentId}/relationships/{relationshipId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Relationship (Update)</td>
+          <td>Updates the relationship with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d97">/{constituentId}/relationships/{relationshipId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Relationship type (Get list)</td>
+          <td>Returns the list of relationship types for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d92">/{constituentId}/relationshiptypes?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Solicitor (Create)</td>
+          <td>Adds a solicitor to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d9a">/{constituentId}/solicitors?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Solicitor (Delete)</td>
+          <td>Deletes the solicitor with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d9b">/{constituentId}/solicitors/{solicitorId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Solicitor (Get list)</td>
+          <td>Returns the list of solicitors for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d99">/{constituentId}/solicitors?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Solicitor (Get)</td>
+          <td>Returns information about the solicitor with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d9c">/{constituentId}/solicitors/{solicitorId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Solicitor (Update)</td>
+          <td>Updates the solicitor with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d9d">/{constituentId}/solicitors/{solicitorId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+        <tr>
+          <td>Solicitor type (Get list)</td>
+          <td>Returns the list of solicitor types for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d98">/{constituentId}/solicitortypes?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Spouse (Get)</td>
+          <td>Returns spouse information for the specified constituent.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d91">/{constituentId}/spouse?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Web address (Create)</td>
+          <td>Adds a web address to the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d9f">/{constituentId}/webaddresses?tenantId={tenantId}</a>
+          </td>
+          <td>POST</td>
+        </tr>
+
+        <tr>
+          <td>Web address (Delete)</td>
+          <td>Deletes the web address with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1da0">/{constituentId}/webaddresses/{webAddressId}?tenantId={tenantId}</a>
+          </td>
+          <td>DELETE</td>
+        </tr>
+
+        <tr>
+          <td>Web address (Get list)</td>
+          <td>Returns the list of web addresses for the constituent with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1d9e">/{constituentId}/webaddresses?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Web address (Get)</td>
+          <td>Returns information about the web address with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1da1">/{constituentId}/webaddresses/{webAddressId}?tenantId={tenantId}</a>
+          </td>
+          <td>GET</td>
+        </tr>
+
+        <tr>
+          <td>Web address (Update)</td>
+          <td>Updates the web address with the specified ID.</td>
+          <td>
+            <a href="https://bbapidev.portal.azure-api.net/docs/services/54c136c272126c0990e57438/operations/54c136c372126c027cbc1da2">/{constituentId}/webaddresses/{webAddressId}?tenantId={tenantId}</a>
+          </td>
+          <td>PUT</td>
+        </tr>
+
+
     </tbody>
   </table>
 </div>
@@ -429,7 +1239,7 @@ Here is a list of the available scopes:</p>
 <h3 id="best-practices">Best Practices</h3>
 <p>The following best practices are intended to give your users the best experience possible, and make your integration as efficient as possible. </p>
 <h4 id="creating-new-constituents">Creating new constituents</h4>
-<p>This process uses 2 API calls to add a constituent to   constituent, one to determine if it already exists, and one to add it. It is fine to use this process if you are adding a fairly small number of constituents. </p>
+<p>This process uses 2 API calls to add a constituent to  RENXT constituent, one to determine if it already exists, and one to add it. It is fine to use this process if you are adding a fairly small number of constituents. </p>
 <p>HOW Make a POST call to the Constituents Collection API.</p>
 <p class="alert alert-info">BEST PRACTICE Use this workflow for creating a new constituent to prevent receiving an unnecessary 409 return by verifying whether or not the proposed new constituent already exists prior to issuing a POST to create it.</p>
 
@@ -437,13 +1247,13 @@ Here is a list of the available scopes:</p>
 <p><ol></p>
 <p><li>Verify that the constituent does not already exist in the Constituents collection:
  Search for the constituent in the user&#39;s constituent collection by <a href="" >email address</a> :
- <code>GET: <a href="https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com"><a href="https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com">https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com</a></a></code>
+ <code>GET: <a href="https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com">https://api.constantconstituent.com/v2/constituents?email=new_constituent@email.com</a></code>
  <br>or <a href="" >lookup id</a>:
- <code>GET: <a href="https://api.constantconstituent.com/v2/constituents?lookupID=(value"><a href="https://api.constantconstituent.com/v2/constituents?lookupID=(value">https://api.constantconstituent.com/v2/constituents?lookupID=(value</a></a>)</code></li></p>
+ <code>GET: <a href="https://api.constantconstituent.com/v2/constituents?lookupID=(value">https://api.constantconstituent.com/v2/constituents?lookupID=(value</a>)</code></li></p>
 <p><li>If the constituent does not exist, then proceed with <a href="">creating them</a>. </li>
 </ol></p>
 <p><h2 id="requests">Requests</h2></p>
-<p>The  Web API is based on REST principles: data resources are accessed via standard HTTPS requests in UTF-8 format to a Web API endpoint. Where possible, the Web API strives to use appropriate HTTP verbs for each action:</p>
+<p><p>The RENXT Web API is based on REST principles: data resources are accessed via standard HTTPS requests in UTF-8 format to a Web API endpoint. Where possible, the Web API strives to use appropriate HTTP verbs for each action:</p></p>
 <div class="table-responsive">
   <table class="table table-striped table-hover">
     <thead>
@@ -473,15 +1283,19 @@ Here is a list of the available scopes:</p>
   </table>
 </div>
 
-<h3 id="common-request-headers">Common Request Headers</h3>
-<p>ipsum lorem</p>
-<h2 id="responses">Responses</h2>
-<p>All data is received as a JSON object.</p>
-<h2 id="version">Version</h2>
-<p>When we change the Web API in a backwards-incompatible way, we release a new  version.</p>
-<p>For the  Web API, the URL has a major version number (v1), but the Web API has date based sub-versions which can be chosen using a custom HTTP request header. In this case, the major version provides structural stability of the Web API as a whole while the dated versions account for smaller changes (field deprecation, endpoint changes, etc). </p>
-<h3 id="what-changes-does-blackbaud-consider-to-be-backwards-compatible-">What changes does Blackbaud consider to be “backwards-compatible”?</h3>
-<ul>
+<p><h3 id="common-request-headers">Common Request Headers</h3></p>
+<div class="draft"><p>ipsum lorem</p>
+</div>
+
+<p><h2 id="responses">Responses</h2></p>
+<p><p>All data is received as a JSON object.</p></p>
+<p><h2 id="version">Version</h2></p>
+<div class="draft"><p>When we change the Web API in a backwards-incompatible way, we release a new  version.</p>
+<p>For the RENXT Web API, the URL has a major version number (v1), but the Web API has date based sub-versions which can be chosen using a custom HTTP request header. In this case, the major version provides structural stability of the Web API as a whole while the dated versions account for smaller changes (field deprecation, endpoint changes, etc). </p>
+</div>
+
+<p><h2 id="backwards-compatible-changes">Backwards-compatible changes</h2></p>
+<div class="draft"><ul>
 <li>Adding new Web API resources.</li>
 <li>Adding new optional request parameters to existing Web API methods.</li>
 <li>Adding new properties to existing Web API responses.</li>
@@ -489,23 +1303,37 @@ Here is a list of the available scopes:</p>
 <li>Changing the length or format of object IDs or other opaque strings. This includes adding or removing fixed prefixes. </li>
 <li>You can safely assume IDs we generate will never exceed x characters, but you should be able to handle IDs of up to that length. </li>
 </ul>
-<h3 id="api-changelog">API Changelog</h3>
-<p>The  <a href="http://localhost:4000/resources/changelog/" >Change Log</a> reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.</p>
-<h2 id="timestamps">Timestamps</h2>
-<p>Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with zero offset: YYYY-MM-DDTHH:MM:SSZ. </p>
-<h2 id="pagination">Pagination</h2>
-<p>Some endpoints support a way of paging the dataset, taking an offset and limit as query parameters:</p>
-<pre><code>$ curl &quot;<a href="https://api.blackbaud.com/v1/constituents?offset=20&amp;limit=10&amp;quot">https://api.blackbaud.com/v1/constituents?offset=20&amp;limit=10&amp;quot</a>;</code></pre>
-<p>Note that offset numbering is zero-based and that omitting the offset parameter will return the first X elements. Check the technical reference for the specific endpoint to see the default limit value. Requests that return an array of items are automatically paginated if the number of items vary (for example, addresses for a constituent). </p>
-<h2 id="response-status-codes">Response Status Codes</h2>
-<p>The API uses the following response status codes, as defined in the RFC 2616 and RFC 6585:</p>
-<h2 id="web-api-fundamentals">Web API Fundamentals</h2>
-<p>ipsum lorem</p>
+</div>
 
-<pre><code>&lt;/div&gt;</code></pre>
+<p><h2 id="api-changelog">API Changelog</h2></p>
+<div class="draft"><p>The  <a href="http://localhost:4000/resources/changelog/" >Change Log</a> reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.</p>
+</div>
+
+<p><h2 id="timestamps">Timestamps</h2></p>
+<div class="draft"><p>Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with zero offset: YYYY-MM-DDTHH:MM:SSZ. </p>
+</div>
+
+<p><h2 id="pagination">Pagination</h2></p>
+<div class="draft"><p>Some endpoints support a way of paging the dataset, taking an offset and limit as query parameters:</p>
+$ curl &quot;<a href="https://api.blackbaud.com/v1/constituents?offset=20&amp;limit=10">https://api.blackbaud.com/v1/constituents?offset=20&amp;limit=10</a>&quot;<p>Note that offset numbering is zero-based and that omitting the offset parameter will return the first X elements. Check the technical reference for the specific endpoint to see the default limit value. Requests that return an array of items are automatically paginated if the number of items vary (for example, addresses for a constituent). </p>
+</div>
+
+<p><h2 id="response-status-codes">Response Status Codes</h2></p>
+<div class="draft"><p>The API uses the following response status codes, as defined in the RFC 2616 and RFC 6585:</p>
+</div>
+
+<p><h2 id="web-api-fundamentals">Web API Fundamentals</h2></p>
+<div class="draft"><p>ipsum lorem</p>
+</div>
+
+
 <p>  </div>
-</div> </p>
- 
+</div></p>
+
+  </div>
+</div><p>  </div>
+</div></p>
+
     
     <!-- Omnibar Placeholder -->
     <div id="omnibar"></div>

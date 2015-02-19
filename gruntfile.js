@@ -18,7 +18,9 @@
 'use strict';
 
 module.exports = function (grunt) {
-  require('jit-grunt')(grunt);
+  require('jit-grunt')(grunt, {
+    useminPrepare: 'grunt-usemin'
+  });
   require('time-grunt')(grunt);
   
   // Blackbaud Namespace

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RENXT Developer</title>
+
+    <!-- build:css ../../assets/css/app.css -->
+    <link rel="stylesheet" href="../../assets/css/app.css">
+    <!-- endbuild -->
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+  <body class="bb-omnibar-height-padding ">
+
+    <div id="top"></div>
+
+    <div class="nav-wrap">
+      <div class="container">
+        <div class="col-sm-12">
+          <ul class="nav-items">
+
+
+      <li >
+        <a href="http://localhost:4000/">Home</a>
+      </li>
+
+
+
+      <li >
+        <a href="http://localhost:4000/tutorials/">Tutorials</a>
+      </li>
+
+
+
+      <li >
+        <a href="http://localhost:4000/guide/">Developer Guide</a>
+      </li>
+
+
+
+      <li class="selected">
+        <a href="http://localhost:4000/resources/">Resources</a>
+      </li>
+
+
+
+      <li >
+        <a href="https://bbapidev.portal.azure-api.net/">Developer Portal</a>
+      </li>
+
+
+
+
+</ul>
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+  <div class="col-sm-3">
+    <div class="sidebar">
+
+<ul class="nav nav-stacked nav-sidebar">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <li>
+              <a href="http://blackbaud.smallworldlabs.com/groups/blogs/30">
+                Blog
+              </a>
+            </li>
+
+
+
+            <li>
+              <a href="http://stackoverflow.com/questions/tagged/renxt">
+                Forum
+              </a>
+            </li>
+
+
+
+            <li class="current">
+              <a href="http://localhost:4000/resources/faq/">
+                FAQ
+              </a>
+
+
+
+
+            </li>
+
+
+
+            <li>
+              <a href="http://localhost:4000/resources/status/">
+                Status <small>(DRAFT)</small>
+              </a>
+            </li>
+
+
+
+            <li>
+              <a href="http://localhost:4000/resources/changelog/">
+                Change Log <small>(DRAFT)</small>
+              </a>
+            </li>
+
+
+
+            <li>
+              <a href="http://localhost:4000/resources/code/">
+                Code Samples
+              </a>
+            </li>
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+
+    </div>
+  </div>
+  <div class="col-sm-9">
+    <h1 id="frequently-asked-questions">Frequently Asked Questions</h1>
+<h3 id="how-do-i-get-started-with-the-api-">How do I get started with the API?</h3>
+<p>The <a href="http://localhost:4000/tutorials/getting-started/" target="_blank">Get Started with the RE NXT API</a> tutorial is the best place to get you up and running quickly.</p>
+<h3 id="so-how-do-you-sign-your-requests-how-do-i-pass-security-credentials-from-my-client-application-to-the-api-">So, how do you sign your requests?  How do I pass security credentials from my client application to the API?</h3>
+<p>You need to provide a token obtained using OAuth 2. Check <a href="" target="_blank">Web API Authorization</a> for more information.</p>
+<h3 id="what-authorization-flow-should-i-use-for-an-app-running-in-a-browser-">What authorization flow should I use for an app running in a browser?</h3>
+<p>Browser-based apps run entirely in the browser after loading the source code from a web page. Since the entire source code is available to the browser, they cannot maintain the confidentiality of their <b>client secret key</b>, so the secret is not used in this case.  </p>
+<p>Like browser-based apps, mobile apps also cannot maintain the confidentiality of their <b>client secret key</b>. Because of this, mobile apps must also use an OAuth flow that does not require a client secret.</p>
+<p>For both browser based apps and mobile apps, the Implicit OAuth2 grant type should be used for this use case.
+See <a href="" target="_blank">Web API Authorization</a> for the various OAuth2 grant types we support.</p>
+<h3 id="i-need-help-where-can-i-get-support-">I need help, where can I get support?</h3>
+<p>Within our <a href="http://localhost:4000/resources/" target="_blank">Resources</a> your will find the link to our Forum. The forum allows you the opportunity to ask, answer, vote and review questions.</p>
+<h3 id="how-do-i-get-my-b-client-id-b-and-b-client-secret-b-for-my-app-">How do I get my <b>client id</b>  and <b>client secret</b> for my app?</h3>
+<p>As the first step towards authorization, you will need to <a href="http://localhost:4000/guide/#registering-your-app" target="_blank">register your application</a>. That will give you a unique <b>client id</b> and <b>client secret key</b> to use in the authorization flows.</p>
+<p>The <b>client id</b> is used within various OAuth 2.0 authorization flows.  The <b>client secret key</b> is used within the Authorization Code and Client Credentials flows.  Remember, the secret must be exchanged from the server side of your client application. If the secret is compromised you can regenerate the key.
+{% endcapture %}</p>
+<h3 id="oops-my-client-secret-has-been-compromized-how-do-i-regenerate-my-client-secret-">Oops, my client secret has been compromized, how do I regenerate my client secret?</h3>
+<p>See Regenerating the Client Secret?</p>
+<div class="draft"><h3 id="do-you-support-cross-origin-resource-sharing-to-allow-you-to-interact-securely-with-our-api-from-a-client-side-web-application-">Do you support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application?</h3>
+<p>TBD</p>
+</div>
+  </div>
+</div>
+
+  </div>
+</div><p>  </div>
+</div></p>
+
+
+    <!-- Omnibar Placeholder -->
+    <div id="omnibar"></div>
+
+    <!-- build:js ../../assets/js/lib.js -->
+    <script src="../../assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="../../assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/vendor/easyXDM/easyXDM.min.js"></script>
+    <script src="../../assets/vendor/holderjs/holder.min.js"></script>
+    <script src="../../assets/vendor/stellar/jquery.stellar.min.js"></script>
+    <!-- endbuild -->
+
+    <script src="//signin.blackbaud.com/omnibar.min.js"></script>
+
+    <!-- build:js ../../assets/js/app.js -->
+    <script src="../../assets/js/omnibar-init.js"></script>
+    <script src="../../assets/js/app.js"></script>
+    <!-- endbuild -->
+
+
+
+  </body>
+</html>
