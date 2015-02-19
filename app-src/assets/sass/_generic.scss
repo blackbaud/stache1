@@ -18,7 +18,7 @@
 }
 
 body {
-  background: #FFF;
+  background: #f3f3f4;
   position: relative;
 }
 
@@ -69,6 +69,11 @@ hr.small {
 .btn-fa-link:hover,
 .btn-fa-link:focus {
   color: #EFEFEF;
+}
+
+.content {
+  background: #FFF;
+  padding-bottom: $section-padding;
 }
 
 .content img,

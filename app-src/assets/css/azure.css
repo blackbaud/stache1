@@ -51,7 +51,7 @@
   width: 100%; }
 
 body {
-  background: #FFF;
+  background: #f3f3f4;
   position: relative; }
 
 h1, .h1, h2, .h2, h3, .h3 {
@@ -91,6 +91,10 @@ hr.small {
 
 .btn-fa-link:hover, .btn-fa-link:focus {
   color: #EFEFEF; }
+
+.content {
+  background: #FFF;
+  padding-bottom: 50px 0; }
 
 .content img, .zone-content img {
   max-width: 100%;
@@ -303,8 +307,7 @@ hr.small {
   background: #50535a;
   color: #787D87;
   font-size: 13px;
-  padding: 50px 0;
-  margin-top: 30px; }
+  padding: 50px 0; }
 
 .footer-site a {
   color: #949AA6; }
