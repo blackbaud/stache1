@@ -121,7 +121,7 @@ fi
 if [ -e "$DEPLOYMENT_SOURCE/Gruntfile.js" ]; then
   eval $NPM_CMD install grunt-cli
   exitWithMessageOnError "installing grunt failed"
-  ./node_modules/.bin/grunt --no-color clean common dist
+  ./node_modules/.bin/grunt --no-color blackbaud:build
   exitWithMessageOnError "grunt failed"
 fi
 
