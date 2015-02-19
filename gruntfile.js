@@ -261,7 +261,7 @@ module.exports = function (grunt) {
     },
     
     usemin: {
-      html: '<%= site.app_build %>index.html'
+      html: '<%= site.app_build %>/**/*.html'
     },
     
     // When serving, watch for file changes
