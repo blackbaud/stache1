@@ -347,7 +347,7 @@ module.exports = function (grunt) {
       'status:build',
       'clean',
       'assemble',
-      'sass',
+      //'sass',
       'useminPrepare',
       'concat:generated',
       'cssmin:generated',
