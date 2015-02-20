@@ -1,8 +1,8 @@
 {{# hasHeadings page=this }}
   {{# eachHeading page=../this }}
-    <li>
+    <li class="{{# if draft }}draft{{/ if }}">
       <a href="#{{ id }}" class="smooth-scroll">
-        {{ name }} {{# if draft }}<small>(DRAFT)</small>{{/ if }}
+        {{ name }}
       </a>
     </li>
   {{/ eachHeading }}

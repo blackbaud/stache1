@@ -5,9 +5,9 @@
 
     <ul class="nav nav-stacked nav-sidebar">
       {{# if showTitle }}
-          <li class="title">
+          <li class="title {{# if draft }}draft{{/ if }}">
             <a href="{{ uri }}">
-              {{ name }} {{# if draft }}<small>DRAFT</small>{{/ if }}
+              {{ name }}
             </a>
           </li>
       {{/ if}}
@@ -15,9 +15,9 @@
       {{# if links }}
         {{# each links }}
           {{# isActiveNav dest=../../../../page.dest }}
-            <li class="current">
+            <li class="current {{# if draft }}draft{{/ if }}">
               <a href="{{ uri }}">
-                {{ name }} {{# if draft }}<small>(DRAFT)</small>{{/ if }}
+                {{ name }}
               </a>
               {{# if ../../../../../showHeadings }}
                 <ul class="nav">
@@ -26,9 +26,9 @@
               {{/ if }}
             </li>
           {{ else }}
-            <li>
+            <li class="{{# if draft }}draft{{/ if }}">
               <a href="{{ uri }}">
-                {{ name }} {{# if draft }}<small>(DRAFT)</small>{{/ if }}
+                {{ name }}
               </a>
             </li>
           {{/ isActiveNav }}

@@ -9,6 +9,7 @@
 # =============================================
 # STACHE
 # =============================================
+draft: true
 base: /
 app: app-
 app_src: <%= site.app %>src/
@@ -101,7 +102,7 @@ portal_endpoints: <%= site.portal %>docs/services/
 portal_name: API management developer portal
 portal_base: https://<%= portal_user %>.azure-api.net
 portal_api: https://<%= portal_user %>.management.azure-api.net/
-portal_qs: 
+portal_qs:
   - api_version: 2014-02-14-preview
 portal_header:
   - authorization: 'SharedAccessSignature uid=54c12d71ce82280329030003&ex=2016-02-06T22:41:00.0000000Z&sn=SuypLuSQqpGI3MEhiGNHcwIkEQQIswUxWsmoh54mpyYXt0U27lOyAapkYHxtnDxIak9JyUskfplQT9iTmBm2yg=='

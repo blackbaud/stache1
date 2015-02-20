@@ -266,14 +266,11 @@ module.exports.register = function (Handlebars, options, params) {
       return getMarked(options.fn(this));
     },
 
+    /**
+    * If settings say to render, wrap content in div
+    **/
     draft: function (options) {
-      /*
-      var m = marked(options.fn(this), {
-        renderer: renderer
-      });
-      return params.assemble.options.draft ? ('<div class="draft">' + m + '</div>') : '';
-      */
-      return '<div class="draft">\r\n\r\n' + getMarked(options.fn(this)) + '\r\n\r\n</div>';
+      return params.assemble.options.site.draft ? ('<div class="draft">\r\n\r\n' + getMarked(options.fn(this)) + '\r\n\r\n</div>') : '';
     },
 
     /**

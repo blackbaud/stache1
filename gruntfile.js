@@ -36,13 +36,12 @@ module.exports = function (grunt) {
     // Reads our configuration files
     pkg: grunt.file.readJSON('package.json'),
     bower: grunt.file.readJSON('.bowerrc'),
-    site: grunt.file.readYAML('_config.yml'),
+    site: grunt.file.readYAML('site.yml'),
     
     // Used to determine file locations, build or serve
     // This means when a user calls build or serve, the assembled files
     // will go into app-build or app-serve.
     status: 'serve',
-    draft: true,
 
     // Displays our title all fancy-like
     asciify: {
@@ -270,7 +269,7 @@ module.exports = function (grunt) {
         files: [
           '<%= site.app_content %>**/*.*',
           '<%= site.app_assets_src %>**/*.*',
-          '_config.yml'
+          'site.yml'
         ],
         tasks: [
           'assemble'
