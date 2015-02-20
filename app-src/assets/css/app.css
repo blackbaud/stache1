@@ -10333,7 +10333,8 @@ hr.small {
   background: #f5f5f5;
   border: solid 1px #CCC;
   padding: 10px;
-  position: relative; }
+  position: relative;
+  margin-top: 60px; }
 
 .draft:before {
   color: #880000;
@@ -10349,6 +10350,10 @@ hr.small {
   -moz-transform: rotate(-45deg);
   -ms-transform: rotate(-45deg);
   -o-transform: rotate(-45deg); }
+
+.draft h2, .draft h3 {
+  padding-top: 0;
+  margin-top: 0; }
 
 /* 
 * ==========================================================================

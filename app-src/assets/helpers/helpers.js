@@ -1,23 +1,31 @@
 /**
 * Stache Helpers
 * Bobby Earl, 2015-02-12
+*
+* NOTES
+*   - Overriding default markdown / md helpers for one simple reason.
+*   - Nesting HTML generated text with four spaces.  Marked thinks this is code.
+*   - In order to fix this, I override the rule that supports four spaces as code.
+*   - The GFM (```) for code still works.
 **/
 
 /*jslint node: true, nomen: true, plusplus: true */
 'use strict';
 
-var cheerio = require('cheerio');
-var fs = require('fs');
-
-// This is such a hack just to handle nested markdown blocks.
-var marked = require('marked');
-var renderer = new marked.Renderer();
-renderer.code = function (code, language) {
-  return code;
-};
-
 module.exports.register = function (Handlebars, options, params) {
   
+  var cheerio = require('cheerio');
+  var fs = require('fs');
+
+  // This is such a hack just to handle nested markdown blocks.
+  var marked = require('marked');
+  var renderer = new marked.Renderer();
+  var lexer = new marked.Lexer();
+  lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
+
+  // Stores any custom counters
+  var counts = {};
+
   /**
   * Utility function to get the basename
   **/
@@ -91,7 +99,7 @@ module.exports.register = function (Handlebars, options, params) {
   * Light wrapper for our custom markdown processor.
   **/
   function getMarked(md) {
-    return marked(md, {
+    return marked.parser(lexer.lex(md), {
       renderer: renderer
     });
   }
@@ -187,7 +195,8 @@ module.exports.register = function (Handlebars, options, params) {
         var el = cheerio(this);
         r = r + options.fn({
           name: el.text(),
-          id: el.attr('id')
+          id: el.attr('id'),
+          draft: el.parent().hasClass('draft')
         });
       });
 
@@ -250,21 +259,38 @@ module.exports.register = function (Handlebars, options, params) {
     },
 
     /**
-    * I'm overriding the default markdown helper.
-    * The original had problems with nested markdown helpers.
-    * It would basically treat any previously nested and converted markdown as <code>.
-    * This was because of the lexer here: https://github.com/chjj/marked/blob/master/lib/marked.js#L15
+    * Overriding default markdown helper.
+    * See notes above for more information.
     **/
     markdown: function (options) {
-      var o = options.fn(this);
-      return this.page.src.indexOf('.md') > -1 ? getMarked(o) : o;
+      return getMarked(options.fn(this));
     },
 
     draft: function (options) {
+      /*
       var m = marked(options.fn(this), {
         renderer: renderer
       });
       return params.assemble.options.draft ? ('<div class="draft">' + m + '</div>') : '';
+      */
+      return '<div class="draft">\r\n\r\n' + getMarked(options.fn(this)) + '\r\n\r\n</div>';
+    },
+
+    /**
+    * Return the current count for the required property
+    **/
+    count: function(prop) {
+      if (typeof counts[prop] === 'undefined') {
+        counts[prop] = 0;
+      }
+      return counts[prop];
+    },
+
+    /**
+    * Increment the count for the required property
+    **/
+    increment: function(prop) {
+      counts[prop] = typeof counts[prop] === 'undefined' ? 0 : (counts[prop] + 1);
     }
   
   });

@@ -31,6 +31,12 @@
     {{! Spaces, tabs and new lines cause markdown helper to fail }}
     {{# markdown }}{{> body }}{{/ markdown }}
     
+    {{# if note }}
+      {{# withHash isPageNote=true priority=priority note=note }}
+        {{> partial-note }}
+      {{/ withHash }}
+    {{/ if }}
+
     {{> partial-footer }}
 
     <!-- Omnibar Placeholder -->

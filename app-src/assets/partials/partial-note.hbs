@@ -1,0 +1,30 @@
+{{ increment 'note' }}
+
+<div class="modal fade" id="modal-notes-{{ count 'note' }}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">
+          Note
+          {{# is priority "high" }}
+            <span class="label label-danger">Priority: {{ priority }}</span>
+          {{/ is }}
+          {{# is priority "medium" }}
+            <span class="label label-warning">Priority: {{ priority }}</span>
+          {{/ is }}
+          {{# is priority "low" }}
+            <span class="label label-info">Priority: {{ priority }}</span>
+          {{/ is }}
+        </h4>
+      </div>
+      <div class="modal-body">
+        {{{ note }}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn {{# if isPageNote }} btn-primary btn-notes {{ else }} btn-notes-inline btn-default btn-xs pull-right {{/ if }}" data-toggle="modal" data-target="#modal-notes-{{ count 'note' }}">
+  <i class="fa fa-info-circle"></i>
+</button>

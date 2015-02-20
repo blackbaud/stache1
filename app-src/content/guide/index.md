@@ -22,9 +22,6 @@ note: |
 ---
 <p class="alert alert-danger">Draft: This content is a work in progress.  For a list of dependencies and To Do list, click the bottom right info icon.</p>
 
-
-
-
 # Developer Guide
 
 The {{ site.product_name_short }} Web API is designed to help you unlock your key {{ site.product_name_short }} data by allowing developers to create applications that manage constituents data.  Since the {{ site.product_name_short }} Web API is organized around REST, it's very easy to write and test applications. You can use your browser and pretty much any HTTP client in any programming language to interact with the Web API.  Our Web API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients. JSON will be returned in all responses from the API, including errors.
@@ -111,7 +108,7 @@ If your client secret has be compromised, you will need to follow these steps to
 **2. Check your email inbox**
 <p class="alert alert-warning">Blackbaud will send the email to the email address associated with your registered application.  You provided this email address when you registered your application.</p>
  
-The email will contain your regenerated **Client Secret**.    
+The email will contain your regenerated **Client Secret**.
 
 ## Regenerating your client secret (Self-service)
 If your client secret has be compromised, you will need to follow these steps to regenerate the secret:
@@ -160,7 +157,9 @@ After receiving an authorization code, your application must exchange the code f
 
 Authorization begins with your application sending a request to the <code>{{ site.authorization_endpoint }}</code> endpoint of the {{ site.authorization_service_name }}.  Exactly when you decide to make this request is up to you.  You may decide to request authorization when your application gathers initial information from the user.  Alternatively, you may decide to authorize when the user first attempts to access a protected resource (user data) managed by the {{ site.product_name_short }} Web API. 
 
-    GET {{ site.authorization_endpoint }}
+```
+GET {{ site.authorization_endpoint }}
+```
 
 The request will include parameters in the query string:
  
@@ -237,7 +236,9 @@ If the user has accepted your request, the response query string contains the fo
 
 For example:
 
-    https://example.com/callback?code=NApCCg..BkWtQ&state=profile%2Factivity
+```
+https://example.com/callback?code=NApCCg..BkWtQ&state=profile%2Factivity
+```
 
 If the user has not accepted your request or an error has occurred, the response query string contains the following parameters:
 
@@ -264,13 +265,17 @@ If the user has not accepted your request or an error has occurred, the response
 
 For example:
 
-    https://example.com/callback?error=access_denied&state=STATE
+```
+https://example.com/callback?error=access_denied&state=STATE
+```
 
 **4. Your application requests refresh and access tokens**
 
 When the authorization code has been received, you will need to exchange it with an access token by making a POST request to the {{ site.authorization_service_name }}, this time to its /token endpoint:
 
-    POST https://accounts.blackbaud.com/token
+```
+POST https://accounts.blackbaud.com/token
+```
 
 The *body* of this POST request must contain the following parameters:
 
@@ -360,19 +365,23 @@ On success, the response from the {{ site.authorization_service_name }} has the 
 
 An example [cURL](http://en.wikipedia.org/wiki/CURL) request and response from the token endpoint will look something like this:
 
-    curl -H "Authorization: Basic ZjM...zE=" -d grant_type=authorization_code -d code=MQCbtKe...44KN -d redirect_uri=https%3A%2F%2Fwww.foo.com%2Fauth https://accounts.blackbaud.com/token
-    {
-       "access_token": "NgCXRK...MzYjw",
-       "token_type": "Bearer",
-       "expires_in": 3600,
-       "refresh_token": "NgAagA...Um_SHo"
-    }
+```
+curl -H "Authorization: Basic ZjM...zE=" -d grant_type=authorization_code -d code=MQCbtKe...44KN -d redirect_uri=https%3A%2F%2Fwww.foo.com%2Fauth https://accounts.blackbaud.com/token
+{
+   "access_token": "NgCXRK...MzYjw",
+   "token_type": "Bearer",
+   "expires_in": 3600,
+   "refresh_token": "NgAagA...Um_SHo"
+}
+```
 
 **6. Use the access token to access the {{ site.product_name_short }} Web API**
 
 The access token allows you to make requests to the {{ site.product_name_short }} Web API on a behalf of a user, for example:
     
-    curl -H "Authorization: Bearer NgCXRK...MzYjw" https://api.blackbaud.com/v1/constituent/342jsdsaq2wqw
+```
+curl -H "Authorization: Bearer NgCXRK...MzYjw" https://api.blackbaud.com/v1/constituent/342jsdsaq2wqw
+```
 
 **7. Requesting access token from refresh token**
 
@@ -380,7 +389,9 @@ Access tokens are deliberately set to expire after a short time, after which new
 
 The request is sent to the token endpoint of the {{ site.authorization_service_name }}:
 
-    POST https://accounts.blackbaud.com/token
+```
+POST https://accounts.blackbaud.com/token
+```
 
 The body of this POST request must contain the following parameters:
 
@@ -427,31 +438,39 @@ The header of this POST request must contain the following parameter:
 
 For example:
 
-    curl -H "Authorization: Basic ZjM4Zj...Y0MzE=" -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo https://accounts.blackbaud.com/token
-    {
-       "access_token": "NgA6ZcYI...ixn8bUQ",
-       "token_type": "Bearer",
-       "expires_in": 3600
-    }
-
+```
+curl -H "Authorization: Basic ZjM4Zj...Y0MzE=" -d grant_type=refresh_token -d refresh_token=NgAagA...NUm_SHo https://accounts.blackbaud.com/token
+{
+   "access_token": "NgA6ZcYI...ixn8bUQ",
+   "token_type": "Bearer",
+   "expires_in": 3600
+}
+```
 
 ## Implicit Grant Flow
 
 Implicit grant flow is for clients that are implemented entirely using JavaScript and running in your application user's browser. You do not need any server-side code to use it.
 
-
-
 {{# draft }}
+
 ## Client Credentials Flow
-{% include note.html priority='medium' note='This needs more work.' %}
+
+{{# withHash priority="medium" note="This needs more work." }}
+  {{> partial-note }}
+{{/ withHash }}
 
 The Client Credentials flow is used by the developer to access data that is related to their partner client application. This flow is used the **xyz** end points. 
 
 <p class="alert alert-info">The Client Credentials flow does not include authorization and therefore cannot be used to access or manage a user’s private data. This flow is described in <a href="http://tools.ietf.org/html/rfc6749#section-4.4">RFC-6749</a>.</p>
+
 {{/ draft }}
 
 ## Using Scopes
-{% include note.html priority='medium' note='This is a prototype of scopes documentation.  Scopes have not been defined for the Web API.' %}
+
+{{# withHash priority="medium" note="This is a prototype of scopes documentation.  Scopes have not been defined for the Web API." }}
+  {{> partial-note }}
+{{/ withHash }}
+
 When your application seeks authorization to access user-related data, you will often need to specify one or more scopes. Here’s how.
 
 Most calls to the {{ site.product_name_short }} Web API require prior authorization by your application’s user. To get that authorization, your application will first need to make a call to the {{ site.authorization_service_name }}’s `/authorize` endpoint, passing along a list of the **scopes** for which access permission is sought.
@@ -461,7 +480,9 @@ Scopes let you specify exactly what types of data your application wants to acce
 Example
 The following code makes a request asking for scopes ‘constituent-read’:
 
-    code sample here
+```
+code sample here
+```
 
 On execution, the user is redirected to a page explaining the information that is requested:
 	
@@ -501,9 +522,9 @@ Here is a list of the available scopes:
 </div>
 
 
+{{# draft }}
 ## CORS
 
-{{# draft }}
 We support cross-origin resource sharing to allow you to interact securely with our API from a client-side web application (though you should remember that you should never expose your secret API key in any public website's client-side code).
 {{/ draft }}
 
@@ -612,27 +633,32 @@ The {{ site.product_name_short }} Web API is based on REST principles: data reso
   </table>
 </div>
 
-### Common Request Headers
-
 {{# draft }}
-ipsum lorem
+
+  ### Common Request Headers
+
+  ipsum lorem
+
 {{/ draft }}
 
 ## Responses
 
 All data is received as a JSON object.
 
+{{# draft }}
+
 ## Version
 
-{{# draft }}
 When we change the Web API in a backwards-incompatible way, we release a new  version.
 
 For the {{ site.product_name_short }} Web API, the URL has a major version number (v1), but the Web API has date based sub-versions which can be chosen using a custom HTTP request header. In this case, the major version provides structural stability of the Web API as a whole while the dated versions account for smaller changes (field deprecation, endpoint changes, etc). 
+
 {{/ draft }}
+
+{{# draft }}
 
 ## Backwards-compatible changes
 
-{{# draft }}
 - Adding new Web API resources.
 - Adding new optional request parameters to existing Web API methods.
 - Adding new properties to existing Web API responses.
@@ -641,37 +667,38 @@ For the {{ site.product_name_short }} Web API, the URL has a major version numbe
 - You can safely assume IDs we generate will never exceed x characters, but you should be able to handle IDs of up to that length. 
 {{/ draft }}
 
+{{# draft }}
 ## API Changelog
 
-{{# draft }}
 The  <a href="{{ site.resources_changelog }}" >Change Log</a> reflects backwards-incompatible updates, backward compatible updates, removed features due to planned deprecation, features marked for future planned deprecation, and fixes for bugs or known issues. Make sure you’re subscribed to our blog and API mailing list to keep up with API changes.
 {{/ draft }}
 
+{{# draft }}
 ##Timestamps
 
-{{# draft }}
 Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with zero offset: YYYY-MM-DDTHH:MM:SSZ. 
 {{/ draft }}
 
+{{# draft }}
 ##Pagination
 
-{{# draft }}
 Some endpoints support a way of paging the dataset, taking an offset and limit as query parameters:
 
-    $ curl "https://api.blackbaud.com/v1/constituents?offset=20&limit=10"
-
+```
+$ curl "https://api.blackbaud.com/v1/constituents?offset=20&limit=10"
+```
 Note that offset numbering is zero-based and that omitting the offset parameter will return the first X elements. Check the technical reference for the specific endpoint to see the default limit value. Requests that return an array of items are automatically paginated if the number of items vary (for example, addresses for a constituent). 
 {{/ draft }}
 
+{{# draft }}
 ##Response Status Codes
 
-{{# draft }}
 The API uses the following response status codes, as defined in the RFC 2616 and RFC 6585:
 {{/ draft }}
 
+{{# draft }}
 ## Web API Fundamentals
 
-{{# draft }}
 ipsum lorem
 {{/ draft }}
 

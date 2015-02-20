@@ -2,7 +2,7 @@
   {{# eachHeading page=../this }}
     <li>
       <a href="#{{ id }}" class="smooth-scroll">
-        {{ name }}
+        {{ name }} {{# if draft }}<small>(DRAFT)</small>{{/ if }}
       </a>
     </li>
   {{/ eachHeading }}
