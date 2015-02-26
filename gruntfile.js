@@ -17,285 +17,286 @@
 /*jslint node: true, nomen: true, plusplus: true */
 'use strict';
 
-module.exports = function (grunt) {
+module.exports = function (grunt) { 
   
-  try {
-    require('jit-grunt')(grunt, {
-      useminPrepare: 'grunt-usemin'
-    });
-    require('time-grunt')(grunt);
-  } catch (err) {
-    console.log('ARE YOU SURE YOU RAN NPM install?');
-    re
-  }
+  console.log('HOW?!?!?!?!!?!?!');
 
   // Blackbaud Namespace
-  var NS = 'blackbaud:';
+  var NS = 'blackbaud_';
   
-  // Disable grunt headers
-  //grunt.log.header = function () {};
+  // Necessary since we are actually running in the root project folder.
+  // There's probably a clever grunt / node way to find this value in case it changes.
+  var dir = 'node_modules/blackbaud-stache/';
+  
+  // Original reference to the header logging function.
+  var header = grunt.log.header;
+  
+  try {
+    require('time-grunt')(grunt);
+    require('jit-grunt')(grunt, {
+      useminPrepare: 'grunt-usemin'
+    })({
+      pluginsRoot: dir + 'node_modules/'
+    });
+  } catch (err) {
+    grunt.fail.fatal('You must run npm install before using Blackbaud Stache.');
+    return;
+  }
+  
+  grunt.registerTask('stache', 'The entry point for all stache tasks.', function() {
+    
+    console.log(this);
+    
+    var options = this.options({
+      
+      // Configuration files (exist here so they can be overridden)
+      stacheDir: dir,
 
-  // Initialize our configuration
-  // For my sanity, please alphabetize any tasks after pkg and site.
-  grunt.initConfig({
-    
-    // Reads our configuration files
-    pkg: grunt.file.readJSON('package.json'),
-    bower: grunt.file.readJSON('.bowerrc'),
-    site: grunt.file.readYAML('site.yml'),
-    
-    // Used to determine file locations, build or serve
-    // This means when a user calls build or serve, the assembled files
-    // will go into app-build or app-serve.
-    status: 'serve',
+      // Reads our configuration files
+      pkg: grunt.file.readJSON(dir + 'package.json'),
+      bower: grunt.file.readJSON(dir + '.bowerrc'),
+      site: grunt.file.readYAML(dir + 'stache.config.yml'),
 
-    // Displays our title all fancy-like
-    asciify: {
-      one: {
-        text: 'Blackbaud',
-        options: {
-          font: 'cybermedium',
-          log: true
-        }
-      },
-      two: {
-        text: 'Documentation',
-        options: {
-          font: 'cybermedium',
-          log: true
-        }
-      },
-      three: {
-        text: 'Builder ',
-        options: {
-          font: 'cybermedium',
-          log: true
-        }
-      }
-    },
-    
-    // Static site gen
-    assemble: {
-      options: {
-        assets: '<%= site.app_assets_build %>',
-        data: '<%= site.app_data %>**/*.*',
-        helpers: ['<%= site.app_helpers %>**/*.js'],
-        partials: ['<%= site.app_partials %>**/*.hbs'],
-        layoutdir: '<%= site.app_layouts %>',
-        layoutext: '.hbs',
-        layout: 'base',
-        pkg: '<%= pkg %>',
+      // Used to determine file locations, build or serve
+      // This means when a user calls build or serve, the assembled files
+      // will go into app-build or app-serve.
+      status: 'serve',
 
-        // Make some data always available
-        operations: grunt.file.readJSON('app-src/assets/data/operations.json'),
-        site: '<%= site %>',
-        status: '<%= status %>',
-        draft: '<%= draft %>'
-
-      },
-      site: {
-        options: {},
-        files: [
-          {
-            expand: true,
-            cwd: '<%= site.app_content %>',
-            dest: '<%= site.app_build %>',
-            src: ['**/*.*']
-          }
-        ]
-      }
-    },
-    
-    // Cleans the specified folder before serve/build
-    clean: {
-      build: {
-        src: ['<%= site.app_build %>']
-      }
-    },
-    
-    // Creates a server
-    connect: {
-      dev: {
-        options: {
-          base: [
-            '<%= site.app_build %>',
-            '<%= site.app_src %>'
-          ],
-          livereload: true,
-          port: 4000
-        }
-      }
-    },
-    
-    copy: {
-      build: {
-        files: [
-          {
-            expand: true,
-            cwd: '<%= site.app_assets_src %>img/',
-            src: '**',
-            dest: '<%= site.app_assets_build %>img/'
-          },
-          {
-            expand: true,
-            cwd: '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/Bootstrap/fonts/',
-            src: '*',
-            dest: '<%= site.app_assets_build %>fonts/'
-          },
-          {
-            expand: true,
-            cwd: '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/FontAwesome/fonts/',
-            src: '*',
-            dest: '<%= site.app_assets_build %>fonts/'
-          },
-          {
-            expand: true,
-            cwd: '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/fonts/',
-            src: '*',
-            dest: '<%= site.app_assets_build %>fonts/'
-          }
-        ]
-      }
-    },
-
-    cssmin: {
-      target: {
-        files: [{
-          expand: true,
-          cwd: '<%= site.app_assets_build %>',
-          src: ['*.css', '!*.min.css'],
-          dest: '<%= site.app_assets_build %>',
-          ext: '.min.css'
-        }]
-      }
-    },
-
-    // Adds timestamp to the assets
-    filerev: {
-      site: {
-        files: [{
-          src: [
-            '<%= site.app_assets_build %>/css/*.css',
-            '<%= site.app_assets_build %>/js/*.js'
-          ]
-        }]
-      }
-    },
-    
-    // Downloads the latest metadata for a package and finds the download url.
-    http: {
-      'portal-get-operations': {
-        options: {
-          url: '<%= site.portal_api %>apis/54c136c272126c0990e57438/operations',
-          qs: '<%= site.portal_qs %>',
-          headers: {
-            'authorization': '<%= site.portal_header.authorization %>'
-          },
-          
-          // Instead of being able to use dest, I'm having to remove '{ value: [...]}'
-          // This caused errors in assemble.
-          json: true,
-          callback: function (error, response, body) {
-            if (error) {
-              grunt.log.writeln(error);
-            } else {
-              grunt.file.write('<%= site.app_data %>operations.json', JSON.stringify(body.value));
-            }
+      // Displays our title all fancy-like
+      asciify: {
+        stache: {
+          text: 'Blackbaud STACHE',
+          options: {
+            font: 'cybermedium',
+            log: true
           }
         }
-      }
-    },
-    
-    nugetter: {
-      skyui: {
+      },
+
+      // Static site gen
+      assemble: {
         options: {
-          server: 'http://tfs-sym.blackbaud.com:81/nuget/',
-          dest: '<%= site.app_assets_src %>nuget/%(id)s',
-          packages: [
+          assets: '<%= stache.config.app_assets_build %>',
+          data: '<%= stache.config.app_data %>**/*.*',
+          helpers: ['<%= stache.config.app_helpers %>**/*.js'],
+          partials: ['<%= stache.config.app_partials %>**/*.hbs'],
+          layoutdir: '<%= stache.config.app_layouts %>',
+          layoutext: '.hbs',
+          layout: 'base',
+          pkg: '<%= pkg %>',
+
+          // Make some data always available
+          //operations: grunt.file.readJSON('app-src/assets/data/operations.json'),
+          site: '<%= site %>',
+          status: '<%= status %>',
+          draft: '<%= draft %>'
+
+        },
+        site: {
+          options: {},
+          files: [
             {
-              id: 'Blackbaud.SkyUI.Sass'
+              expand: true,
+              cwd: '<%= stache.config.app_content %>',
+              dest: '<%= stache.config.app_build %>',
+              src: ['**/*.*']
+            }
+          ]
+        }
+      },
+
+      // Cleans the specified folder before serve/build
+      clean: {
+        build: {
+          src: ['<%= stache.config.app_build %>']
+        }
+      },
+
+      // Creates a server
+      connect: {
+        dev: {
+          options: {
+            base: [
+              '<%= stache.config.app_build %>',
+              '<%= stache.config.app_src %>'
+            ],
+            livereload: true,
+            port: 4000
+          }
+        }
+      },
+
+      copy: {
+        build: {
+          files: [
+            {
+              expand: true,
+              cwd: '<%= stache.config.app_assets_src %>img/',
+              src: '**',
+              dest: '<%= stache.config.app_assets_build %>img/'
             },
             {
-              id: 'Blackbaud.SkyUI.Scripts'
+              expand: true,
+              cwd: '<%= stache.config.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/Bootstrap/fonts/',
+              src: '*',
+              dest: '<%= stache.config.app_assets_build %>fonts/'
+            },
+            {
+              expand: true,
+              cwd: '<%= stache.config.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/FontAwesome/fonts/',
+              src: '*',
+              dest: '<%= stache.config.app_assets_build %>fonts/'
+            },
+            {
+              expand: true,
+              cwd: '<%= stache.config.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/fonts/',
+              src: '*',
+              dest: '<%= stache.config.app_assets_build %>fonts/'
             }
           ]
         }
-      }
-    },
-    
-    sass: {
-      options: {
-        includePaths: [
-          '<%= site.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/'
-        ]
       },
-      build: {
-        files: [{
-          expand: true,
-          cwd: '<%= site.app_sass %>',
-          src: ['*.scss'],
-          dest: '<%= site.app_css %>',
-          ext: '.css'
-        }]
-      }
-    },
-    
-    // Tasks to clone and fetch the latest SkyUI from TFS.
-    shell: {
-      'skyui-tfs-clone': {
-        command: 'git tf clone <%= site.tfs %> <%= site.skyTfsRemote %> <%= site.skyTfsLocal %>'
-      },
-      'skyui-tfs-fetch': {
-        command: 'git fetch <%= site.skyLocal %>'
-      },
-      'bower-install': {
-        command: 'bower install'
-      },
-      'npm-install': {
-        command: 'npm install'
-      }
-    },
-    
-    useminPrepare: {
-      html: '<%= site.app_build %>index.html',
-      options: {
-        assetsDirs: ['<%= site.app_assets_src %>'],
-        dest: '<%= site.app_build %>',
-        root: '<%= site.app_src %>'
-      }
-    },
-    
-    usemin: {
-      html: '<%= site.app_build %>/**/*.html'
-    },
-    
-    // When serving, watch for file changes
-    watch: {
-      content: {
-        files: [
-          '<%= site.app_content %>**/*.*',
-          '<%= site.app_assets_src %>**/*.*',
-          'site.yml'
-        ],
-        tasks: [
-          'assemble'
-        ],
-        options: {
-          livereload: true
+
+      cssmin: {
+        target: {
+          files: [{
+            expand: true,
+            cwd: '<%= stache.config.app_assets_build %>',
+            src: ['*.css', '!*.min.css'],
+            dest: '<%= stache.config.app_assets_build %>',
+            ext: '.min.css'
+          }]
         }
       },
+
+      // Adds timestamp to the assets
+      filerev: {
+        site: {
+          files: [{
+            src: [
+              '<%= stache.config.app_assets_build %>/css/*.css',
+              '<%= stache.config.app_assets_build %>/js/*.js'
+            ]
+          }]
+        }
+      },
+
+      // Downloads the latest metadata for a package and finds the download url.
+      http: {
+        'portal-get-operations': {
+          options: {
+            url: '<%= stache.config.portal_api %>apis/54c136c272126c0990e57438/operations',
+            qs: '<%= stache.config.portal_qs %>',
+            headers: {
+              'authorization': '<%= stache.config.portal_header.authorization %>'
+            },
+
+            // Instead of being able to use dest, I'm having to remove '{ value: [...]}'
+            // This caused errors in assemble.
+            json: true,
+            callback: function (error, response, body) {
+              if (error) {
+                grunt.log.writeln(error);
+              } else {
+                grunt.file.write('<%= stache.config.app_data %>operations.json', JSON.stringify(body.value));
+              }
+            }
+          }
+        }
+      },
+
+      nugetter: {
+        skyui: {
+          options: {
+            server: 'http://tfs-sym.blackbaud.com:81/nuget/',
+            dest: '<%= stache.config.app_assets_src %>nuget/%(id)s',
+            packages: [
+              {
+                id: 'Blackbaud.SkyUI.Sass'
+              },
+              {
+                id: 'Blackbaud.SkyUI.Scripts'
+              }
+            ]
+          }
+        }
+      },
+
       sass: {
-        files: [
-          '<%= site.app_assets_src %>sass/**/*.*'
-        ],
-        tasks: [
-          'sass'
-        ],
         options: {
-          livereload: true
+          includePaths: [
+            '<%= stache.config.app_nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/'
+          ]
+        },
+        build: {
+          files: [{
+            expand: true,
+            cwd: '<%= stache.config.app_sass %>',
+            src: ['*.scss'],
+            dest: '<%= stache.config.app_css %>',
+            ext: '.css'
+          }]
+        }
+      },
+
+      // Tasks to clone and fetch the latest SkyUI from TFS.
+      shell: {
+        'skyui-tfs-clone': {
+          command: 'git tf clone <%= stache.config.tfs %> <%= stache.config.skyTfsRemote %> <%= stache.config.skyTfsLocal %>'
+        },
+        'skyui-tfs-fetch': {
+          command: 'git fetch <%= stache.config.skyLocal %>'
+        },
+        'bower-install': {
+          command: 'bower install'
+        },
+        'npm-install': {
+          command: 'npm install'
+        }
+      },
+
+      useminPrepare: {
+        html: '<%= stache.config.app_build %>index.html',
+        options: {
+          assetsDirs: ['<%= stache.config.app_assets_src %>'],
+          dest: '<%= stache.config.app_build %>',
+          root: '<%= stache.config.app_src %>'
+        }
+      },
+
+      usemin: {
+        html: '<%= stache.config.app_build %>/**/*.html'
+      },
+
+      // When serving, watch for file changes
+      watch: {
+        content: {
+          files: [
+            '<%= stache.config.app_content %>**/*.*',
+            '<%= stache.config.app_assets_src %>**/*.*',
+            'stache.config.yml'
+          ],
+          tasks: [
+            'assemble'
+          ],
+          options: {
+            livereload: true
+          }
+        },
+        sass: {
+          files: [
+            '<%= stache.config.app_assets_src %>sass/**/*.*'
+          ],
+          tasks: [
+            'sass'
+          ],
+          options: {
+            livereload: true
+          }
         }
       }
-    }
+    });
+    
   });
   
   // Internal task - sets current build/serve status
@@ -329,6 +330,11 @@ module.exports = function (grunt) {
       grunt.log.writeln(grunt.task._tasks[tasks[i]].info);
       grunt.log.writeln('');
     }
+  });
+  
+  // Internal task to control header logging
+  grunt.registerTask('header', function(toggle) {
+    grunt.log.header = toggle == 'true' ? header : function() {};
   });
   
   grunt.registerTask(
@@ -398,12 +404,18 @@ module.exports = function (grunt) {
     'nugetter'
   );
   
-  // Display help message as default task
-  grunt.registerTask('default', [
-    'asciify:one',
-    'asciify:two',
-    'asciify:three',
-    'welcome'
+  // Display help message
+  grunt.registerTask(NS + 'help', 'Display this help message.', [
+    'header:false',
+    'asciify:stache',
+    'welcome',
+    'header:true'
   ]);
+  
+  // This can be overwritten in individual project gruntfile.js
+  //grunt.registerTask('default', NS + 'help');
+  grunt.registerTask('default', function() {
+    console.log('running default task inside blackbaud-stache.');
+  });
   
 };

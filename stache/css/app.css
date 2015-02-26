@@ -5992,7 +5992,7 @@ h3, h4, h5 {
   font-weight: 600;
   padding: 14px 20px 14px 25px; }
 
-.site.navbar-right > li > a {
+.stache.config.navbar-right > li > a {
   color: #999c9e; }
 
 .nav > li.active > a {
@@ -6002,7 +6002,7 @@ h3, h4, h5 {
   background-color: #293846;
   color: white; }
 
-.site.navbar-top-links > li > a:hover, .site.navbar-top-links > li > a:focus {
+.stache.config.navbar-top-links > li > a:hover, .stache.config.navbar-top-links > li > a:focus {
   background-color: #ececec; }
 
 .nav > li > a i {
@@ -6091,7 +6091,7 @@ h3, h4, h5 {
 .dropdown-messages li em, .dropdown-alerts li em {
   font-size: 10px; }
 
-.site.navbar-top-links .dropdown-alerts a {
+.stache.config.navbar-top-links .dropdown-alerts a {
   font-size: 12px; }
 
 .nav-header {
@@ -6105,10 +6105,10 @@ h3, h4, h5 {
   border-left: 4px solid #19aa8d;
   background: #293846; }
 
-.site.nav-second-level > li.active {
+.stache.config.nav-second-level > li.active {
   border: none; }
 
-.site.nav-second-level.collapse[style] {
+.stache.config.nav-second-level.collapse[style] {
   height: auto !important; }
 
 .nav-header a {
@@ -6133,7 +6133,7 @@ h3, h4, h5 {
 .navbar-form-custom .form-group {
   margin-bottom: 0; }
 
-.site.navbar-top-links a {
+.stache.config.navbar-top-links a {
   font-size: 14px; }
 
 .navbar-form-custom .form-control {
@@ -7620,7 +7620,7 @@ body.body-small .footer.fixed {
   color: #555555;
   cursor: default; }
 
-.site.nav-tabs li {
+.stache.config.nav-tabs li {
   background: none;
   border: none; }
 
@@ -7666,7 +7666,7 @@ body.body-small .footer.fixed {
   font-size: 12px;
   padding: 10px; }
 
-.site.navbar-top-links .link-block a {
+.stache.config.navbar-top-links .link-block a {
   font-size: 12px; }
 
 .link-block a {
@@ -7957,7 +7957,7 @@ table.table-mail tr td {
 .text-muted {
   color: #888888; }
 
-.dashboard_2 site.navbar, .dashboard_3 site.navbar, .inbox site.navbar, .email_view site.navbar, .email_compose site.navbar {
+.dashboard_2 stache.config.navbar, .dashboard_3 stache.config.navbar, .inbox stache.config.navbar, .email_view stache.config.navbar, .email_compose stache.config.navbar {
   background: white; }
 
 /* MARGINS & PADDINGS */
@@ -8805,7 +8805,7 @@ dd.project-people {
     border-top: 1px solid #e7eaec;
     padding-top: 10px;
     min-height: 100px; }
-  .site.navbar-top-links li.dropdown {
+  .stache.config.navbar-top-links li.dropdown {
     display: none; } }
 
 /* begin _bootstrap-variable-defaults */

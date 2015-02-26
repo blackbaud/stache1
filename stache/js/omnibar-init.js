@@ -8,7 +8,7 @@
     enableSearch: false,
     enableHelp: false,
     serviceName: 'Blackbaud Developer',
-    signInRedirectUrl: '{{ site.devportalsigninurl }}',
+    signInRedirectUrl: '{{ stache.config.devportalsigninurl }}',
     signOutRedirectUrl: '',
     afterLoad: function () {
 
@@ -19,7 +19,7 @@
         var $el = $(this),
             parts = $el.attr('href').split('?'),
             qs = parts.length == 2 ? parts[1] : '',
-            href = '{{ site.devportalsigninurl }}' + '?' + qs;
+            href = '{{ stache.config.devportalsigninurl }}' + '?' + qs;
         $el.attr('href', href);
       });
       */

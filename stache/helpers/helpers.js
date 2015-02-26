@@ -39,11 +39,11 @@ module.exports.register = function (Handlebars, options, params) {
       var dot = path.lastIndexOf('.'),
         toReplace = [
           {
-            replace: params.assemble.options.site.base,
+            replace: params.assemble.options.stache.config.base,
             replaceWith: ''
           },
           {
-            replace: params.assemble.options.site.app_build,
+            replace: params.assemble.options.stache.config.app_build,
             replaceWith: ''
           },
           {
@@ -208,7 +208,7 @@ module.exports.register = function (Handlebars, options, params) {
     * Supports optional modulus parameters.
     **/
     eachChildLink: function (options) {
-      var active = getActiveNav(options.hash.dest || this.page.dest || '', options.hash.links || this.site.links || '');
+      var active = getActiveNav(options.hash.dest || this.page.dest || '', options.hash.links || this.stache.config.links || '');
       if (active && active.links) {
         active = active.links;
       }
@@ -270,7 +270,7 @@ module.exports.register = function (Handlebars, options, params) {
     * If settings say to render, wrap content in div
     **/
     draft: function (options) {
-      return params.assemble.options.site.draft ? ('<div class="draft">\r\n\r\n' + getMarked(options.fn(this)) + '\r\n\r\n</div>') : '';
+      return params.assemble.options.stache.config.draft ? ('<div class="draft">\r\n\r\n' + getMarked(options.fn(this)) + '\r\n\r\n</div>') : '';
     },
 
     /**

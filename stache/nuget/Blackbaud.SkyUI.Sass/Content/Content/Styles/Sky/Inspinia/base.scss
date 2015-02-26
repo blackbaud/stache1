@@ -266,7 +266,7 @@ body.body-small .footer.fixed {
   cursor: default;
 }
 
-.site.nav-tabs li {
+.stache.config.nav-tabs li {
   background: none;
   border: none;
 }
@@ -325,7 +325,7 @@ body.body-small .footer.fixed {
   padding: 10px;
 }
 
-.site.navbar-top-links .link-block a {
+.stache.config.navbar-top-links .link-block a {
   font-size: 12px;
 }
 
@@ -690,11 +690,11 @@ table.table-mail tr td {
   color: #888888;
 }
 
-.dashboard_2 site.navbar,
-.dashboard_3 site.navbar,
-.inbox site.navbar,
-.email_view site.navbar,
-.email_compose site.navbar {
+.dashboard_2 stache.config.navbar,
+.dashboard_3 stache.config.navbar,
+.inbox stache.config.navbar,
+.email_view stache.config.navbar,
+.email_compose stache.config.navbar {
   background: white;
 }
 

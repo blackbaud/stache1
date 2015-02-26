@@ -1,0 +1,40 @@
+# =============================================
+# STACHE
+# =============================================
+draft: true
+base: /
+content: content/
+src: node_modules/blackbaud-stache/stache/
+build: <%= stache.status %>/
+sass: <%= stache.config.src %>sass/
+css: <%= stache.config.src %>css/
+data: <%= stache.config.src %>data/
+nuget: <%= stache.config.src %>nuget/
+helpers: <%= stache.config.src %>helpers/
+partials: <%= stache.config.src %>partials/
+layouts: <%= stache.config.src %>layouts/
+error:
+  404: <%= stache.config.build %>404/index.html
+
+
+#appSrc: 'app-src/'
+#appDist: 'app-dist/'
+#appAssets: '<%= stache.config.appSrc %>assets/'
+#appData: '<%= stache.config.appSrc %>data/'
+#portalApi: 'https://bbapidev.management.azure-api.net'
+##portalQueryString: {
+##  'api-version': '2014-02-14-preview'
+##}
+#nuget: 'Blackbaud.SkyUI.Sass'
+#nugetDir: '_nuget/<%= paths.nuget %>'
+#nugetServer: 'http://tfs-sym.blackbaud.com:81/nuget/'
+#nugetVersion: ''  # Set by blackbaud:skyui-nuget
+#skyJsonRemote: '' # Set by blackbaud:skyui-nuget
+#skyJsonRemoteById: '<%= paths.nugetServer %>FindPackagesById()?id=\'<%= paths.nuget %>\'&$orderby=Published desc&$top=1'
+#skyJsonRemoteByVersion: '<%= paths.nugetServer %>Packages(Id=\'<%= paths.nuget %>\',Version=\'<%= paths.nugetVersion %>\')'
+#skyTfsLocal: '_sass/Sky/'
+#skyTfsRemote: '$/Products/REx/Styles/Sky/DEV/Sky/Content/Styles/Sky/'
+#skyZipExpanded: '<%= paths.nugetDir %>/'
+#skyZipLocal: '<%+ paths.nugetDir %>.zip'
+#skyZipRemote: '' # Set by http:skyui-json
+#tfs:  'https://tfs.blackbaud.com/tfs/DefaultCollection/'

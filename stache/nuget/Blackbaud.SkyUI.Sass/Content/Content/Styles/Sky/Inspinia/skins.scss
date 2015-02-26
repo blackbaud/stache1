@@ -75,7 +75,7 @@ body.skin-1 {
   padding: 20px 30px 10px 30px;
 }
 
-.fixed-site.skin-1 .navbar-fixed-top {
+.fixed-stache.config.skin-1 .navbar-fixed-top {
   background: white;
 }
 
@@ -193,7 +193,7 @@ body.skin-2 {
   opacity: 0.5;
 }
 
-.skin-2 #side-menu > li > a, .skin-2 .site.nav-second-level > li > a {
+.skin-2 #side-menu > li > a, .skin-2 .stache.config.nav-second-level > li > a {
   color: #586b7d;
 }
 
@@ -226,7 +226,7 @@ body.skin-2 #wrapper {
   background: $skin-2-nav-top-bg;
 }
 
-.fixed-site.skin-2 .navbar-fixed-top {
+.fixed-stache.config.skin-2 .navbar-fixed-top {
   background: $skin-2-nav-top-bg;
   border-bottom: none !important;
 }
@@ -296,7 +296,7 @@ body.skin-2 #wrapper {
   border-radius: 10px;
 }
 
-.skin-2 .site.navbar-top-links > li > a:hover, .skin-2 .site.navbar-top-links > li > a:focus {
+.skin-2 .stache.config.navbar-top-links > li > a:hover, .skin-2 .stache.config.navbar-top-links > li > a:focus {
   background: darken($skin-2-nav-top-bg, 5%);
 }
 
@@ -358,7 +358,7 @@ body.boxed-layout.skin-3 #wrapper {
   background: darken($skin-3-nav-bg, 2%);
 }
 
-.fixed-site.skin-3 .navbar-fixed-top {
+.fixed-stache.config.skin-3 .navbar-fixed-top {
   background: white;
 }
 

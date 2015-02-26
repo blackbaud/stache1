@@ -3,14 +3,14 @@
     <div class="row">
       <div class="col-xs-6 col-sm-4">
         <p>
-          <a href="{{ site.baseurl }}">
+          <a href="{{ stache.config.baseurl }}">
             <span class="bbsky-char bbsky-char-re"></span>
             <span class="bbsky-char bbsky-char-nxt"></span>
           </a>
         </p>
 
         <ul class="list-unstyled">
-          {{# each site.links }}
+          {{# each stache.config.links }}
             <li>
               <a href="{{ uri }}">{{ name }}</a>
             </li>
@@ -28,15 +28,15 @@
             <ul class="list-inline bb-love">
               <li>
                 <a href="http://www.blackbaud.com" target="_blank">
-                  <img src="{{ site.baseurl }}/assets/img/logo-bb-white.png" alt="Blackbaud" class="img-responsive" />
+                  <img src="{{ stache.config.baseurl }}/assets/img/logo-bb-white.png" alt="Blackbaud" class="img-responsive" />
                 </a>
               </li>
               <li>
                 <i class="fa fa-lg fa-plus"></i>
               </li>
               <li>
-                <a href="{{ site.githubbase }}" target="_blank">
-                  <img src="{{ site.baseurl }}/assets/img/logo-github.png" alt="GitHub" class="img-responsive" />
+                <a href="{{ stache.config.githubbase }}" target="_blank">
+                  <img src="{{ stache.config.baseurl }}/assets/img/logo-github.png" alt="GitHub" class="img-responsive" />
                 </a>
               </li>
             </ul>  <!-- .list-inline -->
@@ -48,7 +48,7 @@
 
             <ul class="list-inline social-icons">
               <li>
-                <a href="{{ site.githubbase }}" target="_blank">
+                <a href="{{ stache.config.githubbase }}" target="_blank">
                   <i class="fa fa-github"></i>
                 </a>
               </li>

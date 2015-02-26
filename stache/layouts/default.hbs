@@ -7,7 +7,7 @@ layout: base
 {% assign isSibling = false %}
 {% assign hasHeadings = false %}
 
-{% assign url_current = page.url | remove: 'index.html' | prepend: site.baseurl %}
+{% assign url_current = page.url | remove: 'index.html' | prepend: stache.config.baseurl %}
 {% assign h2 = content | split: '<h2' %}
   
 {% if page.showHeadings %}
@@ -29,12 +29,12 @@ layout: base
       <div class="col-sm-12">
         <ul class="nav-items">
           
-          {% for parent in site.links %}
+          {% for parent in stache.config.links %}
             {% if parent.showInHeader != false %}
           
               {% assign url_parent = parent.url %}
               {% unless parent.url contains '://' %}
-                {% assign url_parent = url_parent | prepend: site.baseurl %}
+                {% assign url_parent = url_parent | prepend: stache.config.baseurl %}
               {% endunless %}
 
               {% if url_current == url_parent and parent.links.size > 0 %}
@@ -43,7 +43,7 @@ layout: base
               {% endif %}
 
               {% for child in parent.links %}
-                {% assign url_child = child.url | prepend: site.baseurl %}
+                {% assign url_child = child.url | prepend: stache.config.baseurl %}
                 {% assign indexOf = url_current | split: url_child %}
           
                 {% if url_current == url_child or indexOf.size > 1 %}
@@ -86,14 +86,14 @@ layout: base
               {% else %}
                 {% if hasSiblings or isSibling %}
 
-                  {% for parent in site.links %}
-                    {% assign url_parent = parent.url | prepend: site.baseurl %}
+                  {% for parent in stache.config.links %}
+                    {% assign url_parent = parent.url | prepend: stache.config.baseurl %}
                     {% if url_parent_current == url_parent %}
                       {% for child in parent.links %}
                         
                         {% assign url_child = child.url %}
                         {% unless url_child contains '://' %}
-                          {% assign url_child = url_child | prepend: site.baseurl %}
+                          {% assign url_child = url_child | prepend: stache.config.baseurl %}
                         {% endunless %}
                         {% assign indexOf = url_current | split: url_child %}
 
@@ -161,7 +161,7 @@ layout: base
           <div class="{% if hasSidebar %} col-sm-9 col-sm-offset-3 {% else %} col-sm-12 {% endif %}">
             <div class="feedback-content">
               <h3>Provide feedback for this information</h3>
-              <p>Want to edit or suggest content changes?  <a href="{{ page.path | prepend: '/' | prepend: site.githubblob }}" target="_blank">View this page</a> in our GitHub repository to get started.</p>
+              <p>Want to edit or suggest content changes?  <a href="{{ page.path | prepend: '/' | prepend: stache.config.githubblob }}" target="_blank">View this page</a> in our GitHub repository to get started.</p>
             </div>  <!-- .feedback-content -->
           </div>  <!-- .col-sm-12 -->
         </div>  <!-- .row -->

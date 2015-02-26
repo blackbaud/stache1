@@ -1,6 +1,6 @@
 {{! No real reason to have this as a partial currently.  It was meant to be nested.  Leaving as is for now. }}
 {{! Finds our current page }}
-{{# each site.links }}
+{{# each stache.config.links }}
   {{# isActiveNav dest=../page.dest }}
 
     <ul class="nav nav-stacked nav-sidebar">
