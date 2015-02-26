@@ -18,11 +18,17 @@
 'use strict';
 
 module.exports = function (grunt) {
-  require('jit-grunt')(grunt, {
-    useminPrepare: 'grunt-usemin'
-  });
-  require('time-grunt')(grunt);
   
+  try {
+    require('jit-grunt')(grunt, {
+      useminPrepare: 'grunt-usemin'
+    });
+    require('time-grunt')(grunt);
+  } catch (err) {
+    console.log('ARE YOU SURE YOU RAN NPM install?');
+    re
+  }
+
   // Blackbaud Namespace
   var NS = 'blackbaud:';
   

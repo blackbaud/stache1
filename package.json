@@ -1,10 +1,10 @@
 {
   "author": "Bobby Earl",
-  "name": "nxt-api-documentation",
-  "version": "0.0.1",
-  "description": "Documentation site for API surrounding Blackbaud NXT products.",
-  "private": true,
-  "devDependencies": {
+  "name": "blackbaud-stache",
+  "version": "0.0.2",
+  "description": "STACHE - Blackbaud Documentation Builder",
+  "private": false,
+  "dependencies": {
     "assemble": "^0.4.42",
     "async": "^0.9.0",
     "bower": "^1.3.12",
@@ -25,12 +25,21 @@
     "grunt-sass": "^0.18.0",
     "grunt-shell": "^1.1.1",
     "grunt-usemin": "^3.0.0",
-    "handlebars-helpers": "^0.5.8",
     "jit-grunt": "^0.9.1",
-    "markdown": "^0.5.0",
-    "markdowndeep": "^1.6.6",
     "marked": "^0.3.3",
-    "pdc": "^0.2.2",
     "time-grunt": "^1.0.0"
-  }
+  },
+  "main": "gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blackbaud-community/stache.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blackbaud-community/stache/issues"
+  },
+  "homepage": "https://github.com/blackbaud-community/stache"
 }

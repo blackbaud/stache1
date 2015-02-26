@@ -3,6 +3,9 @@
 .DS_Store
 Thumbs.db
 vendor/
-node_modules/
 app-serve/*
 app-build/*
+
+!node_modules/
+node_modules/*
+!node_modules/grunt
