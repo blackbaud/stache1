@@ -31,33 +31,27 @@ module.exports.register = function (Handlebars, options, params) {
   **/
   function basename(path, clean) {
 
+    // Clean is optional, but defaults to true
     if (arguments.length !== 2) {
       clean = true;
     }
 
     if (clean && path) {
-      var dot = path.lastIndexOf('.'),
-        toReplace = [
-          {
-            replace: params.assemble.options.stache.config.base,
-            replaceWith: ''
-          },
-          {
-            replace: params.assemble.options.stache.config.app_build,
-            replaceWith: ''
-          },
-          {
-            replace: 'index',
-            replaceWith: ''
-          }
-        ],
-        i = 0,
-        j = toReplace.length;
-
+      var dot = path.lastIndexOf('.')
+      
+      // Replace the extension
       path = dot === -1 ? path : path.substr(0, dot);
-      for (i; i < j; i++) {
-        path = path.replace(toReplace[i].replace, toReplace[i].replaceWith);
-      }
+      
+      // Replace the default page name
+      path = path.replace('index', '');
+      
+      // Remove our build folder
+      path = path.replace(params.assemble.options.stache.config.build, '');
+      
+      // Remove leading & trailing slash
+      path = path.replace(/^\/|\/$/g, '');
+      
+    // Always return a path
     } else {
       path = '';
     }
@@ -165,6 +159,14 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     isActiveNav: function (options) {
       return isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '') ? options.fn(this) : options.inverse(this);
+    },
+    
+    /**
+    * Is the current page home
+    **/
+    isHome: function (options) {
+      var b = basename(options.hash.dest || this.page.dest || 'NOT_HOME', true);
+      return b === '' ? options.fn(this) : options.inverse(this);
     },
 
     /**

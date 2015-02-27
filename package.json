@@ -49,7 +49,7 @@
   "readme": "# STACHE - Blackbaud Documentation Builder\r\n\r\nMore information coming soon.",
   "readmeFilename": "README.md",
   "gitHead": "0a672b891c5d9e3ffa5781809e3fe01e7577ecb7",
-  "_id": "blackbaud-stache@0.0.2",
-  "_shasum": "71a12ed8a61f6df4a1d96edff585fd5efba79eb1",
-  "_from": "blackbaud-stache@0.0.2"
+  "_id": "blackbaud-stache@0.1.0",
+  "_shasum": "a64d80f49324039b0a604ad8efc584b8b9b89fb4",
+  "_from": "blackbaud-stache@^0.1.0"
 }

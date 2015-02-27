@@ -1,0 +1,15 @@
+---
+layout: layout-container
+showHeadings: true
+---
+
+<div class="row">
+  <div class="col-sm-3">
+    <div class="sidebar">
+      {{> partial-sidebar }}
+    </div>
+  </div>
+  <div class="col-sm-9">
+    {{# markdown }}{{> body }}{{/ markdown }}
+  </div>
+</div>

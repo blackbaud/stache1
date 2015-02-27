@@ -66,17 +66,17 @@ module.exports = function (grunt) {
         partials: ['<%= stache.config.partials %>**/*.hbs'],
         layoutdir: '<%= stache.config.layouts %>',
         layoutext: '.hbs',
-        layout: 'base',
+        layout: 'layout-base',
         stache: '<%= stache %>'
       },
-      site: {
+      stache: {
         options: {},
         files: [
           {
             expand: true,
             cwd: '<%= stache.config.content %>',
             dest: '<%= stache.config.build %>',
-            src: ['**/*.*']
+            src: ['**/*.md','**/*.hbs']
           }
         ]
       }
@@ -263,7 +263,7 @@ module.exports = function (grunt) {
 
     // When serving, watch for file changes
     watch: {
-      content: {
+      stache: {
         files: [
           '<%= stache.config.content %>**/*.*',
           '<%= stache.config.src %>**/*.*',
@@ -319,7 +319,8 @@ module.exports = function (grunt) {
       'status:serve',
       'clean',
       'copy',
-      'assemble',
+      'assemble:stache',
+      'assemble:custom',
       'sass',
       'connect',
       'watch'

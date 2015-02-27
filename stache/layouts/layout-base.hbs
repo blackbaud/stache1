@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" class="{{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
+
+    <!-- build:css {{ assets }}css/app.css -->
+    <link rel="stylesheet" href="{{ assets }}css/app.css">
+    <!-- endbuild -->
+    
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body class="bb-omnibar-height-padding {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+    
+    <div id="top"></div>
+    
+    <div class="nav-wrap">
+      <div class="container">
+        <div class="col-sm-12">
+          {{> partial-nav }}
+        </div>
+      </div>
+    </div>
+
+    {{! Spaces, tabs and new lines cause markdown helper to fail }}
+    {{# markdown }}{{> body }}{{/ markdown }}
+    
+    {{# if note }}
+      {{# withHash isPageNote=true priority=priority note=note }}
+        {{> partial-note }}
+      {{/ withHash }}
+    {{/ if }}
+
+    {{> partial-footer }}
+
+    <!-- Omnibar Placeholder -->
+    <div id="omnibar"></div>
+
+    <!-- build:js {{ assets }}js/lib.js -->
+    <script src="{{ assets }}vendor/jquery/dist/jquery.min.js"></script>
+    <script src="{{ assets }}vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{{ assets }}vendor/easyXDM/easyXDM.min.js"></script>
+    <script src="{{ assets }}vendor/holderjs/holder.min.js"></script>
+    <script src="{{ assets }}vendor/stellar/jquery.stellar.js"></script>
+    <!-- endbuild -->
+
+    <script src="//signin.blackbaud.com/omnibar.min.js"></script>
+
+    <!-- build:js {{ assets }}js/app.js -->
+    <script src="{{ assets }}js/omnibar-init.js"></script>
+    <script src="{{ assets }}js/app.js"></script>
+    <!-- endbuild -->
+    
+    {{# is stache.config.status "serve" }}
+      <script src="//localhost:35729/livereload.js"></script>
+    {{/ is }}
+    
+  </body>
+</html>
