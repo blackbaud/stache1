@@ -7,6 +7,7 @@
   "description": "Blackbaud Documentation",
   "private": true,
   "dependencies": {
-    "blackbaud-stache": "latest"
+    "blackbaud-stache": "latest",
+    "grunt": "^0.4.5"
   }
 }
