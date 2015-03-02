@@ -1,0 +1,128 @@
+test: SHOULD SEE THIS!
+
+# NOTES:
+#
+# This navigation file is purposefully flat.  Structure of the nav is described in sitemap.xml.
+# When adding new links, please follow the convention below:
+#   - Include trailing slashes
+#   - Use the Lo-Dash syntax to build nested links
+
+# =============================================
+# PRODUCT
+# =============================================
+product_name_long: My project or team name
+product_name_short: MyProjectTeam
+#authentication_service_name: Blackbaud Authentication Service
+#authorization_service_name: Blackbaud Authorization Service
+#authorization_url: https://authorize.blackbaud.com/
+#authorization_endpoint: <%= stache.config.authorization_url %>authorize/
+#register_app_email: apis@blackbaud.com
+title: <%= stache.config.product_name_short %> Doc Site
+
+
+# =============================================
+# GITHUB config
+# =============================================
+github: https://github.com/blackbaud-community/
+#github_repo_web_api_authorization: <%= stache.config.github %>RENXT-WebAPI-Authorization/
+
+
+# =============================================
+# TUTORIALS
+# =============================================
+tutorials: <%= stache.config.base %>tutorials/
+tutorials_getting_started: <%= stache.config.tutorials %>getting-started/
+#tutorials_auth: <%= stache.config.tutorials %>auth/
+
+
+# =============================================
+# GUIDE
+# =============================================
+guide: <%= stache.config.base %>guide/
+#guide_using_scopes: <%= stache.config.guide %>#using_scopes
+#guide_web_api_fundamentals: <%= stache.config.guide %>#web-api-fundamentals
+#guide_constituents: <%= stache.config.guide %>#constituents
+#guide_authorization_code_flow: <%= stache.config.guide %>#authorization-code-flow
+#guide_client_credentials_flow: <%= stache.config.guide %>#client-credentials-flow
+#guide_implicit_grant_flow: <%= stache.config.guide %>#implicit-grant-flow
+#guide_registering_your_app: <%= stache.config.guide %>#registering-your-app
+
+
+# =============================================
+# RESOURCES
+# =============================================
+resources: <%= stache.config.base %>resources/
+#resources_changelog: <%= stache.config.resources %>changelog/
+resources_code: <%= stache.config.resources %>code/
+resources_faq: <%= stache.config.resources %>faq/
+#resources_status: <%= stache.config.resources %>status/
+
+
+# =============================================
+# COMMUNITY
+# =============================================
+#community: http://blackbaud.smallworldlabs.com
+#community_blog: http://blackbaud.smallworldlabs.com/groups/blogs/30
+#community_forum: http://stackoverflow.com/questions/tagged/renxt
+
+
+# =============================================
+# PORTAL
+# =============================================
+#portal_user: bbapidev
+#portal: https://<%= stache.config.portal_user %>.portal.azure-api.net/
+#portal_analytics: <%= stache.config.portal %>analytics/
+#portal_issues: <%= stache.config.portal %>issues/
+#portal_signin: <%= stache.config.portal %>signin/
+#portal_signup: <%= stache.config.portal %>signup/
+#portal_products: <%= stache.config.portal %>products/
+#portal_applications: <%= stache.config.portal %>applications/
+#portal_endpoints: <%= stache.config.portal %>docs/services/
+#portal_name: API management developer portal
+#portal_base: https://<%= portal_user %>.azure-api.net
+#portal_api: https://<%= portal_user %>.management.azure-api.net/
+#portal_qs:
+#  - api_version: 2014-02-14-preview
+#portal_header:
+#  - authorization: 'SharedAccessSignature uid=54c12d71ce82280329030003&ex=2016-02-06T22:41:00.0000000Z&sn=SuypLuSQqpGI3MEhiGNHcwIkEQQIswUxWsmoh54mpyYXt0U27lOyAapkYHxtnDxIak9JyUskfplQT9iTmBm2yg=='
+
+
+# =============================================
+# LEGAL
+# =============================================
+#legal: <%= stache.config.base %>legal/
+
+
+# =============================================
+# SITEMAP
+# =============================================
+links:
+  - name: Home
+    uri: <%= stache.config.base %>
+
+  - name: Tutorials
+    uri: <%= stache.config.tutorials %>
+    links:
+
+      - name: Getting Started
+        uri: <%= stache.config.tutorials_getting_started %>
+        description: "This tutorial introduces our ...."
+
+  - name: Developer Guide
+    uri: <%= stache.config.guide %>
+
+  - name: Resources
+    uri: <%= stache.config.resources %>
+    links:
+
+    
+
+      - name: FAQ
+        uri: <%= stache.config.resources_faq %>
+        icon: fa-question
+        description: "For particularly technical challenges and for commonly asked questions, be sure to visit the FAQ section."
+
+      - name: Code Samples
+        uri: <%= stache.config.resources_code %>
+        icon: fa-github
+        description: "We love GitHub as much as you do. All code samples are located in GitHub for maximum collaboration possibilities."
