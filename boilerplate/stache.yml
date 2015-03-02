@@ -32,7 +32,8 @@ github: https://github.com/blackbaud-community/
 # =============================================
 tutorials: <%= stache.config.base %>tutorials/
 tutorials_getting_started: <%= stache.config.tutorials %>getting-started/
-#tutorials_auth: <%= stache.config.tutorials %>auth/
+tutorials_2: <%= stache.config.tutorials %>tutorial2/
+tutorials_3: <%= stache.config.tutorials %>tutorial3/
 
 
 # =============================================
@@ -106,7 +107,11 @@ links:
 
       - name: Getting Started
         uri: <%= stache.config.tutorials_getting_started %>
-        description: "This tutorial introduces our ...."
+        description: "This getting started tutorial introduces our ...."
+        
+      - name: Sample Tutorial 2
+        uri: <%= stache.config.tutorials_2 %>
+        description: "This tutorial 2 introduces ...."
 
   - name: Developer Guide
     uri: <%= stache.config.guide %>
@@ -114,8 +119,6 @@ links:
   - name: Resources
     uri: <%= stache.config.resources %>
     links:
-
-    
 
       - name: FAQ
         uri: <%= stache.config.resources_faq %>

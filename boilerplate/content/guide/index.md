@@ -2,99 +2,66 @@
 layout: sidebar
 priority: high
 note: |  
-  <p>Problem -  You don’t make it easy.</p>
-  <p>Best Practice -  A developer guide provides details surrounding various API topics.</p>
-  <p>Benchmarks -  <a href="https://developer.spotify.com/web-api/user-guide/" target="_blank">Spotify Web API User Guide</a> and <a href="https://developer.spotify.com/web-api/authorization-guide/" target="_blank">Spotify Web API Authorization Guide</a></p> 
   <p>TO DO:</p>
   <ul>
-  <li>Work with BB legal to develop a Developer Terms of Use.</li>
-  <li>Audience: Review content with Partnership Team and Product Management</li>
-  <li>Registering Your App:  If we want manual instructions, may need a Blackbaud email address for manual registering of client application.  Devs must have a way to receive their <b>client id</b> and <b>secret</b>.  Devs must have way to regenerate secret. </li>
-  <li>Registering Your App: Not MVP for CTP. New web app needed to allow for 3rd party dev/partner self service application registration.</li>
-  <li>Common Request Headers: Document the standard/typical HTTP request response headers returned by the API such as Content-type and Content-length. Engineering should work with documentation to identify and explain any significant and important HTTP headers such as Cache-control or Authorization</li>
-  <li>Versioning:  Versioning strategy and backwards-compatible changes policy are TBD.</li>
-  <li>Changelog:  API engineers should track changes, fixes, issues and place into Change log.</li>
-  <li>Timestamp:  Verify format of all dates and times with the API team</li>
-  <li>Pagination:  Functionality is TBD</li>
-  <li>Response Status Codes:  Codes returned by API will be determined by engineering and listed here.   May require automated doc process.</li>
-  <li>Get input to backwards-compatible changes from  API Team engineers</li>
+  <li>Here is a To Do item.</li>
+  <li>Here is a To Do item.</li>
   </ul>
 ---
-<p class="alert alert-danger">Draft: This content is a work in progress.  For a list of dependencies and To Do list, click the bottom right info icon.</p>
+<p class="alert alert-danger">Draft: This content is a work in progress.</p>
 
 # Developer Guide
 
-The {{ stache.config.product_name_short }} Web API is designed to help you unlock your key {{ stache.config.product_name_short }} data by allowing developers to create applications that manage constituents data.  Since the {{ stache.config.product_name_short }} Web API is organized around REST, it's very easy to write and test applications. You can use your browser and pretty much any HTTP client in any programming language to interact with the Web API.  Our Web API is designed to have predictable, resource-oriented URLs and to use HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which can be understood by off-the-shelf HTTP clients. JSON will be returned in all responses from the API, including errors.
+Here is a paragraph describing the {{ stache.config.product_name_short }} 
 
-<p class="alert alert-info">Note that by using Blackbaud developer tools, you accept our <a href="{{ stache.config.legal }}" class="alert-link">Developer Terms of Use</a>. </p>
 
 ## Audience
 
-Currently, the RE NXT API is only available to a select group of Blackbaud partners.  Over time, as the API matures, we will open the API to a wider audience.  If you are an existing of potential Blackbaud Partner and are interested in building an integration or 3rd party product that integrates with our APIs, we encourage you to constituent our Partnership team.  If all goes well, you can apply to one of our API products within the developer portal.  For details, see our <a href="{{ stache.config.tutorials_getting_started }}" > Getting Started</a> tutorial. 
+Currently, the { stache.config.product_name_short }}  is only available to a select group of Blackbaud folks.  For next steps, see our <a href="{{ stache.config.tutorials_getting_started }}" > Getting Started</a> tutorial. 
 
-This documentation is designed for people familiar with HTTP programming and RESTful programming concepts. You should also be familiar with the Raiser's Edge from a user's and administrator's point of view. There are many HTTP RESTful tutorials available on the Web, including using cURL and Fiddler to make and test HTTP requests. 
+This documentation is designed for people familiar with XYZ concepts. You should also be familiar with the Product X from a Y point of view. There are many tutorials available on the Web, including using A, B, and C. 
 
 {{# draft }}
-If you are unfamiliar with HTTP programming and RESTful Web APIs, we recommend spending some time reviewing <a href="{{ stache.config.guide_web_api_fundamentals }}" >Web API Fundamentals</a>.
+If you are unfamiliar with X and Y concepts, we recommend spending some time reviewing <a href="" >Fundamentals</a>.
 {{/ draft }}
 
-## Registering Your App
-If your application seeks access to {{ stache.config.product_name_short }} data (constituents, gifts, etc.) it must be registered. You can register your application, even before you have created it. 
 
-{{# draft }}
-Follow these steps to register an application:
 
-**1.  Send an email to {{ stache.config.register_app_email }}**.
+<p class="alert alert-warning">This is a warning message!</p>
 
-- Be sure the email subject reads "{{ stache.config.product_name_short }}-Register My App"
-- Within the email body, provide the following information:
-	- Application Name:  Your application name. Maximum 60 characters.
-	- Application Description:  A short description of your application. Maximum 250 characters.
-	- Website URL: Where the user may obtain more information about this application (e.g. http://mystache.config.com).
-	- Redirects:  A listing of White-listed addresses to redirect to after authorization success or failure occurs  (e.g. http://mystache.config.com/callback/)
-   
-**2. Check your email inbox**
-You will receive an email that will provide you with your **Client ID** and **Client Secret**.  This information will be needed for Web API Authorization.  
-
-<p class="alert alert-warning">Always store keys securely! Regenerate your client secret if you suspect it has been compromised!</p>
-
-## Registering Your App (Self Service)
-**1. Go to <a href="{{ stache.config.portal_applications }}" target="_blank">My Applications</a>** 
+## Simple Steps within Markdown
+**1. Here is step 1 within a numbered list within markdown.  Note that is is bold!
 
 This site allows you to manage your applications that integrate with Blackbaud using the new {{ stache.config.product_name_short }} Web API. 
 
-**2. Click <i>Create a new application</i>**
+**2.  Here is step two . Hey <i>this text is emphasied!</i>**
 
-- Enter the name of your application (for example, “My Test Application”.) Note that this name will be shown in the pop-up that asks the user for authorization to access their Blackbaud {{ stache.config.product_name_short }} data.
-- Enter an application description.
-- Click the **Create** button.  
+- Here is an unordered list.  Note the bullets.
+- Another bullet
+- Yet another bullet.
  
-After your application has been successfully created, you will be directed to a page to enter additional application details.
+Here is some plain, jane text.
 
-**3. Enter your website address for your app.**  
 
-- Enter the Website URL where your users can find more information about your application (for example, its user guide, terms of use, licensing restrictions, and support information).
+**4.  Note the *Text* and *this text* See how the markdown works?.** 
 
-**4.  Note the *Client ID* and *Client Secret* values.** 
+- A bullet for you!
 
-- Write these down and keep them safe!
-
-<p class="alert alert-warning">Important: Always store keys securely! Regenerate your client secret if you suspect it has been compromised!</p>
+<p class="alert alert-success">Success: This is a success message!  Its green. </p>
+<p class="alert alert-info">Info: This is an info message!</p>
+<p class="alert alert-warning">Warning: This is a warning message!</p>
+<p class="alert alert-danger">Oh snap! It's a danger message. </p>
 
 **5.  Add any Redirect URIs** 
 
-- Add the Redirect URI that the {{ stache.config.authorization_service_name }} could call when the authentication process completes. (e.g. http://mystache.config.com/callback/).  For the purposes of this tutorial, add this URI to the Redirect URIs whitelist:   `http://localhost:8888/callback`.  At a later time, you can come back  and edit this URI. 
+Below is a reference to an image.  Check the bottom of the markdown source to see the reference to the image. 
 
-<p class="alert alert-warning">Important: When you call the {{ stache.config.authorization_service_name }} from your application, you will send a redirect-uri in the call. The redirect-uri is the address that the {{ stache.config.authorization_service_name }} redirects to after authorization succeeds or fails. If you do not white-list that URI here, authorization will fail. Any URI you enter here must exactly match the value you later use in the calls to the {{ stache.config.authorization_service_name }}, including upper/lowercase characters, terminating slashes, and so on.</p>
-
-**6. Click Save to complete the registration of your application.**
-
-**7.  Your application will now be shown, along with any other applications you have registered, in the main list on the <i>My Applications</i> page:**
+`![Ipsum Image][ipsum-image-02]`
 
 ![Ipsum Image][ipsum-image-02]
 
 
-## Regenerating your client secret (Manual)
+## Here is an H2 tag.  This will typically show up within the side nav.
 If your client secret has be compromised, you will need to follow these steps to regenerate the secret:
 
 **1.  Send an email to {{ stache.config.register_app_email }}**.
