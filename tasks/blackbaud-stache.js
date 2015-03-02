@@ -356,12 +356,17 @@ module.exports = function (grunt) {
     'new',
     'Create a new site using the STACHE boilerplate.',
     function(dir) {
-      if (grunt.file.exists(dir)) {
-        grunt.fail.fatal('The folder "' + dir + '" must not exist.')
-      } else {
-        grunt.config('boilerplateDest', dir);
-        grunt.task.run('copy:boilerplate');
-      }
+	  if (!dir) {
+	    grunt.fail.fatal('Please specify a folder.');
+	  } else {
+		dir = grunt.option('cwd') + dir;
+        if (grunt.file.exists(dir)) {
+          grunt.fail.fatal('The folder "' + dir + '" must not exist.')
+        } else {
+          grunt.config('boilerplateDest', dir);
+          grunt.task.run('copy:boilerplate');
+        }
+	  }
     }
   );
   

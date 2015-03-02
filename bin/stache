@@ -7,14 +7,14 @@
 
 'use strict';
 
+var path = require('path');
 var shell = require('child_process').exec;
-var args = process.argv.slice(2);
-var task = args.length > 0 ? args[0] : 'help';
+var args = process.argv.slice(2).join(':');
+var pathGruntFile = path.normalize(__dirname + '/../');
+var pathProject = path.normalize(process.cwd() + '/');
 
-// In order to make STACHE as Jekyll like as possible as far as commands,
-// I'm adding support for any additional parameters to be combined with the grunt task.
-// Separated by a colon.
-shell('grunt ' + args.join(':'), function (error, stdout, stderr) {
+// Run the global gruntfile.js, convert parameters to grunt commands separated by colons
+shell('grunt --cwd=' + pathProject + ' ' + args, { cwd: pathGruntFile }, function (error, stdout, stderr) {
   if (error) {
     console.log(error.stack);
     console.log('Error code: ' + error.code);
