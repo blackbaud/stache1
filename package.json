@@ -3,7 +3,7 @@
     "name": "Bobby Earl"
   },
   "name": "blackbaud-stache",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "STACHE - Blackbaud Documentation Builder",
   "private": false,
   "preferGlobal": true,

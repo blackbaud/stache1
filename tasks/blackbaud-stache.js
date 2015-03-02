@@ -45,7 +45,6 @@ module.exports = function (grunt) {
       pathPackage: 'package.json',
       package: '',
       config: ''
-      
     },
 
     // Displays our title all fancy-like
