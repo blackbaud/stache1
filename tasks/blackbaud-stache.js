@@ -22,7 +22,9 @@ var merge = require('merge');
 module.exports = function (grunt) {
   
   // Original reference to the header logging function.
+  // Disabling grunt header unless verbose is enabled
   var header = grunt.log.header;
+  grunt.log.header = function() {};
   
   // Default configuration
   var defaults = {
@@ -88,10 +90,11 @@ module.exports = function (grunt) {
         options: {
           filter: 'include',
           tasks: [
-            'help',
             'build',
-            'serve',
+            'help',
+            'new',
             'publish',
+            'serve',
             'update'
           ]
         }
@@ -145,6 +148,16 @@ module.exports = function (grunt) {
             cwd: '<%= stache.config.nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/fonts/',
             src: '*',
             dest: '<%= stache.config.build %>fonts/'
+          }
+        ]
+      },
+      boilerplate: {
+        files: [
+          {
+            expand: true,
+            cwd: 'boilerplate/',
+            src: '**',
+            dest: '<%= boilerplateDest %>'
           }
         ]
       }
@@ -312,21 +325,7 @@ module.exports = function (grunt) {
   ****************************************************************
   **/
   
-  grunt.registerTask(
-    'serve',
-    'Serve the documentation',
-    [
-      'status:serve',
-      'clean',
-      'copy',
-      'assemble:stache',
-      'assemble:custom',
-      'sass',
-      'connect',
-      'watch'
-    ]
-  );
-  
+
   grunt.registerTask(
     'build',
     'Build the documentation',
@@ -346,6 +345,43 @@ module.exports = function (grunt) {
   );
   
   grunt.registerTask(
+    'help', 
+    'Display this help message.', 
+    [
+      'asciify:help',
+      'availabletasks'
+    ]
+  );
+  
+  grunt.registerTask(
+    'new',
+    'Create a new site using the STACHE boilerplate.',
+    function(dir) {
+      if (grunt.file.exists(dir)) {
+        grunt.fail.fatal('The folder "' + dir + '" must not exist.')
+      } else {
+        grunt.config('boilerplateDest', dir);
+        grunt.task.run('copy:boilerplate');
+      }
+    }
+  );
+  
+  grunt.registerTask(
+    'serve',
+    'Serve the documentation',
+    [
+      'status:serve',
+      'clean',
+      'copy:build',
+      'assemble:stache',
+      'assemble:custom',
+      'sass',
+      'connect',
+      'watch'
+    ]
+  );
+  
+  grunt.registerTask(
     'update',
     'Updates ALL external dependencies. (SkyUI, Azure, Bower, NPM)',
     [
@@ -356,39 +392,32 @@ module.exports = function (grunt) {
     ]
   );
 
+  // NEEDS TO ME MIGRATED TO ASSEMBLE
   grunt.registerTask(
     'portal-get-operations',
     'Downloads the list of operations for the default (or specified) API.',
     'http:portal-get-operations'
   );
   
+  // MADE GENERIC AND IMPLEMENTED IN ASSEMBLE ('plugin?')
   grunt.registerTask(
     'skyui-tfs-clone',
     'Clones the latest version of SkyUI from TFS',
     'shell:skyui-tfs-clone'
   );
   
+  // MADE GENERIC AND IMPLEMENTED IN ASSEMBLE ('plugin?')
   grunt.registerTask(
     'skyui-tfs-fetch',
     'Fetches the latest version of SkyUI from TFS',
     'shell:skyui-tfs-fetch'
   );
   
+  // NEEDS TO BE MIGRATED TO ASSEMBLE (Already created grunt-nuggetter plugin)
   grunt.registerTask(
     'skyui-nuget',
     'Fetches the latest version of SkyUI from the INTERNAL NuGet Server',
     'nugetter'
-  );
-  
-  grunt.registerTask(
-    'help', 
-    'Display this help message.', 
-    [
-      'header:false',
-      'asciify:help',
-      'availabletasks',
-      'header:true'
-    ]
   );
   
   grunt.registerTask('stache', function(optionalTask) {
@@ -430,9 +459,10 @@ module.exports = function (grunt) {
       useminPrepare: 'grunt-usemin',
       availabletasks: 'grunt-available-tasks'
     })({
-      pluginsRoot: defaults.stache.dir + 'node_modules/'
+      pluginsRoot: 'node_modules/' //defaults.stache.dir + 'node_modules/'
     });
   } catch (err) {
+    grunt.log.writeln(err);
     grunt.fail.fatal('You must run npm install before using Blackbaud Stache.');
     return;
   }

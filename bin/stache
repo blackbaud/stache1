@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+/**
+* Why such a small file?  In almost all cases, this is simply a shim for grunt.
+* We kept grunt in order to better support TFS / Visual Studio development (surprising right?)
+**/
+
+'use strict';
+
+var shell = require('child_process').exec;
+var args = process.argv.slice(2);
+var task = args.length > 0 ? args[0] : 'help';
+
+// In order to make STACHE as Jekyll like as possible as far as commands,
+// I'm adding support for any additional parameters to be combined with the grunt task.
+// Separated by a colon.
+shell('grunt ' + args.join(':'), function (error, stdout, stderr) {
+  if (error) {
+    console.log(error.stack);
+    console.log('Error code: ' + error.code);
+    console.log('Signal received: ' + error.signal);
+  }
+  console.log(stdout);
+  console.log(stderr);
+});

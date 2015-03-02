@@ -6,6 +6,21 @@
   "version": "0.1.0",
   "description": "STACHE - Blackbaud Documentation Builder",
   "private": false,
+  "preferGlobal": true,
+  "bin": {
+    "stache": "bin/stache"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blackbaud-community/stache.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blackbaud-community/stache/issues"
+  },
   "dependencies": {
     "assemble": "^0.4.42",
     "async": "^0.9.0",
@@ -32,24 +47,5 @@
     "jit-grunt": "^0.9.1",
     "marked": "^0.3.3",
     "merge": "^1.2.0"
-  },
-  "main": "gruntfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/blackbaud-community/stache.git"
-  },
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/blackbaud-community/stache/issues"
-  },
-  "homepage": "https://github.com/blackbaud-community/stache",
-  "readme": "# STACHE - Blackbaud Documentation Builder\r\n\r\nMore information coming soon.",
-  "readmeFilename": "README.md",
-  "gitHead": "0a672b891c5d9e3ffa5781809e3fe01e7577ecb7",
-  "_id": "blackbaud-stache@0.1.0",
-  "_shasum": "a64d80f49324039b0a604ad8efc584b8b9b89fb4",
-  "_from": "blackbaud-stache@^0.1.0"
+  }
 }
