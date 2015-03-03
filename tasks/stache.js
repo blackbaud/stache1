@@ -115,7 +115,8 @@ module.exports = function (grunt) {
         options: {
           base: [
             '<%= stache.config.build %>',
-            '<%= stache.config.src %>'
+            '<%= stache.config.src %>',
+            '<%= stache.config.content %>'
           ],
           livereload: true,
           port: 4000
