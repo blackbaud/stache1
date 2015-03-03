@@ -1,23 +1,14 @@
 {
   "author": {
-    "name": "Bobby Earl"
+    "name": "Blackbaud - Bobby Earl"
   },
   "name": "blackbaud-stache",
-  "version": "0.1.4",
-  "description": "STACHE - Blackbaud Documentation Builder",
-  "private": false,
-  "preferGlobal": true,
-  "bin": {
-    "stache": "bin/stache"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "0.1.6",
+  "description": "Blackbaud Stache",
   "repository": {
     "type": "git",
     "url": "https://github.com/blackbaud-community/stache.git"
   },
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/blackbaud-community/stache/issues"
   },

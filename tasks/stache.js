@@ -41,10 +41,11 @@ module.exports = function (grunt) {
       status: 'serve',
       
       // Configuration file paths
+      cli: grunt.option('cli'),
       pathConfig: 'stache.yml',
       pathPackage: 'package.json',
       package: '',
-      config: ''
+      config: '',
     },
 
     // Displays our title all fancy-like
@@ -70,6 +71,7 @@ module.exports = function (grunt) {
         layout: 'layout-base',
         stache: '<%= stache %>'
       },
+      custom: {},
       stache: {
         options: {},
         files: [
@@ -456,20 +458,14 @@ module.exports = function (grunt) {
   
   defaults.stache.config = merge(stacheConfig, localConfig);
   grunt.config.merge(defaults);
-  
-  // Verifies npm install has been ran
-  try {
-    require('jit-grunt')(grunt, {
-      useminPrepare: 'grunt-usemin',
-      availabletasks: 'grunt-available-tasks'
-    })({
-      pluginsRoot: 'node_modules/' //defaults.stache.dir + 'node_modules/'
-    });
-  } catch (err) {
-    grunt.log.writeln(err);
-    grunt.fail.fatal('You must run npm install before using Blackbaud Stache.');
-    return;
-  }
-    
+
+  // Dynamically load our modules
+  require('jit-grunt')(grunt, {
+    useminPrepare: 'grunt-usemin',
+    availabletasks: 'grunt-available-tasks'
+  })({
+    pluginsRoot: defaults.stache.dir + 'node_modules/'
+  });
+
   
 };
