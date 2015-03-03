@@ -151,16 +151,6 @@ module.exports = function (grunt) {
             dest: '<%= stache.config.build %>fonts/'
           }
         ]
-      },
-      boilerplate: {
-        files: [
-          {
-            expand: true,
-            cwd: 'boilerplate/',
-            src: '**',
-            dest: '<%= boilerplateDest %>'
-          }
-        ]
       }
     },
 
@@ -358,17 +348,7 @@ module.exports = function (grunt) {
     'new',
     'Create a new site using the STACHE boilerplate.',
     function(dir) {
-	  if (!dir) {
-	    grunt.fail.fatal('Please specify a folder.');
-	  } else {
-		dir = grunt.option('cwd') + dir;
-        if (grunt.file.exists(dir)) {
-          grunt.fail.fatal('The folder "' + dir + '" must not exist.')
-        } else {
-          grunt.config('boilerplateDest', dir);
-          grunt.task.run('copy:boilerplate');
-        }
-	  }
+      /* PLACEHOLDER */
     }
   );
   
@@ -458,14 +438,20 @@ module.exports = function (grunt) {
   
   defaults.stache.config = merge(stacheConfig, localConfig);
   grunt.config.merge(defaults);
+  
+  // Check to see if they've ran npm install
+  if (grunt.file.exists(defaults.stache.dir + 'node_modules/')) {
 
-  // Dynamically load our modules
-  require('jit-grunt')(grunt, {
-    useminPrepare: 'grunt-usemin',
-    availabletasks: 'grunt-available-tasks'
-  })({
-    pluginsRoot: defaults.stache.dir + 'node_modules/'
-  });
-
+    // Dynamically load our modules
+    require('jit-grunt')(grunt, {
+      useminPrepare: 'grunt-usemin',
+      availabletasks: 'grunt-available-tasks'
+    })({
+      pluginsRoot: defaults.stache.dir + 'node_modules/'
+    });
+    
+  } else {
+    grunt.fail.fatal('You must run "npm install" before using Blackbaud Stache.');
+  }
   
 };
