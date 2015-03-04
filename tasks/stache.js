@@ -439,20 +439,13 @@ module.exports = function (grunt) {
   
   defaults.stache.config = merge(stacheConfig, localConfig);
   grunt.config.merge(defaults);
-  
-  // Check to see if they've ran npm install
-  if (grunt.file.exists(defaults.stache.dir + 'node_modules/')) {
 
-    // Dynamically load our modules
-    require('jit-grunt')(grunt, {
-      useminPrepare: 'grunt-usemin',
-      availabletasks: 'grunt-available-tasks'
-    })({
-      pluginsRoot: defaults.stache.dir + 'node_modules/'
-    });
-    
-  } else {
-    grunt.fail.fatal('You must run "npm install" before using Blackbaud Stache.');
-  }
-  
+  // Dynamically load our modules
+  require('jit-grunt')(grunt, {
+    useminPrepare: 'grunt-usemin',
+    availabletasks: 'grunt-available-tasks'
+  })({
+    pluginsRoot: defaults.stache.dir + 'node_modules/'
+  });
+
 };
