@@ -21,13 +21,13 @@
     border-left: 4px solid #293846;
   }
 
-  .nav-sidebar > li.current,
-  .nav-sidebar > li.current li.active {
+  .nav-sidebar li.current,
+  .nav-sidebar li.current li.active {
     border-left: 4px solid #19aa8d;
     background: #293846;
   }
 
-  .nav-sidebar > li.current > a {
+  .nav-sidebar li.current > a {
     color: white;
   }
 

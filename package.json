@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "assemble": "^0.4.42",
+    "assemble-yaml": "^0.2.1",
     "async": "^0.9.0",
     "bower": "^1.3.12",
     "cheerio": "^0.18.0",

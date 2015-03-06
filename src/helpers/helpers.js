@@ -14,6 +14,7 @@
 
 module.exports.register = function (Handlebars, options, params) {
   
+  var merge = require('merge');
   var cheerio = require('cheerio');
   var fs = require('fs');
 
@@ -59,26 +60,31 @@ module.exports.register = function (Handlebars, options, params) {
     return path;
   }
 
-  function isActiveNav(dest, uri) {
+  /**
+  * Determines if two URI's are the same.
+  * Supports thinking parent uri's are active
+  **/
+  function isActiveNav(dest, uri, parentCanBeActive) {
     dest = basename(dest);
     uri = basename(uri);
-    return uri !== '' ? dest.indexOf(uri) > -1 : uri === dest;
+    var r = (parentCanBeActive && uri !== '') ? dest.indexOf(uri) > -1 : uri === dest;
+    return r;
   }
 
   /**
   * Recursively searches the nav array to find the active link
   **/
-  function getActiveNav(dest, links) {
-    var j = links.length,
+  function getActiveNav(dest, nav_links, parentCanBeActive) {
+    var j = nav_links.length,
       i = 0,
       r = '';
 
     for (i; i < j; i++) {
 
-      if (isActiveNav(dest, links[i].uri)) {
-        r = links[i];
-      } else if (links[i].links) {
-        r = getActiveNav(dest, links[i].links);
+      if (isActiveNav(dest, nav_links[i].uri, parentCanBeActive)) {
+        r = nav_links[i];
+      } else if (nav_links[i].nav_links) {
+        r = getActiveNav(dest, nav_links[i].nav_links, parentCanBeActive);
       }
 
       if (r !== '') {
@@ -93,7 +99,8 @@ module.exports.register = function (Handlebars, options, params) {
   * Light wrapper for our custom markdown processor.
   **/
   function getMarked(md) {
-    return marked.parser(lexer.lex(md), {
+    return marked.parser(lexer.lex(md || ''), {
+      headerPrefix: '',
       renderer: renderer
     });
   }
@@ -158,7 +165,8 @@ module.exports.register = function (Handlebars, options, params) {
     * http://assemble.io/docs/FAQ.html
     **/
     isActiveNav: function (options) {
-      return isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '') ? options.fn(this) : options.inverse(this);
+      var r = isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '', options.hash.parentCanBeActive || true);
+      return r ? options.fn(this) : options.inverse(this);
     },
     
     /**
@@ -185,12 +193,11 @@ module.exports.register = function (Handlebars, options, params) {
 
     /**
     * This innocuous looking helper took quite a long time to figure out.
-    * It takes the current pages entire RAW source, compiles it, and loads it in cheerio (jQuery).
+    * It takes the current pages entire RAW source, crompiles it, and loads it in cheerio (jQuery).
     * Then it parses for the relevant headers and executes the template for each one.
     **/
     eachHeading: function (options) {
-
-      var html = getMarked(Handlebars.compile(options.hash.page || this.pagination.index.page)(params.assemble.options)),
+      var html = getMarked(Handlebars.compile(options.hash.page || '')(params.assemble.options)),
         r = '';
 
       cheerio(options.hash.selector || 'h2', html).each(function () {
@@ -210,9 +217,9 @@ module.exports.register = function (Handlebars, options, params) {
     * Supports optional modulus parameters.
     **/
     eachChildLink: function (options) {
-      var active = getActiveNav(options.hash.dest || this.page.dest || '', options.hash.links || this.stache.config.links || '');
-      if (active && active.links) {
-        active = active.links;
+      var active = getActiveNav(options.hash.dest || this.page.dest || '', options.hash.nav_links || this.stache.config.nav_links || '', false);
+      if (active && active.nav_links) {
+        active = active.nav_links;
       }
       return Handlebars.helpers.eachWithMod(active, options);
     },
@@ -290,6 +297,19 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     increment: function(prop) {
       counts[prop] = typeof counts[prop] === 'undefined' ? 0 : (counts[prop] + 1);
+    },
+    
+    /**
+    * Helper to make including a partial easier (passing in the has as context)
+    **/
+    partial: function(name, context, options) {
+      
+      var c = merge(context, options.hash);
+      var fn = Handlebars.partials[name];
+      if (typeof fn === 'string') {
+        fn = Handlebars.compile(fn);
+      }
+      return new Handlebars.SafeString(fn(c));
     }
   
   });

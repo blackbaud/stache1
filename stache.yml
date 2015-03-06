@@ -13,6 +13,9 @@ nuget: <%= stache.config.src %>nuget/
 helpers: <%= stache.config.src %>helpers/
 partials: <%= stache.config.src %>partials/
 layouts: <%= stache.config.src %>layouts/
+nav_type: directory # or links
+nav_title_home: Home
+nav_links: 
 error:
   404: <%= stache.config.build %>404/index.html
 

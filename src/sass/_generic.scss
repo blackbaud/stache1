@@ -82,6 +82,11 @@ hr.small {
   height: auto;
 }
 
+.content,
+.content-min-height {
+  min-height: 400px;
+}
+
 .header-with-button {
   @include clearfix();
 }

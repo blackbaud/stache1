@@ -110,8 +110,8 @@
 
 /* 
 * ==========================================================================
-* PAGE - CODE SAMPLES
-* ========================================================================== 
+* PAGE - SHOWCASE
+========================================================================== 
 */
 
   .code h2 {
@@ -127,12 +127,12 @@
     background: #EFEFEF;
   }
 
-  .code .has-hover {
+  .showcase .has-hover {
     display: block;
     position: relative; 
   }
 
-  .code .show-on-hover {
+  .showcase .show-on-hover {
     background: rgba(0, 0, 0, .5);
     display: block;
     left: 0;
@@ -145,23 +145,23 @@
     transition: opacity .3s;
   }
 
-  .code .show-on-hover .is-table {
+  .showcase .show-on-hover .is-table {
     display: table;
     height: 100%;
     width: 100%;
   }
 
-  .code .show-on-hover .is-table-cell {
+  .showcase .show-on-hover .is-table-cell {
     display: table-cell;
     text-align: center;
     vertical-align: middle;
   }
 
-  .code .has-hover.is-hover .show-on-hover {
+  .showcase .has-hover.is-hover .show-on-hover {
     opacity: 1;
     visibility: visible;
   }
 
-  .code .show-on-hover .btn-white {
+  .showcase .show-on-hover .btn-white {
     margin-top: 10px;
   }

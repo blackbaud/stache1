@@ -18,6 +18,7 @@
 
 // For merging our YAML files
 var merge = require('merge');
+var yfm = require('assemble-yaml');
 
 module.exports = function (grunt) {
   
@@ -68,7 +69,7 @@ module.exports = function (grunt) {
         partials: ['<%= stache.config.partials %>**/*.hbs'],
         layoutdir: '<%= stache.config.layouts %>',
         layoutext: '.hbs',
-        layout: 'layout-base',
+        layout: 'layout-container',
         stache: '<%= stache %>'
       },
       custom: {},
@@ -275,6 +276,7 @@ module.exports = function (grunt) {
           'stache.yml'
         ],
         tasks: [
+          'createAutoNav',
           'assemble'
         ],
         options: {
@@ -294,6 +296,21 @@ module.exports = function (grunt) {
       }
     }
   };
+  
+  /**
+  ****************************************************************
+  * PRIVATE METHODS
+  ****************************************************************
+  **/
+  
+  function createTitle(name) {
+    var output = '';
+    var parts = name.indexOf('/') > -1 ? name.split('/') : [name];
+    parts.forEach(function (el, idx) {
+      output += el[0].toUpperCase() + el.slice(1) + ' ';
+    });
+    return output;
+  }
 
   /**
   ****************************************************************
@@ -309,6 +326,107 @@ module.exports = function (grunt) {
   // Internal task to control header logging
   grunt.registerTask('header', function(toggle) {
     grunt.log.header = toggle == 'true' ? header : function() {};
+  });
+  
+  // Creates nav to mirror directory structure
+  grunt.registerTask('createAutoNav', function() {
+    
+    if (grunt.config('stache.config.nav_type') !== 'directory') {
+      return;
+    }
+    
+    var sorted = [];
+    var root = 'stache.config';
+    
+    grunt.config.set(root + '.nav_links', []);
+    grunt.file.recurse(grunt.config(root + '.content'), function (abspath, rootdir, subdir, filename) {
+      sorted.push({
+        abspath: abspath,
+        rootdir: rootdir,
+        subdir: subdir,
+        filename: filename
+      }); 
+    });
+    
+    sorted.sort(function (a, b) {
+      var subdirA = a.subdir || '';
+      var subdirB = b.subdir || '';
+      
+      if (subdirA < subdirB) {
+        return -1;
+      } else if (subdirA > subdirB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+    
+    sorted.forEach(function (el, idx) {
+     
+      var path = root;
+      var abspath = el.abspath;
+      var rootdir = el.rootdir;
+      var subdir = el.subdir;
+      var filename = el.filename;
+      var raw = yfm.extract(abspath);
+      var title = raw.title || subdir ? createTitle(subdir) : grunt.config('stache.config.nav_title_home');
+      var file = filename.replace('.md', '.html').replace('.hbs', '.html');
+      
+      // Nested directories
+      if (subdir) {
+        
+        // Split the subdir into its different directories
+        var subdirParts = subdir.split('/');
+        for (var i = 0, j = subdirParts.length; i < j; i++) {
+          
+          var index = 0;
+          path += '.nav_links';
+          
+          // Is the current path already an array?
+          var pathCurrent = grunt.config.get(path);
+          
+          // It is an array, let's try to find the index for our current subDirPart
+          if (grunt.util.kindOf(pathCurrent) === 'array') {
+            
+            var found = false;
+
+            for (var m = 0, n = pathCurrent.length; m < n; m++) {
+              var pathCurrentItem = grunt.config.get(path + '.' + m);
+              if (pathCurrentItem.uri && pathCurrentItem.uri.indexOf('/' + subdirParts[i] + '/') > -1) {
+                found = true;
+                index = m;
+                break;
+              }
+            }
+            
+            // Our array has previous items but no match was found, let's add a new item
+            if (pathCurrent.length > 0 && !found) {
+              index = pathCurrent.length;
+            }
+            
+            path += '.' + index;
+            
+          // It's not an array, which means we need to create the links property
+          } else {  
+            grunt.config.set(path, []);
+            path += '.0';
+          }
+          
+        }
+        
+      } else {
+        path += '.nav_links';
+        path += '.' + grunt.config.get(path).length;
+      }
+
+      // Record this url
+      grunt.config.set(path, {
+        name: title,
+        uri: (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : file)
+      });
+      
+    });
+    
   });
   
   /**
@@ -360,6 +478,7 @@ module.exports = function (grunt) {
       'status:serve',
       'clean',
       'copy:build',
+      'createAutoNav',
       'assemble:stache',
       'assemble:custom',
       'sass',

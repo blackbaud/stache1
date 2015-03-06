@@ -6,7 +6,31 @@ showHeadings: true
 <div class="row">
   <div class="col-sm-3">
     <div class="sidebar">
-      {{> partial-sidebar }}
+
+      {{# each stache.config.nav_links }}
+        {{# isActiveNav dest=../page.dest }}
+          <ul class="nav nav-stacked nav-sidebar">
+            
+            {{# if showTitle }}
+                <li class="title {{# if draft }}draft{{/ if }}">
+                  <a href="{{ uri }}">
+                    {{ name }}
+                  </a>
+                </li>
+            {{/ if}}
+            
+            {{ partial 'partial-sidebar' this dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
+            
+            <li class="visible-on-affix">
+              <a href="#top" class="smooth-scroll">
+                <i class="fa fa-caret-square-o-up"></i>
+              </a>
+            </li>
+            
+          </ul>
+        {{/ isActiveNav }}
+      {{/ each }}
+      
     </div>
   </div>
   <div class="col-sm-9">

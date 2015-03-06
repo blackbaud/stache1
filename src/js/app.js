@@ -6,10 +6,11 @@
   var body = $('body'),
     sidebar = $('.sidebar'),
     sidebarNav = $('.nav-sidebar'),
+    sidebarHeading = sidebar.find('li.heading'),
     height = 0;
   
-  // No need to start these if there's no sidebar
-  if (sidebar.length) {
+  // Scrollspy + affix only run if there are li.heading's on the page
+  if (sidebarHeading.length) {
     
     // Affix
     sidebarNav.affix({
@@ -26,7 +27,7 @@
 
     // Scrollspy
     body.scrollspy({
-      target: '.sidebar'
+      target: '.headings'
     });
     
   }

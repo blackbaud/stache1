@@ -1,9 +1,13 @@
-{{# hasHeadings page=this }}
-  {{# eachHeading page=../this }}
-    <li class="{{# if draft }}draft{{/ if }}">
-      <a href="#{{ id }}" class="smooth-scroll">
-        {{ name }}
-      </a>
-    </li>
-  {{/ eachHeading }}
+{{# hasHeadings page=page }}
+  <div class="headings">
+    <ul class="nav">
+      {{# eachHeading page=../page }}
+        <li class="heading {{# if draft }}draft{{/ if }}">
+          <a href="#{{ id }}" class="smooth-scroll">
+            {{ name }}
+          </a>
+        </li>
+      {{/ eachHeading }}
+    </ul>
+  </div>
 {{/ hasHeadings }}

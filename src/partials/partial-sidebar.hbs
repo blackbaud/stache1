@@ -1,53 +1,47 @@
-{{! No real reason to have this as a partial currently.  It was meant to be nested.  Leaving as is for now. }}
-{{! Finds our current page }}
-{{# each stache.config.links }}
-  {{# isActiveNav dest=../page.dest }}
 
-    <ul class="nav nav-stacked nav-sidebar">
-      {{# if showTitle }}
-          <li class="title {{# if draft }}draft{{/ if }}">
-            <a href="{{ uri }}">
-              {{ name }}
-            </a>
-          </li>
-      {{/ if}}
+{{# if nav_links }}
+  {{# each nav_links }}
 
-      {{# if links }}
-        {{# each links }}
-          {{# isActiveNav dest=../../../../page.dest }}
-            <li class="current {{# if draft }}draft{{/ if }}">
-              <a href="{{ uri }}">
-                {{ name }}
-              </a>
-              {{# if ../../../../../showHeadings }}
-                <ul class="nav">
-                  {{> partial-page-headings ../../../../../../pagination.index.page }}
-                </ul>
-              {{/ if }}
-            </li>
-          {{ else }}
-            <li class="{{# if draft }}draft{{/ if }}">
-              <a href="{{ uri }}">
-                {{ name }}
-              </a>
-            </li>
-          {{/ isActiveNav }}
-        {{/ each }}
-      {{ else }}
+    {{# isActiveNav dest=../../dest }}
 
-        {{# if ../../../showHeadings }}
-          {{> partial-page-headings ../../../../pagination.index.page }}
+      <li class="current {{# if draft }}draft{{/ if }} {{# isActiveNav dest=../../../dest parentCanBeActive=false }}active{{/ isActiveNav }}">
+        
+        <a href="{{ uri }}">
+          {{ name }}
+        </a>
+        
+        {{# if nav_links }}
+
+          <ul class="nav">
+            {{ partial 'partial-sidebar' this dest=../../../../dest showHeadings=../../../../showHeadings page=../../../../page }}
+          </ul>
+        
+        {{ else }}
+        
+          {{# if ../../../../showHeadings }}
+            {{ partial 'partial-page-headings' this page=../../../../../page }}
+          {{/ if }}
+
         {{/ if }}
+        
+      </li>
 
-      {{/ if }}
+    {{ else }}
 
-      <li class="visible-on-affix">
-        <a href="#top" class="smooth-scroll">
-          <i class="fa fa-caret-square-o-up"></i>
+      <li class="{{# if draft }}draft{{/ if }}">
+        <a href="{{ uri }}">
+          {{ name }}
         </a>
       </li>
 
-    </ul>
+    {{/ isActiveNav }}
 
-  {{/ isActiveNav }}
-{{/ each }}
+  {{/ each }}
+
+{{ else }}
+
+  {{# if ../showHeadings }}
+    {{ partial 'partial-page-headings' this page=../../page }}
+  {{/ if }}
+
+{{/ if }}
