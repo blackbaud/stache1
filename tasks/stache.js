@@ -45,6 +45,7 @@ module.exports = function (grunt) {
       cli: grunt.option('cli'),
       pathConfig: 'stache.yml',
       pathPackage: 'package.json',
+      pathBower: '.bowerrc',
       package: '',
       config: '',
     },
@@ -140,19 +141,19 @@ module.exports = function (grunt) {
           },
           {
             expand: true,
-            cwd: '<%= stache.config.nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/Bootstrap/fonts/',
+            cwd: '<%= stache.config.bower %>bb-sky-sass/Bootstrap/fonts/',
             src: '*',
             dest: '<%= stache.config.build %>fonts/'
           },
           {
             expand: true,
-            cwd: '<%= stache.config.nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/FontAwesome/fonts/',
+            cwd: '<%= stache.config.bower %>bb-sky-sass/FontAwesome/fonts/',
             src: '*',
             dest: '<%= stache.config.build %>fonts/'
           },
           {
             expand: true,
-            cwd: '<%= stache.config.nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/Sky/fonts/',
+            cwd: '<%= stache.config.bower %>bb-sky-sass/fonts/',
             src: '*',
             dest: '<%= stache.config.build %>fonts/'
           }
@@ -208,27 +209,10 @@ module.exports = function (grunt) {
       }
     },
 
-    nugetter: {
-      skyui: {
-        options: {
-          server: 'http://tfs-sym.blackbaud.com:81/nuget/',
-          dest: '<%= stache.config.src %>nuget/%(id)s',
-          packages: [
-            {
-              id: 'Blackbaud.SkyUI.Sass'
-            },
-            {
-              id: 'Blackbaud.SkyUI.Scripts'
-            }
-          ]
-        }
-      }
-    },
-
     sass: {
       options: {
         includePaths: [
-          '<%= stache.config.nuget %>Blackbaud.SkyUI.Sass/Content/Content/Styles/'
+          '<%= stache.config.bower %>
         ]
       },
       build: {
@@ -373,8 +357,24 @@ module.exports = function (grunt) {
       var subdir = el.subdir;
       var filename = el.filename;
       var raw = yfm.extract(abspath);
-      var title = raw.title || subdir ? createTitle(subdir) : grunt.config('stache.config.nav_title_home');
+      var title = raw.title || subdir ? createTitle(subdir) : grunt.config.get('stache.config.nav_title_home');
       var file = filename.replace('.md', '.html').replace('.hbs', '.html');
+      var include = raw.showInNav || true;
+      
+      if (include) {
+        grunt.config.get('stache.config.nav_exclude').forEach(function (f) {
+          if (abspath.indexOf(f) > -1) {
+            include = false;
+            return;
+          }
+        });
+      }
+      
+      // Make sure the user doesn't want to ignore this file
+      if (!include) {
+        grunt.log.writeln('Ignoring adding to nav: ' + abspath);
+        return;
+      }
       
       // Nested directories
       if (subdir) {
@@ -426,7 +426,7 @@ module.exports = function (grunt) {
       // Record this url
       grunt.config.set(path, {
         name: title,
-        uri: (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : file)
+        uri: (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file))
       });
       
     });
@@ -437,8 +437,7 @@ module.exports = function (grunt) {
   ****************************************************************
   * PUBLIC TASKS
   ****************************************************************
-  **/
-  
+  **/  
 
   grunt.registerTask(
     'build',
@@ -497,7 +496,6 @@ module.exports = function (grunt) {
     [
       'shell:npm-install',
       'shell:bower-install',
-      'skyui-nuget',
       'portal-get-operations'
     ]
   );
@@ -521,13 +519,6 @@ module.exports = function (grunt) {
     'skyui-tfs-fetch',
     'Fetches the latest version of SkyUI from TFS',
     'shell:skyui-tfs-fetch'
-  );
-  
-  // NEEDS TO BE MIGRATED TO ASSEMBLE (Already created grunt-nuggetter plugin)
-  grunt.registerTask(
-    'skyui-nuget',
-    'Fetches the latest version of SkyUI from the INTERNAL NuGet Server',
-    'nugetter'
   );
   
   grunt.registerTask('stache', function(optionalTask) {
@@ -558,6 +549,10 @@ module.exports = function (grunt) {
 
   if (grunt.file.exists(defaults.stache.pathPackage)) {
     defaults.stache.package = grunt.file.readJSON(defaults.stache.pathPackage);
+  }
+  
+  if (grunt.file.exists(defaults.stache.pathBower)) {
+    defaults.stache.bower = grunt.file.readJSON(defaults.stache.pathBower).directory;
   }
   
   defaults.stache.config = merge(stacheConfig, localConfig);
