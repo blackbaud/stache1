@@ -23,14 +23,24 @@
     
     <div id="top"></div>
     
-    <div class="nav-wrap">
+    <nav class="navbar navbar-default bb-navbar nav-wrap">
       <div class="container">
-        <div class="col-sm-12">
-          {{> partial-nav }}
+        <div class="row">
+          <div class="col-sm-12">
+            <ul class="nav navbar-nav navbar-left">
+              {{# each stache.config.nav_links }}
+                {{# is showInHeader false }} {{ else }}
+                  <li {{# isActiveNav dest=../../page.dest }}class="bb-navbar-active"{{/ isActiveNav }}>
+                    <a href="{{ ../uri }}">{{ name }}</a>
+                  </li>
+                {{/ is }}
+              {{/ each }}
+            </ul>            
+          </div>
         </div>
       </div>
-    </div>
-
+    </nav>
+        
     {{! Spaces, tabs and new lines cause markdown helper to fail }}
     {{# markdown }}{{> body }}{{/ markdown }}
     

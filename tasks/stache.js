@@ -84,7 +84,7 @@ module.exports = function (grunt) {
             src: [
               '**/*.md',
               '**/*.hbs',
-              '**/.html'
+              '**/*.html'
             ]
           }
         ]
@@ -141,19 +141,30 @@ module.exports = function (grunt) {
           },
           {
             expand: true,
-            cwd: '<%= stache.config.bower %>bb-sky-sass/Bootstrap/fonts/',
+            cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/Bootstrap/fonts/',
             src: '*',
             dest: '<%= stache.config.build %>fonts/'
           },
           {
             expand: true,
-            cwd: '<%= stache.config.bower %>bb-sky-sass/FontAwesome/fonts/',
+            cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/FontAwesome/fonts/',
             src: '*',
             dest: '<%= stache.config.build %>fonts/'
           },
           {
             expand: true,
-            cwd: '<%= stache.config.bower %>bb-sky-sass/fonts/',
+            cwd: '<%= stache.dir %><%= stache.bower %>octicons/octicons/',
+            src: [
+              '*.eot',
+              '*.svg',
+              '*.ttf',
+              '*.woff'
+            ],
+            dest: '<%= stache.config.build %>fonts/'
+          },
+          {
+            expand: true,
+            cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/fonts/',
             src: '*',
             dest: '<%= stache.config.build %>fonts/'
           }
@@ -212,7 +223,7 @@ module.exports = function (grunt) {
     sass: {
       options: {
         includePaths: [
-          '<%= stache.config.bower %>
+          '<%= stache.dir %><%= stache.bower %>'
         ]
       },
       build: {
@@ -299,6 +310,32 @@ module.exports = function (grunt) {
     });
     return output;
   }
+  
+  function sort(arr, prop, propDefault) {
+    arr.sort(function (a, b) {
+      var ap = a[prop] || propDefault;
+      var bp = b[prop] || propDefault;
+      if (ap < bp) {
+        return -1;
+      } else if (ap > bp) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  }
+  
+  function sortRecursive(key) { 
+    var nav_links = grunt.config.get(key);
+    sort(nav_links, 'order', 100);
+    grunt.config.set(key, nav_links);
+    
+    nav_links.forEach(function (el, idx) {
+      if (el.nav_links) {
+        sortRecursive(key + '.' + idx + '.nav_links')
+      }
+    });
+  }
 
   /**
   ****************************************************************
@@ -325,29 +362,23 @@ module.exports = function (grunt) {
     
     var sorted = [];
     var root = 'stache.config';
+    var navKey = '.nav_links';
     
-    grunt.config.set(root + '.nav_links', []);
+    grunt.config.set(root + navKey, []);
     grunt.file.recurse(grunt.config(root + '.content'), function (abspath, rootdir, subdir, filename) {
+      var fm = yfm.extractJSON(abspath);
       sorted.push({
         abspath: abspath,
         rootdir: rootdir,
         subdir: subdir,
-        filename: filename
+        filename: filename,
+        frontmatter: fm,
       }); 
     });
     
-    sorted.sort(function (a, b) {
-      var subdirA = a.subdir || '';
-      var subdirB = b.subdir || '';
-      
-      if (subdirA < subdirB) {
-        return -1;
-      } else if (subdirA > subdirB) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+    // Sort alphabetically ensures that parents are created first.
+    // This is crucial to this process.  We can sort by order below.
+    sort(sorted, 'subdir', '');
     
     sorted.forEach(function (el, idx) {
      
@@ -356,10 +387,10 @@ module.exports = function (grunt) {
       var rootdir = el.rootdir;
       var subdir = el.subdir;
       var filename = el.filename;
-      var raw = yfm.extract(abspath);
-      var title = raw.title || subdir ? createTitle(subdir) : grunt.config.get('stache.config.nav_title_home');
+      var order = el.frontmatter.order;
+      var title = el.frontmatter.title || (subdir ? createTitle(subdir) : grunt.config.get('stache.config.nav_title_home'));
       var file = filename.replace('.md', '.html').replace('.hbs', '.html');
-      var include = raw.showInNav || true;
+      var include = el.frontmatter.showInNav || true;
       
       if (include) {
         grunt.config.get('stache.config.nav_exclude').forEach(function (f) {
@@ -372,7 +403,7 @@ module.exports = function (grunt) {
       
       // Make sure the user doesn't want to ignore this file
       if (!include) {
-        grunt.log.writeln('Ignoring adding to nav: ' + abspath);
+        grunt.verbose.writeln('Ignoring adding to nav: ' + abspath);
         return;
       }
       
@@ -384,7 +415,7 @@ module.exports = function (grunt) {
         for (var i = 0, j = subdirParts.length; i < j; i++) {
           
           var index = 0;
-          path += '.nav_links';
+          path += navKey;
           
           // Is the current path already an array?
           var pathCurrent = grunt.config.get(path);
@@ -419,18 +450,23 @@ module.exports = function (grunt) {
         }
         
       } else {
-        path += '.nav_links';
+        path += navKey;
         path += '.' + grunt.config.get(path).length;
       }
 
       // Record this url
       grunt.config.set(path, {
         name: title,
+        order: order,
         uri: (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file))
       });
       
     });
     
+    // Now we can rearrange each item according to order
+    sortRecursive(root + navKey)
+    
+    console.log(grunt.config.get(root + navKey));
   });
   
   /**
@@ -466,12 +502,12 @@ module.exports = function (grunt) {
     ]
   );
   
+  // This method is registered here in order to show up in the available tasks help screen.
+  // It's defined in the blackbaud-stache-cli package though.
   grunt.registerTask(
     'new',
     'Create a new site using the STACHE boilerplate.',
-    function(dir) {
-      /* PLACEHOLDER */
-    }
+    function(dir) {}
   );
   
   grunt.registerTask(
@@ -539,20 +575,20 @@ module.exports = function (grunt) {
   var localConfig = {};
   var stacheConfig = {};
   
+  // Read local files
   if (grunt.file.exists(defaults.stache.pathConfig)) {
     localConfig = grunt.file.readYAML(defaults.stache.pathConfig);
   }
-  
-  if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathConfig)) {
-    stacheConfig = grunt.file.readYAML(defaults.stache.dir + defaults.stache.pathConfig);
-  }
-
   if (grunt.file.exists(defaults.stache.pathPackage)) {
     defaults.stache.package = grunt.file.readJSON(defaults.stache.pathPackage);
   }
   
-  if (grunt.file.exists(defaults.stache.pathBower)) {
-    defaults.stache.bower = grunt.file.readJSON(defaults.stache.pathBower).directory;
+  // Read stache files
+  if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathConfig)) {
+    stacheConfig = grunt.file.readYAML(defaults.stache.dir + defaults.stache.pathConfig);
+  }  
+  if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathBower)) {
+    defaults.stache.bower = grunt.file.readJSON(defaults.stache.dir + defaults.stache.pathBower).directory;
   }
   
   defaults.stache.config = merge(stacheConfig, localConfig);

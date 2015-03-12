@@ -8,6 +8,7 @@
     "bootbox": "~4.3.0",
     "easyXDM": "~2.4.17",
     "bootstrap": "~3.3.2",
+    "octicons": "*",
     "bb-sky-sass": "git+https://tfs.blackbaud.com/tfs/DefaultCollection/ProductsGit/_git/bower-bb-sky-sass"
   }
 }

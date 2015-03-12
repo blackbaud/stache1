@@ -6,12 +6,13 @@
 
 // Set Bootstrap + FontAwesome fonts
 $icon-font-path: '../fonts/';
-$fa-font-path: '../fonts/';
+$fa-font-path: $icon-font-path;
+$octicons-font-path: $icon-font-path;
 
 // Undo some Bootstrap variables
 $grid-gutter-width: 30px;
 $screen-lg-min: 1200px;
 $section-padding: 50px 0;
 
-// Needed to azure footer parent
-$footer-bg: #292a2b;
+// Needed for azure footer parent
+$footer-bg: #f3f3f4;

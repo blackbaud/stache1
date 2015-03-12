@@ -9,7 +9,6 @@ build: <%= stache.status %>/
 sass: <%= stache.config.src %>sass/
 css: <%= stache.config.src %>css/
 data: <%= stache.config.src %>data/
-nuget: <%= stache.config.src %>nuget/
 helpers: <%= stache.config.src %>helpers/
 partials: <%= stache.config.src %>partials/
 layouts: <%= stache.config.src %>layouts/
@@ -19,5 +18,6 @@ nav_links:
 nav_exclude:
   - 404
   - assets
+  - search
 error:
   404: <%= stache.config.build %>404/index.html
