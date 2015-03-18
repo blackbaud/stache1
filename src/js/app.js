@@ -68,4 +68,10 @@
     $('[data-toggle="tooltip"]').tooltip();
   });
   
+  // Searching
+  $('#tipue_search_input').tipuesearch({
+      'mode': 'json',
+      'contentLocation': '/search/content.html'
+  });
+  
 }(jQuery, window, document));

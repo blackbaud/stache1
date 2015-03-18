@@ -7,6 +7,7 @@
     <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
 
     <!-- build:css {{ assets }}css/app.css -->
+    <link rel="stylesheet" href="{{ assets }}tipuesearch/tipuesearch.css">
     <link rel="stylesheet" href="{{ assets }}css/app.css">
     {{# each stache.config.files.css }}
       <link rel="stylesheet" href="{{ this }}">
@@ -61,6 +62,8 @@
     <script src="{{ assets }}vendor/easyXDM/easyXDM.min.js"></script>
     <script src="{{ assets }}vendor/holderjs/holder.min.js"></script>
     <script src="{{ assets }}vendor/stellar/jquery.stellar.js"></script>
+    <script src="{{ assets }}tipuesearch/tipuesearch_set.js"></script>
+    <script src="{{ assets }}tipuesearch/tipuesearch.js"></script>
     <!-- endbuild -->
 
     <script src="//signin.blackbaud.com/omnibar.min.js"></script>

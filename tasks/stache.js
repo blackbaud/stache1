@@ -302,12 +302,18 @@ module.exports = function (grunt) {
   ****************************************************************
   **/
   
-  function createTitle(name) {
+  function createTitle(name, separator, isBreadcrumbs) {
     var output = '';
     var parts = name.indexOf('/') > -1 ? name.split('/') : [name];
+    
+    if (!isBreadcrumbs) {
+      parts = parts.slice(-1);
+    }
+    
     parts.forEach(function (el, idx) {
-      output += el[0].toUpperCase() + el.slice(1) + ' ';
+      output += el[0].toUpperCase() + el.slice(1) + separator;
     });
+    
     return output;
   }
   
@@ -388,7 +394,10 @@ module.exports = function (grunt) {
       var subdir = el.subdir;
       var filename = el.filename;
       var order = el.frontmatter.order;
-      var title = el.frontmatter.title || (subdir ? createTitle(subdir) : grunt.config.get('stache.config.nav_title_home'));
+      var separator = grunt.config.get('stache.config.nav_title_separator') || ' ';
+      var home = grunt.config.get('stache.config.nav_title_home') || 'home';
+      var breadcrumbs = el.frontmatter.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
+      var title = el.frontmatter.title || (subdir ? createTitle(subdir, separator, false) : home);
       var file = filename.replace('.md', '.html').replace('.hbs', '.html');
       var include = el.frontmatter.showInNav || true;
       
@@ -456,6 +465,7 @@ module.exports = function (grunt) {
 
       // Record this url
       grunt.config.set(path, {
+        breadcrumbs: breadcrumbs,
         name: title,
         order: order,
         uri: (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file))
@@ -465,8 +475,6 @@ module.exports = function (grunt) {
     
     // Now we can rearrange each item according to order
     sortRecursive(root + navKey)
-    
-    console.log(grunt.config.get(root + navKey));
   });
   
   /**
