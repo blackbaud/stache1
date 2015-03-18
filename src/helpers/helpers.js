@@ -117,8 +117,13 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     getOperation: function (context) {
       
+      var operations = params.assemble.options.data.operations;
+      if (!operations) {
+        return '';
+      }
+      
       var hasProperty = context.hash.property !== 'undefined',
-        filtered = params.assemble.options.data.operations.filter(function (item) {
+        filtered = operations.filter(function (item) {
           var prop;
           for (prop in context.hash) {
             if (context.hash.hasOwnProperty(prop) && prop !== 'property') {
