@@ -4,7 +4,7 @@
 draft: true
 base: /
 content: content/
-data: <%= stache.config.content %>data/
+data: data/
 src: <%= stache.dir %>src/
 build: <%= stache.status %>/
 sass: <%= stache.config.src %>sass/
