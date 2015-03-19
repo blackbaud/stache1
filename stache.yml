@@ -18,7 +18,6 @@ nav_links:
 nav_exclude:
   - 404
   - assets
-  - data
   - search
 error:
   404: <%= stache.config.build %>404/index.html
