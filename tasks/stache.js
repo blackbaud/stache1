@@ -393,27 +393,26 @@ module.exports = function (grunt) {
       var rootdir = el.rootdir;
       var subdir = el.subdir;
       var filename = el.filename;
-      var order = el.frontmatter.order;
       var separator = grunt.config.get('stache.config.nav_title_separator') || ' ';
       var home = grunt.config.get('stache.config.nav_title_home') || 'home';
-      var breadcrumbs = el.frontmatter.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
-      var title = el.frontmatter.title || (subdir ? createTitle(subdir, separator, false) : home);
       var file = filename.replace('.md', '.html').replace('.hbs', '.html');
-      var include = el.frontmatter.showInNav || true;
+      var item = el.frontmatter;
       
-      if (include) {
+      // A few programmitcally created front-matter variables
+      item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
+      item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
+      item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
+      item.breadcrumbs = item.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
+      item.name = item.name || (subdir ? createTitle(subdir, separator, false) : home);
+      
+      // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
+      if (item.showInNav) {
         grunt.config.get('stache.config.nav_exclude').forEach(function (f) {
           if (abspath.indexOf(f) > -1) {
-            include = false;
+            item.showInNav = false;
             return;
           }
         });
-      }
-      
-      // Make sure the user doesn't want to ignore this file
-      if (!include) {
-        grunt.verbose.writeln('Ignoring adding to nav: ' + abspath);
-        return;
       }
       
       // Nested directories
@@ -462,14 +461,16 @@ module.exports = function (grunt) {
         path += navKey;
         path += '.' + grunt.config.get(path).length;
       }
+      
+      // Show in nav superceeds showInHeader and showInFooter
+      if (!item.showInNav) {
+        grunt.log.writeln('Ignoring: ' + abspath);
+        item.showInHeader = item.showInFooter = item.showInNav;
+      }
 
       // Record this url
-      grunt.config.set(path, {
-        breadcrumbs: breadcrumbs,
-        name: title,
-        order: order,
-        uri: (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file))
-      });
+      item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
+      grunt.config.set(path, item);
       
     });
     

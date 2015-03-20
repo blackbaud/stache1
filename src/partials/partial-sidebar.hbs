@@ -13,13 +13,13 @@
         {{# if nav_links }}
 
           <ul class="nav">
-            {{ partial 'partial-sidebar' this dest=../../../../dest showHeadings=../../../../showHeadings page=../../../../page }}
+            {{ include 'partial-sidebar' this dest=../../../../dest showHeadings=../../../../showHeadings page=../../../../page }}
           </ul>
         
         {{ else }}
         
           {{# if ../../../../showHeadings }}
-            {{ partial 'partial-page-headings' this page=../../../../../page }}
+            {{ include 'partial-page-headings' this page=../../../../../page }}
           {{/ if }}
 
         {{/ if }}
@@ -41,7 +41,7 @@
 {{ else }}
 
   {{# if ../showHeadings }}
-    {{ partial 'partial-page-headings' this page=../../page }}
+    {{ include 'partial-page-headings' this page=../../page }}
   {{/ if }}
 
 {{/ if }}

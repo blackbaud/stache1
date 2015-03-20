@@ -75,51 +75,36 @@
 
 /* 
 * ==========================================================================
-* PAGE - RESOURCES
+* PAGE - SHOWCASE
 * ========================================================================== 
 */
 
-  .resources {
+  .showcase {
     padding: 80px 0 0 0;
   }
 
-  .resources-more {
-    padding: 30px 0 50px 0;
-  }
-
-  .resources .fa {
+  .showcase-icon {
     float: left;
     font-size: 28px;
     text-align: center;
     padding: 0 10px 10px 0;
   }
 
-  .resources .desc {
+  .showcase-desc {
     padding: 0 15px;
     overflow: hidden;
   }
 
-  .resources h2 {
-    padding-top: 0;
-    margin-top: 0;
-  }
-
-  .resources-more {
-    padding: 20px 0 50px 0;
-  }
-
-/* 
-* ==========================================================================
-* PAGE - SHOWCASE
-========================================================================== 
-*/
-
-  .code h2 {
+  .showcase h2 {
     margin: 0 0 20px 0;
     padding: 0;
   }
 
-  .code .row {
+  .showcase-more {
+    padding: 20px 0 50px 0;
+  }
+
+  .showcase-row {
     padding: 30px 0;
   }
 

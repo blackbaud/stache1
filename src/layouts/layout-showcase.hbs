@@ -8,10 +8,11 @@ layout: layout-container
   {{# eachChildLink mod=3 }}
 
     {{# if firstOrMod0 }}
-      <div class="row {{# unless first }}resources-more{{/ unless }}">
+      <div class="row showcase-row {{# unless first }}showcase-more{{/ unless }}">
     {{/ if }}
 
     <div class="col-sm-4">
+      
       {{# if thumbnail }}
         <div class="has-hover">
           <img src="{{ thumbnail }}" alt="" />
@@ -24,10 +25,22 @@ layout: layout-container
           </div>
         </div>
       {{/ if }}
+      
+      {{# if icon }}
+        <i class="showcase-icon {{ icon }}"></i>
+        <div class="showcase-desc">
+      {{/ if }}
+      
       <h3><a href="{{ uri }}">{{ name }}</a></h3>
+      
       {{# if description }}
         <p>{{ description }}</p>
       {{/ if }}
+          
+      {{# if icon }}
+        </div>
+      {{/ if }}
+      
     </div>
 
     {{# if lastOrMod1 }}

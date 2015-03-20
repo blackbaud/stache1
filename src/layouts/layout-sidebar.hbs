@@ -19,7 +19,7 @@ showHeadings: true
                 </li>
             {{/ if}}
             
-            {{ partial 'partial-sidebar' this dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
+            {{ include 'partial-sidebar' this dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
             
             <li class="visible-on-affix">
               <a href="#top" class="smooth-scroll">

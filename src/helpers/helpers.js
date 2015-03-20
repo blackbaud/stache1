@@ -266,13 +266,6 @@ module.exports.register = function (Handlebars, options, params) {
     },
 
     /**
-    * Includes a relative file
-    **/
-    include: function (file, options) {
-      return fs.readFileSync(this.page.src.substr(0, this.page.src.lastIndexOf('/')) + '/' + file);
-    },
-
-    /**
     * Overriding default markdown helper.
     * See notes above for more information.
     **/
@@ -302,18 +295,46 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     increment: function(prop) {
       counts[prop] = typeof counts[prop] === 'undefined' ? 0 : (counts[prop] + 1);
-    },
-    
+    },    
+
     /**
-    * Helper to make including a partial easier (passing in the has as context)
+    * Render a file.  Search path order: partial, absolute, relative, content folder
     **/
-    partial: function(name, context, options) {
+    include: function (file, context, options) {
       
+      if (typeof options === 'undefined') {
+        options = context;
+        context = this;
+      }
+      
+      var fn = '';
+      var fileWithPath = file;
       var c = merge(context, options.hash);
-      var fn = Handlebars.partials[name];
+      
+      if (typeof Handlebars.partials[fileWithPath] !== 'undefined') {
+        fn = Handlebars.partials[fileWithPath];        
+      } else {
+      
+        if (!fs.existsSync(fileWithPath)) {
+          fileWithPath = this.page.src.substr(0, this.page.src.lastIndexOf('/')) + '/' + file;
+          if (!fs.existsSync(fileWithPath)) {
+            fileWithPath = params.assemble.options.stache.config.content + file;
+            if (!fs.existsSync(fileWithPath)) {
+              fileWithPath = '';
+            }
+          }
+        }
+
+        if (fileWithPath !== '') {
+          fn = fs.readFileSync(fileWithPath, 'utf8');
+        }
+        
+      }
+      
       if (typeof fn === 'string') {
         fn = Handlebars.compile(fn);
       }
+      
       return new Handlebars.SafeString(fn(c));
     },
     
