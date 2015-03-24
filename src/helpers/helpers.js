@@ -336,14 +336,6 @@ module.exports.register = function (Handlebars, options, params) {
       }
       
       return new Handlebars.SafeString(fn(c));
-    },
-    
-    /**
-    * Make sure text will pass as json
-    **/
-    forSearch: function(text) {
-      var a = { text: text };
-      return JSON.stringify(a);
     }
   
   });

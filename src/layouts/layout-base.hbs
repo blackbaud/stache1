@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="{{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+<html lang="en" class="{{# isHome dest=page.dest }}full-height-width{{/ isHome }}" ng-app="stache">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +7,6 @@
     <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
 
     <!-- build:css {{ assets }}css/app.css -->
-    <link rel="stylesheet" href="{{ assets }}tipuesearch/tipuesearch.css">
     <link rel="stylesheet" href="{{ assets }}css/app.css">
     {{# each stache.config.files.css }}
       <link rel="stylesheet" href="{{ this }}">
@@ -101,14 +100,15 @@
     <script src="{{ assets }}vendor/easyXDM/easyXDM.min.js"></script>
     <script src="{{ assets }}vendor/holderjs/holder.min.js"></script>
     <script src="{{ assets }}vendor/stellar/jquery.stellar.js"></script>
-    <script src="{{ assets }}tipuesearch/tipuesearch_set.js"></script>
-    <script src="{{ assets }}tipuesearch/tipuesearch.js"></script>
+    <script src="{{ assets }}vendor/angular/angular.min.js"></script>
+    <script src="{{ assets }}vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
     <!-- endbuild -->
 
     <script src="//signin.blackbaud.com/omnibar.min.js"></script>
 
     <!-- build:js {{ assets }}js/app.js -->
     <script src="{{ assets }}js/omnibar-init.js"></script>
+    <script src="{{ assets }}js/search.js"></script>
     <script src="{{ assets }}js/app.js"></script>
     {{# each stache.config.files.js }}
       <script src="{{ this }}"></script>

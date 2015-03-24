@@ -69,9 +69,17 @@
   });
   
   // Searching
-  $('#tipue_search_input').tipuesearch({
-      'mode': 'json',
-      'contentLocation': '/search/content.html'
-  });
+  var q = getParameterByName('q');
+  if (q !== '') {
+    $('#q').val(q);
+  }
+  
+  
+  function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
   
 }(jQuery, window, document));

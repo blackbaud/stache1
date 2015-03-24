@@ -19,6 +19,7 @@
 // For merging our YAML files
 var merge = require('merge');
 var yfm = require('assemble-yaml');
+var cheerio = require('cheerio');
 
 module.exports = function (grunt) {
   
@@ -312,7 +313,8 @@ module.exports = function (grunt) {
     
     parts.forEach(function (el, idx) {
       output += el[0].toUpperCase() + el.slice(1) + separator;
-    });
+    });    
+    output = output.slice(0, 0 - separator.length);
     
     return output;
   }
@@ -369,8 +371,10 @@ module.exports = function (grunt) {
     var sorted = [];
     var root = 'stache.config';
     var navKey = '.nav_links';
+    var navKeySearch ='.nav_search';
     
     grunt.config.set(root + navKey, []);
+    grunt.config.set(root + navKeySearch, []);
     grunt.file.recurse(grunt.config(root + '.content'), function (abspath, rootdir, subdir, filename) {
       var fm = yfm.extractJSON(abspath);
       sorted.push({
@@ -389,7 +393,6 @@ module.exports = function (grunt) {
     sorted.forEach(function (el, idx) {
      
       var path = root;
-      var abspath = el.abspath;
       var rootdir = el.rootdir;
       var subdir = el.subdir;
       var filename = el.filename;
@@ -404,11 +407,12 @@ module.exports = function (grunt) {
       item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
       item.breadcrumbs = item.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
       item.name = item.name || (subdir ? createTitle(subdir, separator, false) : home);
+      item.abspath = el.abspath;
       
       // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
       if (item.showInNav) {
         grunt.config.get('stache.config.nav_exclude').forEach(function (f) {
-          if (abspath.indexOf(f) > -1) {
+          if (item.abspath.indexOf(f) > -1) {
             item.showInNav = false;
             return;
           }
@@ -464,18 +468,54 @@ module.exports = function (grunt) {
       
       // Show in nav superceeds showInHeader and showInFooter
       if (!item.showInNav) {
-        grunt.log.writeln('Ignoring: ' + abspath);
+        grunt.verbose.writeln('Ignoring: ' + item.abspath);
         item.showInHeader = item.showInFooter = item.showInNav;
       }
 
       // Record this url
       item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
       grunt.config.set(path, item);
+      grunt.config.set(root + navKeySearch + '.' + idx, item);
       
     });
     
     // Now we can rearrange each item according to order
     sortRecursive(root + navKey)
+  });
+  
+  // Prepare the JSON for our search implementation
+  grunt.registerTask('prepareSearch', function() {
+    var status = grunt.config.get('stache.status');
+    var files = grunt.config.get('stache.config.nav_search');
+    var search = [];
+    
+    for (var i = 0, j = files.length; i < j; i++) {
+      if (files[i].showInNav) {
+        
+        var item = files[i];
+        var file = status + item.uri;
+        if (grunt.file.isDir(file)) {
+          file += 'index.html';
+        }
+        
+        var html = grunt.file.read(file, 'utf8');
+        var content = cheerio('.content', html);
+        if (content.length === 0) {
+          content = cheerio('body', html);
+        }
+        
+        // Required tipuesearch fields
+        //item.title = item.name;
+        //item.loc = item.uri;
+        //item.tags = item.tags || '';
+        //item.text = content.text().replace(/(\r\n|\n|\r)/gm, '').replace(/\s+/g, ' ');
+        
+        item.html = content.html();
+        item.text = content.text();
+        search.push(item);
+      }
+    }
+    grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }));
   });
   
   /**
@@ -529,6 +569,7 @@ module.exports = function (grunt) {
       'createAutoNav',
       'assemble:stache',
       'assemble:custom',
+      'prepareSearch',
       'sass',
       'connect',
       'watch'
