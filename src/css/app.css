@@ -10619,7 +10619,7 @@ div.draft h2, div.draft h3 {
   margin-top: 0; }
 
 .highlighted {
-  background: yellow; }
+  font-weight: bold; }
 
 /* 
 * ==========================================================================

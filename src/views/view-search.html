@@ -1,7 +1,7 @@
 <h1>Search</h1>
 
 <div class="input-group input-group-lg">
-  <input type="text" class="form-control input-lg" placeholder="What can I help you find?" ng-model="query2" ng-enter="search(query2)">
+  <input type="text" class="form-control input-lg" placeholder="What can I help you find?" ng-model="query2" stache-enter="search(query2)">
   <span class="input-group-btn">
     <button class="btn btn-default btn-lg" type="submit" ng-click="search(query2)">Search</button>
   </span>
@@ -9,12 +9,16 @@
 
 <div ng-show="query">
   <h2>Search Results for {{query}}</h2>
-  <ul class="list-unstyled">
-    <li ng-repeat="page in response.pages | filter:query">
-      <h3><a href="{{page.uri}}">{{page.name}}</a></h3>
-      <p ng-show="page.description">{{::page.description}}</p>
-      <p ng-hide="page.description" ng-bind-html="page.text | highlight:query"></p>
+  
+  <p ng-hide="results.length">Unable to locate any results.</p>
+  <p ng-show="error">{{::error}}</p>
+  
+  <ul class="list-unstyled" ng-show="results">
+    <li ng-repeat="result in results | orderBy:'-weight'">
+      <h3><a href="{{result.uri}}">{{::result.name}}</a></h3>
+      <p ng-bind-html="result.match | limitTo: 500 | highlight:query"></p>        
       <hr />
     </li>
   </ul>
+  
 </div>

@@ -125,8 +125,8 @@ module.exports = function (grunt) {
             '<%= stache.config.src %>',
             '<%= stache.config.content %>'
           ],
-          livereload: true,
-          port: 4000
+          livereload: grunt.option('livereload') || '<%= stache.config.livereload %>',
+          port: grunt.option('port') || '<%= stache.config.port %>'
         }
       }
     },
@@ -197,30 +197,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Downloads the latest metadata for a package and finds the download url.
-    http: {
-      'portal-get-operations': {
-        options: {
-          url: '<%= stache.config.portal_api %>apis/54c136c272126c0990e57438/operations',
-          qs: '<%= stache.config.portal_qs %>',
-          headers: {
-            'authorization': '<%= stache.config.portal_header.authorization %>'
-          },
-
-          // Instead of being able to use dest, I'm having to remove '{ value: [...]}'
-          // This caused errors in assemble.
-          json: true,
-          callback: function (error, response, body) {
-            if (error) {
-              grunt.log.writeln(error);
-            } else {
-              grunt.file.write('<%= stache.config.data %>operations.json', JSON.stringify(body.value));
-            }
-          }
-        }
-      }
-    },
-
     sass: {
       options: {
         includePaths: [
@@ -269,6 +245,9 @@ module.exports = function (grunt) {
 
     // When serving, watch for file changes
     watch: {
+      options: {
+        livereload: grunt.option('livereload') || '<%= stache.config.livereload %>'
+      },
       stache: {
         files: [
           '<%= stache.config.content %>**/*.*',
@@ -278,10 +257,7 @@ module.exports = function (grunt) {
         tasks: [
           'createAutoNav',
           'assemble'
-        ],
-        options: {
-          livereload: true
-        }
+        ]
       },
       sass: {
         files: [
@@ -289,10 +265,7 @@ module.exports = function (grunt) {
         ],
         tasks: [
           'sass'
-        ],
-        options: {
-          livereload: true
-        }
+        ]
       }
     }
   };
@@ -510,12 +483,12 @@ module.exports = function (grunt) {
         //item.tags = item.tags || '';
         //item.text = content.text().replace(/(\r\n|\n|\r)/gm, '').replace(/\s+/g, ' ');
         
-        item.html = content.html();
-        item.text = content.text();
+        //item.html = content.html();
+        item.text = content.text().replace(/\s{2,}/g, ' ');
         search.push(item);
       }
     }
-    grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }));
+    grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }, null, ' '));
   });
   
   /**

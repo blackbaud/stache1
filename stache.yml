@@ -18,6 +18,13 @@ partial_footer_social: <%= stache.config.partials %>partial-footer-social.hbs
 layouts: <%= stache.config.src %>layouts/
 error:
   404: <%= stache.config.build %>404/index.html
+  
+# =============================================
+# STACHE - SERVING
+# =============================================
+
+port: 4000
+livereload: 4100
 
 # =============================================
 # STACHE - LAYOUTS
