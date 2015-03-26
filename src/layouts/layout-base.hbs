@@ -59,19 +59,19 @@
           <div class="container">
             <div class="row">
               <div class="col-xs-6 col-sm-4">
-                {{ include stache.config.partial_footer_logo }}
-                {{ include stache.config.partial_footer_navigation }}
-              </div>  <!-- .col-sm-4 -->
+                {{{ include stache.config.partial_footer_logo }}}
+                {{{ include stache.config.partial_footer_navigation }}}
+              </div>
               <div class="col-xs-6 col-sm-4">
-                {{ include stache.config.partial_footer_internal }}
-              </div>  <!-- .col-sm-4 -->
+                {{{ include stache.config.partial_footer_internal }}}
+              </div>
               <div class="col-sm-4">
-                {{ include stache.config.partial_footer_social }}
-              </div>  <!-- .col-sm-4 -->
-            </div>  <!-- .row -->
+                {{{ include stache.config.partial_footer_social }}}
+              </div>
+            </div>
 
-          </div>  <!-- .container -->
-        </div>  <!-- .footer -->
+          </div>
+        </div>
     
       {{/ if }}
     {{/ if }}
@@ -115,10 +115,6 @@
       <script src="{{ this }}"></script>
     {{/ each }}
     <!-- endbuild -->
-    
-    {{# is stache.config.status "serve" }}
-      <script src="//localhost:35729/livereload.js"></script>
-    {{/ is }}
     
   </body>
 </html>

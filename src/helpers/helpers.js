@@ -307,12 +307,13 @@ module.exports.register = function (Handlebars, options, params) {
         context = this;
       }
       
-      var fn = '';
+      var r = '';
+      var template = '';
       var fileWithPath = file;
       var c = merge(context, options.hash);
       
       if (typeof Handlebars.partials[fileWithPath] !== 'undefined') {
-        fn = Handlebars.partials[fileWithPath];        
+        template = Handlebars.partials[fileWithPath]; 
       } else {
       
         if (!fs.existsSync(fileWithPath)) {
@@ -326,16 +327,18 @@ module.exports.register = function (Handlebars, options, params) {
         }
 
         if (fileWithPath !== '') {
-          fn = fs.readFileSync(fileWithPath, 'utf8');
+          template = fs.readFileSync(fileWithPath).toString('utf8');
         }
         
       }
       
-      if (typeof fn === 'string') {
-        fn = Handlebars.compile(fn);
+      if (typeof template === 'string') {
+        r = Handlebars.compile(template)(c);
       }
       
-      return new Handlebars.SafeString(fn(c));
+      // I spent an entire day tracking down this bug.
+      // Files created on different systems with different line endings freaked this out.
+      return new Handlebars.SafeString(r.replace(/\r\n/g, '\n'));
     }
   
   });

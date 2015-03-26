@@ -1,3 +1,9 @@
+# 0.2.15
+
+2015-03-26
+
+ - Better handling of CRLF vs LF when running build command.
+ 
 # 0.2.14
 
 2015-03-25

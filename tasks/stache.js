@@ -136,6 +136,12 @@ module.exports = function (grunt) {
         files: [
           {
             expand: true,
+            cwd: '<%= stache.config.src %>',
+            src: 'views/*.*',
+            dest: '<%= stache.config.build %>'
+          },
+          {
+            expand: true,
             cwd: '<%= stache.config.src %>img/',
             src: '**',
             dest: '<%= stache.config.build %>img/'
@@ -229,6 +235,13 @@ module.exports = function (grunt) {
         command: 'npm install'
       }
     },
+    
+    // Needed to allow angular apps
+    uglify: {
+      options: {
+        mangle: false
+      }
+    },
 
     useminPrepare: {
       html: '<%= stache.config.build %>index.html',
@@ -240,7 +253,7 @@ module.exports = function (grunt) {
     },
 
     usemin: {
-      html: '<%= stache.config.build %>/**/*.html'
+      html: '<%= stache.config.build %>**/*.html'
     },
 
     // When serving, watch for file changes
@@ -477,13 +490,6 @@ module.exports = function (grunt) {
           content = cheerio('body', html);
         }
         
-        // Required tipuesearch fields
-        //item.title = item.name;
-        //item.loc = item.uri;
-        //item.tags = item.tags || '';
-        //item.text = content.text().replace(/(\r\n|\n|\r)/gm, '').replace(/\s+/g, ' ');
-        
-        //item.html = content.html();
         item.text = content.text().replace(/\s{2,}/g, ' ');
         search.push(item);
       }
@@ -503,15 +509,17 @@ module.exports = function (grunt) {
     [
       'status:build',
       'clean',
-      'assemble',
-      //'sass',
+      'createAutoNav',
+      'assemble:stache',
+      'assemble:custom',
+      'prepareSearch',
+      'sass',
       'useminPrepare',
       'concat:generated',
       'cssmin:generated',
       'uglify:generated',
-      'copy:build',
-      //'filerev',
-      'usemin'
+      'usemin',
+      'copy:build'
     ]
   );
   
@@ -619,6 +627,7 @@ module.exports = function (grunt) {
 
   // Dynamically load our modules
   require('jit-grunt')(grunt, {
+    usemin: 'grunt-usemin',
     useminPrepare: 'grunt-usemin',
     availabletasks: 'grunt-available-tasks'
   })({
