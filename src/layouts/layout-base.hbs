@@ -19,7 +19,7 @@
     <![endif]-->
     
   </head>
-  <body class="bb-omnibar-height-padding {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+  <body class="{{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
     
     <div id="top"></div>
     
@@ -105,16 +105,24 @@
     <script src="{{ assets }}vendor/angular-sanitize/angular-sanitize.min.js"></script>
     <!-- endbuild -->
 
-    <script src="//signin.blackbaud.com/omnibar.min.js"></script>
-
     <!-- build:js {{ assets }}js/app.js -->
-    <script src="{{ assets }}js/omnibar-init.js"></script>
     <script src="{{ assets }}js/search.js"></script>
     <script src="{{ assets }}js/app.js"></script>
     {{# each stache.config.files.js }}
       <script src="{{ this }}"></script>
     {{/ each }}
     <!-- endbuild -->
+    
+    {{# if stache.config.showOmnibar }}
+      <script src="//signin.blackbaud.com/omnibar.min.js"></script>
+      {{# if stache.config.omnibar }}
+        {{ include stache.config.omnibar }}
+      {{ else }}
+        <script>
+        {{{ include stache.config.partial_omnibar }}}
+        </script>
+      {{/ if }}
+    {{/ if }}
     
   </body>
 </html>

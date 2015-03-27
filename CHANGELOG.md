@@ -2,7 +2,9 @@
 
 2015-03-26
 
- - Better handling of CRLF vs LF when running build command.
+ - Updated overwriting sky variables (Bootstrap min-width).
+ - Added video sizing to Bootstrap shim.
+ - Updated omnibar to be customizable
  
 # 0.2.14
 
