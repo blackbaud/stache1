@@ -475,23 +475,25 @@ module.exports = function (grunt) {
     var files = grunt.config.get('stache.config.nav_search');
     var search = [];
     
-    for (var i = 0, j = files.length; i < j; i++) {
-      if (files[i].showInNav) {
-        
-        var item = files[i];
-        var file = status + item.uri;
-        if (grunt.file.isDir(file)) {
-          file += 'index.html';
+    if (files && files.length) {
+      for (var i = 0, j = files.length; i < j; i++) {
+        if (files[i].showInNav) {
+
+          var item = files[i];
+          var file = status + item.uri;
+          if (grunt.file.isDir(file)) {
+            file += 'index.html';
+          }
+
+          var html = grunt.file.read(file, 'utf8');
+          var content = cheerio('.content', html);
+          if (content.length === 0) {
+            content = cheerio('body', html);
+          }
+
+          item.text = content.text().replace(/\s{2,}/g, ' ');
+          search.push(item);
         }
-        
-        var html = grunt.file.read(file, 'utf8');
-        var content = cheerio('.content', html);
-        if (content.length === 0) {
-          content = cheerio('body', html);
-        }
-        
-        item.text = content.text().replace(/\s{2,}/g, ' ');
-        search.push(item);
       }
     }
     grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }, null, ' '));
