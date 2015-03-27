@@ -1,16 +1,23 @@
+# 0.2.17
+
+2015-03-27
+
+ - Copying web.config when building.
+ - Bug Fixes.
+ 
 # 0.2.15
 
 2015-03-26
 
  - Updated overwriting sky variables (Bootstrap min-width).
  - Added video sizing to Bootstrap shim.
- - Updated omnibar to be customizable
+ - Updated omnibar to be customizable.
  
 # 0.2.14
 
 2015-03-25
 
- - Initial creation of changelog
+ - Initial creation of changelog.
  
 # 0.2.13
 

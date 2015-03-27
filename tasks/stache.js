@@ -174,6 +174,10 @@ module.exports = function (grunt) {
             cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/fonts/',
             src: '*',
             dest: '<%= stache.config.build %>fonts/'
+          },
+          {
+            src: 'web.config',
+            dest: '<%= stache.config.build %>'
           }
         ]
       }
