@@ -7,10 +7,6 @@
 *   - Work on error codes when serving.  Maybe not even necessary since it's just local.
 *       If we do it, it needs to handle relative asset linking outside of Assemble.
 *       Inspiration: https://github.com/gruntjs/grunt-contrib-connect/issues/30
-*
-* NOTES
-*   There is a current bug where 'local echo' can't be disabled when running the skyui-tfs-clone task.
-*   This means a user's password will be visible.  More investigation into the problem is necessary.
 **/
 
 /*jslint node: true, nomen: true, plusplus: true */
@@ -101,6 +97,7 @@ module.exports = function (grunt) {
             'build',
             'help',
             'new',
+            'prepare',
             'publish',
             'serve',
             'update'
@@ -232,17 +229,8 @@ module.exports = function (grunt) {
 
     // Tasks to clone and fetch the latest SkyUI from TFS.
     shell: {
-      'skyui-tfs-clone': {
-        command: 'git tf clone <%= stache.config.tfs %> <%= stache.config.skyTfsRemote %> <%= stache.config.skyTfsLocal %>'
-      },
-      'skyui-tfs-fetch': {
-        command: 'git fetch <%= stache.config.skyLocal %>'
-      },
-      'bower-install': {
-        command: 'bower install'
-      },
-      'npm-install': {
-        command: 'npm install'
+      'update': {
+        command: 'npm update && npm install blackbaud-stache-cli -g'
       }
     },
     
@@ -549,7 +537,15 @@ module.exports = function (grunt) {
   grunt.registerTask(
     'new',
     'Create a new site using the STACHE boilerplate.',
-    function(dir) {}
+    function() {}
+  );
+  
+  // This method is registered here in order to show up in the available tasks help screen.
+  // It's defined in the blackbaud-stache-cli package though.
+  grunt.registerTask(
+    'prepare',
+    'Installs npm packages.',
+    function() {}
   );
   
   grunt.registerTask(
@@ -571,33 +567,10 @@ module.exports = function (grunt) {
   
   grunt.registerTask(
     'update',
-    'Updates ALL external dependencies. (SkyUI, Azure, Bower, NPM)',
+    'Update current npm packages and blackcbaud-stache-cli globally',
     [
-      'shell:npm-install',
-      'shell:bower-install',
-      'portal-get-operations'
+      'shell:update'
     ]
-  );
-
-  // NEEDS TO ME MIGRATED TO ASSEMBLE
-  grunt.registerTask(
-    'portal-get-operations',
-    'Downloads the list of operations for the default (or specified) API.',
-    'http:portal-get-operations'
-  );
-  
-  // MADE GENERIC AND IMPLEMENTED IN ASSEMBLE ('plugin?')
-  grunt.registerTask(
-    'skyui-tfs-clone',
-    'Clones the latest version of SkyUI from TFS',
-    'shell:skyui-tfs-clone'
-  );
-  
-  // MADE GENERIC AND IMPLEMENTED IN ASSEMBLE ('plugin?')
-  grunt.registerTask(
-    'skyui-tfs-fetch',
-    'Fetches the latest version of SkyUI from TFS',
-    'shell:skyui-tfs-fetch'
   );
   
   grunt.registerTask('stache', function(optionalTask) {
