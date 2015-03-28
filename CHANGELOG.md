@@ -1,3 +1,10 @@
+# 0.2.19
+
+2015-03-27
+
+ - Created update stache task.
+ - Updated available tasks.
+ 
 # 0.2.18
 
 2015-03-27
