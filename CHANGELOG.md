@@ -1,3 +1,9 @@
+# 0.2.20
+
+2015-03-27
+
+ - Manually copying assets folder.
+ 
 # 0.2.19
 
 2015-03-27
