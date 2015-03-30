@@ -48,3 +48,8 @@ nav_links:
 nav_exclude:
   - 404
   - assets
+  
+# =============================================
+# STACHE - LINKS
+# =============================================
+githubbase: https://github.com/blackbaud-community

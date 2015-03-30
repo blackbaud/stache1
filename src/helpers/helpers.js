@@ -339,6 +339,59 @@ module.exports.register = function (Handlebars, options, params) {
       // I spent an entire day tracking down this bug.
       // Files created on different systems with different line endings freaked this out.
       return new Handlebars.SafeString(r.replace(/\r\n/g, '\n'));
+    },
+
+    /**
+    * Supports object + arrays
+    **/
+    length: function (collection) {
+      if( collection.length ) return collection.length;
+      var length = 0;
+      for( var prop in collection ){
+          if( collection.hasOwnProperty( prop ) ){
+              length++;
+          }
+      }
+      return length;
+    },
+    
+    withCoverage: function (collection, options) {
+      var r = '';
+      if (arguments.length > 1) {
+        var total = 0;
+        var coverage = 0;
+        var percentage = 0;
+        var cssClass = 'success';
+
+        for (var prop in collection){
+          if (collection.hasOwnProperty(prop)) {
+            total += collection[prop].length ? collection[prop].length : 1;
+            if (collection[prop].length) {
+              for (var m = 0, n = collection[prop].length; m < n; m++) {
+                coverage += collection[prop][m] === 0 ? 0 : 1;
+              }
+            } else if (collection[prop] !== 0) {
+              coverage++;
+            }
+          }
+        }
+        
+        percentage = total === 0 ? 100 : ((coverage / total) * 100);
+        if (percentage < 50) {
+          cssClass = 'danger';
+        } else if (percentage < 80) {
+          cssClass = 'warning';
+        }
+        
+        r = options.fn({
+          total: total,
+          coverage: coverage,
+          cssClass: cssClass,
+          percentage: percentage === 100 ? 100 : percentage.toFixed(options.hash.fixed)
+        });
+      }
+
+      return r;
     }
   
   });

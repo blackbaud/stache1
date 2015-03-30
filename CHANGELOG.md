@@ -1,3 +1,10 @@
+# 0.2.22
+
+2015-03-30
+
+ - Code coverage helpers.
+ - Cleaned up footer.
+ 
 # 0.2.20
 
 2015-03-27
