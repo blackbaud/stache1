@@ -1,0 +1,13 @@
+{
+  "name": "bower-bb-sky-sass",
+  "version": "0.1.6",
+  "_release": "0.1.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.6",
+    "commit": "818e87b09047c4027f5f37eb9097a0fc7906e4e1"
+  },
+  "_source": "https://tfs.blackbaud.com/tfs/DefaultCollection/ProductsGit/_git/bower-bb-sky-sass",
+  "_target": "*",
+  "_originalSource": "git+https://tfs.blackbaud.com/tfs/DefaultCollection/ProductsGit/_git/bower-bb-sky-sass"
+}

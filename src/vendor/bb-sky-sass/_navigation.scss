@@ -1,0 +1,118 @@
+@import "_mixins.scss";
+
+/* NAVIGATION START */
+
+$nav-color: #a7b1c2;
+$nav-selected-color: $selected-text-color;
+$nav-selected-background-color: #293846;
+$nav-item-padding: 16px;
+$nav-selected-border-width: 4px;
+
+.bb-navbar {
+    margin-bottom: $margin-double;
+    border-bottom: 1px solid $light-gray;
+    background-color: $nav-bg;
+    padding: 0 $padding;
+
+    @media (max-width: $screen-xs-max) {
+        &:not(.bb-navbar-showmobile) {
+            display: none;
+        }
+    }
+
+    .dropdown .dropdown-menu {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    &.navbar {
+        border-radius: 0;
+    }
+
+    .nav.navbar-nav {
+        font-family: $font-family-alternate;
+        padding: 0;
+        margin: 0;
+        font-size: 0;
+        color: $nav-color;
+
+        li {
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+            margin-right: $margin-half;
+
+            .dropdown-menu li {
+                margin: 0;
+
+                a {
+                    background-color: $nav-bg;
+                    border-bottom: none;
+                    font-size: 12px;
+                    font-weight: normal;
+                    color: $nav-color;
+                }
+            }
+            
+            a,
+            .dropdown-menu a {
+                padding: $nav-item-padding $nav-item-padding * 0.75;
+                text-decoration: none;
+                color: $nav-color;
+                font-weight: 600;
+                margin: 0;
+                border-radius: 0;
+
+                &:hover {
+                    background-color: $nav-selected-background-color;
+                    color: $nav-selected-color;
+                }
+            }
+
+            &:hover,
+            &.bb-navbar-active {
+                a {
+                    background-color: $nav-selected-background-color;
+                    border-bottom: solid $nav-selected-border-width $blue;
+                    color: $nav-selected-color;
+                    padding-bottom: $nav-item-padding - $nav-selected-border-width;
+                }
+            }
+
+            &.disabled {
+                pointer-events: none;
+
+                a {
+                    background-color: transparent;
+                    border-bottom: none;
+                    cursor: default;
+                    color: darken($nav-color, 20%);
+                    padding-bottom: 0;
+                }
+            }
+        }
+
+        &.navbar-right {
+            li {
+                margin-left: $margin-half;
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+@media (min-width: $screen-sm-min) {
+    ul.nav-items {
+        li {
+            a {
+                padding: $nav-item-padding;
+            }
+
+            &:after {
+                left: ($margin + $padding-half);
+            }
+        }
+    }
+}
+
+/* NAVIGATION END */

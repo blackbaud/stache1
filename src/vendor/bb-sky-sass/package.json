@@ -1,0 +1,7 @@
+﻿{
+  "name": "bower-bb-sky-sass",
+  "version": "0.1.0",
+  "devDependencies": {
+    "grunt-bump": "~0.3.0"
+  }
+}

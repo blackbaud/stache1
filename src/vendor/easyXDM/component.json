@@ -1,0 +1,20 @@
+{
+  "name": "easyXDM",
+  "version": "2.4.17",
+  "description": "A javascript library providing cross-browser, cross-site messaging/method invocation.",
+  "keywords": [ "cross-domain", "rpc" ],
+  "author": {
+    "name": "oyvindkinsey",
+    "email": "oyvind@kinsey.no"
+  },
+  "licenses": [
+    { "type": "MIT" }
+  ],
+  "homepage": "http://easyxdm.net/",
+  "main": "./easyXDM.js",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/oyvindkinsey/easyXDM.git"
+  }
+}

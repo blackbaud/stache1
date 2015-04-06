@@ -1,0 +1,75 @@
+﻿@import '_mixins.scss';
+
+.ui-select-container {
+    &.ui-select-multiple {
+        //Fix the minimum height of multiple search container to match other fields
+        &.ui-select-bootstrap {
+            min-height: $input-height-base;
+        }
+
+        .ui-select-match-item {
+            //Change the color of the multiple search pill boxes
+            &.btn-default {
+                background-color: #f1f1f1;
+                border-color: #ededed;
+                color: #333;
+
+                //Change the color of the selected pill box
+                &.btn-primary {
+                    background-color: #d0d0d0;
+                    border-color: #d0d0d0;
+                }
+            }
+        }
+    }
+
+    .ui-select-match {
+        //Remove the button appearance of the single search box only
+        > span.btn, > span.btn-default {
+            &:hover {
+                background-color: $input-bg;
+                color: $input-color;
+            }
+        }
+
+        //Modify the placement and look of the placeholder text to match the input box so it doesn't jump when we click on the search
+        .ui-select-toggle {
+            padding-left: 5px;
+            padding-right: 40px;
+            text-align: left;
+
+            .ui-select-placeholder {
+                color: $input-color-placeholder;
+                font-style: italic;
+            }
+
+            //Prevent long text values from messing up the clear button and search icon
+            .ui-select-match-text {
+                @include text-overflow();
+                width: 100%;
+            }
+
+            //Because of the padding-right on ui-select-toggle to correct text overflow issues
+            //from overlapping the clear button and search icon, we need this to make the clear 
+            //button line up correctly next to the text area.
+            a.btn.btn-xs.btn-link.pull-right {
+                float: none !important;
+            }
+
+            //Replace the caret class with the correct search icon class
+            i.caret {
+                @extend .glyphicon;
+                @extend .glyphicon-search;
+                border: none;
+                top: 5px;
+                right: -22px;
+            }
+        }
+    }
+}
+
+.bb-searchfield-no-records {
+    font-style: italic;
+    padding: 3px 20px;
+    color: $gray-light;
+}
