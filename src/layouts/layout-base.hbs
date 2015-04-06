@@ -7,9 +7,9 @@
     <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
 
     <!-- build:css {{ assets }}css/app.css -->
+    <link rel="stylesheet" href="{{ assets }}css/app.css">
     <!-- endbuild -->
     
-    <link rel="stylesheet" href="{{ assets }}css/app.css">    
     {{# each stache.config.files.css }}
       <link rel="stylesheet" href="{{ this }}">
     {{/ each }}
@@ -106,8 +106,11 @@
     <script src="{{ assets }}vendor/angular-sanitize/angular-sanitize.min.js"></script>
     <!-- endbuild -->
 
+    <!-- build:js {{ assets }}js/app.js -->
     <script src="{{ assets }}js/search.js"></script>
     <script src="{{ assets }}js/app.js"></script>
+    <!-- endbuild -->
+    
     {{# each stache.config.files.js }}
       <script src="{{ this }}"></script>
     {{/ each }}
