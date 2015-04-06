@@ -48,6 +48,7 @@ nav_links:
 nav_exclude:
   - 404
   - assets
+  - .DS_Store
   
 # =============================================
 # STACHE - LINKS

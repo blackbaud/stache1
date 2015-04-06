@@ -179,7 +179,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: '<%= stache.config.content %>assets',
-            src: '**',
+            src: '**/*.*',
             dest: '<%= stache.config.build %>assets'
           }
         ]
