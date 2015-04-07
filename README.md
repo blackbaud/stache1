@@ -1,3 +1,3 @@
 # STACHE - Blackbaud Documentation Builder
 
-More information coming soon.
+[![npm version](https://badge.fury.io/js/blackbaud-stache.svg)](http://badge.fury.io/js/blackbaud-stache)
