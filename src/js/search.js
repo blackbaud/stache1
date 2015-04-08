@@ -19,7 +19,6 @@ stache.config(function($stateProvider, $urlRouterProvider) {
     url: '?q&p',
     templateUrl: '/views/view-search.html'
   });
-  //$urlRouterProvider.otherwise('search');
 });
 
 /**
@@ -122,6 +121,9 @@ stache.filter('highlight', function($sce) {
   }
 });
 
+/**
+*
+**/
 stache.filter('truncate', function () {
   return function (text, length, end) {
     if (isNaN(length)) {

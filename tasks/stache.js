@@ -267,7 +267,8 @@ module.exports = function (grunt) {
         ],
         tasks: [
           'createAutoNav',
-          'assemble'
+          'assemble',
+          'copy:build'
         ]
       },
       sass: {
