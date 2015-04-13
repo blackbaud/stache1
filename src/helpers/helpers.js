@@ -345,7 +345,7 @@ module.exports.register = function (Handlebars, options, params) {
     * Supports object + arrays
     **/
     length: function (collection) {
-      if( collection.length ) return collection.length;
+      if( collection && collection.length ) return collection.length;
       var length = 0;
       for( var prop in collection ){
           if( collection.hasOwnProperty( prop ) ){
