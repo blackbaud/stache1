@@ -1,0 +1,56 @@
+/*Imports all of Sky including Bootstrap*/
+
+//Import variables and mixins from Sky and then Bootstrap
+@import "_mixins.scss";
+
+//Import Bootstrap
+@import "Bootstrap/bootstrap.scss";
+
+// Import Font Awesome
+@import "FontAwesome/font-awesome.scss";
+
+// Google Fonts
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amplang=en");
+
+// Variables, Mixins
+@import "Inspinia/variables";
+@import "Inspinia/mixins";
+
+// INSPINIA Theme Elements
+@import "Inspinia/typography";
+@import "Inspinia/navigation";
+@import "Inspinia/buttons";
+@import "Inspinia/badgets_labels";
+@import "Inspinia/elements";
+@import "Inspinia/sidebar";
+@import "Inspinia/base";
+@import "Inspinia/pages";
+
+// Media query style
+@import "Inspinia/media";
+
+//Load Sky styles
+@import '_jqgrid.scss';
+@import '_check.scss';
+@import '_checklist.scss';
+@import '_datefield.scss';
+@import '_grid.scss';
+@import "_tables.scss";
+@import "_spinning.scss";
+@import "_imports.scss";
+@import "_navigation.scss";
+@import "_pagination.scss";
+@import "_tile.scss";
+@import "_toolbars.scss";
+@import "_forms.scss";
+@import "_modals.scss";
+@import "_viewkeeper.scss";
+@import "_responsivetabs.scss";
+@import "_charts.scss";
+@import "_omnibar.scss";
+@import "_helpbutton.scss";
+@import "_toast.scss";
+@import "_wait.scss";
+
+// Default Sky Theme
+@import "_theme.scss";

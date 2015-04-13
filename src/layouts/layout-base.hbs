@@ -8,11 +8,10 @@
 
     <!-- build:css {{ assets }}css/app.css -->
     <link rel="stylesheet" href="{{ assets }}css/app.css">
-    <!-- endbuild -->
-    
     {{# each stache.config.files.css }}
       <link rel="stylesheet" href="{{ this }}">
     {{/ each }}
+    <!-- endbuild -->
     
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -104,16 +103,16 @@
     <script src="{{ assets }}vendor/angular/angular.min.js"></script>
     <script src="{{ assets }}vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="{{ assets }}vendor/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="{{ assets }}vendor/typeahead.js/dist/typeahead.bundle.min.js"></script>
     <!-- endbuild -->
 
     <!-- build:js {{ assets }}js/app.js -->
     <script src="{{ assets }}js/search.js"></script>
     <script src="{{ assets }}js/app.js"></script>
-    <!-- endbuild -->
-    
     {{# each stache.config.files.js }}
       <script src="{{ this }}"></script>
     {{/ each }}
+    <!-- endbuild -->
     
     {{# if stache.config.showOmnibar }}
       <script src="//signin.blackbaud.com/omnibar.min.js"></script>

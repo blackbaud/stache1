@@ -86,10 +86,10 @@ hr.small {
   margin-right: auto; }
 
 .text-primary {
-  color: #006699; }
+  color: #1c84c6; }
 
 .bg-primary {
-  background: #006699;
+  background: #1c84c6;
   color: #FFF; }
 
 .bg-secondary {
@@ -136,12 +136,6 @@ hr.small {
 
 .section-padding h2 {
   padding: 20px 0; }
-
-.table thead tr th {
-  background-color: #19aa8d;
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-  color: #FFF; }
 
 .modal-footer {
   text-align: right; }
@@ -337,7 +331,7 @@ div.draft h2, div.draft h3 {
   color: #1ab394;
   text-decoration: none; }
 
-.bb-love {
+.bb-love, .social-icons {
   padding: 20px 0 0 0; }
 
 .bb-love li {
@@ -359,7 +353,7 @@ div.draft h2, div.draft h3 {
   margin: 0 5px; }
 
 .bb-love, .social-icons {
-  text-align: center; }
+  text-align: right; }
 
 @font-face {
   font-family: 'octicons';

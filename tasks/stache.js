@@ -63,7 +63,7 @@ module.exports = function (grunt) {
       options: {
         assets: '<%= stache.config.build %>',
         data: '<%= stache.config.data %>**/*.*',
-        helpers: ['helper-moment', '<%= stache.config.helpers %>**/*.js'],
+        helpers: ['<%= stache.config.helpers %>**/*.js'],
         partials: ['<%= stache.config.partials %>**/*.hbs'],
         layoutdir: '<%= stache.config.layouts %>',
         layoutext: '.hbs',
@@ -179,7 +179,7 @@ module.exports = function (grunt) {
           {
             expand: true,
             cwd: '<%= stache.config.content %>assets',
-            src: '**/*.*',
+            src: '**',
             dest: '<%= stache.config.build %>assets'
           }
         ]
@@ -267,8 +267,7 @@ module.exports = function (grunt) {
         ],
         tasks: [
           'createAutoNav',
-          'assemble',
-          'copy:build'
+          'assemble'
         ]
       },
       sass: {
