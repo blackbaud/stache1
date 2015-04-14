@@ -3,6 +3,7 @@
 # =============================================
 
 base: /
+static: static/
 content: content/
 data: data/
 src: <%= stache.dir %>src/

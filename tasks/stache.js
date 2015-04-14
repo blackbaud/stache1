@@ -120,7 +120,8 @@ module.exports = function (grunt) {
           base: [
             '<%= stache.config.build %>',
             '<%= stache.config.src %>',
-            '<%= stache.config.content %>'
+            '<%= stache.config.content %>',
+            '<%= stache.config.static %>'
           ],
           livereload: grunt.option('livereload') || '<%= stache.config.livereload %>',
           port: grunt.option('port') || '<%= stache.config.port %>'
@@ -173,14 +174,16 @@ module.exports = function (grunt) {
             dest: '<%= stache.config.build %>fonts/'
           },
           {
-            src: 'web.config',
-            dest: '<%= stache.config.build %>'
-          },
-          {
             expand: true,
             cwd: '<%= stache.config.content %>assets',
             src: '**/*.*',
             dest: '<%= stache.config.build %>assets'
+          },
+          {
+            expand: true,
+            cwd: '<%= stache.config.static %>',
+            src: '**/*.*',
+            dest: '<%= stache.config.build %>'
           }
         ]
       }
