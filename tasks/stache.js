@@ -120,7 +120,8 @@ module.exports = function (grunt) {
           base: [
             '<%= stache.config.build %>',
             '<%= stache.config.src %>',
-            '<%= stache.config.content %>'
+            '<%= stache.config.content %>',
+            '<%= stache.config.static %>'
           ],
           livereload: grunt.option('livereload') || '<%= stache.config.livereload %>',
           port: grunt.option('port') || '<%= stache.config.port %>'
