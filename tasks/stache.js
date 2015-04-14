@@ -390,6 +390,7 @@ module.exports = function (grunt) {
       item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
       item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
       item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
+      item.showChildShowcaseItem = typeof item.showChildShowcaseItem !== 'undefined' ? item.showChildShowcaseItem : true;
       item.breadcrumbs = item.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
       item.name = item.name || (subdir ? createTitle(subdir, separator, false) : home);
       item.abspath = el.abspath;
