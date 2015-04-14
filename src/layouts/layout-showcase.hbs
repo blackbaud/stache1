@@ -6,12 +6,9 @@ layout: layout-container
 
 <div class="showcase">
   {{# eachChildLink mod=3 }}
-    {{# if showChildShowcaseItem }}
-  
       {{# if firstOrMod0 }}
         <div class="row showcase-row {{# unless first }}showcase-more{{/ unless }}">
       {{/ if }}
-          
             <div class="col-sm-4">
             {{# if thumbnail }}
               <div class="has-hover">
@@ -25,14 +22,11 @@ layout: layout-container
                 </div>
               </div>
             {{/ if }}
-
             {{# if icon }}
               <i class="showcase-icon {{ icon }}"></i>
               <div class="showcase-desc">
             {{/ if }}
-
             <h3><a href="{{ uri }}">{{ name }}</a></h3>
-
             {{# if description }}
               <p>{{ description }}</p>
             {{/ if }}
@@ -41,11 +35,8 @@ layout: layout-container
               </div>
             {{/ if }}
             </div>
-
       {{# if lastOrMod1 }}
         </div>
       {{/ if }}
-  
-    {{/ if }}
   {{/ eachChildLink }}
 </div>
