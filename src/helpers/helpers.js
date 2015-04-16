@@ -245,7 +245,14 @@ module.exports.register = function (Handlebars, options, params) {
       if (context && context.length) {
         j = context.length;
         for (i; i < j; i++) {
-          if (context[i].showInNav) {
+          
+          var show = true;
+          if (typeof context[i].showInNav !== 'undefined' && context[i].showInNav === false) {
+            show = false;
+          }
+        
+          
+         if (show) {
             m = counter % mod;
             context[i].first = counter === 0;
             context[i].last = counter === j - 1;
