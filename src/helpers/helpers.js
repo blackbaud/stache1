@@ -236,6 +236,7 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     eachWithMod: function (context, options) {
       var r = '',
+        counter = 0,
         i = 0,
         m = 0,
         mod = options.hash.mod || 0,
@@ -244,14 +245,17 @@ module.exports.register = function (Handlebars, options, params) {
       if (context && context.length) {
         j = context.length;
         for (i; i < j; i++) {
-          m = i % mod;
-          context[i].first = i === 0;
-          context[i].last = i === j - 1;
-          context[i].mod0 = m === 0;
-          context[i].mod1 = m === mod - 1;
-          context[i].firstOrMod0 = context[i].first || context[i].mod0;
-          context[i].lastOrMod1 = context[i].last || context[i].mod1;
-          r += options.fn(context[i]);
+          if (context[i].showInNav) {
+            m = counter % mod;
+            context[i].first = counter === 0;
+            context[i].last = counter === j - 1;
+            context[i].mod0 = m === 0;
+            context[i].mod1 = m === mod - 1;
+            context[i].firstOrMod0 = context[i].first || context[i].mod0;
+            context[i].lastOrMod1 = context[i].last || context[i].mod1;
+            r += options.fn(context[i]);
+            counter++;
+          }
         }
       }
       return r;
