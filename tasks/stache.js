@@ -18,17 +18,17 @@ var yfm = require('assemble-yaml');
 var cheerio = require('cheerio');
 
 module.exports = function (grunt) {
-  
+
   // Original reference to the header logging function.
   // Disabling grunt header unless verbose is enabled
   var header = grunt.log.header;
   grunt.log.header = function() {};
-  
+
   // Default configuration
   var defaults = {
-    
+
     stache: {
-    
+
       // Necessary since we are actually running in the root project folder.
       // There's probably a clever grunt / node way to find this value in case it changes.
       dir: 'node_modules/blackbaud-stache/',
@@ -37,7 +37,7 @@ module.exports = function (grunt) {
       // This means when a user calls build or serve, the assembled files
       // will go into app-build or app-serve.
       status: 'serve',
-      
+
       // Configuration file paths
       cli: grunt.option('cli'),
       pathConfig: 'stache.yml',
@@ -49,7 +49,7 @@ module.exports = function (grunt) {
 
     // Displays our title all fancy-like
     asciify: {
-      help: { 
+      help: {
         text: 'Blackbaud STACHE',
         options: {
           font: 'cybermedium',
@@ -87,7 +87,7 @@ module.exports = function (grunt) {
         ]
       }
     },
-    
+
     // Listing our available tasks
     availabletasks: {
       tasks: {
@@ -236,7 +236,7 @@ module.exports = function (grunt) {
         command: 'npm update && npm install blackbaud-stache-cli -g'
       }
     },
-    
+
     // Needed to allow angular apps
     uglify: {
       options: {
@@ -284,29 +284,29 @@ module.exports = function (grunt) {
       }
     }
   };
-  
+
   /**
   ****************************************************************
   * PRIVATE METHODS
   ****************************************************************
   **/
-  
+
   function createTitle(name, separator, isBreadcrumbs) {
     var output = '';
     var parts = name.indexOf('/') > -1 ? name.split('/') : [name];
-    
+
     if (!isBreadcrumbs) {
       parts = parts.slice(-1);
     }
-    
+
     parts.forEach(function (el, idx) {
       output += el[0].toUpperCase() + el.slice(1) + separator;
-    });    
+    });
     output = output.slice(0, 0 - separator.length);
-    
+
     return output;
   }
-  
+
   function sort(arr, prop, propDefault) {
     arr.sort(function (a, b) {
       var ap = a[prop] || propDefault;
@@ -320,12 +320,12 @@ module.exports = function (grunt) {
       }
     });
   }
-  
-  function sortRecursive(key) { 
+
+  function sortRecursive(key) {
     var nav_links = grunt.config.get(key);
     sort(nav_links, 'order', 100);
     grunt.config.set(key, nav_links);
-    
+
     nav_links.forEach(function (el, idx) {
       if (el.nav_links) {
         sortRecursive(key + '.' + idx + '.nav_links')
@@ -338,48 +338,56 @@ module.exports = function (grunt) {
   * PRIVATE TASKS
   ****************************************************************
   **/
-  
+
   // Internal task - sets current build/serve status
   grunt.registerTask('status', function (status) {
     grunt.config('stache.status', status);
   });
-  
+
   // Internal task to control header logging
   grunt.registerTask('header', function(toggle) {
     grunt.log.header = toggle == 'true' ? header : function() {};
   });
-  
+
   // Creates nav to mirror directory structure
   grunt.registerTask('createAutoNav', function() {
-    
+
     if (grunt.config('stache.config.nav_type') !== 'directory') {
       return;
     }
-    
+
     var sorted = [];
     var root = 'stache.config';
     var navKey = '.nav_links';
     var navKeySearch ='.nav_search';
-    
+
     grunt.config.set(root + navKey, []);
     grunt.config.set(root + navKeySearch, []);
     grunt.file.recurse(grunt.config(root + '.content'), function (abspath, rootdir, subdir, filename) {
       var fm = yfm.extractJSON(abspath);
-      sorted.push({
-        abspath: abspath,
-        rootdir: rootdir,
-        subdir: subdir,
-        filename: filename,
-        frontmatter: fm,
-      }); 
+      
+      var show = true;
+      if (typeof fm.published !== 'undefined' && fm.published === false) {
+        show = false;
+      }
+      
+      if (show) {
+        sorted.push({
+          abspath: abspath,
+          rootdir: rootdir,
+          subdir: subdir,
+          filename: filename,
+          frontmatter: fm,
+        });
+      }
     });
-    
+
     // Sort alphabetically ensures that parents are created first.
     // This is crucial to this process.  We can sort by order below.
     sort(sorted, 'subdir', '');
-    
+
     sorted.forEach(function (el, idx) {
-     
+
       var path = root;
       var rootdir = el.rootdir;
       var subdir = el.subdir;
@@ -388,16 +396,15 @@ module.exports = function (grunt) {
       var home = grunt.config.get('stache.config.nav_title_home') || 'home';
       var file = filename.replace('.md', '.html').replace('.hbs', '.html');
       var item = el.frontmatter;
-      
+
       // A few programmitcally created front-matter variables
       item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
       item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
       item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
-      item.showChildShowcaseItem = typeof item.showChildShowcaseItem !== 'undefined' ? item.showChildShowcaseItem : true;
       item.breadcrumbs = item.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
       item.name = item.name || (subdir ? createTitle(subdir, separator, false) : home);
       item.abspath = el.abspath;
-      
+
       // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
       if (item.showInNav) {
         grunt.config.get('stache.config.nav_exclude').forEach(function (f) {
@@ -407,23 +414,23 @@ module.exports = function (grunt) {
           }
         });
       }
-      
+
       // Nested directories
       if (subdir) {
-        
+
         // Split the subdir into its different directories
         var subdirParts = subdir.split('/');
         for (var i = 0, j = subdirParts.length; i < j; i++) {
-          
+
           var index = 0;
           path += navKey;
-          
+
           // Is the current path already an array?
           var pathCurrent = grunt.config.get(path);
-          
+
           // It is an array, let's try to find the index for our current subDirPart
           if (grunt.util.kindOf(pathCurrent) === 'array') {
-            
+
             var found = false;
 
             for (var m = 0, n = pathCurrent.length; m < n; m++) {
@@ -434,27 +441,27 @@ module.exports = function (grunt) {
                 break;
               }
             }
-            
+
             // Our array has previous items but no match was found, let's add a new item
             if (pathCurrent.length > 0 && !found) {
               index = pathCurrent.length;
             }
-            
+
             path += '.' + index;
-            
+
           // It's not an array, which means we need to create the links property
-          } else {  
+          } else {
             grunt.config.set(path, []);
             path += '.0';
           }
-          
+
         }
-        
+
       } else {
         path += navKey;
         path += '.' + grunt.config.get(path).length;
       }
-      
+
       // Show in nav superceeds showInHeader and showInFooter
       if (!item.showInNav) {
         grunt.verbose.writeln('Ignoring: ' + item.abspath);
@@ -465,19 +472,19 @@ module.exports = function (grunt) {
       item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
       grunt.config.set(path, item);
       grunt.config.set(root + navKeySearch + '.' + idx, item);
-      
+
     });
-    
+
     // Now we can rearrange each item according to order
     sortRecursive(root + navKey)
   });
-  
+
   // Prepare the JSON for our search implementation
   grunt.registerTask('prepareSearch', function() {
     var status = grunt.config.get('stache.status');
     var files = grunt.config.get('stache.config.nav_search');
     var search = [];
-    
+
     if (files && files.length) {
       for (var i = 0, j = files.length; i < j; i++) {
         if (files[i].showInNav) {
@@ -501,12 +508,12 @@ module.exports = function (grunt) {
     }
     grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }, null, ' '));
   });
-  
+
   /**
   ****************************************************************
   * PUBLIC TASKS
   ****************************************************************
-  **/  
+  **/
 
   grunt.registerTask(
     'build',
@@ -527,16 +534,16 @@ module.exports = function (grunt) {
       'copy:build'
     ]
   );
-  
+
   grunt.registerTask(
-    'help', 
-    'Display this help message.', 
+    'help',
+    'Display this help message.',
     [
       'asciify:help',
       'availabletasks'
     ]
   );
-  
+
   // This method is registered here in order to show up in the available tasks help screen.
   // It's defined in the blackbaud-stache-cli package though.
   grunt.registerTask(
@@ -544,7 +551,7 @@ module.exports = function (grunt) {
     'Create a new site using the STACHE boilerplate.',
     function() {}
   );
-  
+
   // This method is registered here in order to show up in the available tasks help screen.
   // It's defined in the blackbaud-stache-cli package though.
   grunt.registerTask(
@@ -552,7 +559,7 @@ module.exports = function (grunt) {
     'Installs npm packages.',
     function() {}
   );
-  
+
   grunt.registerTask(
     'serve',
     'Serve the documentation',
@@ -569,7 +576,7 @@ module.exports = function (grunt) {
       'watch'
     ]
   );
-  
+
   grunt.registerTask(
     'update',
     'Update current npm packages and blackcbaud-stache-cli globally',
@@ -577,7 +584,7 @@ module.exports = function (grunt) {
       'shell:update'
     ]
   );
-  
+
   grunt.registerTask('stache', function(optionalTask) {
     var task = optionalTask || 'help';
     if (grunt.task._tasks[task]) {
@@ -586,16 +593,16 @@ module.exports = function (grunt) {
       grunt.fail.fatal('Unknown command requested: ' + task);
     }
   });
-  
+
   /**
   ****************************************************************
   * CONSTRUCTOR
   ****************************************************************
   **/
-  
+
   var localConfig = {};
   var stacheConfig = {};
-  
+
   // Read local files
   if (grunt.file.exists(defaults.stache.pathConfig)) {
     localConfig = grunt.file.readYAML(defaults.stache.pathConfig);
@@ -603,15 +610,15 @@ module.exports = function (grunt) {
   if (grunt.file.exists(defaults.stache.pathPackage)) {
     defaults.stache.package = grunt.file.readJSON(defaults.stache.pathPackage);
   }
-  
+
   // Read stache files
   if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathConfig)) {
     stacheConfig = grunt.file.readYAML(defaults.stache.dir + defaults.stache.pathConfig);
-  }  
+  }
   if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathBower)) {
     defaults.stache.bower = grunt.file.readJSON(defaults.stache.dir + defaults.stache.pathBower).directory;
   }
-  
+
   defaults.stache.config = merge(stacheConfig, localConfig);
   grunt.config.merge(defaults);
 
