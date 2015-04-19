@@ -322,6 +322,7 @@ module.exports.register = function (Handlebars, options, params) {
       var template = '';
       var fileWithPath = file;
       var c = merge(context, options.hash);
+      var hideYFM = typeof options.hash.hideYFM !== 'undefined' ? options.hash.hideYFM : true;
       
       if (typeof Handlebars.partials[fileWithPath] !== 'undefined') {
         template = Handlebars.partials[fileWithPath]; 
@@ -349,7 +350,16 @@ module.exports.register = function (Handlebars, options, params) {
       
       // I spent an entire day tracking down this bug.
       // Files created on different systems with different line endings freaked this out.
-      return new Handlebars.SafeString(r.replace(/\r\n/g, '\n'));
+      r = r.replace(/\r\n/g, '\n')
+      
+      // Hide YAML Front Matter
+      if (hideYFM && (r.match(/---/g) || []).length > 1) {
+        var start = r.indexOf('---') + 1;
+        var end = r.indexOf('---', start);
+        r = r.substr(end + 3);
+      }
+      
+      return new Handlebars.SafeString(r);
     },
 
     /**
