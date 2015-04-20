@@ -332,7 +332,7 @@ module.exports = function (grunt) {
 
     nav_links.forEach(function (el, idx) {
       if (el.nav_links) {
-        if (el.abspath.indexOf(blog) > -1) {
+        if (el.abspath && el.abspath.indexOf(blog) > -1) {
           sortAscending = false;
         }
         sortRecursive(key + '.' + idx + '.nav_links', sortAscending)
