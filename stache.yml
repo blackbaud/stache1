@@ -6,6 +6,7 @@ base: /
 static: static/
 content: content/
 data: data/
+blog: blog/
 src: <%= stache.dir %>src/
 build: <%= stache.status %>/
 sass: <%= stache.config.src %>sass/

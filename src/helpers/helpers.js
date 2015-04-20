@@ -222,7 +222,22 @@ module.exports.register = function (Handlebars, options, params) {
     * Supports optional modulus parameters.
     **/
     eachChildLink: function (options) {
-      var active = getActiveNav(options.hash.dest || this.page.dest || '', options.hash.nav_links || this.stache.config.nav_links || '', false);
+      var dest = '';
+      var nav_links = '';
+      
+      if (typeof options.hash.dest !== 'undefined') {
+        dest = options.hash.dest;
+      } else if (typeof this.page !== 'undefined' && typeof this.page.dest !== 'undefined') {
+        dest = this.page.dest;
+      }
+      
+      if (typeof options.hash.nav_links !== 'undefined') {
+        nav_links = options.hash.nav_links;
+      } else if (typeof this.stache.config.nav_links !== 'undefined') {
+        nav_links = this.stache.config.nav_links;
+      }
+      
+      var active = getActiveNav(dest, nav_links, false);
       if (active && active.nav_links) {
         active = active.nav_links;
       }

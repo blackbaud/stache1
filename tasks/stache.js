@@ -308,28 +308,35 @@ module.exports = function (grunt) {
     return output;
   }
 
-  function sort(arr, prop, propDefault) {
+  function sort(arr, sortAscending, prop, propDefault) {
     arr.sort(function (a, b) {
       var ap = a[prop] || propDefault;
       var bp = b[prop] || propDefault;
+      
       if (ap < bp) {
-        return -1;
+        return sortAscending ? -1 : 1;
       } else if (ap > bp) {
-        return 1;
+        return sortAscending ? 1 : -1;
       } else {
         return 0;
       }
     });
   }
 
-  function sortRecursive(key) {
+  function sortRecursive(key, sortAscending) {
     var nav_links = grunt.config.get(key);
-    sort(nav_links, 'order', 100);
+    var blog = grunt.config.get('stache.config.blog');
+    
+    sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100);
     grunt.config.set(key, nav_links);
 
     nav_links.forEach(function (el, idx) {
       if (el.nav_links) {
-        sortRecursive(key + '.' + idx + '.nav_links')
+        if (el.abspath.indexOf(blog) > -1) {
+          console.log(el.nav_links);
+          sortAscending = false;
+        }
+        sortRecursive(key + '.' + idx + '.nav_links', sortAscending)
       }
     });
   }
@@ -372,6 +379,10 @@ module.exports = function (grunt) {
         show = false;
       }
       
+      if (abspath && abspath.indexOf('.DS_Store') > -1) {
+        show = false;
+      }
+      
       if (show) {
         sorted.push({
           abspath: abspath,
@@ -385,7 +396,7 @@ module.exports = function (grunt) {
 
     // Sort alphabetically ensures that parents are created first.
     // This is crucial to this process.  We can sort by order below.
-    sort(sorted, 'subdir', '');
+    sort(sorted, true, 'subdir', '');
 
     sorted.forEach(function (el, idx) {
 
@@ -477,7 +488,7 @@ module.exports = function (grunt) {
     });
 
     // Now we can rearrange each item according to order
-    sortRecursive(root + navKey)
+    sortRecursive(root + navKey, true);
   });
 
   // Prepare the JSON for our search implementation
