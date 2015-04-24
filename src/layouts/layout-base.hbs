@@ -43,7 +43,11 @@
     </nav>
         
     {{! Spaces, tabs and new lines cause markdown helper to fail }}
-    {{# markdown }}{{> body }}{{/ markdown }}
+    {{# if stache.config.markdown }}
+      {{# markdown }}{{> ../body }}{{/ markdown }}
+    {{ else }}
+      {{> body }}
+    {{/ if }}
     
     {{# if note }}
       {{# withHash isPageNote=true priority=priority note=note }}

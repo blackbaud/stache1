@@ -22,6 +22,10 @@ module.exports.register = function (Handlebars, options, params) {
   var marked = require('marked');
   var renderer = new marked.Renderer();
   var lexer = new marked.Lexer();
+//  renderer.html = function(html) {
+//    console.log(html);
+//    return html;
+//  };
   lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
   // Stores any custom counters
@@ -103,6 +107,51 @@ module.exports.register = function (Handlebars, options, params) {
       headerPrefix: '',
       renderer: renderer
     });
+  }
+  
+  /**
+  *
+  **/
+  function withCoverage(collection, options) {
+    var total = 0;
+    var coverage = 0;
+
+    for (var prop in collection){
+      if (collection.hasOwnProperty(prop)) {
+        total += collection[prop].length ? collection[prop].length : 1;
+        if (collection[prop].length) {
+          for (var m = 0, n = collection[prop].length; m < n; m++) {
+            coverage += collection[prop][m] === 0 ? 0 : 1;
+          }
+        } else if (collection[prop] !== 0) {
+          coverage++;
+        }
+      }
+    }
+    
+    return instanbul(total, coverage, options);
+  }
+  
+  /**
+  *
+  **/
+  function instanbul(total, coverage, options) {
+    
+    var cssClass = 'success';
+    var percentage = total === 0 ? 100 : ((coverage / total) * 100);
+    
+    if (percentage < 50) {
+      cssClass = 'danger';
+    } else if (percentage < 80) {
+      cssClass = 'warning';
+    }
+    
+    return {
+      total: total,
+      coverage: coverage,
+      cssClass: cssClass,
+      percentage: percentage === 100 ? 100 : percentage.toFixed(options.hash.fixed)
+    };    
   }
 
   Handlebars.registerHelper({
@@ -391,43 +440,68 @@ module.exports.register = function (Handlebars, options, params) {
       return length;
     },
     
-    withCoverage: function (collection, options) {
-      var r = '';
-      if (arguments.length > 1) {
-        var total = 0;
-        var coverage = 0;
-        var percentage = 0;
-        var cssClass = 'success';
-
-        for (var prop in collection){
-          if (collection.hasOwnProperty(prop)) {
-            total += collection[prop].length ? collection[prop].length : 1;
-            if (collection[prop].length) {
-              for (var m = 0, n = collection[prop].length; m < n; m++) {
-                coverage += collection[prop][m] === 0 ? 0 : 1;
+    withCoverageTotal: function (collection, property, options) {
+      var total = 0;
+      var coverage = 0;
+      
+      for (var file in collection) {
+        if (collection[file].hasOwnProperty(property)) {
+          var individual = withCoverage(collection[file][property], options);
+          total += individual.total;
+          coverage += individual.coverage;
+        }
+      }
+      
+      return options.fn(instanbul(total, coverage, options));
+    },
+    
+    withCoverage: function (collection, property, options) {
+      return options.fn(withCoverage(collection[property], options));
+    },
+    
+    withSkippedTotal: function (collection, key, options) {
+      var skipped = 0;
+      
+      for (var file in collection) {
+        if (collection[file].hasOwnProperty(key)) {
+          for (var item in collection[file][key]) {
+            if (collection[file][key][item].skip) {
+              skipped++;
+            }
+            if (collection[file][key][item].locations) {
+              for (var i = 0, j = collection[file][key][item].locations.length; i < j; i++) {
+                if (collection[file][key][item].locations[i].skip) {
+                  skipped++;
+                }
               }
-            } else if (collection[prop] !== 0) {
-              coverage++;
             }
           }
         }
-        
-        percentage = total === 0 ? 100 : ((coverage / total) * 100);
-        if (percentage < 50) {
-          cssClass = 'danger';
-        } else if (percentage < 80) {
-          cssClass = 'warning';
-        }
-        
-        r = options.fn({
-          total: total,
-          coverage: coverage,
-          cssClass: cssClass,
-          percentage: percentage === 100 ? 100 : percentage.toFixed(options.hash.fixed)
-        });
       }
-
-      return r;
+      
+      return options.fn({
+        total: skipped
+      });
+    },
+    
+    raw: function(options) {
+      return '<raw>' + options.fn(this) + '</raw>';
+    },
+    
+    withFirstProperty: function(collection, options) {
+      for (var property in collection) {
+        return options.fn(collection[property]); 
+      }
+    },
+    
+    percent: function(dividend, divisor, options) {
+      var r = 0;
+      if (dividend === divisor) {
+        r = 100;
+      } else if (divisor !== 0) {
+        r = Math.round(dividend/divisor); 
+      }
+      return r.toFixed(options.hash.toFixed || 0);
     }
   
   });

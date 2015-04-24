@@ -39,6 +39,7 @@ omnibar_search: 'false'
 draft: true
 showFooter: true
 showOmnibar: true
+markdown: true
 
 # =============================================
 # STACHE - NAVIGATION
