@@ -16,6 +16,7 @@
 var merge = require('merge');
 var yfm = require('assemble-yaml');
 var cheerio = require('cheerio');
+var assemble = require('assemble');
 
 module.exports = function (grunt) {
 
@@ -68,7 +69,14 @@ module.exports = function (grunt) {
         layoutdir: '<%= stache.config.layouts %>',
         layoutext: '.hbs',
         layout: 'layout-container',
-        stache: '<%= stache %>'
+        stache: '<%= stache %>',
+        
+        // https://github.com/assemble/assemble/pull/468#issuecomment-38730532
+        initializeEngine: function (engine, options)  {
+          var search = "{{\\s*body\\s*}}";
+          engine.bodyRegex = new RegExp(search, 'ig');
+          engine.init(options, { grunt: grunt, assemble: assemble });
+        }
       },
       custom: {},
       stache: {
