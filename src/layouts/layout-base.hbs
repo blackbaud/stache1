@@ -44,7 +44,7 @@
         
     {{! Spaces, tabs and new lines cause markdown helper to fail }}
     {{# if stache.config.markdown }}
-      {{# markdown }}{{> ../body }}{{/ markdown }}
+      {{# markdown }}{{> body }}{{/ markdown }}
     {{ else }}
       {{> body }}
     {{/ if }}
