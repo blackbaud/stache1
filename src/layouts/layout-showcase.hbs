@@ -2,7 +2,11 @@
 layout: layout-container
 ---
 
-{{ body }}
+{{# if stache.config.markdown }}
+  {{# markdown }}{{ body }}{{/ markdown }}
+{{ else }}
+  {{ body }}
+{{/ if }}
 
 <div class="showcase">
   {{# eachChildLink mod=3 }}
