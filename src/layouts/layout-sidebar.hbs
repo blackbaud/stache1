@@ -10,7 +10,7 @@ showHeadings: true
       {{# each stache.config.nav_links }}
         {{# isActiveNav dest=../page.dest }}
           <ul class="nav nav-stacked nav-sidebar">
-            
+
             {{# if showTitle }}
                 <li class="title {{# if draft }}draft{{/ if }}">
                   <a href="{{ uri }}">
@@ -18,22 +18,26 @@ showHeadings: true
                   </a>
                 </li>
             {{/ if}}
-            
+
             {{ include 'partial-sidebar' this dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
-            
+
             <li class="visible-on-affix">
               <a href="#top" class="smooth-scroll">
                 <i class="fa fa-caret-square-o-up"></i>
               </a>
             </li>
-            
+
           </ul>
         {{/ isActiveNav }}
       {{/ each }}
-      
+
     </div>
   </div>
   <div class="col-sm-9">
-    {{ body }}
+    {{# if stache.config.markdown }}
+      {{# markdown }}{{ body }}{{/ markdown }}
+    {{ else }}
+      {{ body }}
+    {{/ if }}
   </div>
 </div>
