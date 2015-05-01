@@ -1,4 +1,4 @@
-easyXDM - easy Cross-Domain Messaging
+﻿easyXDM - easy Cross-Domain Messaging
 =====================================
 easyXDM is a Javascript library that enables you as a developer to easily work around the limitation set in place by the Same Origin Policy, in turn making it easy to communicate and expose javascript API's across domain boundaries.
 
@@ -91,7 +91,7 @@ These properties can be set only on the provider
 
 * `acl` {String || String[]} Use this to only allow specific domains to consume this provider. The patterns can contain the wildcards ? and * as in the examples 'http://example.com', '*.foo.com' and '*dom?.com', or they can be regular expressions starting with ^ and ending with $. If none of the patterns match an Error will be thrown.
 
-A socket can be teared down (iframe removed etc) using 
+A socket can be torn down (removing the `iframe`, etc.) using 
 
 ```javascript
     socket.destroy();
@@ -222,21 +222,21 @@ This is how you can use it:
 
 ```javascript
     var rpc = new easyXDM.Rpc({
-    remote: "http://foo.bar/cors/"
-  },
+		remote: "http://foo.bar/cors/"
+	},
     {
         remote: {
-      request: {}
-    }
+			request: {}
+		}
     });
 
-  rpc.request({
-    url: "/resource/x/y/z/",
-    method: "POST",
-    data: {foo: "bar", bar: "foo"}
-  }, function(response){
-    alert(response.data);
-  });
+	rpc.request({
+		url: "/resource/x/y/z/",
+		method: "POST",
+		data: {foo: "bar", bar: "foo"}
+	}, function(response){
+		alert(response.data);
+	});
 ```
 
 easyXDM.noConflict
@@ -251,10 +251,10 @@ It also takes a single argument, a string representation of the namespace. We ne
 Example:
 
 ```javascript
-  // Let's assume we already have an instance of easyXDM on the page, but
-  // we need to load another one and put it under PROJECT.easyXDM. Here is
-  // how you do it.
-  var PROJECT = { easyXDM: easyXDM.noConflict("PROJECT") };
+	// Let's assume we already have an instance of easyXDM on the page, but
+	// we need to load another one and put it under PROJECT.easyXDM. Here is
+	// how you do it.
+	var PROJECT = { easyXDM: easyXDM.noConflict("PROJECT") };
 ```
 
 For more information
