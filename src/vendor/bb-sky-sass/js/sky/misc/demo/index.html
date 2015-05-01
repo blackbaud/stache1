@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html ng-app="KitchenSink" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="../../dist/css/sky.css" />
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/themes/github.css" />
+  <link rel="stylesheet" type="text/css" href="../../bower_components/angular-toastr/dist/angular-toastr.css" />
+  <link rel="stylesheet" type="text/css" href="../../bower_components/angular-ui-select/dist/select.css" />
+  <title>Interactive Kitchen Sink</title>
+  <script src="../../bower_components/jquery/dist/jquery.js"></script>
+  <script src="../../bower_components/jquery-ui/jquery-ui.js"></script>
+  <script src="../../bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+  <script src="../../bower_components/bootstrap-js-components/dist/dropdown.min.js"></script>
+  <script src="../../bower_components/enquire/dist/enquire.js"></script>
+  <script src="../../bower_components/angular/angular.js"></script>
+  <script src="../../bower_components/angular-animate/angular-animate.js"></script>
+  <script src="../../bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+  <script src="../../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="../../bower_components/responsive-tabs/js/jquery.responsiveTabs.js"></script>
+  <script src="../../bower_components/easyxdm/src/easyXDM.debug.js"></script>
+  <script src="../../bower_components/moment/moment.js"></script>
+  <script src="../../bower_components/autoNumeric/autoNumeric.js"></script>
+  <script src="../../bower_components/jqgrid/js/jquery.jqGrid.js"></script>
+  <script src="../../bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+  <script src="../../bower_components/bootstrap-datepicker-eyecon/js/bootstrap-datepicker.js"></script>
+  <script src="../../bower_components/blockui/jquery.blockUI.js"></script>
+  <script src="../../bower_components/jquery-icheck/icheck.js"></script>
+  <script src="../../bower_components/angular-ui-select/dist/select.js"></script>
+  <script src="../../bower_components/fastclick/lib/fastclick.js"></script>
+
+  <script src="../../dist/js/sky.js"></script>
+  <script src="index.js"></script>
+
+  <style type="text/css">
+    .kitchen-sink-divider {
+      margin: 20px 0;
+    }
+
+    /* Bootstrap defines a close class that causes syntax highlighting to not look right.  This fixes it. */
+    .tag.close {
+      float: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      color: inherit;
+      text-shadow: none;
+      opacity: 1;
+    }
+
+    .kitchen-sink-example {
+      padding-right: 20px;
+      margin-bottom: 15px;
+    }
+
+    h2, h3 {
+      margin-bottom: 10px;
+    }
+
+    .demo-content {
+      padding: 15px 20px 20px 20px;
+      background-color: #fff;
+    }
+
+    pre, code {
+      border-radius: 0;
+    }
+  </style>
+</head>
+<body ng-view ng-controller="MainController" id="body">
+  <div bb-omnibar></div>
+  <bb-navbar class="bb-omnibar-height-margin">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li><a href="../patterns">Design Patterns</a></li>
+        <li class="bb-navbar-active"><a href="../directives/">Directives</a></li>
+      </ul>
+    </div>
+  </bb-navbar>
+
+  <div class="row-fluid">
+    <div id="page-content">
+      <div class="page-content-tile-column">
+        <div class="demo-content">
+          <section class="page-content-column">
+            <h1>Directives</h1>
+            <hr class="kitchen-sink-divider" />
+            <p>
+              The following is a list of Angular directives provided by the Blackbaud Sky UI JavaScript library.
+              This library is for use in conjunction with the Blackbaud Sky UI Sass library.  Both are
+              available via Blackbaud's NuGet repository.
+            </p>
+            <p>
+              <h3>Dependencies</h3>
+              The Sky UI JavaScript library requires the following 3rd-party libraries.  Other libraries are required for some directives
+              but are not required if the directive is not actually used.  Any additional dependencies are
+              cited in the individual directive documentation.
+            </p>
+            <p>
+              <ul>
+                <li>
+                  <strong><a href="http://jquery.com">jQuery</a> (2.1.0 or higher)</strong> - Must be included before AngularJS
+                </li>
+                <li>
+                  <strong><a href="https://angularjs.org">AngularJS</a> (1.3.2 or higher)</strong>
+                </li>
+                <li>
+                  <strong><a href="http://angular-ui.github.io/bootstrap/">Angular UI Bootstrap</a> (0.12.0 or higher)</strong>
+                </li>
+                <li>
+                  <strong><a href="http://momentjs.com/">Moment.js</a> (2.8.4 or higher)</strong> A library used for various date functions throughout Sky.
+                </li>
+              </ul>
+            </p>
+            <p>
+              Many more useful directives exist in the <a href="http://angular-ui.github.io/bootstrap/">Angular UI Bootstrap</a> library,
+              and some of the directives in Sky are meant to enhance directives in this library.
+            </p>
+            <hr class="kitchen-sink-divider" />
+            <p>
+              <h3>References</h3>
+              <ul>
+              <% demoModules.forEach(function(module) { %>
+                <li>
+                  <strong><a href="##<%= module.name %>"><%= module.displayName %></a></strong> (sky.<%= module.name %>)
+                </li>
+              <% }); %>
+              </ul>
+            </p>
+          </section>
+        </div>
+      </div>
+      <br />
+      <br />
+      <% demoModules.forEach(function(module) { %>
+      <a name="#/<%= module.name %>"></a>
+      <div class="page-content-tile-column">
+        <div class="demo-content">
+          <section id="<%= module.name %>" class="page-content-column">
+            <h1>
+                <%= module.displayName %> <small>(sky.<%= module.name %>)</small>
+            </h1>
+            <hr class="kitchen-sink-divider" />
+            <div class="row">
+              <div class="col-md-6 kitchen-sink-example">
+                <%= module.docs.html %>
+              </div>
+              <div class="col-md-6 kitchen-sink-readme" ng-non-bindable>
+                <%= module.docs.md %>
+              </div>
+            </div>
+            <hr class="kitchen-sink-divider" />
+            <div class="row code">
+              <div class="col-md-12">
+                <tabset>
+                    <tab heading="Markup">
+                      <div>
+                        <pre><code data-language="html" ng-non-bindable><%- module.docs.html %></code></pre>
+                      </div>
+                    </tab>
+                    <tab heading="JavaScript">
+                      <div>
+                        <pre><code data-language="javascript" ng-non-bindable><%- module.docs.js %></code></pre>
+                      </div>
+                    </tab>
+                </tabset>
+              </div>
+            </div>
+          </section>
+          <script><%= module.docs.js %></script>
+        </div>
+      </div>
+      <br />
+      <% }); %>
+    </div>
+  </div>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/rainbow.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/generic.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/javascript.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/html.js"></script>
+</body>
+</html>

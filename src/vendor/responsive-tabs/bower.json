@@ -1,0 +1,12 @@
+{
+    "name": "responsive-tabs",
+    "version": "1.4.4",
+    "main": "js/jquery.responsiveTabs.js",
+    "ignore": [
+        ".jshintrc",
+        "**/*.txt"
+    ],
+    "dependencies": {
+        "jquery": ">=1.7.2"
+    }
+}

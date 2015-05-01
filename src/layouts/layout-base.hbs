@@ -9,45 +9,46 @@
     <!-- build:css {{ assets }}css/app.css -->
     <link rel="stylesheet" href="{{ assets }}css/app.css">
     <!-- endbuild -->
-    
+
     {{# each stache.config.files.css }}
       <link rel="stylesheet" href="{{ this }}">
     {{/ each }}
-    
+
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
+
   </head>
   <body class="{{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
-    
+
     <div id="top"></div>
-    
-    <nav class="navbar navbar-default bb-navbar nav-wrap">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <ul class="nav navbar-nav navbar-left">
-              {{# each stache.config.nav_links }}
-                {{# if showInHeader }}
-                  <li {{# isActiveNav dest=../../page.dest }}class="bb-navbar-active"{{/ isActiveNav }}>
-                    <a href="{{ ../uri }}">{{ name }}</a>
-                  </li>
-                {{/ if }}
-              {{/ each }}
-            </ul>            
+
+    {{# if stache.config.showHeader }}
+      {{# if stache.config.header }}
+        {{ include stache.config.header }}
+      {{ else }}
+
+        <nav class="navbar navbar-default bb-navbar nav-wrap">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-12">
+                {{{ include stache.config.partial_header_nav }}}
+                {{{ include stache.config.partial_header_search }}}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </nav>
-        
+        </nav>
+
+      {{/ if }}
+    {{/ if }}
+
     {{# if stache.config.markdown }}
       {{# markdown }}{{ body }}{{/ markdown }}
     {{ else }}
       {{ body }}
     {{/ if }}
-    
+
     {{# if note }}
       {{# withHash isPageNote=true priority=priority note=note }}
         {{> partial-note }}
@@ -58,7 +59,7 @@
       {{# if stache.config.footer }}
         {{ include stache.config.footer }}
       {{ else }}
-        
+
         <div class="footer-site">
           <div class="container">
             <div class="row">
@@ -76,10 +77,10 @@
 
           </div>
         </div>
-    
+
       {{/ if }}
     {{/ if }}
-    
+
     <div class="copyright">
       <div class="container">
         <div class="row">
@@ -113,11 +114,11 @@
     <script src="{{ assets }}js/search.js"></script>
     <script src="{{ assets }}js/app.js"></script>
     <!-- endbuild -->
-    
+
     {{# each stache.config.files.js }}
       <script src="{{ this }}"></script>
     {{/ each }}
-    
+
     {{# if stache.config.showOmnibar }}
       <script src="//signin.blackbaud.com/omnibar.min.js"></script>
       {{# if stache.config.omnibar }}
@@ -128,6 +129,6 @@
         </script>
       {{/ if }}
     {{/ if }}
-    
+
   </body>
 </html>

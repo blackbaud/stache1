@@ -1,0 +1,22 @@
+﻿<div ng-controller="DateFieldDemoController">
+    <form name="testform" novalidate>
+        <div class="form-group">
+            <label>Date Field</label>
+            <bb-date-field name="testDate1"
+                            required
+                            ng-model="testdate1"></bb-date-field>
+
+            <label class="error">{{testform.testDate1.invalidFormatMessage}}</label>
+        </div>
+
+        <div class="form-group">
+            <label>Date Field - Custom Formatting</label>
+            <bb-date-field name="testDate2"
+                            required
+                            ng-model="testdate2"
+                            bb-date-field-options="dateFieldOptions"></bb-date-field>
+
+            <label class="error">{{testform.testDate2.invalidFormatMessage}}</label>
+        </div>
+    </form>
+</div>

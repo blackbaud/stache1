@@ -1,0 +1,18 @@
+﻿<div style="display:none;">
+    <div bb-scrolling-view-keeper="viewKeeperOptions" class="grid-filters">
+        <div class="grid-filters-box" bb-scroll-into-view="expanded">
+            <div class="grid-filters-icon" ng-click="expanded = !expanded"></div>
+            <div class="grid-filters-container" style="display:none;">
+                <div class="grid-filters-header" ng-click="expanded = !expanded">
+                    <h4 class="grid-filters-header-title">{{resources.grid_filters_header}}</h4>
+                    <span class="grid-filters-header-hide">{{resources.grid_filters_hide}}</span>
+                </div>
+                <div class="grid-filters-body" ng-transclude></div>
+                <div class="grid-filters-footer">
+                    <button data-bbauto-field="ApplyGridFilters" class="btn btn-primary" type="submit" ng-click="applyFilters()">{{resources.grid_filters_apply}}</button>
+                    <button data-bbauto-field="ClearGridFilters" class="btn btn-white" type="button" ng-click="clearFilters()">{{resources.grid_filters_clear}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

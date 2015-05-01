@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+- '0.10'
+before_script:
+- npm install -g bower
+- bower install
+notifications:
+  slack: bb-usered:yMb5USE8UB7l2wgwCxZS8w0q
+branches:
+  only:
+    - master
+    - /^deploy-.*$/
+    - /^docs-.*$/
+before_install:
+- chmod +x update-sky-docs.sh
+after_success: ./update-sky-docs.sh
+#cache:
+#  directories:
+#    - node_modules
+# 1. GH_TOKEN - used to update documentation repo
+env:
+  global:
+  - secure: Q/uVV1sN5HzjKDUUo7aZAwosuF0hth8ezw2Dc9dLpnFvVi+QmyfakHV+pWRrihx81GbO4hV4H+V2tV9YjNIapD/dZSpj7G1Dsb88V9TGRisRpRxNIVFL/REQW5G31vGvlK0uoGiyxacc/kh6RKVmvE8fdJifaHWY5xdqsIcl0DQ=

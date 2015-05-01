@@ -1,0 +1,14 @@
+<section ng-class="isCollapsed ? 'collapsed' : 'collapsible'" class="ibox tile">
+    <div bb-scroll-into-view="scrollIntoView">
+        <div class="ibox-title" ng-click="titleClick()">
+            <h5 class="tile-header">{{tileHeader}}</h5>
+            <div class="ibox-tools">
+                <i ng-class="'glyphicon-chevron-' + (isCollapsed ? 'down' : 'up')" class="glyphicon tile-chevron"></i>
+                <i class="tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div collapse="isCollapsed" class="ibox-content tile-content" ng-transclude>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,28 @@
+﻿<div ng-controller="CheckTestController">
+    <div style="float: left;">
+        <label>Checkboxes:</label>
+        <div ng-repeat="checkBoxItem in locals.checkBoxItems" class="m-b-xs">
+            <input bb-check type="checkbox" ng-model="checkBoxItem.checked" ng-disabled="checkBoxItem.disabled">
+            {{checkBoxItem.description}}
+        </div>
+        <div class="m-t-sm">
+            <label>Scope state:</label>
+            <ul>
+                <li ng-repeat="checkBoxItem in locals.checkBoxItems">{{checkBoxItem.description}}: {{checkBoxItem.checked}}</li>
+            </ul>
+        </div>
+    </div>
+    <div style="float: right;">
+        <label>Radio buttons:</label>
+        <div ng-repeat="radioItem in locals.radioItems" class="m-b-xs">
+            <input bb-check type="radio" ng-model="locals.selectedRadioItem" ng-value="radioItem.id" ng-disabled="radioItem.disabled">
+            {{radioItem.description}}
+        </div>
+        <div class="m-t-sm">
+            <label>Scope state:</label>
+            <ul>
+                <li>Radio selected: {{locals.selectedRadioItem}}</li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -190,4 +190,12 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 #Sky-specific files
+.DS_Store
 **/*.tmp
+demo/Bootstrap/
+demo/FontAwesome/
+demo/fonts/
+demo/sky.js*
+demo/sky.min*
+coverage/
+web.config

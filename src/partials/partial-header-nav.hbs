@@ -1,0 +1,9 @@
+<ul class="nav navbar-nav navbar-left">
+  {{# each stache.config.nav_links }}
+    {{# if showInHeader }}
+      <li {{# isActiveNav dest=../../page.dest }}class="bb-navbar-active"{{/ isActiveNav }}>
+        <a href="{{ ../uri }}">{{ name }}</a>
+      </li>
+    {{/ if }}
+  {{/ each }}
+</ul>

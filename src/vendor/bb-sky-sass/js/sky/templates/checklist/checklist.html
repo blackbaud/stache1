@@ -1,0 +1,27 @@
+﻿<div>
+  <div ng-if="bbChecklistIncludeSearch" class="checklist-filter-bar">
+    <input type="text" maxlength="255" placeholder="{{bbChecklistSearchPlaceholder}}" ng-model="locals.searchText" ng-model-options="{debounce: bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">
+  </div>
+  <div class="checklist-filter-bar">
+    <a class="checklist-link" data-bbauto-field="ChecklistSelectAll" href="#" ng-click="locals.selectAll()">{{locals.selectAllText}}</a>
+    <a class="checklist-link" data-bbauto-field="ChecklistClear" href="#" ng-click="locals.clear()">{{locals.clearAllText}}</a>
+  </div>
+  <div class="checklist-wrapper">
+    <table class="table checklist-table">
+      <thead>
+        <tr>
+          <th class="checklist-checkbox-column"></th>
+          <th ng-repeat="column in locals.columns" class="{{column.class}}" ng-style="{'width': column.width}">{{column.caption}}</th>
+        </tr>
+      </thead>
+      <tbody bb-highlight="locals.searchText" bb-highlight-beacon="locals.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklistItems.length}}">
+        <tr ng-repeat="item in bbChecklistItems" ng-click="locals.rowClicked(item);" class="checklist-row">
+          <td><input bb-check type="checkbox" checklist-model="bbChecklistSelectedItems" checklist-value="item" ng-click="$event.stopPropagation();" data-bbauto-field="{{item[bbChecklistAutomationField]}}" /></td>
+          <td ng-repeat="column in locals.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="checklist-no-items" ng-if="!bbChecklistItems.length">{{locals.noItemsText || locals.defaultNoItemsText}}</div>
+  </div>
+  <div ng-transclude></div>
+</div>

@@ -1,0 +1,28 @@
+{
+  "name": "bootstrap-datepicker-eyecon",
+  "version": "1.0.0",
+  "homepage": "https://github.com/chihab/bootstrap-datepicker-eyecon",
+  "authors": [
+    "Stefan Petre"
+  ],
+  "description": "The original Datepicker for Bootstrap from eyecon",
+  "main": "js/bootstrap-datepicker.js",
+  "moduleType": [
+    "amd",
+    "es6"
+  ],
+  "keywords": [
+    "bootstrap-datepicker",
+    "bootstrap",
+    "datepicker",
+    "eyecon"
+  ],
+  "license": "Apache 2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

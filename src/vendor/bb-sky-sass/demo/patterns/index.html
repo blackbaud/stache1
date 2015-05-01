@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html ng-app="KitchenSink" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" type="text/css" href="../../dist/css/sky.css" />
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/themes/github.css" />
+  <link rel="stylesheet" type="text/css" href="../../bower_components/angular-toastr/dist/angular-toastr.css" />
+  <link rel="stylesheet" type="text/css" href="../../bower_components/angular-ui-select/dist/select.css" />
+  <title>Design Patterns - Sky</title>
+  <script src="../../bower_components/jquery/dist/jquery.js"></script>
+  <script src="../../bower_components/jquery-ui/jquery-ui.js"></script>
+  <script src="../../bower_components/jqueryui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+  <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../../bower_components/enquire/dist/enquire.js"></script>
+  <script src="../../bower_components/angular/angular.js"></script>
+  <script src="../../bower_components/angular-animate/angular-animate.js"></script>
+  <script src="../../bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
+  <script src="../../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="../../bower_components/responsive-tabs/js/jquery.responsiveTabs.js"></script>
+  <script src="../../bower_components/easyxdm/src/easyXDM.debug.js"></script>
+  <script src="../../bower_components/moment/moment.js"></script>
+  <script src="../../bower_components/autoNumeric/autoNumeric.js"></script>
+  <script src="../../bower_components/jqgrid/js/jquery.jqGrid.js"></script>
+  <script src="../../bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+  <script src="../../bower_components/bootstrap-datepicker-eyecon/js/bootstrap-datepicker.js"></script>
+  <script src="../../bower_components/blockui/jquery.blockUI.js"></script>
+  <script src="../../bower_components/jquery-icheck/icheck.js"></script>
+  <script src="../../bower_components/angular-ui-select/dist/select.js"></script>
+
+  <script src="../../dist/js/sky.js"></script>
+  <script src="index.js"></script>
+
+  <script>
+    angular.module('KitchenSink')
+      .config(['$stateProvider', function ($stateProvider) {
+        $stateProvider.state('home', {
+          templateUrl: 'home.html',
+          url: ''
+        })
+        
+        $stateProvider.state('forms', {
+          controller: 'FormsPatternController',
+          templateUrl: 'doctemplates/forms.html',
+          url: '/forms'
+        });
+          
+        $stateProvider.state('icons', {
+          controller: 'IconsPatternController',
+          templateUrl: 'doctemplates/icons.html',
+          url: '/icons'
+        });
+          
+        $stateProvider.state('recordPages', {
+          controller: 'RecordPagesPatternController',
+          templateUrl: 'doctemplates/recordPages.html',
+          url: '/recordPages'
+        });
+          
+        $stateProvider.state('tabs', {
+          controller: 'TabsPatternController',
+          templateUrl: 'doctemplates/tabs.html',
+          url: '/tabs'
+        });
+          
+        $stateProvider.state('text', {
+          controller: 'TextPatternController',
+          templateUrl: 'doctemplates/text.html',
+          url: '/text'
+        });
+          
+        $stateProvider.state('wizards', {
+          controller: 'WizardsPatternController',
+          templateUrl: 'doctemplates/wizards.html',
+          url: '/wizards'
+        });
+          
+          }]);
+  </script>
+
+  <style type="text/css">
+    .kitchen-sink-divider {
+      margin: 20px 0;
+    }
+
+    /* Bootstrap defines a close class that causes syntax highlighting to not look right.  This fixes it. */
+    .tag.close {
+      float: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      color: inherit;
+      text-shadow: none;
+      opacity: 1;
+    }
+
+    .kitchen-sink-example {
+      padding-right: 20px;
+      margin-bottom: 15px;
+    }
+
+    h2, h3 {
+      margin-bottom: 10px;
+    }
+
+    .demo-content {
+      padding: 15px 20px 20px 20px;
+      background-color: #fff;
+    }
+
+    .kitchen-sink-section {
+      padding: 10px;
+    }
+
+    .kitchen-sink-code .r-tabs .r-tabs-panel {
+      background-color: transparent;
+    }
+
+    pre, code {
+      border-radius: 0;
+    }
+  </style>
+</head>
+<body id="body">
+
+  <div bb-omnibar></div>
+  <bb-navbar class="bb-omnibar-height-margin">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li class="dropdown bb-navbar-active">
+          <a ui-sref="home" class="dropdown-toggle disabled" role="button" aria-expanded="false">Design Patterns <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            
+            <li>
+              <a ui-sref="forms">Forms</a>
+            </li>
+            
+            <li>
+              <a ui-sref="icons">Icons</a>
+            </li>
+            
+            <li>
+              <a ui-sref="recordPages">Record Pages</a>
+            </li>
+            
+            <li>
+              <a ui-sref="tabs">Tabs</a>
+            </li>
+            
+            <li>
+              <a ui-sref="text">Text</a>
+            </li>
+            
+            <li>
+              <a ui-sref="wizards">Wizards</a>
+            </li>
+            
+          </ul>
+        </li>
+        <li><a href="../directives/index.html">Directives</a></li>
+      </ul>
+    </div>
+  </bb-navbar>
+
+  <div ui-view>
+  </div>
+
+  
+  <script type="text/ng-template" id="doctemplates/forms.html">
+    <div class="ibox page-content-tile-column">
+      <div class="ibox-content">
+        <section class="page-content-column">
+          <h1>Forms</h1>
+          <p><p>Forms are fun.</p></p>
+        </section>
+      </div>
+    </div>
+
+    <div class="ibox page-content-tile-column">
+      <p>
+        <button class="btn btn-primary" ng-click="$parent.showCodeforms = !$parent.showCodeforms">
+          <i class="fa fa-code"></i> <span>{{$parent.showCodeforms ? 'Hide code': 'Show code'}}</span>
+        </button>
+      </p>
+    </div>
+
+    <section class="page-content-column kitchen-sink-code" ng-show="$parent.showCodeforms">
+      <bb-tab>
+        <bb-tab-group>
+          <bb-tab-group-item bb-tab-item-header="'Markup'">
+            <div>
+              <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller="FormsPatternController"&gt;
+
+&lt;div class=&quot;ibox page-content-tile-column&quot;&gt;
+  &lt;button class=&quot;btn btn-primary&quot; ng-click=&quot;locals.openForm()&quot;&gt;Open form&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script type=&quot;text/ng-template&quot; id=&quot;patterns/forms/modalform.html&quot;&gt;
+  &lt;bb-modal&gt;
+    &lt;div class=&quot;modal-form&quot;&gt;
+      &lt;bb-modal-header&gt;Form elements&lt;/bb-modal-header&gt;
+      &lt;form ng-submit=&quot;locals.save()&quot;&gt;
+        &lt;div bb-modal-body&gt;
+          &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label class=&quot;control-label&quot;&gt;Text field&lt;/label&gt;
+            &lt;input type=&quot;text&quot; class=&quot;form-control&quot; /&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label class=&quot;control-label required&quot;&gt;Required field&lt;/label&gt;
+            &lt;input type=&quot;text&quot; required class=&quot;form-control&quot; /&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label class=&quot;control-label&quot;&gt;Date field&lt;/label&gt;
+            &lt;bb-date-field ng-model=&quot;date&quot;&gt;&lt;/bb-date-field&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label class=&quot;control-label&quot;&gt;
+              &lt;input bb-check type=&quot;checkbox&quot; ng-model=&quot;checkbox&quot;&gt;
+              Check box
+            &lt;/label&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label class=&quot;control-label&quot;&gt;
+              &lt;input bb-check type=&quot;radio&quot; ng-model=&quot;radio1&quot;&gt;
+              Radio button
+            &lt;/label&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;bb-modal-footer&gt;
+          &lt;bb-modal-footer-button-primary&gt;&lt;/bb-modal-footer-button-primary&gt;
+          &lt;bb-modal-footer-button-cancel&gt;&lt;/bb-modal-footer-button-cancel&gt;
+        &lt;/bb-modal-footer&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  &lt;/bb-modal&gt;
+&lt;/script&gt;
+
+&lt;/div&gt;</code></pre>
+            </div>
+          </bb-tab-group-item>
+          <bb-tab-group-item bb-tab-item-header="'JavaScript'">
+            <div>
+              <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+    .controller(&#x27;FormsPatternController&#x27;, [&#x27;$scope&#x27;, &#x27;bbModal&#x27;, function ($scope, bbModal) {
+        $scope.locals = {
+            openForm: function () {
+                bbModal.open({
+                    templateUrl: &#x27;patterns/forms/modalform.html&#x27;
+                });
+            }
+        };
+    }])
+    .controller(&#x27;FormsModalPatternController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+        $scope.locals = {
+            save: function () {
+
+            }
+        };
+    }]);</code></pre>
+            </div>
+          </bb-tab-group-item>
+        </bb-tab-group>
+      </bb-tab>
+    </section>
+    <div class="ibox page-content-tile-column">
+  <button class="btn btn-primary" ng-click="locals.openForm()">Open form</button>
+</div>
+
+<script type="text/ng-template" id="patterns/forms/modalform.html">
+  <bb-modal>
+    <div class="modal-form">
+      <bb-modal-header>Form elements</bb-modal-header>
+      <form ng-submit="locals.save()">
+        <div bb-modal-body>
+          <div class="form-group">
+            <label class="control-label">Text field</label>
+            <input type="text" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="control-label required">Required field</label>
+            <input type="text" required class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="control-label">Date field</label>
+            <bb-date-field ng-model="date"></bb-date-field>
+          </div>
+          <div class="form-group">
+            <label class="control-label">
+              <input bb-check type="checkbox" ng-model="checkbox">
+              Check box
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="control-label">
+              <input bb-check type="radio" ng-model="radio1">
+              Radio button
+            </label>
+          </div>
+        </div>
+        <bb-modal-footer>
+          <bb-modal-footer-button-primary></bb-modal-footer-button-primary>
+          <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+        </bb-modal-footer>
+      </form>
+    </div>
+  </bb-modal>
+</script>
+    <script>
+      setTimeout(function () {
+        Rainbow.color();
+      }, 100);
+    </script>
+  </script>
+  <script>
+    angular.module('KitchenSink')
+    .controller('FormsPatternController', ['$scope', 'bbModal', function ($scope, bbModal) {
+        $scope.locals = {
+            openForm: function () {
+                bbModal.open({
+                    templateUrl: 'patterns/forms/modalform.html'
+                });
+            }
+        };
+    }])
+    .controller('FormsModalPatternController', ['$scope', function ($scope) {
+        $scope.locals = {
+            save: function () {
+
+            }
+        };
+    }]);
+  </script>
+  
+  <script type="text/ng-template" id="doctemplates/icons.html">
+    <div class="ibox page-content-tile-column">
+      <div class="ibox-content">
+        <section class="page-content-column">
+          <h1>Icons</h1>
+          <p><p>Sky uses a mix of glyph fonts to display icons, namely <a href="http://glyphicons.com/">GLYPHICONS</a>, <a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a> and a custom glyph font created specifically for Sky.
+While the full palette of icons is available for use, the following icons have been designated for use throughout Sky for particular actions.</p></p>
+        </section>
+      </div>
+    </div>
+
+    <div class="ibox page-content-tile-column">
+      <p>
+        <button class="btn btn-primary" ng-click="$parent.showCodeicons = !$parent.showCodeicons">
+          <i class="fa fa-code"></i> <span>{{$parent.showCodeicons ? 'Hide code': 'Show code'}}</span>
+        </button>
+      </p>
+    </div>
+
+    <section class="page-content-column kitchen-sink-code" ng-show="$parent.showCodeicons">
+      <bb-tab>
+        <bb-tab-group>
+          <bb-tab-group-item bb-tab-item-header="'Markup'">
+            <div>
+              <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller="IconsPatternController"&gt;
+
+&lt;div class=&quot;ibox page-content-tile-column&quot;&gt;
+  &lt;div class=&quot;ibox-content&quot;&gt;
+    &lt;div class=&quot;kitchen-sink-section page-content-column&quot;&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;sky-icon sky-icon-add-fill&quot;&gt;&lt;/i&gt; Add
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;fa fa-pencil&quot;&gt;&lt;/i&gt; Edit
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;sky-icon sky-icon-delete&quot;&gt;&lt;/i&gt; Delete
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;glyphicon glyphicon-search&quot;&gt;&lt;/i&gt; Search
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;sky-icon sky-icon-message-bubble&quot;&gt;&lt;/i&gt; Action
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;sky-icon sky-icon-note&quot;&gt;&lt;/i&gt; Note
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;glyphicon glyphicon-chevron-up&quot;&gt;&lt;/i&gt; Collapse (tiles)
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;glyphicon glyphicon-chevron-down&quot;&gt;&lt;/i&gt; Expand (tiles)
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;glyphicon glyphicon-th&quot;&gt;&lt;/i&gt; Move
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;sky-icon sky-icon-filter&quot;&gt;&lt;/i&gt; Filter
+      &lt;/p&gt;
+      &lt;p&gt;
+        &lt;i class=&quot;sky-icon sky-icon-multi-action&quot;&gt;&lt;/i&gt; Actions (list)
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;</code></pre>
+            </div>
+          </bb-tab-group-item>
+          <bb-tab-group-item bb-tab-item-header="'JavaScript'">
+            <div>
+              <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;IconsPatternController&#x27;, angular.noop);</code></pre>
+            </div>
+          </bb-tab-group-item>
+        </bb-tab-group>
+      </bb-tab>
+    </section>
+    <div class="ibox page-content-tile-column">
+  <div class="ibox-content">
+    <div class="kitchen-sink-section page-content-column">
+      <p>
+        <i class="sky-icon sky-icon-add-fill"></i> Add
+      </p>
+      <p>
+        <i class="fa fa-pencil"></i> Edit
+      </p>
+      <p>
+        <i class="sky-icon sky-icon-delete"></i> Delete
+      </p>
+      <p>
+        <i class="glyphicon glyphicon-search"></i> Search
+      </p>
+      <p>
+        <i class="sky-icon sky-icon-message-bubble"></i> Action
+      </p>
+      <p>
+        <i class="sky-icon sky-icon-note"></i> Note
+      </p>
+      <p>
+        <i class="glyphicon glyphicon-chevron-up"></i> Collapse (tiles)
+      </p>
+      <p>
+        <i class="glyphicon glyphicon-chevron-down"></i> Expand (tiles)
+      </p>
+      <p>
+        <i class="glyphicon glyphicon-th"></i> Move
+      </p>
+      <p>
+        <i class="sky-icon sky-icon-filter"></i> Filter
+      </p>
+      <p>
+        <i class="sky-icon sky-icon-multi-action"></i> Actions (list)
+      </p>
+    </div>
+  </div>
+</div>
+    <script>
+      setTimeout(function () {
+        Rainbow.color();
+      }, 100);
+    </script>
+  </script>
+  <script>
+    angular.module('KitchenSink').controller('IconsPatternController', angular.noop);
+  </script>
+  
+  <script type="text/ng-template" id="doctemplates/recordPages.html">
+    <div class="ibox page-content-tile-column">
+      <div class="ibox-content">
+        <section class="page-content-column">
+          <h1>Record Pages</h1>
+          <p><p>Sky uses a mix of glyph fonts to display icons, namely <a href="http://glyphicons.com/">GLYPHICONS</a>, <a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a> and a custom glyph font created specifically for Sky.
+While the full palette of icons is available for use, the following icons have been designated for use throughout Sky for particular actions.</p></p>
+        </section>
+      </div>
+    </div>
+
+    <div class="ibox page-content-tile-column">
+      <p>
+        <button class="btn btn-primary" ng-click="$parent.showCoderecordPages = !$parent.showCoderecordPages">
+          <i class="fa fa-code"></i> <span>{{$parent.showCoderecordPages ? 'Hide code': 'Show code'}}</span>
+        </button>
+      </p>
+    </div>
+
+    <section class="page-content-column kitchen-sink-code" ng-show="$parent.showCoderecordPages">
+      <bb-tab>
+        <bb-tab-group>
+          <bb-tab-group-item bb-tab-item-header="'Markup'">
+            <div>
+              <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller="RecordPagesPatternController"&gt;
+
+&lt;div class=&quot;container-fluid&quot;&gt;
+  &lt;div class=&quot;row page-content-multicolumn&quot;&gt;
+    &lt;div class=&quot;col-md-6 page-content-tile-column&quot;&gt;
+      &lt;bb-tile bb-tile-header=&quot;&#x27;Tile header&#x27;&quot;&gt;
+        &lt;div bb-tile-section class=&quot;tile-content-section&quot;&gt;
+          &lt;h6 class=&quot;ng-binding&quot;&gt;Tile subsection header&lt;/h6&gt;
+          &lt;div class=&quot;col-sm-6&quot; ng-switch=&quot;data.addresses.length &gt; 0&quot;&gt;
+            &lt;dl class=&quot;dl-horizontal&quot;&gt;
+              &lt;dt&gt;
+                Data label
+              &lt;/dt&gt;
+              &lt;dd&gt;
+                Data value
+              &lt;/dd&gt;
+            &lt;/dl&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;col-sm-12&quot;&gt;
+            &lt;dl class=&quot;constituent-summary-details-emails dl-horizontal&quot; data-bbauto-repeater=&quot;EmailList&quot; data-bbauto-repeater-count=&quot;1&quot;&gt;
+              &lt;dt ng-repeat-start=&quot;email in data.emails&quot; data-bbauto-field=&quot;EmailType&quot; data-bbauto-index=&quot;0&quot; class=&quot;ng-binding ng-scope&quot;&gt;Email&lt;/dt&gt;
+              &lt;dd ng-repeat-end=&quot;&quot; class=&quot;ng-scope&quot;&gt;&lt;a href=&quot;mailto:paul@paulcrowder.net&quot; data-bbauto-field=&quot;EmailAddress&quot; data-bbauto-index=&quot;0&quot; class=&quot;ng-binding&quot;&gt;paul@paulcrowder.net&lt;/a&gt;&lt;/dd&gt;&lt;!-- end ngRepeat: email in data.emails --&gt;
+            &lt;/dl&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/bb-tile&gt;
+      &lt;bb-tile bb-tile-header=&quot;&#x27;Read more&#x27;&quot;&gt;
+        &lt;div bb-tile-section ng-controller=&quot;ReadMoreTestController&quot;&gt;
+          &lt;div bb-text-expand=&quot;locals.longText&quot; bb-text-expand-max-newlines=&quot;2&quot; style=&quot;white-space: pre-wrap;&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/bb-tile&gt;
+      &lt;bb-tile bb-tile-header=&quot;&#x27;Validation&#x27;&quot;&gt;
+        &lt;div bb-tile-section ng-controller=&quot;ValidationTestController&quot;&gt;
+          &lt;form name=&quot;form&quot; novalidate&gt;
+            &lt;div&gt;
+              Email validation
+              &lt;input type=&quot;email&quot; ng-model=&quot;locals.myEmail&quot; bb-email-validation name=&quot;emailValidation&quot; /&gt;
+              &lt;span ng-show=&quot;form.emailValidation.$error.email&quot;&gt;This email format is invalid!&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+        &lt;/div&gt;
+      &lt;/bb-tile&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;col-md-6 page-content-tile-column&quot;&gt;
+      &lt;bb-tile bb-tile-header=&quot;&#x27;Pagination&#x27;&quot;&gt;
+        &lt;div bb-tile-section&gt;
+          &lt;div bb-pagination-content=&quot;locals.itemsPaged&quot;&gt;
+            &lt;table class=&quot;table&quot;&gt;
+              &lt;thead&gt;
+                &lt;tr&gt;
+                  &lt;th&gt;Text&lt;/th&gt;
+                &lt;/tr&gt;
+              &lt;/thead&gt;
+              &lt;tbody&gt;
+                &lt;tr ng-repeat=&quot;item in locals.itemsPaged.items&quot;&gt;
+                  &lt;td&gt;{{item.text}}&lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/tbody&gt;
+            &lt;/table&gt;
+          &lt;/div&gt;
+          &lt;div bb-pagination=&quot;locals.itemsPaged&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/bb-tile&gt;
+      &lt;bb-tile bb-tile-header=&quot;&#x27;Highlight&#x27;&quot;&gt;
+        &lt;div bb-tile-section ng-controller=&quot;HighlightTestController&quot;&gt;
+          Enter some text to highlight:
+          &lt;br /&gt;
+          &lt;input ng-model=&quot;locals.highlightText&quot; /&gt;
+          &lt;br /&gt;
+          &lt;br /&gt;
+          &lt;div bb-highlight=&quot;locals.highlightText&quot;&gt;
+            What you type will be highlighted here.
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/bb-tile&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;</code></pre>
+            </div>
+          </bb-tab-group-item>
+          <bb-tab-group-item bb-tab-item-header="'JavaScript'">
+            <div>
+              <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;RecordPagesPatternController&#x27;, [&#x27;$scope&#x27;, &#x27;bbPaging&#x27;, function ($scope, bbPaging) {
+    var items = [
+        {text: &#x27;Item 1&#x27;},
+        {text: &#x27;Item 2&#x27;},
+        {text: &#x27;Item 3&#x27;},
+        {text: &#x27;Item 4&#x27;},
+        {text: &#x27;Item 5&#x27;},
+        {text: &#x27;Item 6&#x27;},
+        {text: &#x27;Item 7&#x27;},
+        {text: &#x27;Item 8&#x27;},
+        {text: &#x27;Item 9&#x27;},
+        {text: &#x27;Item 10&#x27;},
+        {text: &#x27;Item 11&#x27;},
+        {text: &#x27;Item 12&#x27;}
+    ];
+
+    $scope.locals = {
+        itemsPaged: bbPaging.init(items)
+    };
+}]);</code></pre>
+            </div>
+          </bb-tab-group-item>
+        </bb-tab-group>
+      </bb-tab>
+    </section>
+    <div class="container-fluid">
+  <div class="row page-content-multicolumn">
+    <div class="col-md-6 page-content-tile-column">
+      <bb-tile bb-tile-header="'Tile header'">
+        <div bb-tile-section class="tile-content-section">
+          <h6 class="ng-binding">Tile subsection header</h6>
+          <div class="col-sm-6" ng-switch="data.addresses.length > 0">
+            <dl class="dl-horizontal">
+              <dt>
+                Data label
+              </dt>
+              <dd>
+                Data value
+              </dd>
+            </dl>
+          </div>
+          <div class="col-sm-12">
+            <dl class="constituent-summary-details-emails dl-horizontal" data-bbauto-repeater="EmailList" data-bbauto-repeater-count="1">
+              <dt ng-repeat-start="email in data.emails" data-bbauto-field="EmailType" data-bbauto-index="0" class="ng-binding ng-scope">Email</dt>
+              <dd ng-repeat-end="" class="ng-scope"><a href="mailto:paul@paulcrowder.net" data-bbauto-field="EmailAddress" data-bbauto-index="0" class="ng-binding">paul@paulcrowder.net</a></dd><!-- end ngRepeat: email in data.emails -->
+            </dl>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </bb-tile>
+      <bb-tile bb-tile-header="'Read more'">
+        <div bb-tile-section ng-controller="ReadMoreTestController">
+          <div bb-text-expand="locals.longText" bb-text-expand-max-newlines="2" style="white-space: pre-wrap;"></div>
+        </div>
+      </bb-tile>
+      <bb-tile bb-tile-header="'Validation'">
+        <div bb-tile-section ng-controller="ValidationTestController">
+          <form name="form" novalidate>
+            <div>
+              Email validation
+              <input type="email" ng-model="locals.myEmail" bb-email-validation name="emailValidation" />
+              <span ng-show="form.emailValidation.$error.email">This email format is invalid!</span>
+            </div>
+          </form>
+        </div>
+      </bb-tile>
+    </div>
+    <div class="col-md-6 page-content-tile-column">
+      <bb-tile bb-tile-header="'Pagination'">
+        <div bb-tile-section>
+          <div bb-pagination-content="locals.itemsPaged">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Text</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in locals.itemsPaged.items">
+                  <td>{{item.text}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div bb-pagination="locals.itemsPaged"></div>
+        </div>
+      </bb-tile>
+      <bb-tile bb-tile-header="'Highlight'">
+        <div bb-tile-section ng-controller="HighlightTestController">
+          Enter some text to highlight:
+          <br />
+          <input ng-model="locals.highlightText" />
+          <br />
+          <br />
+          <div bb-highlight="locals.highlightText">
+            What you type will be highlighted here.
+          </div>
+        </div>
+      </bb-tile>
+    </div>
+  </div>
+</div>
+    <script>
+      setTimeout(function () {
+        Rainbow.color();
+      }, 100);
+    </script>
+  </script>
+  <script>
+    angular.module('KitchenSink').controller('RecordPagesPatternController', ['$scope', 'bbPaging', function ($scope, bbPaging) {
+    var items = [
+        {text: 'Item 1'},
+        {text: 'Item 2'},
+        {text: 'Item 3'},
+        {text: 'Item 4'},
+        {text: 'Item 5'},
+        {text: 'Item 6'},
+        {text: 'Item 7'},
+        {text: 'Item 8'},
+        {text: 'Item 9'},
+        {text: 'Item 10'},
+        {text: 'Item 11'},
+        {text: 'Item 12'}
+    ];
+
+    $scope.locals = {
+        itemsPaged: bbPaging.init(items)
+    };
+}]);
+  </script>
+  
+  <script type="text/ng-template" id="doctemplates/tabs.html">
+    <div class="ibox page-content-tile-column">
+      <div class="ibox-content">
+        <section class="page-content-column">
+          <h1>Tabs</h1>
+          <p><p>Tab titles should be sentence-cased.  Titles may also display a number indicating the contents of a list in the associated tab.</p></p>
+        </section>
+      </div>
+    </div>
+
+    <div class="ibox page-content-tile-column">
+      <p>
+        <button class="btn btn-primary" ng-click="$parent.showCodetabs = !$parent.showCodetabs">
+          <i class="fa fa-code"></i> <span>{{$parent.showCodetabs ? 'Hide code': 'Show code'}}</span>
+        </button>
+      </p>
+    </div>
+
+    <section class="page-content-column kitchen-sink-code" ng-show="$parent.showCodetabs">
+      <bb-tab>
+        <bb-tab-group>
+          <bb-tab-group-item bb-tab-item-header="'Markup'">
+            <div>
+              <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller="TabsPatternController"&gt;
+
+&lt;div class=&quot;ibox page-content-tile-column&quot;&gt;
+  &lt;bb-tab&gt;
+    &lt;bb-tab-group&gt;
+      &lt;bb-tab-group-item bb-tab-item-header=&quot;{headerTitle: &#x27;Header with number&#x27;, headerCount: &#x27;25&#x27;}&quot;&gt;
+        &lt;div&gt;Some content&lt;/div&gt;
+      &lt;/bb-tab-group-item&gt;
+      &lt;bb-tab-group-item bb-tab-item-header=&quot;&#x27;Header without number&#x27;&quot;&gt;
+        &lt;div&gt;Some more content&lt;/div&gt;
+      &lt;/bb-tab-group-item&gt;
+    &lt;/bb-tab-group&gt;
+    &lt;bb-tab-group&gt;
+      &lt;bb-tab-group-item bb-tab-item-header=&quot;&#x27;Second group&#x27;&quot;&gt;
+        &lt;div&gt;Part of another tab group&lt;/div&gt;
+      &lt;/bb-tab-group-item&gt;
+    &lt;/bb-tab-group&gt;
+  &lt;/bb-tab&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;</code></pre>
+            </div>
+          </bb-tab-group-item>
+          <bb-tab-group-item bb-tab-item-header="'JavaScript'">
+            <div>
+              <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;TabsPatternController&#x27;, angular.noop);</code></pre>
+            </div>
+          </bb-tab-group-item>
+        </bb-tab-group>
+      </bb-tab>
+    </section>
+    <div class="ibox page-content-tile-column">
+  <bb-tab>
+    <bb-tab-group>
+      <bb-tab-group-item bb-tab-item-header="{headerTitle: 'Header with number', headerCount: '25'}">
+        <div>Some content</div>
+      </bb-tab-group-item>
+      <bb-tab-group-item bb-tab-item-header="'Header without number'">
+        <div>Some more content</div>
+      </bb-tab-group-item>
+    </bb-tab-group>
+    <bb-tab-group>
+      <bb-tab-group-item bb-tab-item-header="'Second group'">
+        <div>Part of another tab group</div>
+      </bb-tab-group-item>
+    </bb-tab-group>
+  </bb-tab>
+</div>
+    <script>
+      setTimeout(function () {
+        Rainbow.color();
+      }, 100);
+    </script>
+  </script>
+  <script>
+    angular.module('KitchenSink').controller('TabsPatternController', angular.noop);
+  </script>
+  
+  <script type="text/ng-template" id="doctemplates/text.html">
+    <div class="ibox page-content-tile-column">
+      <div class="ibox-content">
+        <section class="page-content-column">
+          <h1>Text</h1>
+          <p><p>Test</p></p>
+        </section>
+      </div>
+    </div>
+
+    <div class="ibox page-content-tile-column">
+      <p>
+        <button class="btn btn-primary" ng-click="$parent.showCodetext = !$parent.showCodetext">
+          <i class="fa fa-code"></i> <span>{{$parent.showCodetext ? 'Hide code': 'Show code'}}</span>
+        </button>
+      </p>
+    </div>
+
+    <section class="page-content-column kitchen-sink-code" ng-show="$parent.showCodetext">
+      <bb-tab>
+        <bb-tab-group>
+          <bb-tab-group-item bb-tab-item-header="'Markup'">
+            <div>
+              <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller="TextPatternController"&gt;
+
+&lt;div class=&quot;ibox page-content-tile-column&quot;&gt;
+  &lt;div&gt;
+    &lt;span class=&quot;label label-warning&quot;&gt;Warning&lt;/span&gt;
+    &lt;span class=&quot;label label-danger&quot;&gt;Danger&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;</code></pre>
+            </div>
+          </bb-tab-group-item>
+          <bb-tab-group-item bb-tab-item-header="'JavaScript'">
+            <div>
+              <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;TextPatternController&#x27;, angular.noop);</code></pre>
+            </div>
+          </bb-tab-group-item>
+        </bb-tab-group>
+      </bb-tab>
+    </section>
+    <div class="ibox page-content-tile-column">
+  <div>
+    <span class="label label-warning">Warning</span>
+    <span class="label label-danger">Danger</span>
+  </div>
+</div>
+    <script>
+      setTimeout(function () {
+        Rainbow.color();
+      }, 100);
+    </script>
+  </script>
+  <script>
+    angular.module('KitchenSink').controller('TextPatternController', angular.noop);
+  </script>
+  
+  <script type="text/ng-template" id="doctemplates/wizards.html">
+    <div class="ibox page-content-tile-column">
+      <div class="ibox-content">
+        <section class="page-content-column">
+          <h1>Wizards</h1>
+          <p><h4>When to consider a wizard</h4>
+
+<ul>
+<li>A series of steps are truly modal - the system has questions for the user that must be answered before they can continue.</li>
+<li>The questions can be organized in to a reasonable number of static, linear categories.</li>
+<li>There is significant branching logic in the questions being answered. For example, decisions on step 1 may impact decisions on step 2.</li>
+<li>Have you considered a different construct to solve the problem? Why didn't that work?</li>
+</ul>
+
+<h4>Anatomy of creating content in a wizard</h4>
+
+<ol>
+<li>Wizards appear in a modal dialogue. The size of the modal depends on the content of the solution. Primary navigation is therefore suppressed with the lightbox overlay.</li>
+<li>Steps that are completed have the light blue background, and are clickable.</li>
+<li>The active step is Sky blue.</li>
+<li>The step directly to the right of active is clickable.</li>
+<li>The primary action on create is "Next" and is replaced by "Finish" on the last step.</li>
+<li>"Save and close" is used in cases where it's acceptable for users to not complete the task in one sitting.</li>
+<li>In the event the steps do not fit on the screen, OR steps are not named – collapse to numbered circles.</li>
+</ol></p>
+        </section>
+      </div>
+    </div>
+
+    <div class="ibox page-content-tile-column">
+      <p>
+        <button class="btn btn-primary" ng-click="$parent.showCodewizards = !$parent.showCodewizards">
+          <i class="fa fa-code"></i> <span>{{$parent.showCodewizards ? 'Hide code': 'Show code'}}</span>
+        </button>
+      </p>
+    </div>
+
+    <section class="page-content-column kitchen-sink-code" ng-show="$parent.showCodewizards">
+      <bb-tab>
+        <bb-tab-group>
+          <bb-tab-group-item bb-tab-item-header="'Markup'">
+            <div>
+              <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller="WizardsPatternController"&gt;
+
+&lt;div class=&quot;ibox page-content-tile-column&quot;&gt;
+  &lt;button class=&quot;btn btn-primary&quot; ng-click=&quot;locals.openForm()&quot;&gt;Open form&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script type=&quot;text/ng-template&quot; id=&quot;patterns/wizards/wizardform.html&quot;&gt;
+  &lt;bb-modal&gt;
+    &lt;div class=&quot;modal-form&quot; ng-controller=&quot;WizardsModalPatternController&quot;&gt;
+      &lt;bb-modal-header&gt;Wizard example&lt;/bb-modal-header&gt;
+      &lt;form ng-submit=&quot;locals.save()&quot;&gt;
+        &lt;div bb-modal-body&gt;
+          &lt;tabset bb-wizard&gt;
+            &lt;tab ng-repeat=&quot;step in locals.steps&quot; heading=&quot;{{step.heading}}&quot; active=&quot;step.active&quot; disabled=&quot;step.disabled()&quot; bb-wizard-step-complete=&quot;step.complete()&quot;&gt;
+              &lt;ng-include src=&quot;step.templateUrl&quot;&gt;&lt;/ng-include&gt;
+            &lt;/tab&gt;
+          &lt;/tabset&gt;
+        &lt;/div&gt;
+        &lt;bb-modal-footer&gt;
+          &lt;bb-modal-footer-button ng-click=&quot;locals.wizardNav.goToPrevious()&quot; ng-disabled=&quot;locals.wizardNav.previousDisabled()&quot;&gt;{{locals.wizardNav.previousText()}}&lt;/bb-modal-footer-button&gt;
+          &lt;bb-modal-footer-button-primary ng-click=&quot;locals.wizardNav.goToNext()&quot; ng-disabled=&quot;locals.wizardNav.nextDisabled()&quot;&gt;{{locals.wizardNav.nextText()}}&lt;/bb-modal-footer-button-primary&gt;
+          &lt;bb-modal-footer-button&gt;Save and Close&lt;/bb-modal-footer-button&gt;
+          &lt;bb-modal-footer-button-cancel&gt;&lt;/bb-modal-footer-button-cancel&gt;
+        &lt;/bb-modal-footer&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  &lt;/bb-modal&gt;
+&lt;/script&gt;
+
+&lt;script type=&quot;text/ng-template&quot; id=&quot;patterns/wizards/step1.html&quot;&gt;
+  &lt;div class=&quot; form-group&quot;&gt;
+    &lt;label&gt;Enter text here to continue.&lt;/label&gt;
+    &lt;input type=&quot;text&quot; class=&quot;form-control&quot; ng-model=&quot;locals.requiredValue1&quot; /&gt;
+  &lt;/div&gt;
+&lt;/script&gt;
+
+&lt;script type=&quot;text/ng-template&quot; id=&quot;patterns/wizards/step2.html&quot;&gt;
+  &lt;div class=&quot; form-group&quot;&gt;
+    &lt;label&gt;
+      &lt;input type=&quot;checkbox&quot; bb-check ng-model=&quot;locals.requiredValue2&quot; /&gt;
+      Check this box to enable step 3.
+    &lt;/label&gt;
+  &lt;/div&gt;
+&lt;/script&gt;
+
+&lt;script type=&quot;text/ng-template&quot; id=&quot;patterns/wizards/step3.html&quot;&gt;
+  &lt;div class=&quot; form-group&quot;&gt;
+    Some other content.
+  &lt;/div&gt;
+&lt;/script&gt;
+
+&lt;/div&gt;</code></pre>
+            </div>
+          </bb-tab-group-item>
+          <bb-tab-group-item bb-tab-item-header="'JavaScript'">
+            <div>
+              <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;WizardsPatternController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+
+}]);
+
+angular.module(&#x27;KitchenSink&#x27;)
+    .controller(&#x27;WizardsPatternController&#x27;, [&#x27;$scope&#x27;, &#x27;bbModal&#x27;, function ($scope, bbModal) {
+        $scope.locals = {
+            openForm: function () {
+                bbModal.open({
+                    templateUrl: &#x27;patterns/wizards/wizardform.html&#x27;
+                });
+            }
+        };
+    }])
+    .controller(&#x27;WizardsModalPatternController&#x27;, [&#x27;$scope&#x27;, &#x27;$window&#x27;, &#x27;bbWizardNavigator&#x27;, function ($scope, $window, bbWizardNavigator) {
+        var steps,
+            wizardNav;
+
+        steps = [
+            {
+                heading: &#x27;1. Step 1&#x27;,
+                templateUrl: &#x27;patterns/wizards/step1.html&#x27;,
+                complete: function () {
+                    return !!$scope.locals.requiredValue1;
+                },
+                active: true
+            },
+            {
+                heading: &#x27;2. Step 2&#x27;,
+                templateUrl: &#x27;patterns/wizards/step2.html&#x27;,
+                complete: function () {
+                    return !!$scope.locals.requiredValue2;
+                },
+                disabled: function () {
+                    return !$scope.locals.requiredValue1;
+                }
+            },
+            {
+                heading: &#x27;3. Step 3&#x27;,
+                templateUrl: &#x27;patterns/wizards/step3.html&#x27;,
+                complete: function () {
+                    return !!$scope.locals.requiredValue3;
+                },
+                disabled: function () {
+                    return !$scope.locals.requiredValue1 || !$scope.locals.requiredValue2;
+                }
+            }
+        ];
+
+        wizardNav = bbWizardNavigator.init(
+            {
+                steps: steps,
+                finish: function () {
+                    $window.alert(&#x27;Finished!&#x27;);
+                }
+            }
+        );
+
+        $scope.locals = {
+            steps: steps,
+            wizardNav: wizardNav,
+            firstStepComplete: function () {
+                return !!$scope.locals.requiredValue1;
+            },
+            secondStepComplete: function () {
+                return !!$scope.locals.requiredValue2;
+            }
+        };
+    }]);</code></pre>
+            </div>
+          </bb-tab-group-item>
+        </bb-tab-group>
+      </bb-tab>
+    </section>
+    <div class="ibox page-content-tile-column">
+  <button class="btn btn-primary" ng-click="locals.openForm()">Open form</button>
+</div>
+
+<script type="text/ng-template" id="patterns/wizards/wizardform.html">
+  <bb-modal>
+    <div class="modal-form" ng-controller="WizardsModalPatternController">
+      <bb-modal-header>Wizard example</bb-modal-header>
+      <form ng-submit="locals.save()">
+        <div bb-modal-body>
+          <tabset bb-wizard>
+            <tab ng-repeat="step in locals.steps" heading="{{step.heading}}" active="step.active" disabled="step.disabled()" bb-wizard-step-complete="step.complete()">
+              <ng-include src="step.templateUrl"></ng-include>
+            </tab>
+          </tabset>
+        </div>
+        <bb-modal-footer>
+          <bb-modal-footer-button ng-click="locals.wizardNav.goToPrevious()" ng-disabled="locals.wizardNav.previousDisabled()">{{locals.wizardNav.previousText()}}</bb-modal-footer-button>
+          <bb-modal-footer-button-primary ng-click="locals.wizardNav.goToNext()" ng-disabled="locals.wizardNav.nextDisabled()">{{locals.wizardNav.nextText()}}</bb-modal-footer-button-primary>
+          <bb-modal-footer-button>Save and Close</bb-modal-footer-button>
+          <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+        </bb-modal-footer>
+      </form>
+    </div>
+  </bb-modal>
+</script>
+
+<script type="text/ng-template" id="patterns/wizards/step1.html">
+  <div class=" form-group">
+    <label>Enter text here to continue.</label>
+    <input type="text" class="form-control" ng-model="locals.requiredValue1" />
+  </div>
+</script>
+
+<script type="text/ng-template" id="patterns/wizards/step2.html">
+  <div class=" form-group">
+    <label>
+      <input type="checkbox" bb-check ng-model="locals.requiredValue2" />
+      Check this box to enable step 3.
+    </label>
+  </div>
+</script>
+
+<script type="text/ng-template" id="patterns/wizards/step3.html">
+  <div class=" form-group">
+    Some other content.
+  </div>
+</script>
+    <script>
+      setTimeout(function () {
+        Rainbow.color();
+      }, 100);
+    </script>
+  </script>
+  <script>
+    angular.module('KitchenSink').controller('WizardsPatternController', ['$scope', function ($scope) {
+
+}]);
+
+angular.module('KitchenSink')
+    .controller('WizardsPatternController', ['$scope', 'bbModal', function ($scope, bbModal) {
+        $scope.locals = {
+            openForm: function () {
+                bbModal.open({
+                    templateUrl: 'patterns/wizards/wizardform.html'
+                });
+            }
+        };
+    }])
+    .controller('WizardsModalPatternController', ['$scope', '$window', 'bbWizardNavigator', function ($scope, $window, bbWizardNavigator) {
+        var steps,
+            wizardNav;
+
+        steps = [
+            {
+                heading: '1. Step 1',
+                templateUrl: 'patterns/wizards/step1.html',
+                complete: function () {
+                    return !!$scope.locals.requiredValue1;
+                },
+                active: true
+            },
+            {
+                heading: '2. Step 2',
+                templateUrl: 'patterns/wizards/step2.html',
+                complete: function () {
+                    return !!$scope.locals.requiredValue2;
+                },
+                disabled: function () {
+                    return !$scope.locals.requiredValue1;
+                }
+            },
+            {
+                heading: '3. Step 3',
+                templateUrl: 'patterns/wizards/step3.html',
+                complete: function () {
+                    return !!$scope.locals.requiredValue3;
+                },
+                disabled: function () {
+                    return !$scope.locals.requiredValue1 || !$scope.locals.requiredValue2;
+                }
+            }
+        ];
+
+        wizardNav = bbWizardNavigator.init(
+            {
+                steps: steps,
+                finish: function () {
+                    $window.alert('Finished!');
+                }
+            }
+        );
+
+        $scope.locals = {
+            steps: steps,
+            wizardNav: wizardNav,
+            firstStepComplete: function () {
+                return !!$scope.locals.requiredValue1;
+            },
+            secondStepComplete: function () {
+                return !!$scope.locals.requiredValue2;
+            }
+        };
+    }]);
+  </script>
+  
+
+  <script type="text/ng-template" id="home.html">
+    <div class="demo-content">
+      <section class="page-content-column">
+        <h1>Design Patterns</h1>
+        <hr class="kitchen-sink-divider" />
+        <p>
+          Welcome. SkyUX is Blackbaud's next generation user experience platform that aims to bring a consistent and cohesive experience for our customers across all their services. Sky is both a philosophy for how to design as well as visual design and interaction pattern guidance.
+        </p>
+        <p>
+          <ul>
+            
+            <li>
+              <a ui-sref="forms">Forms</a>
+            </li>
+            
+            <li>
+              <a ui-sref="icons">Icons</a>
+            </li>
+            
+            <li>
+              <a ui-sref="recordPages">Record Pages</a>
+            </li>
+            
+            <li>
+              <a ui-sref="tabs">Tabs</a>
+            </li>
+            
+            <li>
+              <a ui-sref="text">Text</a>
+            </li>
+            
+            <li>
+              <a ui-sref="wizards">Wizards</a>
+            </li>
+            
+          </ul>
+        </p>
+      </section>
+    </div>
+  </script>
+
+  <script src="../../Scripts/bootstrap.min.js"></script>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/rainbow.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/generic.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/javascript.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/js/language/html.js"></script>
+</body>
+</html>

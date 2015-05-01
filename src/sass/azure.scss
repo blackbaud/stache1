@@ -1,11 +1,11 @@
-/* 
+/*
 * ==========================================================================
 * SASS
-* ========================================================================== 
+* ==========================================================================
 */
 
 @import "_variables";
-@import "bb-sky-sass/_variables";
+@import "bb-sky-sass/scss/_variables";
 @import "bb-sky-sass/Bootstrap/_variables";
 
 @import "_omnibar";
@@ -15,10 +15,10 @@
 @import "_footer";
 @import "_octicons";
 
-/* 
+/*
 * ==========================================================================
 * AZURE
-* ========================================================================== 
+* ==========================================================================
 */
 
 #account-menu,
@@ -26,16 +26,16 @@
   display: none;
 }
 
-/* 
+/*
 * ==========================================================================
 * GLOBAL
-* ========================================================================== 
+* ==========================================================================
 */
 
-html, 
-form, 
-body { 
-  font-size: 13px; 
+html,
+form,
+body {
+  font-size: 13px;
   font-family: $font-family-sans-serif;
 }
 
@@ -45,62 +45,62 @@ body {
   font-family: $font-family-sans-serif;
 }
 
-h1, 
-h2, 
+h1,
+h2,
 h3,
 h4,
 h5,
 h6,
-.h1, 
-.h2, 
+.h1,
+.h2,
 .h3,
 .h4,
 .h5,
-.h6 { 
+.h6 {
   font-family: $font-family-sans-serif;
   font-weight: 100;
 }
 
-h1 { 
-  font-size: 30px; 
+h1 {
+  font-size: 30px;
 }
 
-h2 { 
-  font-size: 24px; 
+h2 {
+  font-size: 24px;
 }
 
-h3 { 
-  font-size: 16px; 
+h3 {
+  font-size: 16px;
 }
 
-h4 { 
-  font-size: 14px; 
+h4 {
+  font-size: 14px;
 }
 
-h5 { 
-  font-size: 12px; 
+h5 {
+  font-size: 12px;
 }
 
-h6 { 
-  font-size: 10px; 
+h6 {
+  font-size: 10px;
 }
 
-h3, 
-h4, 
-h5 { 
-  font-weight: 600; 
-  margin-top: 5px; 
+h3,
+h4,
+h5 {
+  font-weight: 600;
+  margin-top: 5px;
 }
 
-.zone-content a { 
+.zone-content a {
   color: #0088cc;
 }
 
-.zone-content a:hover, 
-.zone-content a:focus { 
+.zone-content a:hover,
+.zone-content a:focus {
   color: #005580;
-  text-decoration: none; 
-}  
+  text-decoration: none;
+}
 
 #ap-container {
   max-width: none;
@@ -118,10 +118,10 @@ h5 {
   padding: 0;
 }
 
-/* 
+/*
 * ==========================================================================
 * LAYOUT
-* ========================================================================== 
+* ==========================================================================
 */
 
 .navbar-collapse,
@@ -133,7 +133,7 @@ h5 {
 // Mirrors Sky/Bootstrap/_grid.scss
 .navbar-collapse,
 .layout-row-content .layout,
-.zone-footer footer { 
+.zone-footer footer {
 
   @media (min-width: $screen-sm-min) {
     width: $container-sm;
@@ -146,10 +146,10 @@ h5 {
   }
 }
 
-/* 
+/*
 * ==========================================================================
 * NAVIGATION
-* ========================================================================== 
+* ==========================================================================
 */
 
 .navbar {
@@ -179,7 +179,7 @@ h5 {
   background-color: #293846;
   border-bottom: solid 4px #1ab394;
   color: #FFF !important;
-  padding-bottom: 11px;    
+  padding-bottom: 11px;
 }
 
 .zone-aside-first {

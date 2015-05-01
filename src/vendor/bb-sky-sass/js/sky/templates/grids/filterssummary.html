@@ -1,0 +1,9 @@
+﻿<div class="toolbar table-toolbar applied-filter-bar">
+    <div class="applied-filter-header">
+        <span>{{resources.grid_filters_summary_header}}</span>
+    </div>
+    <div class="applied-filter-content" ng-click="openFilterMenu()">
+        <span class="applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>
+        <span class="sky-icon-close applied-filter-remove" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>
+    </div>
+</div>
