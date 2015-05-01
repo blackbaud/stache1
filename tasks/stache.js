@@ -70,7 +70,7 @@ module.exports = function (grunt) {
         layoutext: '.hbs',
         layout: 'layout-container',
         stache: '<%= stache %>',
-        
+
         // https://github.com/assemble/assemble/pull/468#issuecomment-38730532
         initializeEngine: function (engine, options)  {
           var search = "{{\\s*body\\s*}}";
@@ -154,18 +154,6 @@ module.exports = function (grunt) {
           },
           {
             expand: true,
-            cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/Bootstrap/fonts/',
-            src: '*',
-            dest: '<%= stache.config.build %>fonts/'
-          },
-          {
-            expand: true,
-            cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/FontAwesome/fonts/',
-            src: '*',
-            dest: '<%= stache.config.build %>fonts/'
-          },
-          {
-            expand: true,
             cwd: '<%= stache.dir %><%= stache.bower %>octicons/octicons/',
             src: [
               '*.eot',
@@ -177,7 +165,7 @@ module.exports = function (grunt) {
           },
           {
             expand: true,
-            cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/fonts/',
+            cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/dist/css/fonts/',
             src: '*',
             dest: '<%= stache.config.build %>fonts/'
           },
@@ -320,7 +308,7 @@ module.exports = function (grunt) {
     arr.sort(function (a, b) {
       var ap = a[prop] || propDefault;
       var bp = b[prop] || propDefault;
-      
+
       if (ap < bp) {
         return sortAscending ? -1 : 1;
       } else if (ap > bp) {
@@ -334,7 +322,7 @@ module.exports = function (grunt) {
   function sortRecursive(key, sortAscending) {
     var nav_links = grunt.config.get(key);
     var blog = grunt.config.get('stache.config.blog');
-    
+
     sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100);
     grunt.config.set(key, nav_links);
 
@@ -380,16 +368,16 @@ module.exports = function (grunt) {
     grunt.config.set(root + navKeySearch, []);
     grunt.file.recurse(grunt.config(root + '.content'), function (abspath, rootdir, subdir, filename) {
       var fm = yfm.extractJSON(abspath);
-      
+
       var show = true;
       if (typeof fm.published !== 'undefined' && fm.published === false) {
         show = false;
       }
-      
+
       if (abspath && abspath.indexOf('.DS_Store') > -1) {
         show = false;
       }
-      
+
       if (show) {
         sorted.push({
           abspath: abspath,
