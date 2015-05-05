@@ -15,8 +15,9 @@
       // Look into making this mirror the Angular Directive
       $('.productmenucontainer').append($('.navbar-nav').clone().toggleClass('nav-items bb-omnibar-productmenu'));
 
+      $('.servicename').wrap('<a id="omnibar-link" href="{{ stache.config.base }}"></a>');
+
     }
   });
 
 }(jQuery, window, document));
-
