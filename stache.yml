@@ -33,6 +33,8 @@ livereload: 4100
 omnibar_title: Developer
 omnibar_help: 'false'
 omnibar_search: 'false'
+omnibar_link: <%= stache.config.base %>
+omnibar_link_enabled: true
 
 # =============================================
 # STACHE - LAYOUTS
