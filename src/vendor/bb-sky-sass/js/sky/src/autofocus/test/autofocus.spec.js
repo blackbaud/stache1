@@ -28,8 +28,9 @@ describe('Autofocus directive', function () {
 
         $timeout.flush();
 
-        expect(el.focus()).toBeFocused();
+        expect(el).toBeFocused();
         
+        el.blur();
         el.remove();
     });
 });

@@ -2393,9 +2393,9 @@ This service provides additional functionality that works closely with the direc
                 }],
                 link: function ($scope, element, attrs, bbGrid) {
                     /*jslint unparam: true */
-                    var box = element.find('.grid-filters-box'),
-                        filtersContainer = element.find('.grid-filters-container');
-        
+                    var box = element.find('.bb-grid-filters-box'),
+                        filtersContainer = element.find('.bb-grid-filters-container');
+                    
                     $scope.viewKeeperOptions = {};
 
                     bbGrid.viewKeeperChangedHandler = function (val) {
@@ -2444,6 +2444,7 @@ This service provides additional functionality that works closely with the direc
                             }
                         }
                     });
+                    
                 },
                 templateUrl: 'sky/templates/grids/filters.html'
             };
@@ -2485,7 +2486,7 @@ This service provides additional functionality that works closely with the direc
                 }],
                 link: function ($scope, element, attrs, bbGrid) {
                     /*jslint unparam: true */
-                    var toolbarContainer = element.parents('.bb-grid-container').find('.grid-toolbar-container .bb-grid-filter-summary-container');
+                    var toolbarContainer = element.parents('.bb-grid-container').find('.bb-grid-toolbar-container .bb-grid-filter-summary-container');
 
                     toolbarContainer.append(element);
 
@@ -2556,6 +2557,7 @@ This service provides additional functionality that works closely with the direc
       - `cmd` A function that will be called when the dropdown option is clicked. It should return false if you wish to close the dropdown after the function is called.
   - `hideColPicker` If true, hides the grid column picker in the toolbar.
   - `hideFilters` If true, hides the filters button in the toolbar.
+  - `multiselect` If true, adds a multiselect checkbox column to the listbuilder.
   - `onAddClick` If a function is specified, then an add button will appear in the grid toolbar that will call the `onAddClick` function when clicked.
   - `searchText` The text entered in the grid search box, set by bbGrid.
   - `selectedColumnIds` An array of unique identifiers indicating the visible columns in the order in which they should be displayed.
@@ -2567,6 +2569,13 @@ This service provides additional functionality that works closely with the direc
   - `itemsPerPage` The number of rows you wish to show in the grid per page, defaults to 5.
   - `maxPages` The maximum number of pages to show in the pagination bar, defualts to 5.
   - `recordCount` The total number of records available through pagination.
+- `bb-multiselect-actions` An array of actions that can be shown in the multiselect action bar. Each action can have the following: 
+  - `actionCallback` A function that will be called when the action is clicked.
+  - `automationId` An identifier that will be placed in the `data-bbauto` attribute for automation purposes.
+  - `isPrimary` If true, this action will have the primary button color.
+  - `selections` The selected row objects from the list builder that are associated with this action, this can be updated through the `bb-selections-updated` function. 
+  - `title` The text that will appear on the button for the action.
+- `bb-selections-updated` A function which will be called when multiselect selections are updated. The selections are passed to the function as an argument and you can update your multiselect actions accordingly.
 
 ### Grid Events ###
 
@@ -2582,12 +2591,11 @@ reloading the grid with the current data after the event has fired.
     var DEFAULT_ITEMS_PER_PAGE = 5,
         DEFAULT_MAX_PAGES = 5,
         DEFAULT_COLUMN_SIZE = 150,
-        MULTISELECT_COLUMN_SIZE = 25,
+        MULTISELECT_COLUMN_SIZE = 27,
         DROPDOWN_TOGGLE_COLUMN_SIZE = 40,
         DROPDOWN_TOGGLE_COLUMN_NAME = 'dropdownToggle',
         MULTISELECT_COLUMN_NAME = 'cb',
-        TOP_SCROLLBAR_HEIGHT = 18,
-        HEADER_RESIZE_OVERFLOW_WIDTH = 15;
+        TOP_SCROLLBAR_HEIGHT = 18;
 
     angular.module('sky.grids', ['sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters'])
         .directive('bbGrid', ['bbModal', '$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout',
@@ -2690,7 +2698,8 @@ reloading the grid with the current data after the event has fired.
                             tableEl = element.find('table'),
                             tableDomEl = tableEl[0],
                             tableWrapper = element.find('.table-responsive'),
-                            toolbarContainer = element.find('.grid-toolbar-container'),
+                            tableWrapperWidth,
+                            toolbarContainer = element.find('.bb-grid-toolbar-container'),
                             toolbarContainerId,
                             topScrollbar = element.find('.bb-grid-top-scrollbar'),
                             topScrollbarDiv = topScrollbar.find('>div'),
@@ -2700,9 +2709,9 @@ reloading the grid with the current data after the event has fired.
                             vkToolbars,
                             vkHeader,
                             windowEl = $($window),
-                            windowWidth,
+                            windowEventId,
                             resizeStartColWidth;
-
+                        
                         function updateGridLoadedTimestampAndRowCount(count) {
                             $scope.locals.timestamp = new Date().getTime();
                             $scope.locals.rowcount = count;
@@ -2713,7 +2722,6 @@ reloading the grid with the current data after the event has fired.
                             if ($scope.options && $scope.options.selectedColumnIds && $scope.options.selectedColumnIds.length > 0 && tableEl[0].grid) {
                                 reinitializeGrid();
                             }
-                            
                         }
 
                         function buildColumnClasses(column) {
@@ -2721,7 +2729,7 @@ reloading the grid with the current data after the event has fired.
 
                             //if this column does not allow search then add the appropriate class. This is used when highlighting search results
                             if (column.exclude_from_search) {
-                                classes += "grid-no-search ";
+                                classes += "bb-grid-no-search grid-no-search ";
                             }
 
                             return classes;
@@ -2943,18 +2951,57 @@ reloading the grid with the current data after the event has fired.
                         }
                         
                         function resetTopScrollbar() {
-                            
-                            topScrollbarDiv.width(totalColumnWidth + HEADER_RESIZE_OVERFLOW_WIDTH);
+                            topScrollbarDiv.width(totalColumnWidth);
                             topScrollbarDiv.height(totalColumnWidth > (topScrollbar.width()) ? TOP_SCROLLBAR_HEIGHT : 0);
                             topScrollbar.height(totalColumnWidth > (topScrollbar.width()) ? TOP_SCROLLBAR_HEIGHT : 0);
                         }
 
-                        function resetGridWidth() {
-                            var width = getDesiredGridWidth();
-                            if (width > 0) {
-                                tableEl.setGridWidth(width);
-                                topScrollbar.width(tableWrapper.width());
-                                resetTopScrollbar();
+                        function resizeExtendedColumn(changedWidth, isIncreasing) {
+                            var extendedShrinkWidth = currentExtendedColumnWidth - originalExtendedColumnWidth;
+                            
+                            //If the extended portion of the last column is less than the amount resized
+                            if (extendedShrinkWidth <= changedWidth) {
+                                //decrease extended column to original size
+                                tableEl.setColProp(extendedColumnName, {widthOrg: originalExtendedColumnWidth});
+                                       
+                                //increase grid width by remainder and wipe out all the extended stuff
+                                if (isIncreasing) {
+                                    totalColumnWidth = totalColumnWidth + (changedWidth - extendedShrinkWidth);
+                                } else {
+                                    totalColumnWidth = totalColumnWidth - extendedShrinkWidth;
+                                }
+                                
+                                tableWrapper.addClass('bb-grid-table-wrapper-overflow');
+                                resetExtendedColumn();
+                            } else {
+                                //decrease extended column width by changedWidth
+                                currentExtendedColumnWidth = currentExtendedColumnWidth - changedWidth;
+                                tableEl.setColProp(extendedColumnName, {widthOrg: currentExtendedColumnWidth});
+                                
+                                if (!isIncreasing) {
+                                    totalColumnWidth = totalColumnWidth - changedWidth;
+                                }
+                            } 
+                            tableEl.setGridWidth(totalColumnWidth, true);
+                            resetTopScrollbar();
+                        }
+                        
+                        function resetGridWidth(oldWidth, newWidth) {
+                            var changedWidth,
+                                width;
+                            
+                            topScrollbar.width(tableWrapper.width());
+                            if (needsExtendedColumnResize && newWidth < oldWidth) {
+                                changedWidth = oldWidth - newWidth;
+                                resizeExtendedColumn(changedWidth, false);
+                            } else {
+                                width = getDesiredGridWidth();
+                                
+                                /*istanbul ignore else: sanity check */
+                                if (width > 0) {
+                                    tableEl.setGridWidth(width);
+                                    resetTopScrollbar();
+                                }
                             }
                         }
                         
@@ -2968,8 +3015,7 @@ reloading the grid with the current data after the event has fired.
                         }
                         
                         function resizeStop(newWidth, index) {
-                            var changedWidth,
-                                extendedShrinkWidth;
+                            var changedWidth;
                             
                             tableWrapper.addClass('bb-grid-table-wrapper-overflow');
                             
@@ -2979,24 +3025,9 @@ reloading the grid with the current data after the event has fired.
                             if (needsExtendedColumnResize) {
                                 //If the column you're resizing is not the extended column and you're increasing the size
                                 if (index !== extendedColumnIndex && changedWidth > 0) {             
-                                         
-                                    extendedShrinkWidth = currentExtendedColumnWidth - originalExtendedColumnWidth;
                                     
-                                    //If the extended portion of the last column is less than the amount resized
-                                    if (extendedShrinkWidth <= changedWidth) {
-                                        //decrease extended column to original size
-                                        tableEl.setColProp(extendedColumnName, {widthOrg: originalExtendedColumnWidth});
-                                       
-                                        //increase grid width by remainder and wipe out all the extended stuff
-                                        totalColumnWidth = totalColumnWidth + (changedWidth - extendedShrinkWidth);
-                                              
-                                    } else {
-                                        //decrease extended column width by changedWidth
-                                        currentExtendedColumnWidth = currentExtendedColumnWidth - changedWidth;
-                                        tableEl.setColProp(extendedColumnName, {widthOrg: currentExtendedColumnWidth});
-                                    } 
-                                    tableEl.setGridWidth(totalColumnWidth, true);
-                                    resetTopScrollbar();
+                                    resizeExtendedColumn(changedWidth, true);
+                                    
                                     resetExtendedColumn();
                                     return;
                                 }
@@ -3079,7 +3110,7 @@ reloading the grid with the current data after the event has fired.
                         function highlightSearchText() {
                             var options = $scope.options;
                             if (options && options.searchText) {
-                                bbHighlight(tableEl.find("td").not('.grid-no-search'), options.searchText, 'highlight');
+                                bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
                             } else {
                                 bbHighlight.clear(tableEl);
                             }
@@ -3270,6 +3301,8 @@ reloading the grid with the current data after the event has fired.
                                     locals.selectedRows = allRowData.slice();
                                 }
                             }
+                            
+                            $scope.$apply();
                         }
 
                         function onSelectRow(rowId, status) {
@@ -3321,6 +3354,8 @@ reloading the grid with the current data after the event has fired.
 
                             totalColumnWidth = 0;
                             
+                            tableWrapperWidth = tableWrapper.width();
+                            
                             locals.multiselect = false;
 
                             //Clear reference to the table body since it will be recreated.
@@ -3351,17 +3386,24 @@ reloading the grid with the current data after the event has fired.
                                     locals.multiselect = true;
                                     hoverrows = true;
 
-                                    totalColumnWidth = totalColumnWidth + MULTISELECT_COLUMN_SIZE;     
+                                    totalColumnWidth = totalColumnWidth + MULTISELECT_COLUMN_SIZE;
                                 }
                                 
                                 $scope.searchText = $scope.options.searchText;
                             }
+                            
+                            // Allow grid styles to be changed when grid is in multiselect mode (such as the 
+                            // header checkbox alignment).
+                            element[locals.multiselect ? 'addClass' : 'removeClass']('bb-grid-multiselect');
 
+                           
                             if (getContextMenuItems) {
                                 useGridView = false;
                             }
-
+                           
                             if (columns && selectedColumnIds) {
+                                
+                                
                                 columnModel = buildColumnModel(columns, selectedColumnIds);
                                 columnCount = columnModel.length;
 
@@ -3386,10 +3428,11 @@ reloading the grid with the current data after the event has fired.
                                     width: getDesiredGridWidth()
                                 };
 
+                                
                                 tableEl.jqGrid(jqGridOptions);
-
+          
                                 header = $(tableDomEl.grid.hDiv);
-
+                                
                                 //Attach click handler for sorting columns
                                 header.find('th').on('click', function () {
                                     var sortOptions = $scope.options.sortOptions,
@@ -3407,13 +3450,13 @@ reloading the grid with the current data after the event has fired.
                                         $scope.$apply();
                                     }
                                 });
-
+                                
                                 fullGrid = header.parents('.ui-jqgrid:first');
 
                                 if (vkHeader) {
                                     vkHeader.destroy();
                                 }
-
+                                
                                 toolbarContainer.show();
                                 
                                 topScrollbar.width(tableWrapper.width());
@@ -3423,13 +3466,22 @@ reloading the grid with the current data after the event has fired.
                                     el: header[0],
                                     boundaryEl: tableWrapper[0],
                                     verticalOffSetElId: toolbarContainerId,
-                                    setWidth: true
+                                    setWidth: true,
+                                    onStateChanged: function () {
+                                        if (vkHeader.isFixed) {
+                                            header.scrollLeft(tableWrapper.scrollLeft()); 
+                                        } else {
+                                            header.scrollLeft(0);
+                                        }
+                                            
+                                    }
                                 });
-                                
+         
                                 setSortStyles();
 
                                 $scope.gridCreated = true;
                             }
+                            
                         }
 
                         function destroyCellScopes() {
@@ -3491,6 +3543,17 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.loadMoreStarted = false;
                             }
                         }
+                        
+                        function handleTableWrapperResize() {
+                            var newWidth = tableWrapper.width();
+                            
+                            if (tableWrapperWidth && tableWrapperWidth !== newWidth) {
+                                resetGridWidth(tableWrapperWidth, newWidth);
+                                tableWrapperWidth = newWidth;
+                            } else {
+                                tableWrapperWidth = newWidth;
+                            }
+                        }
 
                         function setRows(rows) {
                             if (tableDomEl.addJSONData) {
@@ -3500,7 +3563,7 @@ reloading the grid with the current data after the event has fired.
                                     destroyCellScopes();
                                     tableDomEl.addJSONData(rows);
                                     $timeout(highlightSearchText);
-
+                                    handleTableWrapperResize();
                                     updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
                                 });
                             }
@@ -3540,7 +3603,7 @@ reloading the grid with the current data after the event has fired.
                         }
 
                         function applySearchText() {
-                            element.find('.search-container input').select();
+                            element.find('.bb-search-container input').select();
                             $scope.options.searchText = $scope.searchText;
                         }
 
@@ -3548,8 +3611,6 @@ reloading the grid with the current data after the event has fired.
                             vkToolbars.scrollToTop();
                         }
                         
-                       
-
                         locals.resetMultiselect = resetMultiselect;
 
                         id = $scope.$id;
@@ -3621,19 +3682,11 @@ reloading the grid with the current data after the event has fired.
                             $scope.$broadcast('updateAppliedFilters', f);
                         });
 
-                        windowWidth = windowEl.width();
-                        windowEl.on("resize." + id + ", orientationchange." + id, function () {
-                            var newWidth = windowEl.width();
-                            if (windowWidth !== newWidth) {
-                                windowWidth = newWidth;
-                                resetGridWidth();
-                            }
-                        });
-
                         bbMediaBreakpoints.register(mediaBreakpointHandler);
 
                         tableWrapper.on('scroll', function () {
                             
+                            /*istanbul ignore else: sanity check */
                             if (vkHeader) {
                                 vkHeader.syncElPosition();
                             }
@@ -3642,8 +3695,13 @@ reloading the grid with the current data after the event has fired.
                                 header.scrollLeft(tableWrapper.scrollLeft());
                             }
                             
-                            topScrollbar.scrollLeft(tableWrapper.scrollLeft());
-                            
+                            topScrollbar.scrollLeft(tableWrapper.scrollLeft());     
+                        });
+                        
+                        windowEventId = 'bbgrid' + id;
+                        
+                        windowEl.on('resize.' + windowEventId + ', orientationchange.' + windowEventId, function () {
+                            handleTableWrapperResize();
                         });
                         
                         topScrollbar.on('scroll', function () {
@@ -3654,21 +3712,23 @@ reloading the grid with the current data after the event has fired.
                         });
 
                         element.on('$destroy', function () {
-                            windowEl.off("resize." + id + ", orientationchange." + id);
-
+                            
+                            /*istanbul ignore else: sanity check */
                             if (vkToolbars) {
                                 vkToolbars.destroy();
                             }
 
+                            /*istanbul ignore else: sanity check */
                             if (vkHeader) {
                                 vkHeader.destroy();
                             }
                             
+                            /*istanbul ignore else: sanity check */
                             if (vkActionBarAndBackToTop) {
                                 vkActionBarAndBackToTop.destroy();
                             }
 
-                            tableWrapper.off();
+                            windowEl.off('resize.' + windowEventId + ', orientationchange.' + windowEventId);
 
                             topScrollbar.off();
                             
@@ -6991,8 +7051,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
 (function () {
     'use strict';
 
-    var CLS_VIEWKEEPER = "viewkeeper",
-        CLS_VIEWKEEPER_FIXED = CLS_VIEWKEEPER + "-fixed",
+    var CLS_VIEWKEEPER_FIXED = 'bb-viewkeeper-fixed viewkeeper-fixed',
         config = {
             viewportMarginTop: 0
         },
@@ -7297,9 +7356,9 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                 //On iOS we need to have special handling when entering textboxes to correct an issue with fixed
                 //elements used by view keeper when the keyboard flys out.
                 angular.element(window.document).on('focus', 'input', function () {
-                    angular.element('body').addClass('viewkeeper-ignore-fixed');
+                    angular.element('body').addClass('bb-viewkeeper-ignore-fixed viewkeeper-ignore-fixed');
                 }).on('blur', 'input', function () {
-                    angular.element('body').removeClass('viewkeeper-ignore-fixed');
+                    angular.element('body').removeClass('bb-viewkeeper-ignore-fixed viewkeeper-ignore-fixed');
                 });
             } else {
                 bbMediaBreakpoints.register(mediaBreakpointHandler);
@@ -7387,23 +7446,24 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                             scrollingDown = true;
                         }
                         prevScroll = scrollPos;
-
+                        
                         if (scrollPos >= elementStart - verticalOffset && element.height() + verticalOffset <= $window.document.body.offsetHeight) {
-                            if (element.height() < $window.innerHeight) {
+                            if (element.height() + verticalOffset < $window.innerHeight) {
                                 tempTop = 0;
 
-                                element.removeClass("grid-filters-fixed-bottom").addClass("grid-filters-fixed-top");
+                                element.removeClass('bb-grid-filters-fixed-bottom grid-filters-fixed-bottom').addClass('bb-grid-filters-fixed-top grid-filters-fixed-top');
 
                                 element.css({
                                     top: verticalOffset + 'px'
                                 });
                             } else if (scrollingDown) {
                                 if (element.offset().top + element.height() > scrollPos + $window.innerHeight) {
+                                    /*istanbul ignore else: sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }
 
-                                    element.removeClass("grid-filters-fixed-top grid-filters-fixed-bottom");
+                                    element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom grid-filters-fixed-top grid-filters-fixed-bottom');
 
                                     element.css({
                                         top: tempTop
@@ -7413,15 +7473,16 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                                     element.css({
                                         top: ''
                                     });
-                                    element.removeClass("grid-filters-fixed-top").addClass("grid-filters-fixed-bottom");
+                                    element.removeClass('bb-grid-filters-fixed-top grid-filters-fixed-top').addClass('bb-grid-filters-fixed-bottom grid-filters-fixed-bottom');
                                 }
                             } else {
                                 if (element.offset().top < scrollPos + verticalOffset) {
+                                    /*istanbul ignore else: sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }
 
-                                    element.removeClass("grid-filters-fixed-top grid-filters-fixed-bottom");
+                                    element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom grid-filters-fixed-top grid-filters-fixed-bottom');
 
                                     element.css({
                                         top: tempTop
@@ -7429,7 +7490,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                                 } else {
                                     tempTop = 0;
 
-                                    element.removeClass("grid-filters-fixed-bottom").addClass("grid-filters-fixed-top");
+                                    element.removeClass('bb-grid-filters-fixed-bottom grid-filters-fixed-bottom').addClass('bb-grid-filters-fixed-top grid-filters-fixed-top');
 
                                     element.css({
                                         top: verticalOffset + 'px'
@@ -7438,13 +7499,13 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                             }
                         } else {
                             tempTop = 0;
-                            element.removeClass("grid-filters-fixed-top grid-filters-fixed-bottom");
+                            element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom grid-filters-fixed-top grid-filters-fixed-bottom');
                             element.css({
                                 top: 0
                             });
                         }
                     }
-
+                    
                     if (!/iPad|iPod|iPhone/i.test($window.navigator.userAgent)) {
                         angular.element($window).on('scroll.' + id + ', orientationchange.' + id, scroll);
 
@@ -8140,29 +8201,29 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>');
     $templateCache.put('sky/templates/checklist/checklist.html',
         '<div>\n' +
-        '  <div ng-if="bbChecklistIncludeSearch" class="checklist-filter-bar">\n' +
+        '  <div ng-if="bbChecklistIncludeSearch" class="bb-checklist-filter-bar checklist-filter-bar">\n' +
         '    <input type="text" maxlength="255" placeholder="{{bbChecklistSearchPlaceholder}}" ng-model="locals.searchText" ng-model-options="{debounce: bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">\n' +
         '  </div>\n' +
-        '  <div class="checklist-filter-bar">\n' +
-        '    <a class="checklist-link" data-bbauto-field="ChecklistSelectAll" href="#" ng-click="locals.selectAll()">{{locals.selectAllText}}</a>\n' +
-        '    <a class="checklist-link" data-bbauto-field="ChecklistClear" href="#" ng-click="locals.clear()">{{locals.clearAllText}}</a>\n' +
+        '  <div class="bb-checklist-filter-bar checklist-filter-bar">\n' +
+        '    <a class="bb-checklist-link checklist-link" data-bbauto-field="ChecklistSelectAll" href="#" ng-click="locals.selectAll()">{{locals.selectAllText}}</a>\n' +
+        '    <a class="bb-checklist-link checklist-link" data-bbauto-field="ChecklistClear" href="#" ng-click="locals.clear()">{{locals.clearAllText}}</a>\n' +
         '  </div>\n' +
-        '  <div class="checklist-wrapper">\n' +
-        '    <table class="table checklist-table">\n' +
+        '  <div class="bb-checklist-wrapper checklist-wrapper">\n' +
+        '    <table class="table bb-checklist-table checklist-table">\n' +
         '      <thead>\n' +
         '        <tr>\n' +
-        '          <th class="checklist-checkbox-column"></th>\n' +
+        '          <th class="bb-checklist-checkbox-column checklist-checkbox-column"></th>\n' +
         '          <th ng-repeat="column in locals.columns" class="{{column.class}}" ng-style="{\'width\': column.width}">{{column.caption}}</th>\n' +
         '        </tr>\n' +
         '      </thead>\n' +
         '      <tbody bb-highlight="locals.searchText" bb-highlight-beacon="locals.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklistItems.length}}">\n' +
-        '        <tr ng-repeat="item in bbChecklistItems" ng-click="locals.rowClicked(item);" class="checklist-row">\n' +
+        '        <tr ng-repeat="item in bbChecklistItems" ng-click="locals.rowClicked(item);" class="bb-checklist-row checklist-row">\n' +
         '          <td><input bb-check type="checkbox" checklist-model="bbChecklistSelectedItems" checklist-value="item" ng-click="$event.stopPropagation();" data-bbauto-field="{{item[bbChecklistAutomationField]}}" /></td>\n' +
         '          <td ng-repeat="column in locals.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>\n' +
         '        </tr>\n' +
         '      </tbody>\n' +
         '    </table>\n' +
-        '    <div class="checklist-no-items" ng-if="!bbChecklistItems.length">{{locals.noItemsText || locals.defaultNoItemsText}}</div>\n' +
+        '    <div class="bb-checklist-no-items checklist-no-items" ng-if="!bbChecklistItems.length">{{locals.noItemsText || locals.defaultNoItemsText}}</div>\n' +
         '  </div>\n' +
         '  <div ng-transclude></div>\n' +
         '</div>');
@@ -8175,27 +8236,27 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>');
     $templateCache.put('sky/templates/grids/actionbar.html',
         '<div ng-show="locals.showActionBar" data-bbauto-view="GridActionBar">\n' +
-        '    <div ng-if="!locals.showMobileActions" class="grid-action-bar">\n' +
-        '        <div ng-if="!locals.mobileButtons" class="grid-action-bar-buttons" ng-repeat="action in locals.actions">\n' +
+        '    <div ng-if="!locals.showMobileActions" class="bb-grid-action-bar grid-action-bar">\n' +
+        '        <div ng-if="!locals.mobileButtons" class="bb-grid-action-bar-buttons grid-action-bar-buttons" ng-repeat="action in locals.actions">\n' +
         '            <button class="btn" ng-class="{\'btn-success\': action.isPrimary, \'btn-white\': !action.isPrimary}" data-bbauto-field="{{action.automationId}}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
         '        </div>\n' +
-        '        <div ng-if="locals.mobileButtons" class="grid-action-bar-buttons">\n' +
+        '        <div ng-if="locals.mobileButtons" class="bb-grid-action-bar-buttons grid-action-bar-buttons">\n' +
         '            <button class="btn btn-success" ng-click="locals.chooseAction()">\n' +
         '                <span class="sky-icon sky-icon-multi-action"></span>\n' +
         '                <span>{{resources.grid_action_bar_choose_action}}</span>\n' +
         '            </button>\n' +
         '        </div>\n' +
-        '        <button class="btn grid-action-bar-clear-selection" ng-click="locals.clearSelection()">\n' +
+        '        <button class="btn bb-grid-action-bar-clear-selection grid-action-bar-clear-selection" ng-click="locals.clearSelection()">\n' +
         '            {{resources.grid_action_bar_clear_selection}}\n' +
         '        </button>\n' +
         '    </div>\n' +
-        '    <div ng-if="locals.showMobileActions" class="grid-action-bar-mobile-buttons">\n' +
-        '        <div class="grid-action-bar-btn-container">\n' +
+        '    <div ng-if="locals.showMobileActions" class="bb-grid-action-bar-mobile-buttons grid-action-bar-mobile-buttons">\n' +
+        '        <div class="bb-grid-action-bar-btn-container grid-action-bar-btn-container">\n' +
         '            <div ng-repeat="action in locals.actions">\n' +
-        '                <button class="grid-action-bar-mobile-btn btn btn-block btn-lg" ng-class="{\'btn-success\': action.isPrimary, \'btn-white\': !action.isPrimary}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
+        '                <button class="bb-grid-action-bar-mobile-btn grid-action-bar-mobile-btn btn btn-block btn-lg" ng-class="{\'btn-success\': action.isPrimary, \'btn-white\': !action.isPrimary}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
         '            </div>\n' +
         '        </div>\n' +
-        '        <button class="btn grid-action-bar-mobile-cancel grid-action-bar-clear-selection" ng-click="locals.cancelChooseAction()">\n' +
+        '        <button class="btn bb-grid-action-bar-mobile-cancel grid-action-bar-mobile-cancel bb-grid-action-bar-clear-selection grid-action-bar-clear-selection" ng-click="locals.cancelChooseAction()">\n' +
         '            {{resources.grid_action_bar_cancel_mobile_actions}}\n' +
         '        </button>\n' +
         '    </div>\n' +
@@ -8204,19 +8265,19 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<bb-modal data-bbauto-view="ColumnPicker">\n' +
         '  <bb-modal-header bb-modal-help-key="$parent.columnPickerHelpKey">{{resources.grid_column_picker_header}}</bb-modal-header>\n' +
         '  <div bb-modal-body>\n' +
-        '    <div class="checklist-filter-bar">\n' +
+        '    <div class="bb-checklist-filter-bar checklist-filter-bar">\n' +
         '      <input type="text" placeholder="{{resources.grid_column_picker_search_placeholder}}" ng-model="locals.searchText" ng-change="applyFilters()" data-bbauto-field="ColumnPickerSearchBox">\n' +
         '    </div>\n' +
-        '    <div class="checklist-filter-bar">\n' +
+        '    <div class="bb-checklist-filter-bar checklist-filter-bar">\n' +
         '      <button ng-repeat="category in categories" type="button" class="btn btn-sm" ng-click="filterByCategory(category)" ng-class="locals.selectedCategory === category ? \'btn-primary\' : \'btn-default\'" data-bbauto-field="{{category}}">{{category}}</button>\n' +
         '    </div>\n' +
-        '    <div class="checklist-wrapper grid-column-picker-wrapper">\n' +
-        '      <table data-bbauto-field="ColumnPickerTable" class="table grid-column-picker-table">\n' +
+        '    <div class="bb-checklist-wrapper checklist-wrapper bb-grid-column-picker-wrapper grid-column-picker-wrapper">\n' +
+        '      <table data-bbauto-field="ColumnPickerTable" class="table bb-grid-column-picker-table grid-column-picker-table">\n' +
         '        <thead>\n' +
         '          <tr>\n' +
-        '            <th class="checklist-checkbox-column"></th>\n' +
-        '            <th class="name-column" data-bbauto-field="ColumnNameHeader">{{resources.grid_column_picker_name_header}}</th>\n' +
-        '            <th class="description-column" data-bbauto-field="ColumnDescriptionHeader">{{resources.grid_column_picker_description_header}}</th>\n' +
+        '            <th class="bb-checklist-checkbox-column checklist-checkbox-column"></th>\n' +
+        '            <th class="bb-checklist-name-column name-column" data-bbauto-field="ColumnNameHeader">{{resources.grid_column_picker_name_header}}</th>\n' +
+        '            <th class="bb-checklist-description-column description-column" data-bbauto-field="ColumnDescriptionHeader">{{resources.grid_column_picker_description_header}}</th>\n' +
         '          </tr>\n' +
         '        </thead>\n' +
         '        <tbody bb-highlight="locals.searchText" data-bbauto-repeater="ColumnChooserFields" data-bbauto-repeater-count="{{columns.length}}">\n' +
@@ -8236,16 +8297,16 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</bb-modal>');
     $templateCache.put('sky/templates/grids/filters.html',
         '<div style="display:none;">\n' +
-        '    <div bb-scrolling-view-keeper="viewKeeperOptions" class="grid-filters">\n' +
-        '        <div class="grid-filters-box" bb-scroll-into-view="expanded">\n' +
-        '            <div class="grid-filters-icon" ng-click="expanded = !expanded"></div>\n' +
-        '            <div class="grid-filters-container" style="display:none;">\n' +
-        '                <div class="grid-filters-header" ng-click="expanded = !expanded">\n' +
-        '                    <h4 class="grid-filters-header-title">{{resources.grid_filters_header}}</h4>\n' +
-        '                    <span class="grid-filters-header-hide">{{resources.grid_filters_hide}}</span>\n' +
+        '    <div bb-scrolling-view-keeper="viewKeeperOptions" class="bb-grid-filters grid-filters">\n' +
+        '        <div class="bb-grid-filters-box grid-filters-box" bb-scroll-into-view="expanded">\n' +
+        '            <div class="bb-grid-filters-icon grid-filters-icon" ng-click="expanded = !expanded"></div>\n' +
+        '            <div class="bb-grid-filters-container grid-filters-container" style="display:none;">\n' +
+        '                <div class="bb-grid-filters-header grid-filters-header" ng-click="expanded = !expanded">\n' +
+        '                    <h4 class="bb-grid-filters-header-title grid-filters-header-title">{{resources.grid_filters_header}}</h4>\n' +
+        '                    <span class="bb-grid-filters-header-hide grid-filters-header-hide">{{resources.grid_filters_hide}}</span>\n' +
         '                </div>\n' +
-        '                <div class="grid-filters-body" ng-transclude></div>\n' +
-        '                <div class="grid-filters-footer">\n' +
+        '                <div class="bb-grid-filters-body grid-filters-body" ng-transclude></div>\n' +
+        '                <div class="bb-grid-filters-footer grid-filters-footer">\n' +
         '                    <button data-bbauto-field="ApplyGridFilters" class="btn btn-primary" type="submit" ng-click="applyFilters()">{{resources.grid_filters_apply}}</button>\n' +
         '                    <button data-bbauto-field="ClearGridFilters" class="btn btn-white" type="button" ng-click="clearFilters()">{{resources.grid_filters_clear}}</button>\n' +
         '                </div>\n' +
@@ -8256,42 +8317,42 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/grids/filtersgroup.html',
         '<div class="form-group" ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'">\n' +
         '    <div ng-click="isCollapsed = !isCollapsed">\n' +
-        '        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="grid-filters-body-group-header-icon glyphicon"></i>\n' +
+        '        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="bb-grid-filters-body-group-header-icon grid-filters-body-group-header-icon glyphicon"></i>\n' +
         '        <label>{{bbGridFiltersGroupLabel}}</label>\n' +
         '    </div>\n' +
-        '    <div class="grid-filters-body-group-content" collapse="!!isCollapsed" ng-transclude></div>\n' +
+        '    <div class="bb-grid-filters-body-group-content grid-filters-body-group-content" collapse="!!isCollapsed" ng-transclude></div>\n' +
         '</div>');
     $templateCache.put('sky/templates/grids/filterssummary.html',
-        '<div class="toolbar table-toolbar applied-filter-bar">\n' +
-        '    <div class="applied-filter-header">\n' +
+        '<div class="toolbar bb-table-toolbar table-toolbar bb-applied-filter-bar applied-filter-bar">\n' +
+        '    <div class="bb-applied-filter-header applied-filter-header">\n' +
         '        <span>{{resources.grid_filters_summary_header}}</span>\n' +
         '    </div>\n' +
-        '    <div class="applied-filter-content" ng-click="openFilterMenu()">\n' +
-        '        <span class="applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>\n' +
-        '        <span class="sky-icon-close applied-filter-remove" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>\n' +
+        '    <div class="bb-applied-filter-content applied-filter-content" ng-click="openFilterMenu()">\n' +
+        '        <span class="bb-applied-filter-text applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>\n' +
+        '        <span class="sky-icon-close bb-applied-filter-remove applied-filter-remove" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>\n' +
         '    </div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/grids/grid.html',
         '<section class="col-xs-12 bb-grid-container" data-bbauto-grid="{{options.automationId}}" data-bbauto-timestamp="{{locals.timestamp}}" data-bbauto-repeater="{{options.automationId}}" data-bbauto-repeater-count="{{locals.rowcount}}">\n' +
         '    <div ng-transclude></div>\n' +
-        '    <div class="grid-toolbar-container" style="display:none;">\n' +
-        '        <div class="toolbar table-toolbar">\n' +
-        '            <div data-bbauto-field="AddButton" class=\'add-button btn-success btn btn-sm\' ng-show="locals.hasAdd" ng-click="locals.onAddClick()">\n' +
-        '                <span class=\'toolbar-button-icon sky-icon sky-icon-add-fill\'></span>\n' +
-        '                <span class=\'toolbar-button-label\'>{{options.onAddClickLabel}}</span>\n' +
+        '    <div class="bb-grid-toolbar-container grid-toolbar-container" style="display:none;">\n' +
+        '        <div class="toolbar bb-table-toolbar table-toolbar">\n' +
+        '            <div data-bbauto-field="AddButton" class="bb-grid-toolbar-btn-add add-button btn-success btn btn-sm" ng-show="locals.hasAdd" ng-click="locals.onAddClick()">\n' +
+        '                <span class="toolbar-button-icon sky-icon sky-icon-add-fill"></span>\n' +
+        '                <span class="toolbar-button-label">{{options.onAddClickLabel}}</span>\n' +
         '            </div>\n' +
-        '            <div class="search-container">\n' +
+        '            <div class="bb-search-container search-container">\n' +
         '                <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && locals.applySearchText();" data-bbauto-field="SearchBox">\n' +
-        '                <div class="search-icon" data-bbauto-field="SearchButton" ng-click="locals.applySearchText();"></div>\n' +
+        '                <div class="bb-search-icon search-icon" data-bbauto-field="SearchButton" ng-click="locals.applySearchText();"></div>\n' +
         '            </div>\n' +
-        '            <div class="toolbar-button column-picker-button" data-bbauto-field="ColumnPickerButton" ng-show="locals.hasColPicker" ng-click="locals.openColumnPicker()">\n' +
-        '                <span class="toolbar-button-icon column-picker-button-icon"></span>\n' +
-        '                <span class="toolbar-button-label">{{resources.grid_columns_button}}</span>\n' +
+        '            <div class="bb-toolbar-btn toolbar-button bb-column-picker-btn column-picker-button" data-bbauto-field="ColumnPickerButton" ng-show="locals.hasColPicker" ng-click="locals.openColumnPicker()">\n' +
+        '                <span class="bb-toolbar-btn-icon toolbar-button-icon bb-column-picker-btn-icon column-picker-button-icon"></span>\n' +
+        '                <span class="bb-toolbar-btn-label toolbar-button-label">{{resources.grid_columns_button}}</span>\n' +
         '            </div>\n' +
-        '            <div class="toolbar-button filter-button" data-bbauto-field="FilterButton" ng-show="locals.hasFilters" ng-click="locals.toggleFilterMenu();">\n' +
-        '                <span class="toolbar-button-icon filter-button-icon"></span>\n' +
-        '                <span class="toolbar-button-label">{{resources.grid_filters_button}}</span>\n' +
+        '            <div class="bb-toolbar-btn toolbar-button bb-filter-btn filter-button" data-bbauto-field="FilterButton" ng-show="locals.hasFilters" ng-click="locals.toggleFilterMenu();">\n' +
+        '                <span class="bb-toolbar-btn-icon toolbar-button-icon bb-filter-btn-icon filter-button-icon"></span>\n' +
+        '                <span class="bb-toolbar-btn-label toolbar-button-label">{{resources.grid_filters_button}}</span>\n' +
         '            </div>\n' +
         '        </div>\n' +
         '        <div class="bb-grid-filter-summary-container">\n' +
@@ -8301,12 +8362,14 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        </div>    \n' +
         '    </div>\n' +
         '    \n' +
+        '    <div class="clearfix"></div>\n' +
+        '    \n' +
         '    <div class="table-responsive">\n' +
         '        \n' +
         '        <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
         '    </div>\n' +
         '    \n' +
-        '    <div ng-if="!paginationOptions" class="table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore();">\n' +
+        '    <div ng-if="!paginationOptions" class="bb-table-loadmore table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore();">\n' +
         '        <span class="fa fa-cloud-download"></span>\n' +
         '        <a href="#">{{resources.grid_load_more}}</a>\n' +
         '    </div>\n' +
@@ -8316,10 +8379,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '    \n' +
-        '    <div class="grid-action-bar-and-back-to-top">\n' +
+        '    <div class="bb-grid-action-bar-and-back-to-top grid-action-bar-and-back-to-top">\n' +
         '        <bb-grid-action-bar ng-if="locals.multiselect && multiselectActions && updateMultiselectActions" bb-multiselect-actions="multiselectActions" bb-selections-updated="updateMultiselectActions(selections)">\n' +
         '        </bb-grid-action-bar>\n' +
-        '        <div class="table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">\n' +
+        '        <div class="bb-table-backtotop table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">\n' +
         '            <span style="float:left">\n' +
         '                <span class="fa fa-arrow-up "></span>\n' +
         '                <a href="#">{{resources.grid_back_to_top}}</a>\n' +
@@ -8391,17 +8454,17 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </ul>\n' +
         '</div>');
     $templateCache.put('sky/templates/tiles/tile.html',
-        '<section ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'" class="ibox tile">\n' +
+        '<section ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'" class="ibox bb-tile tile">\n' +
         '    <div bb-scroll-into-view="scrollIntoView">\n' +
         '        <div class="ibox-title" ng-click="titleClick()">\n' +
-        '            <h5 class="tile-header">{{tileHeader}}</h5>\n' +
+        '            <h5 class="bb-tile-header tile-header">{{tileHeader}}</h5>\n' +
         '            <div class="ibox-tools">\n' +
-        '                <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="glyphicon tile-chevron"></i>\n' +
-        '                <i class="tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
+        '                <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="glyphicon bb-tile-chevron tile-chevron"></i>\n' +
+        '                <i class="bb-tile-grab-handle tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
         '            </div>\n' +
         '            <div class="clearfix"></div>\n' +
         '        </div>\n' +
-        '        <div collapse="isCollapsed" class="ibox-content tile-content" ng-transclude>\n' +
+        '        <div collapse="isCollapsed" class="ibox-content bb-tile-content tile-content" ng-transclude>\n' +
         '        </div>\n' +
         '    </div>\n' +
         '</section>');

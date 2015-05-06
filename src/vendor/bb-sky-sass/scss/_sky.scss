@@ -4,7 +4,7 @@
 @import "_mixins.scss";
 
 //Import Bootstrap
-@import "Bootstrap/bootstrap.scss";
+@import "_bootstrap.scss";
 
 // Import Font Awesome
 @import "FontAwesome/font-awesome.scss";
@@ -31,6 +31,7 @@
 
 //Load Sky styles
 @import '_jqgrid.scss';
+@import '_buttons.scss';
 @import '_check.scss';
 @import '_checklist.scss';
 @import '_datefield.scss';

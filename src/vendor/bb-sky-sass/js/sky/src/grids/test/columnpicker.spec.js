@@ -32,7 +32,7 @@ describe('Grid column picker', function () {
     }
     
     function getColumnChooserButton(el) {
-        return el.find('.bb-grid-container .table-toolbar .column-picker-button');
+        return el.find('.bb-grid-container .bb-table-toolbar .bb-column-picker-btn');
     }
     
     function getColumnChooserRows(modalEl) {

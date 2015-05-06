@@ -1,6 +1,6 @@
 {
   "name": "responsive-tabs",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "main": "js/jquery.responsiveTabs.js",
   "ignore": [
     ".jshintrc",
@@ -10,11 +10,11 @@
     "jquery": ">=1.7.2"
   },
   "homepage": "https://github.com/jellekralt/Responsive-Tabs",
-  "_release": "1.4.4",
+  "_release": "1.4.5",
   "_resolution": {
     "type": "version",
-    "tag": "v1.4.4",
-    "commit": "63559973d44888d28277b35fd52a37e162851688"
+    "tag": "v1.4.5",
+    "commit": "dda421a8f9e26621b4eb51d01fd9302dfe8466c6"
   },
   "_source": "git://github.com/jellekralt/Responsive-Tabs.git",
   "_target": "~1.4.3",

@@ -6,6 +6,7 @@ describe('Grid directive', function () {
     
     var basicGridHtml,
         bbMediaBreakpoints,
+        bbViewKeeperBuilder,
         $compile,
         contextMenuItemClicked,
         dataSet1,
@@ -17,7 +18,8 @@ describe('Grid directive', function () {
         skip,
         $timeout,
         top,
-        fxOff;
+        fxOff,
+        $window;
     
     function getTopAndSkipFromLoadMore(event, data) {
         skip = data.skip;
@@ -50,7 +52,7 @@ describe('Grid directive', function () {
     function setUpGrid(gridHtml, setLocals) {
         var el = angular.element(gridHtml);
         
-        $document.find('body').eq(0).append(el);
+        el.appendTo(document.body);
         
         if (angular.isDefined(setLocals)) {
             $scope.locals = setLocals;
@@ -75,11 +77,11 @@ describe('Grid directive', function () {
     }
     
     function getSearchBox(el) {
-        return el.find('.grid-toolbar-container .search-container input');
+        return el.find('.bb-grid-toolbar-container .bb-search-container input');
     }
     
     function getSearchIcon(el) {
-        return el.find('.grid-toolbar-container .search-container .search-icon');
+        return el.find('.bb-grid-toolbar-container .bb-search-container .bb-search-icon');
     }
     
     function getHeaders(el) {
@@ -87,7 +89,11 @@ describe('Grid directive', function () {
     }
     
     function getAddButton(el) {
-        return el.find('.bb-grid-container .grid-toolbar-container .add-button.btn-success');
+        return el.find('.bb-grid-container .bb-grid-toolbar-container .add-button.btn-success');
+    }
+    
+    function getTableWrapperEl(el) {
+        return el.find('.table-responsive');
     }
     
     beforeEach(module('ngMock'));
@@ -96,12 +102,14 @@ describe('Grid directive', function () {
         'sky.templates'
     ));
     
-    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _bbMediaBreakpoints_) {
+    beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _$timeout_, _bbMediaBreakpoints_, _bbViewKeeperBuilder_, _$window_) {
         $scope = _$rootScope_;
         $compile = _$compile_;
         $document = _$document_;
         $timeout = _$timeout_;
         bbMediaBreakpoints = _bbMediaBreakpoints_;
+        bbViewKeeperBuilder = _bbViewKeeperBuilder_;
+        $window = _$window_;
         
         locals = {
             gridOptions: {
@@ -188,12 +196,12 @@ describe('Grid directive', function () {
         expect(containerEl.length).toBe(1);
         
         //toobar elements are created
-        toolBarEl = containerEl.eq(0).find('.table-toolbar');
+        toolBarEl = containerEl.eq(0).find('.bb-table-toolbar');
         expect(toolBarEl.length).toBe(1);
         
-        expect(toolBarEl.eq(0).find('.search-container').length).toBe(1);
-        expect(toolBarEl.eq(0).find('.column-picker-button').length).toBe(1);
-        expect(toolBarEl.eq(0).find('.filter-button').length).toBe(1);
+        expect(toolBarEl.eq(0).find('.bb-search-container').length).toBe(1);
+        expect(toolBarEl.eq(0).find('.bb-column-picker-btn').length).toBe(1);
+        expect(toolBarEl.eq(0).find('.bb-filter-btn').length).toBe(1);
         
         //column headers are created
         headerEl = getHeaders(el);
@@ -448,11 +456,11 @@ describe('Grid directive', function () {
             
             setGridData(dataSet1);
             
-            searchEl = el.find('.grid-toolbar-container .search-container input');
+            searchEl = el.find('.bb-grid-toolbar-container .bb-search-container input');
             
             searchEl.eq(0).val('John').trigger('change');
             
-            searchIconEl = el.find('.grid-toolbar-container .search-container .search-icon');
+            searchIconEl = el.find('.bb-grid-toolbar-container .bb-search-container .search-icon');
             searchIconEl.eq(0).click();
             
             $scope.$digest();
@@ -707,7 +715,7 @@ describe('Grid directive', function () {
         it('can have columns set to a width greater than the table size which will cause a horizontal scroll bar on the top and bottom', function () {
             var headerEl,
                 topScrollbarEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             locals.gridOptions.columns[0].width_all = 300;
             locals.gridOptions.columns[1].width_all = 300;
@@ -722,7 +730,7 @@ describe('Grid directive', function () {
             expect(headerEl[0].style.width).toBe('300px');
             
             //expect top scrollbar to have height
-            topScrollbarEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar');
+            topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');
             
             expect(topScrollbarEl[0].style.height).toBe('18px');
         });
@@ -744,7 +752,7 @@ describe('Grid directive', function () {
             
             expect(headerEl[0].style.width).toBe('100px');
             
-            topScrollbarEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar');
+            topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');
             
             expect(topScrollbarEl[0].style.height).toBe('0px');
         });
@@ -752,18 +760,33 @@ describe('Grid directive', function () {
         it('will have a top horizontal scroll bar that will sync with the bottom scroll bar', function () {
             var topScrollbarEl,
                 tableWrapperEl,
-                toolbarViewKeeperEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                headerViewKeeperEl,
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             locals.gridOptions.columns[0].width_all = 300;
             locals.gridOptions.columns[1].width_all = 300;
             locals.gridOptions.columns[2].width_all = 300;
             
+            spyOn(bbViewKeeperBuilder, 'create').and.returnValue(
+                { 
+                    destroy: function () {
+                        
+                    },
+                    scrollToTop: function () {
+                        
+                    },
+                    syncElPosition: function () {
+                        
+                    },
+                    isFixed: false
+                }
+            );
+            
             el = setUpGrid(gridWrapperHtml, locals);
             
             setGridData(dataSet1);
             
-            topScrollbarEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar');
+            topScrollbarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .bb-grid-top-scrollbar');
             
             tableWrapperEl = el.find('.table-responsive');
             
@@ -781,29 +804,138 @@ describe('Grid directive', function () {
             
             topScrollbarEl.scroll();
             
-            toolbarViewKeeperEl = el.find('.table-responsive .ui-jqgrid-hdiv');
-            toolbarViewKeeperEl.addClass('viewkeeper-fixed');
+            headerViewKeeperEl = el.find('.table-responsive .ui-jqgrid-hdiv');
+            headerViewKeeperEl.addClass('viewkeeper-fixed');
             topScrollbarEl.scrollLeft(5);
             topScrollbarEl.scroll();
-            expect(toolbarViewKeeperEl.scrollLeft()).toBe(5);
+            expect(headerViewKeeperEl.scrollLeft()).toBe(5);
+            
+            tableWrapperEl.scrollLeft(3);
+            tableWrapperEl.scroll();
+            expect(headerViewKeeperEl.scrollLeft()).toBe(3);
             
             topScrollbarEl.scrollLeft(0);
             topScrollbarEl.scroll();
+            expect(headerViewKeeperEl.scrollLeft()).toBe(0);
             
-            toolbarViewKeeperEl.removeClass('viewkeeper-fixed');
+            headerViewKeeperEl.removeClass('viewkeeper-fixed');
+            
+            tableWrapperEl.scrollLeft(5);
+            tableWrapperEl.scroll();
+            
+            expect(headerViewKeeperEl.scrollLeft()).toBe(0);
+        
+        });
+        
+        it('will scroll properly on header viewkeeper state change when fixed', function () {
+            var tableWrapperEl,
+                headerViewKeeperEl,
+                stateChangedCallback,
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+            
+            locals.gridOptions.columns[0].width_all = 300;
+            locals.gridOptions.columns[1].width_all = 300;
+            locals.gridOptions.columns[2].width_all = 300;
+            
+           
+            
+            spyOn(bbViewKeeperBuilder, 'create').and.callFake(
+                function (callObject) {
+                    if ($(callObject.el).hasClass('ui-jqgrid-hdiv')) {
+                        stateChangedCallback = callObject.onStateChanged;
+                    }
+                    
+                    return {
+                        destroy: function () {
+                        
+                        },
+                        scrollToTop: function () {
+                        
+                        },
+                        syncElPosition: function () {
+                        
+                        },
+                        isFixed: true
+                    };
+                    
+                }
+            );
+            
+            el = setUpGrid(gridWrapperHtml, locals);
+            
+            headerViewKeeperEl = el.find('.table-responsive .ui-jqgrid-hdiv');
+            
+            setGridData(dataSet1);
+            
+            tableWrapperEl = el.find('.table-responsive');
+            
+            
+            headerViewKeeperEl.addClass('viewkeeper-fixed');
             
             tableWrapperEl.scrollLeft(5);
             
-            tableWrapperEl.scroll();
+            stateChangedCallback();
             
-            expect(toolbarViewKeeperEl.scrollLeft()).toBe(0);
+            expect(headerViewKeeperEl.scrollLeft()).toBe(tableWrapperEl.scrollLeft());
+            
+            
+        });
         
+        it('will scroll properly on header viewkeeper state change when not fixed', function () {
+            var tableWrapperEl,
+                headerViewKeeperEl,
+                stateChangedCallback,
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+            
+            locals.gridOptions.columns[0].width_all = 300;
+            locals.gridOptions.columns[1].width_all = 300;
+            locals.gridOptions.columns[2].width_all = 300;
+            
+           
+            
+            spyOn(bbViewKeeperBuilder, 'create').and.callFake(
+                function (callObject) {
+                    if ($(callObject.el).hasClass('ui-jqgrid-hdiv')) {
+                        stateChangedCallback = callObject.onStateChanged;
+                    }
+                    
+                    return {
+                        destroy: function () {
+                        
+                        },
+                        scrollToTop: function () {
+                        
+                        },
+                        syncElPosition: function () {
+                        
+                        },
+                        isFixed: false
+                    };
+                    
+                }
+            );
+            
+            el = setUpGrid(gridWrapperHtml, locals);
+            
+            headerViewKeeperEl = el.find('.table-responsive .ui-jqgrid-hdiv');
+            
+            setGridData(dataSet1);
+            
+            tableWrapperEl = el.find('.table-responsive');
+            
+            tableWrapperEl.scrollLeft(20);
+            
+            stateChangedCallback();
+            
+            expect(headerViewKeeperEl.scrollLeft()).toBe(0);
+            
+            
         });
         
         it('will set the grid width to the new header width on vanilla resize', function () {
             var tableEl,
                 headerEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             locals.gridOptions.columns[0].width_all = 300;
             locals.gridOptions.columns[1].width_all = 300;
@@ -820,15 +952,15 @@ describe('Grid directive', function () {
             spyOn($.fn, 'setGridWidth');
         
             tableEl[0].p.resizeStart({}, 0);
-            tableEl[0].p.resizeStop(600, 0);
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(1200, false);
+            tableEl[0].p.resizeStop(700, 0);
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(1300, false);
         
         });
         
         it('will make the extended column smaller by resize amount when that is smaller than amount column was originally extended', function () {
             var tableEl,
                 headerEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             locals.gridOptions.columns[0].width_all = 100;
             locals.gridOptions.columns[1].width_all = 100;
@@ -838,26 +970,26 @@ describe('Grid directive', function () {
             
             setGridData(dataSet1);
             
-            tableEl = el.find('.table-responsive .bb-grid-table');
-            
             headerEl = getHeaders(el);
             
-            expect(headerEl[2].style.width).toBe('300px');
+            expect(headerEl[2].style.width).toBe('400px');
 
+            tableEl = el.find('.table-responsive .bb-grid-table');
+            
             spyOn($.fn, 'setGridWidth');
             spyOn($.fn, 'setColProp');
         
             tableEl[0].p.resizeStart({}, 0);
             tableEl[0].p.resizeStop(200, 0);
-            expect($.fn.setColProp).toHaveBeenCalledWith(locals.gridOptions.columns[2].name, {widthOrg: 200});
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(500, true);
+            expect($.fn.setColProp).toHaveBeenCalledWith(locals.gridOptions.columns[2].name, {widthOrg: 300});
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(600, true);
             
         });
         
         it('will return extended column to original size and grow table when the resize amount is greater than amount column was originally extended', function () {
             var tableEl,
                 headerEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             locals.gridOptions.columns[0].width_all = 100;
             locals.gridOptions.columns[1].width_all = 100;
@@ -871,23 +1003,23 @@ describe('Grid directive', function () {
             
             headerEl = getHeaders(el);
             
-            expect(headerEl[2].style.width).toBe('300px');
+            expect(headerEl[2].style.width).toBe('400px');
             
             spyOn($.fn, 'setGridWidth');
             spyOn($.fn, 'setColProp');
             
             tableEl[0].p.resizeStart({}, 0);
         
-            tableEl[0].p.resizeStop(350, 0);
+            tableEl[0].p.resizeStop(450, 0);
             
             expect($.fn.setColProp).toHaveBeenCalledWith(locals.gridOptions.columns[2].name, {widthOrg: 100});
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(550, true);
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(650, true);
         });
         
         it('will set width normally when there is an extended column and the grid size is being decreased', function () {
             var tableEl,
                 headerEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             locals.gridOptions.columns[0].width_all = 100;
             locals.gridOptions.columns[1].width_all = 100;
@@ -901,7 +1033,7 @@ describe('Grid directive', function () {
             
             headerEl = getHeaders(el);
             
-            expect(headerEl[2].style.width).toBe('300px');
+            expect(headerEl[2].style.width).toBe('400px');
             
             spyOn($.fn, 'setGridWidth');
             spyOn($.fn, 'setColProp');
@@ -910,7 +1042,7 @@ describe('Grid directive', function () {
             tableEl[0].p.resizeStop(50, 0);
             
             expect($.fn.setColProp).not.toHaveBeenCalled();
-            expect($.fn.setGridWidth).toHaveBeenCalledWith(450, false);
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(550, false);
             
         });
     });
@@ -919,7 +1051,7 @@ describe('Grid directive', function () {
         it('can have xs, sm, md, and lg breakpoints set', function () {
             var callback,
                 headerEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             locals.gridOptions.columns[0].width_xs = 100;
             locals.gridOptions.columns[0].width_sm = 200;
@@ -962,7 +1094,7 @@ describe('Grid directive', function () {
         it('can have a width_all that will be the width for unspecified breakpoints', function () {
             var callback,
                 headerEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             locals.gridOptions.columns[0].width_xs = 100;
             locals.gridOptions.columns[0].width_all = 200;
@@ -999,7 +1131,7 @@ describe('Grid directive', function () {
         it('will have columns defualt to 150px if no breakpoint widths and no width_all is set', function () {
             var callback,
                 headerEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             locals.gridOptions.columns[0].width_xs = 100;
             
@@ -1037,7 +1169,7 @@ describe('Grid directive', function () {
         it('changes the order of selected columns without initializing grids', function () {
             var tableEl,
                 headerEl,
-                gridWrapperHtml = '<div style="width: 500px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
             
             el = setUpGrid(gridWrapperHtml);
             
@@ -1075,5 +1207,201 @@ describe('Grid directive', function () {
         });
     });
     
+    describe('resizing tableWrapper', function () {
+        
+        it('does nothing if the tableWrapper width is unchanged on window resize', function () {
+            var tableWrapperEl,
+                windowEl = $($window);
+            
+            el = setUpGrid(basicGridHtml);
+            
+            tableWrapperEl = getTableWrapperEl(el);
+            
+            spyOn($.fn, 'setGridWidth');
+            windowEl.trigger('resize');
+            
+            expect($.fn.setGridWidth).not.toHaveBeenCalled();
+            
+        });
+        
+        it('gets the new table width from the totalcolumn width when no extended column resize on window resize', function () {
+            var tableWrapperEl,
+                topScrollbarEl,
+                topScrollbarDivEl,
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>',
+                windowEl = $($window);
+            
+            locals.gridOptions.columns[0].width_all = 600;
+            locals.gridOptions.columns[1].width_all = 5;
+            locals.gridOptions.columns[2].width_all = 5;
+            
+            el = setUpGrid(gridWrapperHtml, locals);
+            
+            spyOn($.fn, 'setGridWidth');
+            
+            tableWrapperEl = getTableWrapperEl(el);
+
+            tableWrapperEl.width(599);
+            
+            windowEl.trigger('resize');
+            
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(610);
+            
+            topScrollbarEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar');
+            topScrollbarDivEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar div');
+           
+            
+            expect(topScrollbarDivEl[0].style.width).toBe('610px');
+            expect(topScrollbarDivEl[0].style.height).toBe('18px');
+
+            expect(topScrollbarEl[0].style.width).toBe('599px');
+            expect(topScrollbarEl[0].style.height).toBe('18px');
+        });
+        
+        it('takes away from the extended column width when there is an extended column and the tableWrapper resize is less than the extended portion of the column on window resize', function () {
+            var tableWrapperEl,
+                topScrollbarEl,
+                topScrollbarDivEl,
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>',
+                windowEl = $($window);
+            
+            locals.gridOptions.columns[0].width_all = 5;
+            locals.gridOptions.columns[1].width_all = 5;
+            locals.gridOptions.columns[2].width_all = 5;
+            el = setUpGrid(gridWrapperHtml, locals);
+            
+            spyOn($.fn, 'setGridWidth');
+            spyOn($.fn, 'setColProp');
+            
+            tableWrapperEl = getTableWrapperEl(el);
+            
+            tableWrapperEl.width(299);     
+            
+            windowEl.trigger('resize');
+            
+            expect($.fn.setColProp).toHaveBeenCalledWith(locals.gridOptions.columns[2].name, {widthOrg: 289});
+            
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(299, true);
+            
+            topScrollbarEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar');
+            topScrollbarDivEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar div');   
+            expect(topScrollbarDivEl[0].style.height).toBe('0px');
+            expect(topScrollbarEl[0].style.height).toBe('0px');
+        });
+        
+        it('returns the column its original size and decreases the table size when the window resize is greater than the extended portion of the column on window resize', function () {
+            var tableWrapperEl,
+                topScrollbarEl,
+                topScrollbarDivEl,
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>',
+                windowEl = $($window);
+        
+            locals.gridOptions.columns[0].width_all = 5;
+            locals.gridOptions.columns[1].width_all = 5;
+            locals.gridOptions.columns[2].width_all = 589;
+            
+            el = setUpGrid(gridWrapperHtml, locals);
+            
+            spyOn($.fn, 'setGridWidth').and.callThrough();
+            spyOn($.fn, 'setColProp').and.callThrough();
+            tableWrapperEl = getTableWrapperEl(el);
+            
+            tableWrapperEl.width(589);
+            windowEl.trigger('resize');
+            expect($.fn.setColProp).toHaveBeenCalledWith(
+                locals.gridOptions.columns[2].name, 
+                {widthOrg: 589});
+            
+        
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(599, true);
+            
+            topScrollbarEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar');
+            topScrollbarDivEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar div');
+            
+            expect(topScrollbarDivEl[0].style.height).toBe('18px');
+            expect(topScrollbarEl[0].style.height).toBe('18px');
+        });
+        
+        it('takes away from the extended column width when there is an extended column and the tableWrapper resize is less than the extended portion of the column when the rows are changed', function () {
+            var tableWrapperEl,
+                topScrollbarEl,
+                topScrollbarDivEl,
+                gridWrapperHtml = '<div style="width: 600px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+            
+            locals.gridOptions.columns[0].width_all = 5;
+            locals.gridOptions.columns[1].width_all = 5;
+            locals.gridOptions.columns[2].width_all = 5;
+            el = setUpGrid(gridWrapperHtml, locals);
+            
+            spyOn($.fn, 'setGridWidth');
+            spyOn($.fn, 'setColProp');
+            
+            tableWrapperEl = getTableWrapperEl(el);
+            
+            tableWrapperEl.width(299);     
+            
+            setGridData(dataSet1);
+            
+            expect($.fn.setColProp).toHaveBeenCalledWith(locals.gridOptions.columns[2].name, {widthOrg: 289});
+            
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(299, true);
+            
+            topScrollbarEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar');
+            topScrollbarDivEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar div');   
+            expect(topScrollbarDivEl[0].style.height).toBe('0px');
+            expect(topScrollbarEl[0].style.height).toBe('0px');
+        });
+        
+        it('returns the column its original size and decreases the table size when the window resize is greater than the extended portion of the column when the rows are changed', function () {
+            var tableWrapperEl,
+                topScrollbarEl,
+                topScrollbarDivEl,
+                gridWrapperHtml = '<div style="width: 300px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>';
+        
+            locals.gridOptions.columns[0].width_all = 5;
+            locals.gridOptions.columns[1].width_all = 5;
+            locals.gridOptions.columns[2].width_all = 289;
+            
+            el = setUpGrid(gridWrapperHtml, locals);
+            
+            spyOn($.fn, 'setGridWidth').and.callThrough();
+            spyOn($.fn, 'setColProp').and.callThrough();
+            tableWrapperEl = getTableWrapperEl(el);
+            
+            tableWrapperEl.width(289);
+            setGridData(dataSet1);
+            expect($.fn.setColProp).toHaveBeenCalledWith(
+                locals.gridOptions.columns[2].name, 
+                {widthOrg: 289});
+            
+            expect($.fn.setGridWidth).toHaveBeenCalledWith(299, true);
+            
+            
+            topScrollbarEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar');
+            topScrollbarDivEl = el.find('.bb-grid-container .grid-toolbar-container .bb-grid-top-scrollbar div');
+            
+            expect(topScrollbarDivEl[0].style.height).toBe('18px');
+            expect(topScrollbarEl[0].style.height).toBe('18px');
+        });
+    });
     
+    describe('multiselect', function () {
+        it('should center the header checkbox', function () {
+            var el,
+                th;
+            
+            locals.gridOptions.multiselect = true;
+            
+            el = setUpGrid('<div style="width: 300px;"><bb-grid bb-grid-options="locals.gridOptions"></bb-grid></div>', locals);
+            
+            th = el.find('th:first');
+            
+            // This will validate our assumption that the first TH element contains a checkbox when multiselect is enabled.
+            expect(th.find('input[type="checkbox"]')).toExist();
+                   
+            expect(th).toHaveCss({
+                textAlign: 'center'
+            });
+        });
+    });
 });

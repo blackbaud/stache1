@@ -34,7 +34,7 @@ describe('Grid filters', function () {
     }
     
     function getFilterButton(el) {
-        return el.find('.bb-grid-container .grid-toolbar-container .filter-button');
+        return el.find('.bb-grid-container .bb-grid-toolbar-container .filter-button');
     }
     
     beforeEach(module('ngMock'));
@@ -42,7 +42,6 @@ describe('Grid filters', function () {
         'sky.grids',
         'sky.templates'
     ));
-    
      
     beforeEach(inject(function (_$rootScope_, _$compile_, _$document_, _bbMediaBreakpoints_, _bbViewKeeperBuilder_) {
         $scope = _$rootScope_;
@@ -124,7 +123,7 @@ describe('Grid filters', function () {
             el = setUpGrid(filterGridHtml);
             
             //confirm that flyout icon is there
-            filterIconEl = el.find('.bb-grid-container .grid-filters .grid-filters-icon');
+            filterIconEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-icon');
             expect(filterIconEl.length).toBe(1);
             
             //click filter button
@@ -132,7 +131,7 @@ describe('Grid filters', function () {
             filterButtonEl.click();
             
             //confirm that flyout pane is there
-            filterFlyoutEl = el.find('.bb-grid-container .grid-filters .grid-filters-container');
+            filterFlyoutEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-container');
             expect(filterFlyoutEl.length).toBe(1);
             expect(filterFlyoutEl.eq(0)).toHaveCss({"display": "block"});
             
@@ -189,7 +188,7 @@ describe('Grid filters', function () {
             
             el = setUpGrid(filterGridHtml, locals);
             
-            clearFiltersEl = el.find('.bb-grid-container .grid-filters .grid-filters-container .grid-filters-footer .btn-white');
+            clearFiltersEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-container .bb-grid-filters-footer .btn-white');
             clearFiltersEl.eq(0).click();
             
             expect($scope.locals.gridOptions.filters).toEqual(myFilters);
@@ -200,12 +199,12 @@ describe('Grid filters', function () {
                 clearFiltersEl;
             el = setUpGrid(filterGridHtml);
             
-            applyFiltersEl = el.find('.bb-grid-container .grid-filters .grid-filters-container .grid-filters-footer .btn-primary');
+            applyFiltersEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-container .bb-grid-filters-footer .btn-primary');
             applyFiltersEl.eq(0).click();
             
             expect(angular.isUndefined($scope.locals.gridOptions.filters)).toBe(true);
             
-            clearFiltersEl = el.find('.bb-grid-container .grid-filters .grid-filters-container .grid-filters-footer .btn-white');
+            clearFiltersEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-container .bb-grid-filters-footer .btn-white');
             clearFiltersEl.eq(0).click();
             
             expect(angular.isUndefined($scope.locals.gridOptions.filters)).toBe(true);
@@ -235,11 +234,11 @@ describe('Grid filters', function () {
             filterButtonEl = getFilterButton(el);
             filterButtonEl.click();
             
-            applyFiltersEl = el.find('.bb-grid-container .grid-filters .grid-filters-container .grid-filters-footer .btn-primary');
+            applyFiltersEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-container .bb-grid-filters-footer .btn-primary');
             applyFiltersEl.eq(0).click();
             
             //confirm that flyout pane is not there
-            filterFlyoutEl = el.find('.bb-grid-container .grid-filters .grid-filters-container');
+            filterFlyoutEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-container');
             expect(filterFlyoutEl.length).toBe(1);
             expect(filterFlyoutEl.eq(0)).toHaveCss({"display": "none"});
             
@@ -304,7 +303,7 @@ describe('Grid filters', function () {
             filterButtonEl = getFilterButton(el);
             filterButtonEl.click();
             
-            filterGroupEl = el.find('.bb-grid-container .grid-filters .grid-filters-body .collapsible');
+            filterGroupEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-body .collapsible');
             
             expect(filterGroupEl.length).toBe(1);
             
@@ -337,7 +336,7 @@ describe('Grid filters', function () {
             
             el = setUpGrid(filterSummaryGridHtml);
             
-            filterToolBarEl = el.find('.bb-grid-container .grid-toolbar-container .toolbar.applied-filter-bar');
+            filterToolBarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .toolbar.applied-filter-bar');
             expect(filterToolBarEl.length).toBe(1);
             
             headerEl = filterToolBarEl.eq(0).find('.applied-filter-header span');
@@ -375,7 +374,7 @@ describe('Grid filters', function () {
             
             el = setUpGrid(filterSummaryGridHtml, locals);
             
-            filterToolBarEl = el.find('.bb-grid-container .grid-toolbar-container .toolbar.applied-filter-bar');
+            filterToolBarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .toolbar.applied-filter-bar');
             clearFiltersEl = filterToolBarEl.eq(0).find('.applied-filter-content .applied-filter-remove');
             
             clearFiltersEl.eq(0).click();
@@ -400,7 +399,7 @@ describe('Grid filters', function () {
             
             el = setUpGrid(filterSummaryGridHtml);
             
-            filterToolBarEl = el.find('.bb-grid-container .grid-toolbar-container .toolbar.applied-filter-bar');
+            filterToolBarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .toolbar.applied-filter-bar');
             clearFiltersEl = filterToolBarEl.eq(0).find('.applied-filter-content .applied-filter-remove');
             
             clearFiltersEl.eq(0).click();
@@ -425,13 +424,13 @@ describe('Grid filters', function () {
             
             el = setUpGrid(filterSummaryGridHtml);
             
-            filterToolBarEl = el.find('.bb-grid-container .grid-toolbar-container .toolbar.applied-filter-bar');
+            filterToolBarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .toolbar.applied-filter-bar');
             filterSummaryEl = filterToolBarEl.eq(0).find('.applied-filter-content');
             
             filterSummaryEl.eq(0).click();
             
             //confirm that flyout pane is there
-            filterFlyoutEl = el.find('.bb-grid-container .grid-filters .grid-filters-container');
+            filterFlyoutEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-container');
             expect(filterFlyoutEl.length).toBe(1);
             expect(filterFlyoutEl.eq(0)).toHaveCss({"display": "block"});
             
@@ -449,14 +448,14 @@ describe('Grid filters', function () {
             
             el = setUpGrid(filterSummaryGridHtml);
             
-            filterToolBarEl = el.find('.bb-grid-container .grid-toolbar-container .toolbar.applied-filter-bar');
+            filterToolBarEl = el.find('.bb-grid-container .bb-grid-toolbar-container .toolbar.applied-filter-bar');
             filterSummaryEl = filterToolBarEl.eq(0).find('.applied-filter-content');
             
             
             filterSummaryEl.eq(0).click();
             
             //confirm that flyout pane is there
-            filterFlyoutEl = el.find('.bb-grid-container .grid-filters .grid-filters-container');
+            filterFlyoutEl = el.find('.bb-grid-container .bb-grid-filters .bb-grid-filters-container');
             expect(filterFlyoutEl.length).toBe(0);
         });
         

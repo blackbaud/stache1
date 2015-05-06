@@ -2,6 +2,7 @@
 <html ng-app="KitchenSink" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="../../bower_components/jqgrid/css/ui.jqgrid.css" />
   <link rel="stylesheet" type="text/css" href="../../dist/css/sky.css" />
   <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/themes/github.css" />
   <link rel="stylesheet" type="text/css" href="../../bower_components/angular-toastr/dist/angular-toastr.css" />
@@ -1228,8 +1229,8 @@ angular.module('KitchenSink')
             <div class="row">
               <div class="col-md-6 kitchen-sink-example">
                 <div ng-controller="GridTestController">
-    <bb-grid bb-grid-options="locals.gridOptions">
-        <bb-grid-filters-summary ng-show="locals.appliedFilters.instruments.length > 0" bb-options="locals.filterOptions">
+    <bb-grid bb-grid-options="locals.gridOptions" bb-multiselect-actions="locals.gridActions" bb-selections-updated="locals.updateActions(selections)">
+            <bb-grid-filters-summary ng-show="locals.appliedFilters.instruments.length > 0" bb-options="locals.filterOptions">
             <span ng-repeat="item in locals.appliedFilters.instruments">{{item.name}}<span ng-if="!$last">, </span></span>
         </bb-grid-filters-summary>
         <bb-grid-filters bb-options="locals.filterOptions">
@@ -1308,6 +1309,7 @@ angular.module('KitchenSink')
 <li><code>cmd</code> A function that will be called when the dropdown option is clicked. It should return false if you wish to close the dropdown after the function is called.</li></ul></li>
 <li><code>hideColPicker</code> If true, hides the grid column picker in the toolbar.</li>
 <li><code>hideFilters</code> If true, hides the filters button in the toolbar.</li>
+<li><code>multiselect</code> If true, adds a multiselect checkbox column to the listbuilder.</li>
 <li><code>onAddClick</code> If a function is specified, then an add button will appear in the grid toolbar that will call the <code>onAddClick</code> function when clicked.</li>
 <li><code>searchText</code> The text entered in the grid search box, set by bbGrid.</li>
 <li><code>selectedColumnIds</code> An array of unique identifiers indicating the visible columns in the order in which they should be displayed.</li>
@@ -1319,6 +1321,13 @@ angular.module('KitchenSink')
 <ul><li><code>itemsPerPage</code> The number of rows you wish to show in the grid per page, defaults to 5.</li>
 <li><code>maxPages</code> The maximum number of pages to show in the pagination bar, defualts to 5.</li>
 <li><code>recordCount</code> The total number of records available through pagination.</li></ul></li>
+<li><code>bb-multiselect-actions</code> An array of actions that can be shown in the multiselect action bar. Each action can have the following: 
+<ul><li><code>actionCallback</code> A function that will be called when the action is clicked.</li>
+<li><code>automationId</code> An identifier that will be placed in the <code>data-bbauto</code> attribute for automation purposes.</li>
+<li><code>isPrimary</code> If true, this action will have the primary button color.</li>
+<li><code>selections</code> The selected row objects from the list builder that are associated with this action, this can be updated through the <code>bb-selections-updated</code> function. </li>
+<li><code>title</code> The text that will appear on the button for the action.</li></ul></li>
+<li><code>bb-selections-updated</code> A function which will be called when multiselect selections are updated. The selections are passed to the function as an argument and you can update your multiselect actions accordingly.</li>
 </ul>
 
 <h3>Grid Events</h3>
@@ -1338,8 +1347,8 @@ reloading the grid with the current data after the event has fired.</li>
                     <tab heading="Markup">
                       <div>
                         <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;GridTestController&quot;&gt;
-    &lt;bb-grid bb-grid-options=&quot;locals.gridOptions&quot;&gt;
-        &lt;bb-grid-filters-summary ng-show=&quot;locals.appliedFilters.instruments.length &gt; 0&quot; bb-options=&quot;locals.filterOptions&quot;&gt;
+    &lt;bb-grid bb-grid-options=&quot;locals.gridOptions&quot; bb-multiselect-actions=&quot;locals.gridActions&quot; bb-selections-updated=&quot;locals.updateActions(selections)&quot;&gt;
+            &lt;bb-grid-filters-summary ng-show=&quot;locals.appliedFilters.instruments.length &gt; 0&quot; bb-options=&quot;locals.filterOptions&quot;&gt;
             &lt;span ng-repeat=&quot;item in locals.appliedFilters.instruments&quot;&gt;{{item.name}}&lt;span ng-if=&quot;!$last&quot;&gt;, &lt;/span&gt;&lt;/span&gt;
         &lt;/bb-grid-filters-summary&gt;
         &lt;bb-grid-filters bb-options=&quot;locals.filterOptions&quot;&gt;
@@ -1374,7 +1383,9 @@ reloading the grid with the current data after the event has fired.</li>
 //A comment
 angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;GridTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
     &#x27;use strict&#x27;;
-    var dataSet1 = [
+    var action1,
+        action2,
+        dataSet1 = [
             {
                 name: &#x27;Patrick&#x27;,
                 skills: &#x27;Karate, Kung Fu, Italian cooking, Ditch digging&#x27;
@@ -1478,6 +1489,58 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;GridTestController&#x27
         }
     }
     
+    function updateActions(selections) {
+        var i,
+            selection;
+
+        action1.selections = [];
+        action2.selections = [];
+
+        for (i = 0; i &lt; selections.length; i++) {
+            selection = selections[i];
+            if (selection.instrument.indexOf(&#x27;guitar&#x27;) &gt; -1) {
+                action1.selections.push(selection);
+            } else if (selection.instrument.indexOf(&#x27;Drum&#x27;) &gt; -1) {
+                action2.selections.push(selection);
+            }
+        }
+    }
+    
+    function action1Clicked() {
+        var i,
+            message = &#x27;The selected guitar players are &#x27;;
+        if (action1.selections &amp;&amp; action1.selections.length &gt; 0) {
+            for (i = 0; i &lt; action1.selections.length; i = i + 1) {
+                message += action1.selections[i].name;
+                if (i !== (action1.selections.length - 1)) {
+                    message += &#x27;, &#x27;;
+                }
+            }
+            alert(message);
+        }
+    }
+    
+    function action2Clicked() {
+        var message = &#x27;Drum Drum Drum!&#x27;;
+        
+        alert(message);
+    }
+    
+    action1 = {
+        actionCallback: action1Clicked,
+        automationId: &#x27;Action1Button&#x27;,
+        isPrimary: true,
+        selections: [],
+        title: &#x27;Guitar Action&#x27;
+    };
+    
+    action2 = {
+        actionCallback: action2Clicked,
+        automationId: &#x27;Action2Button&#x27;,
+        isPrimary: false,
+        selections: [],
+        title: &#x27;Drum Action&#x27;
+    };
     
     $scope.locals = {
         appliedFilters: {
@@ -1495,6 +1558,10 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;GridTestController&#x27
                 args.filters = angular.copy($scope.locals.appliedFilters);
             }
         },
+        gridActions: [
+            action1,
+            action2
+        ],
         gridOptions: {
             columns: [
                 {
@@ -1527,7 +1594,6 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;GridTestController&#x27
                     width_xs: 100
                 }
             ],
-        
             data: dataSetBand,
             getContextMenuItems: function (rowid, rowObject) {
                 if (rowid === &#x27;1&#x27; || rowObject.name === &#x27;Ringo&#x27;) {
@@ -1543,6 +1609,8 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;GridTestController&#x27
                     ];
                 }
             },
+            multiselect: true,
+            
             sortOptions: {
                 excludedColumns: [&#x27;bio&#x27;]
             },
@@ -1589,7 +1657,8 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;GridTestController&#x27
             recordCount: 30
         },
         guitarFilter: false,
-        drumsFilter: false
+        drumsFilter: false,
+        updateActions: updateActions
     };
 
     function getDataSet(top, skip) {
@@ -1642,7 +1711,6 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;GridTestController&#x27
         } else {
             $scope.locals.gridOptions.data = dataSetBand;
         }
-    
     });
     
     $scope.$on(&#x27;loadMoreRows&#x27;, function (event, data) {
@@ -1664,7 +1732,9 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;GridTestController&#x27
 //A comment
 angular.module('KitchenSink').controller('GridTestController', ['$scope', function ($scope) {
     'use strict';
-    var dataSet1 = [
+    var action1,
+        action2,
+        dataSet1 = [
             {
                 name: 'Patrick',
                 skills: 'Karate, Kung Fu, Italian cooking, Ditch digging'
@@ -1768,6 +1838,58 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
         }
     }
     
+    function updateActions(selections) {
+        var i,
+            selection;
+
+        action1.selections = [];
+        action2.selections = [];
+
+        for (i = 0; i < selections.length; i++) {
+            selection = selections[i];
+            if (selection.instrument.indexOf('guitar') > -1) {
+                action1.selections.push(selection);
+            } else if (selection.instrument.indexOf('Drum') > -1) {
+                action2.selections.push(selection);
+            }
+        }
+    }
+    
+    function action1Clicked() {
+        var i,
+            message = 'The selected guitar players are ';
+        if (action1.selections && action1.selections.length > 0) {
+            for (i = 0; i < action1.selections.length; i = i + 1) {
+                message += action1.selections[i].name;
+                if (i !== (action1.selections.length - 1)) {
+                    message += ', ';
+                }
+            }
+            alert(message);
+        }
+    }
+    
+    function action2Clicked() {
+        var message = 'Drum Drum Drum!';
+        
+        alert(message);
+    }
+    
+    action1 = {
+        actionCallback: action1Clicked,
+        automationId: 'Action1Button',
+        isPrimary: true,
+        selections: [],
+        title: 'Guitar Action'
+    };
+    
+    action2 = {
+        actionCallback: action2Clicked,
+        automationId: 'Action2Button',
+        isPrimary: false,
+        selections: [],
+        title: 'Drum Action'
+    };
     
     $scope.locals = {
         appliedFilters: {
@@ -1785,6 +1907,10 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
                 args.filters = angular.copy($scope.locals.appliedFilters);
             }
         },
+        gridActions: [
+            action1,
+            action2
+        ],
         gridOptions: {
             columns: [
                 {
@@ -1817,7 +1943,6 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
                     width_xs: 100
                 }
             ],
-        
             data: dataSetBand,
             getContextMenuItems: function (rowid, rowObject) {
                 if (rowid === '1' || rowObject.name === 'Ringo') {
@@ -1833,6 +1958,8 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
                     ];
                 }
             },
+            multiselect: true,
+            
             sortOptions: {
                 excludedColumns: ['bio']
             },
@@ -1879,7 +2006,8 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
             recordCount: 30
         },
         guitarFilter: false,
-        drumsFilter: false
+        drumsFilter: false,
+        updateActions: updateActions
     };
 
     function getDataSet(top, skip) {
@@ -1932,7 +2060,6 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
         } else {
             $scope.locals.gridOptions.data = dataSetBand;
         }
-    
     });
     
     $scope.$on('loadMoreRows', function (event, data) {

@@ -1,29 +1,29 @@
 
 {{# if nav_links }}
-  {{# each nav_links }}
+  {{# eachWithMod nav_links limit=limit }}
 
     {{# isActiveNav dest=../../dest }}
 
       <li class="current {{# if draft }}draft{{/ if }} {{# isActiveNav dest=../../../dest parentCanBeActive=false }}active{{/ isActiveNav }}">
-        
+
         <a href="{{ uri }}">
           {{ name }}
         </a>
-        
+
         {{# if nav_links }}
 
           <ul class="nav">
-            {{ include 'partial-sidebar' this dest=../../../../dest showHeadings=../../../../showHeadings page=../../../../page }}
+            {{ include 'partial-sidebar' this dest=../../../../dest showHeadings=../../../../showHeadings page=../../../../page limit=../../../../limit }}
           </ul>
-        
+
         {{ else }}
-        
+
           {{# if ../../../../showHeadings }}
             {{ include 'partial-page-headings' this page=../../../../../page }}
           {{/ if }}
 
         {{/ if }}
-        
+
       </li>
 
     {{ else }}
@@ -39,7 +39,7 @@
 
     {{/ isActiveNav }}
 
-  {{/ each }}
+  {{/ eachWithMod }}
 
 {{ else }}
 

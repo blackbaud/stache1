@@ -47,6 +47,7 @@ showOmnibar: true
 markdown: true
 comments: true
 comments_key: blackbaud
+blog_recent_limit: 10
 
 # =============================================
 # STACHE - NAVIGATION

@@ -13,7 +13,7 @@
 'use strict';
 
 module.exports.register = function (Handlebars, options, params) {
-  
+
   var merge = require('merge');
   var cheerio = require('cheerio');
   var fs = require('fs');
@@ -43,19 +43,19 @@ module.exports.register = function (Handlebars, options, params) {
 
     if (clean && path) {
       var dot = path.lastIndexOf('.')
-      
+
       // Replace the extension
       path = dot === -1 ? path : path.substr(0, dot);
-      
+
       // Replace the default page name
       path = path.replace('index', '');
-      
+
       // Remove our build folder
       path = path.replace(params.assemble.options.stache.config.build, '');
-      
+
       // Remove leading & trailing slash
       path = path.replace(/^\/|\/$/g, '');
-      
+
     // Always return a path
     } else {
       path = '';
@@ -108,7 +108,7 @@ module.exports.register = function (Handlebars, options, params) {
       renderer: renderer
     });
   }
-  
+
   /**
   *
   **/
@@ -128,30 +128,30 @@ module.exports.register = function (Handlebars, options, params) {
         }
       }
     }
-    
+
     return instanbul(total, coverage, options);
   }
-  
+
   /**
   *
   **/
   function instanbul(total, coverage, options) {
-    
+
     var cssClass = 'success';
     var percentage = total === 0 ? 100 : ((coverage / total) * 100);
-    
+
     if (percentage < 50) {
       cssClass = 'danger';
     } else if (percentage < 80) {
       cssClass = 'warning';
     }
-    
+
     return {
       total: total,
       coverage: coverage,
       cssClass: cssClass,
       percentage: percentage === 100 ? 100 : percentage.toFixed(options.hash.fixed)
-    };    
+    };
   }
 
   Handlebars.registerHelper({
@@ -165,12 +165,12 @@ module.exports.register = function (Handlebars, options, params) {
     * {{ getOperation name="Address (Create)" property="description" }}
     **/
     getOperation: function (context) {
-      
+
       var operations = params.assemble.options.data.operations;
       if (!operations) {
         return '';
       }
-      
+
       var hasProperty = context.hash.property !== 'undefined',
         filtered = operations.filter(function (item) {
           var prop;
@@ -183,18 +183,18 @@ module.exports.register = function (Handlebars, options, params) {
           }
           return true;
         });
-      
+
       if (filtered.length === 1) {
         filtered = filtered[0];
       }
-      
+
       if (hasProperty && typeof filtered[context.hash.property] !== 'undefined') {
         filtered = filtered[context.hash.property];
       }
-      
+
       return filtered;
     },
-    
+
     /**
     * Shortcut for this "{{ getOperation name='Address (Create)' property='id' }}"
     * AND, more importantly, it corrects the azure links.
@@ -222,7 +222,7 @@ module.exports.register = function (Handlebars, options, params) {
       var r = isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '', options.hash.parentCanBeActive || true);
       return r ? options.fn(this) : options.inverse(this);
     },
-    
+
     /**
     * Is the current page home
     **/
@@ -273,19 +273,19 @@ module.exports.register = function (Handlebars, options, params) {
     eachChildLink: function (options) {
       var dest = '';
       var nav_links = '';
-      
+
       if (typeof options.hash.dest !== 'undefined') {
         dest = options.hash.dest;
       } else if (typeof this.page !== 'undefined' && typeof this.page.dest !== 'undefined') {
         dest = this.page.dest;
       }
-      
+
       if (typeof options.hash.nav_links !== 'undefined') {
         nav_links = options.hash.nav_links;
       } else if (typeof this.stache.config.nav_links !== 'undefined') {
         nav_links = this.stache.config.nav_links;
       }
-      
+
       var active = getActiveNav(dest, nav_links, false);
       if (active && active.nav_links) {
         active = active.nav_links;
@@ -304,18 +304,23 @@ module.exports.register = function (Handlebars, options, params) {
         i = 0,
         m = 0,
         mod = options.hash.mod || 0,
+        limit = options.hash.limit || -1,
         j;
 
       if (context && context.length) {
         j = context.length;
         for (i; i < j; i++) {
-          
+
+          if (limit !== -1 && counter >= limit) {
+            break;
+          }
+
           var show = true;
           if (typeof context[i].showInNav !== 'undefined' && context[i].showInNav === false) {
             show = false;
           }
-        
-          
+
+
          if (show) {
             m = counter % mod;
             context[i].first = counter === 0;
@@ -330,7 +335,7 @@ module.exports.register = function (Handlebars, options, params) {
         }
       }
       return r;
-    },
+    },    
 
     /**
     * Loop through a certain number of times.
@@ -370,28 +375,28 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     increment: function(prop) {
       counts[prop] = typeof counts[prop] === 'undefined' ? 0 : (counts[prop] + 1);
-    },    
+    },
 
     /**
     * Render a file.  Search path order: partial, absolute, relative, content folder
     **/
     include: function (file, context, options) {
-      
+
       if (typeof options === 'undefined') {
         options = context;
         context = this;
       }
-      
+
       var r = '';
       var template = '';
       var fileWithPath = file;
       var c = merge(context, options.hash);
       var hideYFM = typeof options.hash.hideYFM !== 'undefined' ? options.hash.hideYFM : true;
-      
+
       if (typeof Handlebars.partials[fileWithPath] !== 'undefined') {
-        template = Handlebars.partials[fileWithPath]; 
+        template = Handlebars.partials[fileWithPath];
       } else {
-      
+
         if (!fs.existsSync(fileWithPath)) {
           fileWithPath = this.page.src.substr(0, this.page.src.lastIndexOf('/')) + '/' + file;
           if (!fs.existsSync(fileWithPath)) {
@@ -405,24 +410,24 @@ module.exports.register = function (Handlebars, options, params) {
         if (fileWithPath !== '') {
           template = fs.readFileSync(fileWithPath).toString('utf8');
         }
-        
+
       }
-      
+
       if (typeof template === 'string') {
         r = Handlebars.compile(template)(c);
       }
-      
+
       // I spent an entire day tracking down this bug.
       // Files created on different systems with different line endings freaked this out.
       r = r.replace(/\r\n/g, '\n')
-      
+
       // Hide YAML Front Matter
       if (hideYFM && (r.match(/---/g) || []).length > 1) {
         var start = r.indexOf('---') + 1;
         var end = r.indexOf('---', start);
         r = r.substr(end + 3);
       }
-      
+
       return new Handlebars.SafeString(r);
     },
 
@@ -439,11 +444,11 @@ module.exports.register = function (Handlebars, options, params) {
       }
       return length;
     },
-    
+
     withCoverageTotal: function (collection, property, options) {
       var total = 0;
       var coverage = 0;
-      
+
       for (var file in collection) {
         if (collection[file].hasOwnProperty(property)) {
           var individual = withCoverage(collection[file][property], options);
@@ -451,17 +456,17 @@ module.exports.register = function (Handlebars, options, params) {
           coverage += individual.coverage;
         }
       }
-      
+
       return options.fn(instanbul(total, coverage, options));
     },
-    
+
     withCoverage: function (collection, property, options) {
       return options.fn(withCoverage(collection[property], options));
     },
-    
+
     withSkippedTotal: function (collection, key, options) {
       var skipped = 0;
-      
+
       for (var file in collection) {
         if (collection[file].hasOwnProperty(key)) {
           for (var item in collection[file][key]) {
@@ -478,31 +483,31 @@ module.exports.register = function (Handlebars, options, params) {
           }
         }
       }
-      
+
       return options.fn({
         total: skipped
       });
     },
-    
+
     raw: function(options) {
       return '<raw>' + options.fn(this) + '</raw>';
     },
-    
+
     withFirstProperty: function(collection, options) {
       for (var property in collection) {
-        return options.fn(collection[property]); 
+        return options.fn(collection[property]);
       }
     },
-    
+
     percent: function(dividend, divisor, options) {
       var r = 0;
       if (dividend === divisor) {
         r = 100;
       } else if (divisor !== 0) {
-        r = Math.round(dividend/divisor); 
+        r = Math.round(dividend/divisor);
       }
       return r.toFixed(options.hash.toFixed || 0);
     }
-  
+
   });
 };

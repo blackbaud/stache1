@@ -1,22 +1,22 @@
 <section class="col-xs-12 bb-grid-container" data-bbauto-grid="{{options.automationId}}" data-bbauto-timestamp="{{locals.timestamp}}" data-bbauto-repeater="{{options.automationId}}" data-bbauto-repeater-count="{{locals.rowcount}}">
     <div ng-transclude></div>
-    <div class="grid-toolbar-container" style="display:none;">
-        <div class="toolbar table-toolbar">
-            <div data-bbauto-field="AddButton" class='add-button btn-success btn btn-sm' ng-show="locals.hasAdd" ng-click="locals.onAddClick()">
-                <span class='toolbar-button-icon sky-icon sky-icon-add-fill'></span>
-                <span class='toolbar-button-label'>{{options.onAddClickLabel}}</span>
+    <div class="bb-grid-toolbar-container grid-toolbar-container" style="display:none;">
+        <div class="toolbar bb-table-toolbar table-toolbar">
+            <div data-bbauto-field="AddButton" class="bb-grid-toolbar-btn-add add-button btn-success btn btn-sm" ng-show="locals.hasAdd" ng-click="locals.onAddClick()">
+                <span class="toolbar-button-icon sky-icon sky-icon-add-fill"></span>
+                <span class="toolbar-button-label">{{options.onAddClickLabel}}</span>
             </div>
-            <div class="search-container">
+            <div class="bb-search-container search-container">
                 <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && locals.applySearchText();" data-bbauto-field="SearchBox">
-                <div class="search-icon" data-bbauto-field="SearchButton" ng-click="locals.applySearchText();"></div>
+                <div class="bb-search-icon search-icon" data-bbauto-field="SearchButton" ng-click="locals.applySearchText();"></div>
             </div>
-            <div class="toolbar-button column-picker-button" data-bbauto-field="ColumnPickerButton" ng-show="locals.hasColPicker" ng-click="locals.openColumnPicker()">
-                <span class="toolbar-button-icon column-picker-button-icon"></span>
-                <span class="toolbar-button-label">{{resources.grid_columns_button}}</span>
+            <div class="bb-toolbar-btn toolbar-button bb-column-picker-btn column-picker-button" data-bbauto-field="ColumnPickerButton" ng-show="locals.hasColPicker" ng-click="locals.openColumnPicker()">
+                <span class="bb-toolbar-btn-icon toolbar-button-icon bb-column-picker-btn-icon column-picker-button-icon"></span>
+                <span class="bb-toolbar-btn-label toolbar-button-label">{{resources.grid_columns_button}}</span>
             </div>
-            <div class="toolbar-button filter-button" data-bbauto-field="FilterButton" ng-show="locals.hasFilters" ng-click="locals.toggleFilterMenu();">
-                <span class="toolbar-button-icon filter-button-icon"></span>
-                <span class="toolbar-button-label">{{resources.grid_filters_button}}</span>
+            <div class="bb-toolbar-btn toolbar-button bb-filter-btn filter-button" data-bbauto-field="FilterButton" ng-show="locals.hasFilters" ng-click="locals.toggleFilterMenu();">
+                <span class="bb-toolbar-btn-icon toolbar-button-icon bb-filter-btn-icon filter-button-icon"></span>
+                <span class="bb-toolbar-btn-label toolbar-button-label">{{resources.grid_filters_button}}</span>
             </div>
         </div>
         <div class="bb-grid-filter-summary-container">
@@ -26,12 +26,14 @@
         </div>    
     </div>
     
+    <div class="clearfix"></div>
+    
     <div class="table-responsive">
         
         <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{'grid-multiselect' : locals.multiselect}"></table>
     </div>
     
-    <div ng-if="!paginationOptions" class="table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore();">
+    <div ng-if="!paginationOptions" class="bb-table-loadmore table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore();">
         <span class="fa fa-cloud-download"></span>
         <a href="#">{{resources.grid_load_more}}</a>
     </div>
@@ -41,10 +43,10 @@
         <div class="clearfix"></div>
     </div>
     
-    <div class="grid-action-bar-and-back-to-top">
+    <div class="bb-grid-action-bar-and-back-to-top grid-action-bar-and-back-to-top">
         <bb-grid-action-bar ng-if="locals.multiselect && multiselectActions && updateMultiselectActions" bb-multiselect-actions="multiselectActions" bb-selections-updated="updateMultiselectActions(selections)">
         </bb-grid-action-bar>
-        <div class="table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">
+        <div class="bb-table-backtotop table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">
             <span style="float:left">
                 <span class="fa fa-arrow-up "></span>
                 <a href="#">{{resources.grid_back_to_top}}</a>

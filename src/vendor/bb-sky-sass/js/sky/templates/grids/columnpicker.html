@@ -1,19 +1,19 @@
-﻿<bb-modal data-bbauto-view="ColumnPicker">
+<bb-modal data-bbauto-view="ColumnPicker">
   <bb-modal-header bb-modal-help-key="$parent.columnPickerHelpKey">{{resources.grid_column_picker_header}}</bb-modal-header>
   <div bb-modal-body>
-    <div class="checklist-filter-bar">
+    <div class="bb-checklist-filter-bar checklist-filter-bar">
       <input type="text" placeholder="{{resources.grid_column_picker_search_placeholder}}" ng-model="locals.searchText" ng-change="applyFilters()" data-bbauto-field="ColumnPickerSearchBox">
     </div>
-    <div class="checklist-filter-bar">
+    <div class="bb-checklist-filter-bar checklist-filter-bar">
       <button ng-repeat="category in categories" type="button" class="btn btn-sm" ng-click="filterByCategory(category)" ng-class="locals.selectedCategory === category ? 'btn-primary' : 'btn-default'" data-bbauto-field="{{category}}">{{category}}</button>
     </div>
-    <div class="checklist-wrapper grid-column-picker-wrapper">
-      <table data-bbauto-field="ColumnPickerTable" class="table grid-column-picker-table">
+    <div class="bb-checklist-wrapper checklist-wrapper bb-grid-column-picker-wrapper grid-column-picker-wrapper">
+      <table data-bbauto-field="ColumnPickerTable" class="table bb-grid-column-picker-table grid-column-picker-table">
         <thead>
           <tr>
-            <th class="checklist-checkbox-column"></th>
-            <th class="name-column" data-bbauto-field="ColumnNameHeader">{{resources.grid_column_picker_name_header}}</th>
-            <th class="description-column" data-bbauto-field="ColumnDescriptionHeader">{{resources.grid_column_picker_description_header}}</th>
+            <th class="bb-checklist-checkbox-column checklist-checkbox-column"></th>
+            <th class="bb-checklist-name-column name-column" data-bbauto-field="ColumnNameHeader">{{resources.grid_column_picker_name_header}}</th>
+            <th class="bb-checklist-description-column description-column" data-bbauto-field="ColumnDescriptionHeader">{{resources.grid_column_picker_description_header}}</th>
           </tr>
         </thead>
         <tbody bb-highlight="locals.searchText" data-bbauto-repeater="ColumnChooserFields" data-bbauto-repeater-count="{{columns.length}}">

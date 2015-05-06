@@ -42,6 +42,7 @@
       - `cmd` A function that will be called when the dropdown option is clicked. It should return false if you wish to close the dropdown after the function is called.
   - `hideColPicker` If true, hides the grid column picker in the toolbar.
   - `hideFilters` If true, hides the filters button in the toolbar.
+  - `multiselect` If true, adds a multiselect checkbox column to the listbuilder.
   - `onAddClick` If a function is specified, then an add button will appear in the grid toolbar that will call the `onAddClick` function when clicked.
   - `searchText` The text entered in the grid search box, set by bbGrid.
   - `selectedColumnIds` An array of unique identifiers indicating the visible columns in the order in which they should be displayed.
@@ -53,6 +54,13 @@
   - `itemsPerPage` The number of rows you wish to show in the grid per page, defaults to 5.
   - `maxPages` The maximum number of pages to show in the pagination bar, defualts to 5.
   - `recordCount` The total number of records available through pagination.
+- `bb-multiselect-actions` An array of actions that can be shown in the multiselect action bar. Each action can have the following: 
+  - `actionCallback` A function that will be called when the action is clicked.
+  - `automationId` An identifier that will be placed in the `data-bbauto` attribute for automation purposes.
+  - `isPrimary` If true, this action will have the primary button color.
+  - `selections` The selected row objects from the list builder that are associated with this action, this can be updated through the `bb-selections-updated` function. 
+  - `title` The text that will appear on the button for the action.
+- `bb-selections-updated` A function which will be called when multiselect selections are updated. The selections are passed to the function as an argument and you can update your multiselect actions accordingly.
 
 ### Grid Events ###
 
@@ -68,12 +76,11 @@ reloading the grid with the current data after the event has fired.
     var DEFAULT_ITEMS_PER_PAGE = 5,
         DEFAULT_MAX_PAGES = 5,
         DEFAULT_COLUMN_SIZE = 150,
-        MULTISELECT_COLUMN_SIZE = 25,
+        MULTISELECT_COLUMN_SIZE = 27,
         DROPDOWN_TOGGLE_COLUMN_SIZE = 40,
         DROPDOWN_TOGGLE_COLUMN_NAME = 'dropdownToggle',
         MULTISELECT_COLUMN_NAME = 'cb',
-        TOP_SCROLLBAR_HEIGHT = 18,
-        HEADER_RESIZE_OVERFLOW_WIDTH = 15;
+        TOP_SCROLLBAR_HEIGHT = 18;
 
     angular.module('sky.grids', ['sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters'])
         .directive('bbGrid', ['bbModal', '$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout',
@@ -176,7 +183,8 @@ reloading the grid with the current data after the event has fired.
                             tableEl = element.find('table'),
                             tableDomEl = tableEl[0],
                             tableWrapper = element.find('.table-responsive'),
-                            toolbarContainer = element.find('.grid-toolbar-container'),
+                            tableWrapperWidth,
+                            toolbarContainer = element.find('.bb-grid-toolbar-container'),
                             toolbarContainerId,
                             topScrollbar = element.find('.bb-grid-top-scrollbar'),
                             topScrollbarDiv = topScrollbar.find('>div'),
@@ -186,9 +194,9 @@ reloading the grid with the current data after the event has fired.
                             vkToolbars,
                             vkHeader,
                             windowEl = $($window),
-                            windowWidth,
+                            windowEventId,
                             resizeStartColWidth;
-
+                        
                         function updateGridLoadedTimestampAndRowCount(count) {
                             $scope.locals.timestamp = new Date().getTime();
                             $scope.locals.rowcount = count;
@@ -199,7 +207,6 @@ reloading the grid with the current data after the event has fired.
                             if ($scope.options && $scope.options.selectedColumnIds && $scope.options.selectedColumnIds.length > 0 && tableEl[0].grid) {
                                 reinitializeGrid();
                             }
-                            
                         }
 
                         function buildColumnClasses(column) {
@@ -207,7 +214,7 @@ reloading the grid with the current data after the event has fired.
 
                             //if this column does not allow search then add the appropriate class. This is used when highlighting search results
                             if (column.exclude_from_search) {
-                                classes += "grid-no-search ";
+                                classes += "bb-grid-no-search grid-no-search ";
                             }
 
                             return classes;
@@ -429,18 +436,57 @@ reloading the grid with the current data after the event has fired.
                         }
                         
                         function resetTopScrollbar() {
-                            
-                            topScrollbarDiv.width(totalColumnWidth + HEADER_RESIZE_OVERFLOW_WIDTH);
+                            topScrollbarDiv.width(totalColumnWidth);
                             topScrollbarDiv.height(totalColumnWidth > (topScrollbar.width()) ? TOP_SCROLLBAR_HEIGHT : 0);
                             topScrollbar.height(totalColumnWidth > (topScrollbar.width()) ? TOP_SCROLLBAR_HEIGHT : 0);
                         }
 
-                        function resetGridWidth() {
-                            var width = getDesiredGridWidth();
-                            if (width > 0) {
-                                tableEl.setGridWidth(width);
-                                topScrollbar.width(tableWrapper.width());
-                                resetTopScrollbar();
+                        function resizeExtendedColumn(changedWidth, isIncreasing) {
+                            var extendedShrinkWidth = currentExtendedColumnWidth - originalExtendedColumnWidth;
+                            
+                            //If the extended portion of the last column is less than the amount resized
+                            if (extendedShrinkWidth <= changedWidth) {
+                                //decrease extended column to original size
+                                tableEl.setColProp(extendedColumnName, {widthOrg: originalExtendedColumnWidth});
+                                       
+                                //increase grid width by remainder and wipe out all the extended stuff
+                                if (isIncreasing) {
+                                    totalColumnWidth = totalColumnWidth + (changedWidth - extendedShrinkWidth);
+                                } else {
+                                    totalColumnWidth = totalColumnWidth - extendedShrinkWidth;
+                                }
+                                
+                                tableWrapper.addClass('bb-grid-table-wrapper-overflow');
+                                resetExtendedColumn();
+                            } else {
+                                //decrease extended column width by changedWidth
+                                currentExtendedColumnWidth = currentExtendedColumnWidth - changedWidth;
+                                tableEl.setColProp(extendedColumnName, {widthOrg: currentExtendedColumnWidth});
+                                
+                                if (!isIncreasing) {
+                                    totalColumnWidth = totalColumnWidth - changedWidth;
+                                }
+                            } 
+                            tableEl.setGridWidth(totalColumnWidth, true);
+                            resetTopScrollbar();
+                        }
+                        
+                        function resetGridWidth(oldWidth, newWidth) {
+                            var changedWidth,
+                                width;
+                            
+                            topScrollbar.width(tableWrapper.width());
+                            if (needsExtendedColumnResize && newWidth < oldWidth) {
+                                changedWidth = oldWidth - newWidth;
+                                resizeExtendedColumn(changedWidth, false);
+                            } else {
+                                width = getDesiredGridWidth();
+                                
+                                /*istanbul ignore else: sanity check */
+                                if (width > 0) {
+                                    tableEl.setGridWidth(width);
+                                    resetTopScrollbar();
+                                }
                             }
                         }
                         
@@ -454,8 +500,7 @@ reloading the grid with the current data after the event has fired.
                         }
                         
                         function resizeStop(newWidth, index) {
-                            var changedWidth,
-                                extendedShrinkWidth;
+                            var changedWidth;
                             
                             tableWrapper.addClass('bb-grid-table-wrapper-overflow');
                             
@@ -465,24 +510,9 @@ reloading the grid with the current data after the event has fired.
                             if (needsExtendedColumnResize) {
                                 //If the column you're resizing is not the extended column and you're increasing the size
                                 if (index !== extendedColumnIndex && changedWidth > 0) {             
-                                         
-                                    extendedShrinkWidth = currentExtendedColumnWidth - originalExtendedColumnWidth;
                                     
-                                    //If the extended portion of the last column is less than the amount resized
-                                    if (extendedShrinkWidth <= changedWidth) {
-                                        //decrease extended column to original size
-                                        tableEl.setColProp(extendedColumnName, {widthOrg: originalExtendedColumnWidth});
-                                       
-                                        //increase grid width by remainder and wipe out all the extended stuff
-                                        totalColumnWidth = totalColumnWidth + (changedWidth - extendedShrinkWidth);
-                                              
-                                    } else {
-                                        //decrease extended column width by changedWidth
-                                        currentExtendedColumnWidth = currentExtendedColumnWidth - changedWidth;
-                                        tableEl.setColProp(extendedColumnName, {widthOrg: currentExtendedColumnWidth});
-                                    } 
-                                    tableEl.setGridWidth(totalColumnWidth, true);
-                                    resetTopScrollbar();
+                                    resizeExtendedColumn(changedWidth, true);
+                                    
                                     resetExtendedColumn();
                                     return;
                                 }
@@ -565,7 +595,7 @@ reloading the grid with the current data after the event has fired.
                         function highlightSearchText() {
                             var options = $scope.options;
                             if (options && options.searchText) {
-                                bbHighlight(tableEl.find("td").not('.grid-no-search'), options.searchText, 'highlight');
+                                bbHighlight(tableEl.find("td").not('.bb-grid-no-search'), options.searchText, 'highlight');
                             } else {
                                 bbHighlight.clear(tableEl);
                             }
@@ -756,6 +786,8 @@ reloading the grid with the current data after the event has fired.
                                     locals.selectedRows = allRowData.slice();
                                 }
                             }
+                            
+                            $scope.$apply();
                         }
 
                         function onSelectRow(rowId, status) {
@@ -807,6 +839,8 @@ reloading the grid with the current data after the event has fired.
 
                             totalColumnWidth = 0;
                             
+                            tableWrapperWidth = tableWrapper.width();
+                            
                             locals.multiselect = false;
 
                             //Clear reference to the table body since it will be recreated.
@@ -837,17 +871,24 @@ reloading the grid with the current data after the event has fired.
                                     locals.multiselect = true;
                                     hoverrows = true;
 
-                                    totalColumnWidth = totalColumnWidth + MULTISELECT_COLUMN_SIZE;     
+                                    totalColumnWidth = totalColumnWidth + MULTISELECT_COLUMN_SIZE;
                                 }
                                 
                                 $scope.searchText = $scope.options.searchText;
                             }
+                            
+                            // Allow grid styles to be changed when grid is in multiselect mode (such as the 
+                            // header checkbox alignment).
+                            element[locals.multiselect ? 'addClass' : 'removeClass']('bb-grid-multiselect');
 
+                           
                             if (getContextMenuItems) {
                                 useGridView = false;
                             }
-
+                           
                             if (columns && selectedColumnIds) {
+                                
+                                
                                 columnModel = buildColumnModel(columns, selectedColumnIds);
                                 columnCount = columnModel.length;
 
@@ -872,10 +913,11 @@ reloading the grid with the current data after the event has fired.
                                     width: getDesiredGridWidth()
                                 };
 
+                                
                                 tableEl.jqGrid(jqGridOptions);
-
+          
                                 header = $(tableDomEl.grid.hDiv);
-
+                                
                                 //Attach click handler for sorting columns
                                 header.find('th').on('click', function () {
                                     var sortOptions = $scope.options.sortOptions,
@@ -893,13 +935,13 @@ reloading the grid with the current data after the event has fired.
                                         $scope.$apply();
                                     }
                                 });
-
+                                
                                 fullGrid = header.parents('.ui-jqgrid:first');
 
                                 if (vkHeader) {
                                     vkHeader.destroy();
                                 }
-
+                                
                                 toolbarContainer.show();
                                 
                                 topScrollbar.width(tableWrapper.width());
@@ -909,13 +951,22 @@ reloading the grid with the current data after the event has fired.
                                     el: header[0],
                                     boundaryEl: tableWrapper[0],
                                     verticalOffSetElId: toolbarContainerId,
-                                    setWidth: true
+                                    setWidth: true,
+                                    onStateChanged: function () {
+                                        if (vkHeader.isFixed) {
+                                            header.scrollLeft(tableWrapper.scrollLeft()); 
+                                        } else {
+                                            header.scrollLeft(0);
+                                        }
+                                            
+                                    }
                                 });
-                                
+         
                                 setSortStyles();
 
                                 $scope.gridCreated = true;
                             }
+                            
                         }
 
                         function destroyCellScopes() {
@@ -977,6 +1028,17 @@ reloading the grid with the current data after the event has fired.
                                 $scope.locals.loadMoreStarted = false;
                             }
                         }
+                        
+                        function handleTableWrapperResize() {
+                            var newWidth = tableWrapper.width();
+                            
+                            if (tableWrapperWidth && tableWrapperWidth !== newWidth) {
+                                resetGridWidth(tableWrapperWidth, newWidth);
+                                tableWrapperWidth = newWidth;
+                            } else {
+                                tableWrapperWidth = newWidth;
+                            }
+                        }
 
                         function setRows(rows) {
                             if (tableDomEl.addJSONData) {
@@ -986,7 +1048,7 @@ reloading the grid with the current data after the event has fired.
                                     destroyCellScopes();
                                     tableDomEl.addJSONData(rows);
                                     $timeout(highlightSearchText);
-
+                                    handleTableWrapperResize();
                                     updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
                                 });
                             }
@@ -1026,7 +1088,7 @@ reloading the grid with the current data after the event has fired.
                         }
 
                         function applySearchText() {
-                            element.find('.search-container input').select();
+                            element.find('.bb-search-container input').select();
                             $scope.options.searchText = $scope.searchText;
                         }
 
@@ -1034,8 +1096,6 @@ reloading the grid with the current data after the event has fired.
                             vkToolbars.scrollToTop();
                         }
                         
-                       
-
                         locals.resetMultiselect = resetMultiselect;
 
                         id = $scope.$id;
@@ -1107,19 +1167,11 @@ reloading the grid with the current data after the event has fired.
                             $scope.$broadcast('updateAppliedFilters', f);
                         });
 
-                        windowWidth = windowEl.width();
-                        windowEl.on("resize." + id + ", orientationchange." + id, function () {
-                            var newWidth = windowEl.width();
-                            if (windowWidth !== newWidth) {
-                                windowWidth = newWidth;
-                                resetGridWidth();
-                            }
-                        });
-
                         bbMediaBreakpoints.register(mediaBreakpointHandler);
 
                         tableWrapper.on('scroll', function () {
                             
+                            /*istanbul ignore else: sanity check */
                             if (vkHeader) {
                                 vkHeader.syncElPosition();
                             }
@@ -1128,8 +1180,13 @@ reloading the grid with the current data after the event has fired.
                                 header.scrollLeft(tableWrapper.scrollLeft());
                             }
                             
-                            topScrollbar.scrollLeft(tableWrapper.scrollLeft());
-                            
+                            topScrollbar.scrollLeft(tableWrapper.scrollLeft());     
+                        });
+                        
+                        windowEventId = 'bbgrid' + id;
+                        
+                        windowEl.on('resize.' + windowEventId + ', orientationchange.' + windowEventId, function () {
+                            handleTableWrapperResize();
                         });
                         
                         topScrollbar.on('scroll', function () {
@@ -1140,21 +1197,23 @@ reloading the grid with the current data after the event has fired.
                         });
 
                         element.on('$destroy', function () {
-                            windowEl.off("resize." + id + ", orientationchange." + id);
-
+                            
+                            /*istanbul ignore else: sanity check */
                             if (vkToolbars) {
                                 vkToolbars.destroy();
                             }
 
+                            /*istanbul ignore else: sanity check */
                             if (vkHeader) {
                                 vkHeader.destroy();
                             }
                             
+                            /*istanbul ignore else: sanity check */
                             if (vkActionBarAndBackToTop) {
                                 vkActionBarAndBackToTop.destroy();
                             }
 
-                            tableWrapper.off();
+                            windowEl.off('resize.' + windowEventId + ', orientationchange.' + windowEventId);
 
                             topScrollbar.off();
                             

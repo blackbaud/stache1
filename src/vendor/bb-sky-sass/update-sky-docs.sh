@@ -5,7 +5,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 
   git config --global user.email "travis@travis-ci.org"
   git config --global user.name "Travis"
-  git clone --quiet https://${GH_TOKEN}@github.com/blackbaud-community/sky-docs.git docs > /dev/null
+  git clone --quiet https://${GH_TOKEN}@github.com/blackbaud/sky-docs.git docs > /dev/null
 
   # Copies the first sub directory of the coverage folder
 

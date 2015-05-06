@@ -284,16 +284,19 @@ describe('Data service', function () {
     });
     
     describe('load manager', function () {
-        it('should raise the expected registered and completed events', function () {
+        var EVT_MARK_COMPLETED = 'bbData.loadManager.markCompleted',
+            EVT_REGISTER_ITEM = 'bbData.loadManager.registerItem';
+        
+        it('should raise the expected registered and completed events when passed to bbData.load()', function () {
             var $scope = $rootScope.$new(),
                 completedFired = false,
                 registerFired = false;
             
-            $rootScope.$on('bbData.loadManager.registerItem', function () {
+            $rootScope.$on(EVT_REGISTER_ITEM, function () {
                 registerFired = true;
             });
             
-            $rootScope.$on('bbData.loadManager.markCompleted', function () {
+            $rootScope.$on(EVT_MARK_COMPLETED, function () {
                 completedFired = true;
             });
             
@@ -315,11 +318,9 @@ describe('Data service', function () {
         
         it('should start a page wait when the first child item begins to load', function () {
             var $scope = $rootScope.$new(),
-                beginWaitFired;
+                emitSpy;
             
-            $rootScope.$on('bbBeginWait', function () {
-                beginWaitFired = true;
-            });
+            emitSpy = spyOn($scope, '$emit').and.callThrough();
             
             bbData.load({
                 data: '/foo/data',
@@ -330,7 +331,266 @@ describe('Data service', function () {
                 }
             });
             
-            expect(beginWaitFired).toBe(true);
+            expect(emitSpy).toHaveBeenCalledWith('bbBeginWait');
+        });
+        
+        it('should allow wait to be canceled when waiting for first item', function () {
+            var $scope = $rootScope.$new(),
+                emitSpy,
+                result;
+            
+            result = bbData.loadManager({
+                scope: $scope,
+                name: 'LoadManagerTest',
+                waitForFirstItem: true
+            });
+            
+            emitSpy = spyOn($scope, '$emit').and.callThrough();
+            
+            result.cancelWaiting();
+            
+            expect(emitSpy).toHaveBeenCalledWith('bbEndWait');
+        });
+        
+        it('should allow wait to be canceled when showing a non-blocking wait for additional items', function () {
+            var $childScope1,
+                $childScope2,
+                $scope = $rootScope.$new(),
+                childResult1,
+                childResult2,
+                emitSpy,
+                result;
+            
+            $childScope1 = $scope.$new();
+            $childScope2 = $scope.$new();
+            
+            result = bbData.loadManager({
+                scope: $scope,
+                isAggregate: true,
+                name: 'LoadManagerTest',
+                nonblockWaitForAdditionalItems: true
+            });
+            
+            childResult1 = bbData.loadManager({
+                scope: $childScope1
+            });
+            
+            childResult2 = bbData.loadManager({
+                scope: $childScope2
+            });
+            
+            $childScope1.$emit(EVT_REGISTER_ITEM, childResult1);
+            $childScope2.$emit(EVT_REGISTER_ITEM, childResult2);
+            
+            $childScope1.$emit(EVT_MARK_COMPLETED, childResult1);
+            
+            emitSpy = spyOn($scope, '$emit').and.callThrough();
+            
+            result.cancelWaiting();
+            
+            expect(emitSpy).toHaveBeenCalledWith('bbEndWait', {
+                nonblocking: true
+            });
+        });
+        
+        it('should wait for all child items to finish loading', function () {
+            var $scope = $rootScope.$new(),
+                parentResult;
+            
+            parentResult = bbData.loadManager({
+                scope: $scope,
+                name: 'LoadManagerTest',
+                isAggregate: true
+            });
+            
+            expect(parentResult.isLoading).toBeFalsy();
+            
+            bbData.load({
+                data: '/foo/data',
+                loadManager: {
+                    scope: $scope.$new(),
+                    name: 'LoadManagerChildTest1'
+                }
+            }).then(function () {
+                expect(parentResult.isLoading).toBe(true);
+            });
+            
+            bbData.load({
+                data: '/foo/data',
+                loadManager: {
+                    scope: $scope.$new(),
+                    name: 'LoadManagerChildTest2'
+                }
+            }).then(function () {
+                expect(parentResult.isLoading).toBe(false);
+            });
+            
+            expect(parentResult.isLoading).toBe(true);
+            
+            $httpBackend.flush();
+        });
+        
+        it('should start a non-blocking wait after its first item is loaded', function () {
+            var $scope = $rootScope.$new(),
+                emitSpy;
+            
+            bbData.loadManager({
+                scope: $scope,
+                name: 'LoadManagerTest',
+                isAggregate: true,
+                nonblockWaitForAdditionalItems: true
+            });
+            
+            emitSpy = spyOn($scope, '$emit').and.callThrough();
+            
+            bbData.load({
+                data: '/foo/data',
+                loadManager: {
+                    scope: $scope.$new(),
+                    name: 'LoadManagerChildTest1'
+                }
+            }).then(function () {
+                expect(emitSpy).toHaveBeenCalledWith('bbBeginWait', {
+                    nonblocking: true
+                });
+            });
+            
+            bbData.load({
+                data: '/foo/data',
+                loadManager: {
+                    scope: $scope.$new(),
+                    name: 'LoadManagerChildTest2'
+                }
+            }).then(function () {
+                expect(emitSpy).toHaveBeenCalledWith('bbEndWait', {
+                    nonblocking: true
+                });
+            });
+            
+            $httpBackend.flush();
+        });
+        
+        it('should start a non-blocking wait when the first item has been loaded and a second item is registered', function () {
+            var $scope = $rootScope.$new(),
+                emitSpy;
+            
+            bbData.loadManager({
+                scope: $scope,
+                name: 'LoadManagerTest',
+                isAggregate: true,
+                nonblockWaitForAdditionalItems: true
+            });
+            
+            bbData.load({
+                data: '/foo/data',
+                loadManager: {
+                    scope: $scope.$new(),
+                    name: 'LoadManagerChildTest1'
+                }
+            });
+            
+            $httpBackend.flush();
+            
+            emitSpy = spyOn($scope, '$emit').and.callThrough();
+            
+            bbData.load({
+                data: '/foo/data',
+                loadManager: {
+                    scope: $scope.$new(),
+                    name: 'LoadManagerChildTest2'
+                }
+            });
+            
+            expect(emitSpy).toHaveBeenCalledWith('bbBeginWait', {
+                nonblocking: true
+            });
+        });
+        
+        it('should end wait when the first item is loaded', function () {
+            var $scope = $rootScope.$new(),
+                emitSpy;
+            
+            bbData.loadManager({
+                scope: $scope,
+                name: 'LoadManagerTest',
+                isAggregate: true,
+                nonblockWaitForAdditionalItems: true,
+                waitForFirstItem: true
+            });
+            
+            bbData.load({
+                data: '/foo/data',
+                loadManager: {
+                    scope: $scope.$new(),
+                    name: 'LoadManagerChildTest1'
+                }
+            });
+            
+            emitSpy = spyOn($scope, '$emit').and.callThrough();
+            
+            $httpBackend.flush();
+            
+            expect(emitSpy).toHaveBeenCalledWith('bbEndWait');
+        });
+        
+        it('should call the first and last item loaded callbacks', function () {
+            var $childScope1,
+                $childScope2,
+                $scope = $rootScope.$new(),
+                childResult1,
+                childResult2,
+                firstItemSpy,
+                lastItemSpy,
+                options;
+            
+            $childScope1 = $scope.$new();
+            $childScope2 = $scope.$new();
+            
+            options = {
+                scope: $scope,
+                name: 'LoadManagerTest',
+                isAggregate: true,
+                nonblockWaitForAdditionalItems: true,
+                onFirstItemLoaded: angular.noop,
+                onLastItemLoaded: angular.noop
+            };
+            
+            bbData.loadManager(options);
+            
+            childResult1 = bbData.loadManager({
+                scope: $childScope1
+            });
+            
+            childResult2 = bbData.loadManager({
+                scope: $childScope2
+            });
+            
+            firstItemSpy = spyOn(options, 'onFirstItemLoaded');
+            lastItemSpy = spyOn(options, 'onLastItemLoaded');
+            
+            $childScope1.$emit(EVT_REGISTER_ITEM, childResult1);
+            $childScope2.$emit(EVT_REGISTER_ITEM, childResult2);
+            
+            $childScope1.$emit(EVT_MARK_COMPLETED, childResult1);
+            
+            expect(firstItemSpy).toHaveBeenCalled();
+            expect(lastItemSpy).not.toHaveBeenCalled();
+            
+            $childScope2.$emit(EVT_MARK_COMPLETED, childResult2);
+            
+            expect(lastItemSpy).toHaveBeenCalled();
+        });
+        
+        it('should not error when mark completed is fired with no item', function () {
+            var $scope = $rootScope.$new();
+            
+            bbData.loadManager({
+                scope: $scope,
+                name: 'LoadManagerTest',
+                isAggregate: true
+            });
+            
+            $scope.$new().$emit(EVT_MARK_COMPLETED);
         });
     });
 });

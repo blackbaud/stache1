@@ -65,8 +65,11 @@
         margin-bottom: 0;
     }    
 
-    form-horizontal .radio, .form-horizontal .checkbox {
-        min-height: 18px;
+    .form-horizontal {
+        .radio,
+        .checkbox {
+            min-height: 18px;
+        }
     }
 
     .control-label {

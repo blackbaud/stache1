@@ -59,6 +59,7 @@
 }
 
 .toolbar {
+    &.bb-table-toolbar,
     &.table-toolbar {
         height: 39px;
         border: 1px solid $gray-lighter;
@@ -66,9 +67,11 @@
         border-left: none;
         padding: $padding-half $padding $padding-half $padding;
 
+        &.bb-applied-filter-bar,
         &.applied-filter-bar {
             border-top: none;
 
+            .bb-applied-filter-header,
             .applied-filter-header {
                 float: left;
                 margin-right: 10px;
@@ -76,6 +79,7 @@
                 font-weight: 600;
             }
 
+            .bb-applied-filter-content,
             .applied-filter-content {
                 background-color: $yellow-button-color;
                 border: 1px solid $yellow-button-border;
@@ -89,12 +93,14 @@
                 -webkit-box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.2);
                 box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.2);
 
+                .bb-applied-filter-text,
                 .applied-filter-text {
                     @include text-overflow();
                     display: block;
                     padding-right: $padding-double + $padding-half;
                 }
 
+                .bb-applied-filter-remove,
                 .applied-filter-remove {
                     color: $error-color;
                     font-family: BBSKY;
@@ -113,6 +119,7 @@
             }
         }
 
+        .bb-search-container,
         .search-container {
             background-color: white;
 
@@ -131,6 +138,7 @@
                 }
             }
 
+            > .bb-search-icon,
             > .search-icon {
                 float: left;
                 width: 23px;
@@ -152,6 +160,7 @@
             }
         }
 
+        .bb-toolbar-btn,
         .toolbar-button {
             float: left;
             margin-left: $margin-half;
@@ -167,6 +176,7 @@
             }
         }
 
+        .bb-toolbar-btn-icon,
         .toolbar-button-icon {
             position: relative;
             top: 1px;
@@ -177,15 +187,18 @@
                 font-size: $font-size-base;
             }
 
+            &.bb-column-picker-btn-icon:before,
             &.column-picker-button-icon:before {
                 content: $bbsky-char-columns;
             }
 
+            &.bb-filter-btn-icon:before,
             &.filter-button-icon:before {
                 content: $bbsky-char-filter;
             }
         }
 
+        .bb-toolbar-btn-label,
         .toolbar-button-label {
             display: none;
             margin-left: 5px;
@@ -197,7 +210,10 @@
     }
 }
 
-.table-loadmore, .table-backtotop {
+.bb-table-loadmore,
+.table-loadmore,
+.bb-table-backtotop,
+.table-backtotop {
     padding: $padding-half;
     text-align: center;
     border: 1px solid $gray-lighter;
@@ -205,14 +221,17 @@
     cursor: pointer;
 }
 
+.bb-table-loadmore,
 .table-loadmore {
     background-color: $gray-lightest;
 }
 
+.bb-table-backtotop,
 .table-backtotop {
     background-color: $toolbar-background-color;
 }
 
+.bb-table-responsive,
 .table-responsive {
     border: none;
 }

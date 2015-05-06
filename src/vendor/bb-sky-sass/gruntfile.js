@@ -103,7 +103,7 @@ module.exports = function (grunt) {
             },
             jshint: {
                 files: jsHintFiles,
-                tasks: ['jshint', 'jscs']
+                tasks: ['lint']
             },
             demo: {
                 files: ['<%= skySrcPath %>*/docs/*.js', '<%= skySrcPath %>*/docs/*.html', 'js/sky/misc/demo/**'],
@@ -166,6 +166,9 @@ module.exports = function (grunt) {
             options: {
                 configFile: 'karma.conf.js'
             },
+            travis: {
+                configFile: 'karma.conf-browserstack.js'
+            },
             unit: {
                 singleRun: true
             },
@@ -219,6 +222,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-jscs');
 
+    grunt.registerTask('lint', ['jshint', 'jscs']);
+    grunt.registerTask('travis', ['lint', 'karma:travis:start']);
     grunt.registerTask('generatedocs', ['jsdoc2md', 'demohtml', 'clean']);
     grunt.registerTask('compilescripts', ['l10n', 'html2js', 'concat_sourcemap', 'uglify']);
     grunt.registerTask('watchandtest', ['karma:watch:start', 'watch']);

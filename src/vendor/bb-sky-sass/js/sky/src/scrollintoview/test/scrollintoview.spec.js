@@ -202,6 +202,8 @@ describe('Scroll into view', function () {
             bbScrollIntoView(el);
             
             validateScrollSpy(el, scrollSpy, 250, null, parentEl);
+            
+            parentEl.remove();
         });
                                      
         it('should highlight the element after scrolling if the highlight option is specified', function () {

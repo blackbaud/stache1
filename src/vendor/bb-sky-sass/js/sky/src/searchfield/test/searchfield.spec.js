@@ -110,6 +110,8 @@ describe('Search field directive', function () {
         matchItemEl = el.find('.ui-select-match-item');
         
         expect(matchItemEl.eq(0).width() <= el.width()).toBe(true);
+        
+        el.remove();
     });
     
     it('should size match items when the window resizes', function () {
@@ -145,6 +147,8 @@ describe('Search field directive', function () {
         $timeout.flush();
         
         expect(matchItemEl.width() <= el.width()).toBe(true);
+        
+        el.remove();
     });
     
     it('should stop listening to window resize event when destroyed', function () {

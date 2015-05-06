@@ -1,13 +1,25 @@
 ---
 layout: layout-sidebar
+limit: <%= stache.config.blog_recent_limit %>
+sidebar_title: Recent Posts
 ---
 
-
 {{ body }}
+
 {{# eachChildLink }}
-  {{ include 'partial-blog-header' }}
-  {{ include abspath }}
-  <hr />
+  {{# if sticky }}
+    {{ include 'partial-blog-header' }}
+    {{ include abspath }}
+    <hr />
+  {{/ if }}
+{{/ eachChildLink }}
+
+{{# eachChildLink }}
+  {{# unless sticky }}
+    {{ include 'partial-blog-header' }}
+    {{ include abspath }}
+    <hr />
+  {{/ unless }}
 {{/ eachChildLink }}
 
 {{# if stache.config.comments }}

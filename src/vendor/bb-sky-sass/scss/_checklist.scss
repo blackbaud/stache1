@@ -1,5 +1,6 @@
-﻿@import '_mixins.scss';
+@import '_mixins.scss';
 
+.bb-checklist-wrapper,
 .checklist-wrapper {
     border: 1px solid $gray-lighter;
     overflow-y: auto;
@@ -15,14 +16,17 @@
     }
 }
 
+.bb-checklist-checkbox-column,
 .checklist-checkbox-column {
     width: 30px;
 }
 
+.bb-checklist-row,
 .checklist-row {
     cursor: pointer;
 }
 
+.bb-checklist-filter-bar,
 .checklist-filter-bar {
     background-color: $gray-lightest;
     border: 1px solid $gray-lighter;
@@ -44,10 +48,12 @@
     }
 }
 
+.bb-checklist-link,
 .checklist-link {
     margin-right: $margin;
 }
 
+.bb-checklist-no-items,
 .checklist-no-items {
     text-align: center;
     margin-top: $margin;

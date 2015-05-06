@@ -4,8 +4,7 @@
 (function () {
     'use strict';
 
-    var CLS_VIEWKEEPER = "viewkeeper",
-        CLS_VIEWKEEPER_FIXED = CLS_VIEWKEEPER + "-fixed",
+    var CLS_VIEWKEEPER_FIXED = 'bb-viewkeeper-fixed viewkeeper-fixed',
         config = {
             viewportMarginTop: 0
         },
@@ -310,9 +309,9 @@
                 //On iOS we need to have special handling when entering textboxes to correct an issue with fixed
                 //elements used by view keeper when the keyboard flys out.
                 angular.element(window.document).on('focus', 'input', function () {
-                    angular.element('body').addClass('viewkeeper-ignore-fixed');
+                    angular.element('body').addClass('bb-viewkeeper-ignore-fixed viewkeeper-ignore-fixed');
                 }).on('blur', 'input', function () {
-                    angular.element('body').removeClass('viewkeeper-ignore-fixed');
+                    angular.element('body').removeClass('bb-viewkeeper-ignore-fixed viewkeeper-ignore-fixed');
                 });
             } else {
                 bbMediaBreakpoints.register(mediaBreakpointHandler);
@@ -400,23 +399,24 @@
                             scrollingDown = true;
                         }
                         prevScroll = scrollPos;
-
+                        
                         if (scrollPos >= elementStart - verticalOffset && element.height() + verticalOffset <= $window.document.body.offsetHeight) {
-                            if (element.height() < $window.innerHeight) {
+                            if (element.height() + verticalOffset < $window.innerHeight) {
                                 tempTop = 0;
 
-                                element.removeClass("grid-filters-fixed-bottom").addClass("grid-filters-fixed-top");
+                                element.removeClass('bb-grid-filters-fixed-bottom grid-filters-fixed-bottom').addClass('bb-grid-filters-fixed-top grid-filters-fixed-top');
 
                                 element.css({
                                     top: verticalOffset + 'px'
                                 });
                             } else if (scrollingDown) {
                                 if (element.offset().top + element.height() > scrollPos + $window.innerHeight) {
+                                    /*istanbul ignore else: sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }
 
-                                    element.removeClass("grid-filters-fixed-top grid-filters-fixed-bottom");
+                                    element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom grid-filters-fixed-top grid-filters-fixed-bottom');
 
                                     element.css({
                                         top: tempTop
@@ -426,15 +426,16 @@
                                     element.css({
                                         top: ''
                                     });
-                                    element.removeClass("grid-filters-fixed-top").addClass("grid-filters-fixed-bottom");
+                                    element.removeClass('bb-grid-filters-fixed-top grid-filters-fixed-top').addClass('bb-grid-filters-fixed-bottom grid-filters-fixed-bottom');
                                 }
                             } else {
                                 if (element.offset().top < scrollPos + verticalOffset) {
+                                    /*istanbul ignore else: sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
                                     }
 
-                                    element.removeClass("grid-filters-fixed-top grid-filters-fixed-bottom");
+                                    element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom grid-filters-fixed-top grid-filters-fixed-bottom');
 
                                     element.css({
                                         top: tempTop
@@ -442,7 +443,7 @@
                                 } else {
                                     tempTop = 0;
 
-                                    element.removeClass("grid-filters-fixed-bottom").addClass("grid-filters-fixed-top");
+                                    element.removeClass('bb-grid-filters-fixed-bottom grid-filters-fixed-bottom').addClass('bb-grid-filters-fixed-top grid-filters-fixed-top');
 
                                     element.css({
                                         top: verticalOffset + 'px'
@@ -451,13 +452,13 @@
                             }
                         } else {
                             tempTop = 0;
-                            element.removeClass("grid-filters-fixed-top grid-filters-fixed-bottom");
+                            element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom grid-filters-fixed-top grid-filters-fixed-bottom');
                             element.css({
                                 top: 0
                             });
                         }
                     }
-
+                    
                     if (!/iPad|iPod|iPhone/i.test($window.navigator.userAgent)) {
                         angular.element($window).on('scroll.' + id + ', orientationchange.' + id, scroll);
 

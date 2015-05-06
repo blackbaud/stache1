@@ -27,6 +27,6 @@
     "path": "~0.11.14"
   },
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start karma.conf-browserstack.js"
+    "test": "grunt travis"
   }
 }

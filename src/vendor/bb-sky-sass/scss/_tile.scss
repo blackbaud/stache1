@@ -1,10 +1,12 @@
 @import "_mixins.scss";
 
+.bb-tile,
 .tile {
     .ibox-title {
         cursor: pointer;
         padding: 0;
 
+        .bb-tile-header,
         .tile-header {
             font-family: $font-family-narrow;
             font-size: 22px;
@@ -60,42 +62,50 @@
 
 /*NOTE -  This section is intentionally outside of the .tile wrapper above.  It defines how
 tiles behave on a modal form.*/
-.modal-body .tile {
-    .ibox-title {
-        height: 32px;
+.modal-body {
+    .bb-tile,
+    .tile {
+        .ibox-title {
+            height: 32px;
 
-        .tile-header {
-            font-family: $font-family-base;
-            font-size: 13px;
-            font-weight: 600;
-            margin: 7px $tile-header-tool-padding;
+            .bb-tile-header,
+            .tile-header {
+                font-family: $font-family-base;
+                font-size: 13px;
+                font-weight: 600;
+                margin: 7px $tile-header-tool-padding;
+            }
         }
-    }
 
-    .ibox-tools {
-        margin-top: 7px;
+        .ibox-tools {
+            margin-top: 7px;
+        }
     }
 }
 
 /*NOTE -  This section is intentionally outside of the .tile wrapper above.  It defines how
 tiles behave within a column of tiles.*/
-.page-content-tile-column .tile {
-    //When columns are stacked in a tile, there is special behavior on extra small devices
-    @media (max-width: $screen-xs-max) {
-        padding-bottom: 0;
+.page-content-tile-column {
+    .bb-tile,
+    .tile {
+        //When columns are stacked in a tile, there is special behavior on extra small devices
+        @media (max-width: $screen-xs-max) {
+            padding-bottom: 0;
 
-        > div {
-            @include shadow($blur: 0);
-        }
-        //Create line above the tile
-        &:before {
-            content: "";
-            display: block;
+            > div {
+                @include shadow($blur: 0);
+            }
+            //Create line above the tile
+            &:before {
+                content: "";
+                display: block;
+            }
         }
     }
 }
 
 .toolbar {
+    &.bb-tile-toolbar,
     &.tile-toolbar {
         border: 1px solid $border-color;
         border-right: none;
@@ -104,6 +114,7 @@ tiles behave within a column of tiles.*/
     }
 }
 
+.bb-tile-chevron,
 .tile-chevron {
     color: #D1DADE;
     float: left;
@@ -111,10 +122,12 @@ tiles behave within a column of tiles.*/
     padding-right: $tile-header-tool-padding;
 }
 
+.bb-tile-content-section,
 .tile-content-section {
     padding: 15px;
 }
 
+.bb-tile-grab-handle,
 .tile-grab-handle {
     color: #E7EAEC;
     cursor: move;
@@ -135,10 +148,12 @@ tiles behave within a column of tiles.*/
 .page-content-column-sortable {
     min-height: 100px;
 
+    .bb-tile-grab-handle,
     .tile-grab-handle {
         display: inline;
     }
 
+    .bb-tile-chevron,
     .tile-chevron {
         padding-right: 0;
     }

@@ -2,7 +2,9 @@
 //A comment
 angular.module('KitchenSink').controller('GridTestController', ['$scope', function ($scope) {
     'use strict';
-    var dataSet1 = [
+    var action1,
+        action2,
+        dataSet1 = [
             {
                 name: 'Patrick',
                 skills: 'Karate, Kung Fu, Italian cooking, Ditch digging'
@@ -106,6 +108,58 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
         }
     }
     
+    function updateActions(selections) {
+        var i,
+            selection;
+
+        action1.selections = [];
+        action2.selections = [];
+
+        for (i = 0; i < selections.length; i++) {
+            selection = selections[i];
+            if (selection.instrument.indexOf('guitar') > -1) {
+                action1.selections.push(selection);
+            } else if (selection.instrument.indexOf('Drum') > -1) {
+                action2.selections.push(selection);
+            }
+        }
+    }
+    
+    function action1Clicked() {
+        var i,
+            message = 'The selected guitar players are ';
+        if (action1.selections && action1.selections.length > 0) {
+            for (i = 0; i < action1.selections.length; i = i + 1) {
+                message += action1.selections[i].name;
+                if (i !== (action1.selections.length - 1)) {
+                    message += ', ';
+                }
+            }
+            alert(message);
+        }
+    }
+    
+    function action2Clicked() {
+        var message = 'Drum Drum Drum!';
+        
+        alert(message);
+    }
+    
+    action1 = {
+        actionCallback: action1Clicked,
+        automationId: 'Action1Button',
+        isPrimary: true,
+        selections: [],
+        title: 'Guitar Action'
+    };
+    
+    action2 = {
+        actionCallback: action2Clicked,
+        automationId: 'Action2Button',
+        isPrimary: false,
+        selections: [],
+        title: 'Drum Action'
+    };
     
     $scope.locals = {
         appliedFilters: {
@@ -123,6 +177,10 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
                 args.filters = angular.copy($scope.locals.appliedFilters);
             }
         },
+        gridActions: [
+            action1,
+            action2
+        ],
         gridOptions: {
             columns: [
                 {
@@ -155,7 +213,6 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
                     width_xs: 100
                 }
             ],
-        
             data: dataSetBand,
             getContextMenuItems: function (rowid, rowObject) {
                 if (rowid === '1' || rowObject.name === 'Ringo') {
@@ -171,6 +228,8 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
                     ];
                 }
             },
+            multiselect: true,
+            
             sortOptions: {
                 excludedColumns: ['bio']
             },
@@ -217,7 +276,8 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
             recordCount: 30
         },
         guitarFilter: false,
-        drumsFilter: false
+        drumsFilter: false,
+        updateActions: updateActions
     };
 
     function getDataSet(top, skip) {
@@ -270,7 +330,6 @@ angular.module('KitchenSink').controller('GridTestController', ['$scope', functi
         } else {
             $scope.locals.gridOptions.data = dataSetBand;
         }
-    
     });
     
     $scope.$on('loadMoreRows', function (event, data) {

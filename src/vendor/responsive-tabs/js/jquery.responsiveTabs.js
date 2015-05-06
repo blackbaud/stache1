@@ -2,7 +2,7 @@
  *  Project: jquery.responsiveTabs.js
  *  Description: A plugin that creates responsive tabs, optimized for all devices
  *  Author: Jelle Kralt (jelle@jellekralt.nl)
- *  Version: 1.4.4
+ *  Version: 1.4.5
  *  License: MIT
  */
 
@@ -18,6 +18,7 @@
         rotate: false,
         setHash: false,
         animation: 'default',
+        animationQueue: false,
         duration: 500,
         scrollToAccordion: false,
         activate: function(){},
@@ -307,8 +308,6 @@
                 // Open the initial tab
                 this._openTab(e, startTab); // Open first tab
             }
-
-
         }
     };
 
@@ -358,8 +357,6 @@
             }
         });
 
-
-
         this.$element.trigger('tabs-activate', oTab);
     };
 
@@ -370,8 +367,17 @@
      */
     ResponsiveTabs.prototype._closeTab = function(e, oTab) {
         var _this = this;
+        var doQueueOnState = typeof _this.options.animationQueue === 'string';
+        var doQueue;
 
         if(oTab !== undefined) {
+            if(doQueueOnState && _this.getState() === _this.options.animationQueue) {
+                doQueue = true;
+            } else if(doQueueOnState) {
+                doQueue = false;
+            } else {
+                doQueue = _this.options.animationQueue;
+            }
 
             // Deactivate tab
             oTab.active = false;
@@ -383,7 +389,7 @@
                 // Set default class to the accordion tab button and tab panel
                 oTab.accordionTab.removeClass(_this.options.classes.stateActive).addClass(_this.options.classes.stateDefault);
                 oTab.panel.removeClass(_this.options.classes.stateActive).addClass(_this.options.classes.stateDefault);
-            }, true);
+            }, !doQueue);
 
             this.$element.trigger('tabs-deactivate', oTab);
         }

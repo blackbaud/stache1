@@ -38,9 +38,9 @@
                 }],
                 link: function ($scope, element, attrs, bbGrid) {
                     /*jslint unparam: true */
-                    var box = element.find('.grid-filters-box'),
-                        filtersContainer = element.find('.grid-filters-container');
-        
+                    var box = element.find('.bb-grid-filters-box'),
+                        filtersContainer = element.find('.bb-grid-filters-container');
+                    
                     $scope.viewKeeperOptions = {};
 
                     bbGrid.viewKeeperChangedHandler = function (val) {
@@ -89,6 +89,7 @@
                             }
                         }
                     });
+                    
                 },
                 templateUrl: 'sky/templates/grids/filters.html'
             };
@@ -130,7 +131,7 @@
                 }],
                 link: function ($scope, element, attrs, bbGrid) {
                     /*jslint unparam: true */
-                    var toolbarContainer = element.parents('.bb-grid-container').find('.grid-toolbar-container .bb-grid-filter-summary-container');
+                    var toolbarContainer = element.parents('.bb-grid-container').find('.bb-grid-toolbar-container .bb-grid-filter-summary-container');
 
                     toolbarContainer.append(element);
 

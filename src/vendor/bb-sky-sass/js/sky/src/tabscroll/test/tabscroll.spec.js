@@ -195,6 +195,7 @@ describe('Tabscroll directive', function () {
             var animateSpy,
                 el,
                 scrollLeftSpy,
+                scrollWasCalled,
                 spyWindowWidth,
                 widthFn,
                 widthSpy;
@@ -224,21 +225,28 @@ describe('Tabscroll directive', function () {
             });
 
             animateSpy = spyOn($.fn, 'animate');
-            scrollLeftSpy = spyOn($.fn, 'scrollLeft');
+            
+            scrollLeftSpy = spyOn($.fn, 'scrollLeft').and.callFake(function () {
+                if (this.hasClass('nav-tabs')) {
+                    scrollWasCalled = true;
+                }
+            });
             
             $(window).resize();
             $timeout.flush();
             
-            expect(scrollLeftSpy.calls.count()).toBe(1);
+            expect(scrollWasCalled).toBe(true);
             
             validateSpyOnTabs(animateSpy);
+            
+            scrollWasCalled = false;
             
             spyWindowWidth = 150;
             
             $(window).resize();
             $timeout.flush();
             
-            expect(scrollLeftSpy.calls.count()).toBe(1);
+            expect(scrollWasCalled).toBe(false);
             
             el.remove();
         });
