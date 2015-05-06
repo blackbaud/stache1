@@ -11,7 +11,7 @@ limit: <%= stache.config.blog_recent_limit %>
 
 {{# if stache.config.comments }}
   {{# is comments false }} {{ else }}
-
+  {{# raw }}
     <div class="blog-comments">
       <div id="disqus_thread"></div>
       <script type="text/javascript">
@@ -22,6 +22,6 @@ limit: <%= stache.config.blog_recent_limit %>
         })();
       </script>
     </div>
-
+  {{/ raw }}
   {{/ is }}
 {{/ if }}

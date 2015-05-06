@@ -22,7 +22,9 @@ sidebar_title: Recent Posts
   {{/ unless }}
 {{/ eachChildLink }}
 
+
 {{# if stache.config.comments }}
+{{# raw }}
   <script type="text/javascript">
     (function () {
       var s = document.createElement('script'); s.async = true;
@@ -31,4 +33,5 @@ sidebar_title: Recent Posts
       (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
     }());
   </script>
+{{/ raw }}
 {{/ if }}
