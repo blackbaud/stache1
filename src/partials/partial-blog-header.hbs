@@ -1,0 +1,30 @@
+<h2>
+  <a href="{{uri}}">{{ name }}</a>
+</h2>
+
+<ul class="list-inline">
+  {{# if pubDate }}
+    <li>
+      <i class="fa fa-calendar"></i>
+      {{ pubDate }}
+    </li>
+  {{/ if }}
+  {{# if author }}
+    <li>
+      <i class="fa fa-user"></i>
+      <a href="https://github.com/{{ author }}">
+        {{# if authorName }}
+          {{ authorName }}
+        {{ else }}
+          {{ author }}
+        {{/ if }}
+      </a>
+    </li>
+  {{/ if }}
+  {{# is comments false }}{{ else }}
+    <li>
+      <i class="fa fa-comments"></i>
+      <a href="{{ uri }}#disqus_thread">Comments</a>
+    </li>
+  {{/ is }}
+</ul>

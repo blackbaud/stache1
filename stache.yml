@@ -45,6 +45,8 @@ showHeader: true
 showFooter: true
 showOmnibar: true
 markdown: true
+comments: true
+comments_key: blackbaud
 
 # =============================================
 # STACHE - NAVIGATION

@@ -1,0 +1,22 @@
+---
+layout: layout-sidebar
+---
+
+
+{{ body }}
+{{# eachChildLink }}
+  {{ include 'partial-blog-header' }}
+  {{ include abspath }}
+  <hr />
+{{/ eachChildLink }}
+
+{{# if stache.config.comments }}
+  <script type="text/javascript">
+    (function () {
+      var s = document.createElement('script'); s.async = true;
+      s.type = 'text/javascript';
+      s.src = '//{{ stache.config.comments_key }}.disqus.com/count.js';
+      (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+  </script>
+{{/ if }}
