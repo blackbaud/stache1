@@ -9,16 +9,16 @@
 
 <div ng-show="query">
   <h2>Search Results for {{query}}</h2>
-  
+
   <p ng-hide="results.length">Unable to locate any results.</p>
-  <p ng-show="error">{{::error}}</p>
-  
+  <p ng-show="error">{{error}}</p>
+
   <ul class="list-unstyled" ng-show="results">
     <li ng-repeat="result in results | orderBy:'-weight'">
-      <h3><a href="{{result.uri}}">{{::result.name}}</a></h3>
-      <p ng-bind-html="result.match | limitTo: 500 | highlight:query"></p>        
+      <h3><a href="{{result.uri}}">{{result.name}}</a></h3>
+      <p ng-bind-html="result.match | limitTo: 500 | highlight:query"></p>
       <hr />
     </li>
   </ul>
-  
+
 </div>
