@@ -305,7 +305,7 @@ module.exports = function (grunt) {
     return output;
   }
 
-  function sort(arr, sortAscending, prop, propDefault) {
+  function sort(arr, sortAscending, prop, propDefault, propIfEqual) {
     arr.sort(function (a, b) {
       var ap = a[prop] || propDefault;
       var bp = b[prop] || propDefault;
@@ -314,6 +314,8 @@ module.exports = function (grunt) {
         return sortAscending ? -1 : 1;
       } else if (ap > bp) {
         return sortAscending ? 1 : -1;
+      } else if (typeof propIfEqual !== 'undefined' && propIfEqual !== ''){
+        return sort(arr, sortAscending, propIfEqual, '');
       } else {
         return 0;
       }
@@ -324,15 +326,16 @@ module.exports = function (grunt) {
     var nav_links = grunt.config.get(key);
     var blog = grunt.config.get('stache.config.blog');
 
-    sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100);
+    sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100, 'name');
     grunt.config.set(key, nav_links);
 
     nav_links.forEach(function (el, idx) {
       if (el.nav_links) {
+        var sortAscendingTemp = sortAscending;
         if (el.abspath && el.abspath.indexOf(blog) > -1) {
-          sortAscending = false;
+          sortAscendingTemp = false;
         }
-        sortRecursive(key + '.' + idx + '.nav_links', sortAscending)
+        sortRecursive(key + '.' + idx + '.nav_links', sortAscendingTemp)
       }
     });
   }

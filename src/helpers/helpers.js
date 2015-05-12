@@ -335,7 +335,7 @@ module.exports.register = function (Handlebars, options, params) {
         }
       }
       return r;
-    },    
+    },
 
     /**
     * Loop through a certain number of times.
