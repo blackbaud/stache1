@@ -310,16 +310,23 @@ module.exports = function (grunt) {
       var ap = a[prop] || propDefault;
       var bp = b[prop] || propDefault;
 
-      if (ap < bp) {
-        return sortAscending ? -1 : 1;
-      } else if (ap > bp) {
-        return sortAscending ? 1 : -1;
-      } else if (typeof propIfEqual !== 'undefined' && propIfEqual !== ''){
-        return sort(arr, sortAscending, propIfEqual, '');
-      } else {
-        return 0;
+      if (ap === bp && typeof propIfEqual !== 'undefined' && propIfEqual !== ''){
+        ap = a[propIfEqual];
+        bp = b[propIfEqual];
       }
+
+      return sortInner(ap, bp, sortAscending);
     });
+  }
+
+  function sortInner(a, b, sortAscending) {
+    if (a < b) {
+      return sortAscending ? -1 : 1;
+    } else if (a > b) {
+      return sortAscending ? 1 : -1;
+    } else {
+      return 0;
+    }
   }
 
   function sortRecursive(key, sortAscending) {
