@@ -5,6 +5,7 @@
 base: /
 static: static/
 content: content/
+includes: includes/
 data: data/
 blog: blog/
 src: <%= stache.dir %>src/
