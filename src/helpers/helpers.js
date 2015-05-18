@@ -392,6 +392,9 @@ module.exports.register = function (Handlebars, options, params) {
       var fileWithPath = file;
       var c = merge(context, options.hash);
       var hideYFM = typeof options.hash.hideYFM !== 'undefined' ? options.hash.hideYFM : true;
+      var render = typeof options.hash.render !== 'undefined' ? options.hash.render : true;
+      var fixNewline = typeof options.hash.fixNewline !== 'undefined' ? options.hash.fixNewline : true;
+      var escape = typeof options.hash.escape !== 'undefined' ? options.hash.escape : false;
 
       if (typeof Handlebars.partials[fileWithPath] !== 'undefined') {
         template = Handlebars.partials[fileWithPath];
@@ -413,19 +416,33 @@ module.exports.register = function (Handlebars, options, params) {
 
       }
 
-      if (typeof template === 'string') {
+      // Allows for raw includes
+      if (typeof template === 'string' && render) {
         r = Handlebars.compile(template)(c);
+      } else if (!render) {
+        r = template;
       }
 
       // I spent an entire day tracking down this bug.
       // Files created on different systems with different line endings freaked this out.
-      r = r.replace(/\r\n/g, '\n')
+      if (fixNewline) {
+        r = r.replace(/\r\n/g, '\n')
+      }
 
       // Hide YAML Front Matter
       if (hideYFM && (r.match(/---/g) || []).length > 1) {
         var start = r.indexOf('---') + 1;
         var end = r.indexOf('---', start);
         r = r.substr(end + 3);
+      }
+
+      if (escape) {
+        r = r
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
       }
 
       return new Handlebars.SafeString(r);

@@ -108,6 +108,7 @@
     <script src="{{ assets }}vendor/angular/angular.min.js"></script>
     <script src="{{ assets }}vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="{{ assets }}vendor/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="{{ assets }}vendor/bb-sky-sass/dist/js/sky.min.js"></script>
     <!-- endbuild -->
 
     <!-- build:js {{ assets }}js/app.js -->
@@ -116,6 +117,10 @@
     <!-- endbuild -->
 
     {{# each stache.config.files.js }}
+      <script src="{{ this }}"></script>
+    {{/ each }}
+
+    {{# each files.js }}
       <script src="{{ this }}"></script>
     {{/ each }}
 
