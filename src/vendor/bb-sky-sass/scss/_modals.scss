@@ -1,10 +1,10 @@
-@import 'Bootstrap/_variables.scss';
-@import '_mixins.scss';
+@import "Bootstrap/variables";
+@import "mixins";
 
 
 .modal-header {
     min-height: 45px;
-
+    
     .dialogHeader, /* Legacy; should eventually be removed */
     .bb-dialog-header {
         white-space: nowrap;
@@ -14,12 +14,17 @@
         overflow: hidden;
         width: 80%;
         float: left;
+        line-height: 1.4; /* Keeps font descenders from being cut off */
     }
 
     .bb-helpbutton {
         float: right;
         margin-right: 20px;
-        margin-top: 2px !important;
+        margin-top: 3px !important;
+    }
+    
+    .close {
+        margin-top: 0;
     }
 }
 
@@ -52,6 +57,17 @@
     
     .modal-body {
         overflow-y: auto;
+    }
+}
+
+.bb-modal-open-mobile {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+    position: fixed;
+    
+    .bb-modal {
+        position: absolute;
     }
 }
 

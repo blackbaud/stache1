@@ -1,9 +1,9 @@
-@import "_variables.scss";
-@import "_bootstrap-variable-defaults.scss";
-@import "Bootstrap/_variables.scss";
-@import "_compass.scss";
-@import "animation/_core.scss";
-@import "Bootstrap/_mixins.scss";
+@import "variables";
+@import "bootstrap-variable-defaults";
+@import "Bootstrap/variables";
+@import "compass";
+@import "animation/core";
+@import "Bootstrap/mixins";
 
 @mixin shadow ($h-shadow:0px, $v-shadow:0px, $blur:5px, $spread-radius:0, $color:$gray-dark-text) {
     box-shadow: $h-shadow $v-shadow $blur $spread-radius $color;

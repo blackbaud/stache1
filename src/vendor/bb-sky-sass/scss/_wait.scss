@@ -1,4 +1,4 @@
-@import '_mixins.scss';
+@import "mixins";
 
 .bb-wait-wrap {
     height: 35px;
@@ -35,11 +35,11 @@
     &.blockOverlay {
         background-color: black;
         cursor: wait;
-        opacity: 0.6;
+        opacity: 0.1;
     }
 
     &.blockMsg {
-        border: solid 1px #656565; // #656565 represents the 0.6 opacity over black background, so the border doesn't show unless the element being blocke is smaller than the blockMsg element.  Then you get a border of the same color to delineate the blockMsg.
+        @include box-shadow(0 0 50px $gray-light);
         background-color: $gray-lightest;
         padding: $padding-plus-half;
         cursor: wait;

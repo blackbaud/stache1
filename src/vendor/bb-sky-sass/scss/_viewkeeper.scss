@@ -1,5 +1,5 @@
-@import '_mixins.scss';
-@import '_variables.scss';
+@import "mixins";
+@import "variables";
 
 $viewkeeper-margin-top: $omnibar-height !default;
 $viewkeeper-margin-top-small: $omnibar-height-small !default;

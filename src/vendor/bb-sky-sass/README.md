@@ -43,7 +43,8 @@ We highly encourage contributions from all users of Sky.  We just ask that you f
 
 1. Fork the master branch into your own repo
 2. Create a branch named after the feature you will be contributing (.e.g. my-new-feature)
-3. Clone your repo locally, then run `npm install` and `bower install` to install all required dependencies
+3. Clone your repo locally, then run `npm install` and `bower install` from your local repo's directory to install all required dependencies
+4. Run `grunt buildall` to do your initial build.  As you write your code, the individual pieces will be built (see step 1 below)
 
 ### Writing the code
 
@@ -61,7 +62,7 @@ If you have Visual Studio with the [Task Runner Explorer](https://visualstudioga
     */
 
   
-  - Your documentation should also include demo HTML, and demo JS in a folder called `docs` under your feature's folder in `src/js`.  As you update these files, the `grunt watchandtest` task will generate documentation which you can find under `demo/directives`.  The documentation page will need to be hosted by a web server; you can use a Node package like [http-server](https://github.com/indexzero/http-server) to start a web server in any folder on your drive.
+  - Your documentation should also include demo HTML, and demo JS in a folder called `docs` under your feature's folder in `src/js`.  As you update these files, the `grunt watchandtest` task will generate documentation which you can find under `bin/demo/directives`.  The documentation page will need to be hosted by a web server; you can use a Node package like [http-server](https://github.com/indexzero/http-server) to start a web server in any folder on your drive.
  - Your unit tests should be located in a folder called `test` under your feature's folder in `src/js` and should consist of one or more JavaScript files named `<featurename>.spec.js`.  As you write unit tests or change code, the `grunt watchandtest` task will run your unit tests and generate code coverage.  Code coverage reports can be located under `coverage/<browser version>/index.html` and can be launched straight from disk.
 
 ### Submitting the code

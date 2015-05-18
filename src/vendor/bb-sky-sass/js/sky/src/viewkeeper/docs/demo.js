@@ -1,1 +1,0 @@
-angular.module('KitchenSink').controller('ViewKeeperTestController', angular.noop);

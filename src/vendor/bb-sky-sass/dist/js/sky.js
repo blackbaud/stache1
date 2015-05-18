@@ -149,7 +149,8 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
         }])
         .filter('bbAutonumeric', ['bbAutonumericConfig', 'bbResources', function (bbAutonumericConfig, bbResources) {
             return function (input, configType, abbreviate) {
-                var dividend,
+                var aSign,
+                    dividend,
                     mDec,
                     formatted,
                     settings,
@@ -159,6 +160,13 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 settings = getBaseSettings(bbAutonumericConfig, configType);
                 
                 if (abbreviate) {
+                    if (settings.pSign === 's') {
+                        // The suffix needs to go between the number and the currency symbol, so the currency
+                        // symbol has to be left off and appended after the number is formatted.
+                        aSign = settings.aSign;
+                        settings.aSign = '';
+                    }
+                    
                     input = Math.round(input);
                     
                     if (input >= 1000000000) {
@@ -189,6 +197,10 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 
                 if (suffix) {
                     formatted += suffix;
+                }
+                
+                if (abbreviate && settings.pSign === 's' && aSign) {
+                    formatted += aSign;
                 }
                 
                 return formatted;
@@ -1165,9 +1177,6 @@ The bbCheck directive allows you to change an input element of type checkbox or 
         function startNonblockingForAdditionalItems() {
             nonblockingForAdditionalItems = true;
             scope.$emit("bbBeginWait", { nonblocking: true });
-            if (options.onFirstItemLoaded) {
-                options.onFirstItemLoaded();
-            }
         }
 
         function markCompleted(item) {
@@ -1181,9 +1190,6 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                     if (nonblockingForAdditionalItems) {
                         nonblockingForAdditionalItems = false;
                         scope.$emit("bbEndWait", { nonblocking: true });
-                        if (options.onLastItemLoaded) {
-                            options.onLastItemLoaded({ viewName: item.name });
-                        }
                     }
                 }
             }
@@ -1509,7 +1515,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
             currentCultureDateFormatString: 'mm/dd/yyyy',
             twoDigitYearRolloverMax: 29
         })
-        .directive('bbDateField', ['$q', 'bbMoment', 'bbDateFieldConfig', 'bbResources', function ($q, bbMoment, bbDateFieldConfig, bbResources) {
+        .directive('bbDateField', ['$q', '$templateCache', 'bbMoment', 'bbDateFieldConfig', 'bbResources', function ($q, $templateCache, bbMoment, bbDateFieldConfig, bbResources) {
 
             function matchSeparator(value) {
                 return value.match(/[.\/\-\s].*?/);
@@ -1660,7 +1666,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     var hasCustomFormatting = (scope.bbDateFieldOptions && !!scope.bbDateFieldOptions.formatValue),
                         input = el.find('input'),
                         today,
-                        datefieldHTML = '<span class="add-on input-group-btn"><button class="btn btn-default bb-date-field-calendar-button"><i class="fa fa-calendar"></i></button></span>',
+                        datefieldHTML = $templateCache.get('sky/templates/datefield/datefield.html'),
                         errorMessage,
                         skipValidation;
 
@@ -2357,6 +2363,90 @@ This service provides additional functionality that works closely with the direc
 
 (function () {
     'use strict';
+    
+    angular.module('sky.grids.actionbar', ['sky.mediabreakpoints', 'sky.resources'])
+    .directive('bbGridActionBar', ['bbMediaBreakpoints', 'bbResources', '$timeout', function (bbMediaBreakpoints, bbResources, $timeout) {
+        return {
+                require: '^bbGrid',
+                replace: true,
+                transclude: true,
+                restrict: 'E',
+                scope: {
+                    bbMultiselectActions: '=',
+                    bbSelectionsUpdated: '&'
+                },
+                controller: ['$scope', function ($scope) {
+                    $scope.locals = {
+                        actions: $scope.bbMultiselectActions,
+                        showActionBar: false,
+                        mobileButtons: false,
+                        showMobileActions: false
+                    };
+
+                    $scope.resources = bbResources;
+                }],
+                link: function ($scope, element, attrs, bbGrid) {
+                    /*jslint unparam: true */
+
+                    bbGrid.scope.$watchCollection('locals.selectedRows', function (newValue) {
+                        var action,
+                            i,
+                            showActionBar;
+
+                        //this notation is necessary because the argument is passed through grid and then to the controller
+                        //in which grid resides.
+                        $scope.bbSelectionsUpdated({ selections: { selections: newValue } });
+
+                        showActionBar = false;
+                        if ($scope.locals.actions) {
+                            //only show the action bar if an action has an available selection
+                            for (i = 0; i < $scope.locals.actions.length; i++) {
+                                action = $scope.locals.actions[i];
+                                if (action.selections.length > 0) {
+                                    showActionBar = true;
+                                }
+                            }
+                        }
+                        $scope.locals.showActionBar = showActionBar;
+
+                        if (showActionBar) {
+                            $timeout(function () {
+                                bbGrid.syncActionBarViewKeeper();
+                            });
+                        }
+                    });
+
+                    //on mobile do an ng-if that changes the stuff.
+                    function mediaBreakpointHandler(newBreakpoints) {
+                        $scope.locals.mobileButtons = newBreakpoints.xs;
+                    }
+
+                    bbMediaBreakpoints.register(mediaBreakpointHandler);
+
+                    element.on('$destroy', function () {
+                        bbMediaBreakpoints.unregister(mediaBreakpointHandler);
+                    });
+
+                    $scope.locals.clearSelection = function () {
+                        bbGrid.resetMultiselect();
+                    };
+
+                    $scope.locals.chooseAction = function () {
+                        $scope.locals.showMobileActions = true;
+                    };
+
+                    $scope.locals.cancelChooseAction = function () {
+                        $scope.locals.showMobileActions = false;
+                    };
+                },
+                templateUrl: 'sky/templates/grids/actionbar.html'
+            };
+    }]);
+}());
+/*global angular */
+
+(function () {
+    'use strict';
     angular.module('sky.grids.filters', ['sky.help', 'sky.resources', 'sky.mediabreakpoints'])
     .directive('bbGridFilters', ['bbHelp', 'bbResources', 'bbMediaBreakpoints', function (bbHelp, bbResources, bbMediaBreakpoints) {
             return {
@@ -2535,16 +2625,19 @@ This service provides additional functionality that works closely with the direc
       - `clearFilters` A function that is called when you click the clear filters (x) icon. You can pass updated filters to `bb-grid` by setting `args.filters`.
 
 - `bb-grid-options` An object with the following properties:
-  - `columns` An array of available columns.  Each column can have these properties:
+  - `columns` An array of available columns.  Each column can have these properties: 
+        - `allow_see_more` Allows the column to have a see more link to view overflow content.
         - `caption` The text to display in the column header and column chooser.
         - `category` A category for the column, can be used to filter in the column chooser.
-        - `center_align` True if the column header and contents should be center aligned.
+        - `center_align` True if the column header and contents should be center aligned. 
+        - `controller` The controller function if the column is templated. This allows a cell to perform logic while displaying formatted or complex data.
         - `description` A description for the column, seen in the column chooser.
         - `exclude_from_search` If true, then the column does not highlight text on search.
         - `id` A unique identifier for the column.  The ID is referenced by the option object's `selectedColumnIds` property.
         - `jsonmap` The name of the property that maps to the column's data.
         - `name` The name of the column.
-        - `right_align` True if the column header and contents should be right aligned.
+        - `right_align` True if the column header and contents should be right aligned. 
+        - `template_url` The url for the column template to show formatted or complex data in a cell. The properties of the cell data object can be accessed using the format `data.property_name`.
         - `width_all` The default width (in pixels) for a column if no breakpoint specific column is specified (`width_xs`, `width_sm`, `width_md`, `width_lg`). If no value is specified, columns will default to 150px, and if the columns do not take up the available room in the grid, the last column will be extended.
         - `width_xs` The width of the column for screen sizes less than 768px. 
         - `width_sm` The width of the column for screen sizes from 768px to 991px.
@@ -2591,13 +2684,13 @@ reloading the grid with the current data after the event has fired.
     var DEFAULT_ITEMS_PER_PAGE = 5,
         DEFAULT_MAX_PAGES = 5,
         DEFAULT_COLUMN_SIZE = 150,
-        MULTISELECT_COLUMN_SIZE = 27,
+        MULTISELECT_COLUMN_SIZE = 35,
         DROPDOWN_TOGGLE_COLUMN_SIZE = 40,
         DROPDOWN_TOGGLE_COLUMN_NAME = 'dropdownToggle',
         MULTISELECT_COLUMN_NAME = 'cb',
         TOP_SCROLLBAR_HEIGHT = 18;
 
-    angular.module('sky.grids', ['sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters'])
+    angular.module('sky.grids', ['sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters', 'sky.grids.actionbar'])
         .directive('bbGrid', ['bbModal', '$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout',
 
             function (bbModal, $window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout) {
@@ -2620,23 +2713,27 @@ reloading the grid with the current data after the event has fired.
                         };
 
                         self.syncViewKeepers = function () {
+                            /*istanbul ignore else: sanity check */
                             if ($scope.syncViewKeepers) {
                                 $scope.syncViewKeepers();
                             }
                         };
 
                         self.syncActionBarViewKeeper = function () {
+                            /*istanbul ignore else: sanity check */
                             if (angular.isFunction($scope.syncActionBarViewKeeper)) {
                                 $scope.syncActionBarViewKeeper();
                             }
                         };
 
                         self.resetMultiselect = function () {
+                            /*istanbul ignore else: sanity check */
                             if (angular.isFunction(locals.resetMultiselect)) {
                                 locals.resetMultiselect();
                             }
                         };
 
+                        
                         self.scope = $scope;
                         
                         $scope.resources = bbResources;
@@ -2658,7 +2755,6 @@ reloading the grid with the current data after the event has fired.
                                     self.toggleFilterMenu();
                                 }
                             },
-
                             loadMore: function () {
                                 $scope.$emit('loadMoreRows');
                                 locals.loadMoreStarted = true;
@@ -2675,7 +2771,7 @@ reloading the grid with the current data after the event has fired.
                         });
                     }],
                     link: function ($scope, element) {
-                        var breakpoints,
+                        var breakpoints = {},
                             cellScopes,
                             columnCount = 0,
                             columnModel,
@@ -2817,17 +2913,16 @@ reloading the grid with the current data after the event has fired.
                                 columnDefault = DEFAULT_COLUMN_SIZE;
                             }
                             
-                            if (breakpoints) {
-                                if (breakpoints.xs) {
-                                    return column.width_xs > 0 ? column.width_xs : columnDefault;
-                                } else if (breakpoints.sm) {
-                                    return column.width_sm > 0 ? column.width_sm : columnDefault;
-                                } else if (breakpoints.md) {
-                                    return column.width_md > 0 ? column.width_md : columnDefault;
-                                } else if (breakpoints.lg) {
-                                    return column.width_lg > 0 ? column.width_lg : columnDefault;
-                                }
+                            if (breakpoints.xs) {
+                                return column.width_xs > 0 ? column.width_xs : columnDefault;
+                            } else if (breakpoints.sm) {
+                                return column.width_sm > 0 ? column.width_sm : columnDefault;
+                            } else if (breakpoints.md) {
+                                return column.width_md > 0 ? column.width_md : columnDefault;
+                            } else if (breakpoints.lg) {
+                                return column.width_lg > 0 ? column.width_lg : columnDefault;
                             }
+
                             return columnDefault;
                         }
                         
@@ -2840,7 +2935,7 @@ reloading the grid with the current data after the event has fired.
 
                             if (getContextMenuItems) {
                                 colModel.push({
-                                    classes: 'grid-dropdown-cell',
+                                    classes: 'grid-dropdown-cell bb-grid-dropdown-cell',
                                     fixed: true,
                                     sortable: false,
                                     name: DROPDOWN_TOGGLE_COLUMN_NAME,
@@ -2932,6 +3027,7 @@ reloading the grid with the current data after the event has fired.
                         }
 
                         function getColumnNameFromElementId(columnName) {
+                            /*istanbul ignore else: sanity check */
                             if (columnName) {
                                 return columnName.replace(locals.gridId + "_", "");
                             }
@@ -2950,10 +3046,14 @@ reloading the grid with the current data after the event has fired.
                             return width;
                         }
                         
+                        function getScrollbarHeight() {
+                            return (totalColumnWidth > (topScrollbar.width())) && !breakpoints.xs ? TOP_SCROLLBAR_HEIGHT : 0;
+                        }
+                        
                         function resetTopScrollbar() {
                             topScrollbarDiv.width(totalColumnWidth);
-                            topScrollbarDiv.height(totalColumnWidth > (topScrollbar.width()) ? TOP_SCROLLBAR_HEIGHT : 0);
-                            topScrollbar.height(totalColumnWidth > (topScrollbar.width()) ? TOP_SCROLLBAR_HEIGHT : 0);
+                            topScrollbarDiv.height(getScrollbarHeight());
+                            topScrollbar.height(getScrollbarHeight());
                         }
 
                         function resizeExtendedColumn(changedWidth, isIncreasing) {
@@ -3014,6 +3114,13 @@ reloading the grid with the current data after the event has fired.
 
                         }
                         
+                        function syncHeaderToTableWrapper() {
+                            if (vkHeader.isFixed) {
+                                header.width(tableWrapper.width());
+                                header.scrollLeft(tableWrapper.scrollLeft());
+                            }
+                        }
+                        
                         function resizeStop(newWidth, index) {
                             var changedWidth;
                             
@@ -3029,6 +3136,8 @@ reloading the grid with the current data after the event has fired.
                                     resizeExtendedColumn(changedWidth, true);
                                     
                                     resetExtendedColumn();
+                                    syncHeaderToTableWrapper();
+                                    
                                     return;
                                 }
                                 resetExtendedColumn();
@@ -3037,7 +3146,8 @@ reloading the grid with the current data after the event has fired.
                             totalColumnWidth = totalColumnWidth + changedWidth;
                             tableEl.setGridWidth(totalColumnWidth, false);
                             resetTopScrollbar();
-                            
+                            syncHeaderToTableWrapper();
+
                             return;               
                         }
 
@@ -3285,9 +3395,17 @@ reloading the grid with the current data after the event has fired.
                             locals.selectedRows = [];
                         }
 
+                        function setAllFancyCheck(status) {
+                            $(element.find('.cbox')).each(function () {
+                                this.checked = status;
+                            }).iCheck('update');
+                        }
+                        
                         function resetMultiselect() {
                             clearSelectedRowsObject();
                             tableEl.resetSelection();
+                            
+                            setAllFancyCheck(false);
                         }
 
                         function onSelectAll(rowIds, status) {
@@ -3295,29 +3413,103 @@ reloading the grid with the current data after the event has fired.
                             var allRowData;
 
                             clearSelectedRowsObject();
+                            
                             if (status === true) {
                                 allRowData = $scope.options.data;
                                 if (allRowData && allRowData.length > 0) {
                                     locals.selectedRows = allRowData.slice();
                                 }
-                            }
+                            } 
+                            
+                            setAllFancyCheck(status);
                             
                             $scope.$apply();
                         }
 
+                        function updateFancyCheckboxCell(i, status) {
+                            var checkboxEl;
+                            
+                            checkboxEl = element.find('td .cbox');
+                            if (checkboxEl.length > (i - 1)) {
+                                checkboxEl[(i - 1)].checked = status;
+                                checkboxEl.eq(i - 1).iCheck('update');
+                            }
+                        }
+                        
+                        function updateFancyCheckboxHeader(status) {
+                            var checkboxEl;
+                            
+                            checkboxEl = header.find('th .cbox');
+                            
+                            if (checkboxEl.length > 0) {
+                                checkboxEl[0].checked = status;
+                                checkboxEl.eq(0).iCheck('update');
+                            }
+                        }
+                        
                         function onSelectRow(rowId, status) {
                             var index,
                                 row = $scope.options.data[(rowId - 1)];
 
+                            updateFancyCheckboxHeader(false);
+                            
                             index = arrayObjectIndexOf(locals.selectedRows, row);
 
                             if (status === true && index === -1 && row) {
                                 locals.selectedRows.push(row);
+                                updateFancyCheckboxCell(rowId, true);
                             } else if (status === false && index > -1) {
                                 locals.selectedRows.splice(index, 1);
+                                updateFancyCheckboxCell(rowId, false);
                             }
                             
                             $scope.$apply();
+                        } 
+                        
+                        function setMultiselectRow(i) {
+                            var row;
+                            
+                            tableEl.setSelection(i, false);
+                            row  = $scope.options.data[(i - 1)];
+                            locals.selectedRows.push(row);
+                            updateFancyCheckboxCell(i, true);
+                        }
+                        
+                        function beforeSelectRow(rowId, e) {
+                            var endIndex,
+                                i,
+                                lastSelectedRow,
+                                startIndex = parseInt(rowId);
+                            
+                            if (e.shiftKey) {
+                                lastSelectedRow = tableEl.getGridParam('selrow');
+                                resetMultiselect();
+                                
+                                //if lastSelectedRow is undefined or null, set to 1
+                                if (angular.isUndefined(lastSelectedRow) || lastSelectedRow === null) {
+                                    lastSelectedRow = 1;
+                                }
+
+                                endIndex = parseInt(lastSelectedRow);
+                                
+                                //set shift click selection first so last selected row is set properly
+                                if (endIndex < startIndex) {
+                                    for (i = startIndex; i >  endIndex - 1; i = i - 1) {
+                                        setMultiselectRow(i);
+                                    }
+                                } else if (endIndex > startIndex) {
+                                    for (i = startIndex; i <  endIndex + 1; i = i + 1) {
+                                        setMultiselectRow(i);
+                                    }
+                                } else {
+                                    $scope.$apply();
+                                    return true; 
+                                }
+                                
+                                $scope.$apply();
+                                return false; 
+                            } 
+                            return true;
                         }
                         
                         function pageChanged() {
@@ -3327,7 +3519,7 @@ reloading the grid with the current data after the event has fired.
                             $scope.$emit('loadMoreRows', {top: top, skip: skip});
                             
                         }
-                        
+ 
                         function initializePagination() {
                             if (angular.isDefined($scope.paginationOptions)) {
                                 
@@ -3345,6 +3537,41 @@ reloading the grid with the current data after the event has fired.
                             }
                         }
                         
+                        function setUpFancyCheckHeader() {
+                            var headerCheckEl =  header.find('th .cbox');
+                            headerCheckEl.iCheck({
+                                checkboxClass: 'bb-check-checkbox'
+                            });
+                            
+                            headerCheckEl.off('click.i');
+                            element.find('th .bb-check-checkbox').off('click.i');
+                            element.find('th .iCheck-helper').off('mousedown');
+                            element.find('th .iCheck-helper').off('mouseup');
+                            element.find('th .iCheck-helper').off('click');
+                            
+                            
+                            element.find('th .iCheck-helper').on('click', function () {
+                                element.find('th .cbox').trigger('click');
+                            });
+                            
+                        }
+                        
+                        function setUpFancyCheckCell() {
+                            element.find('td .cbox').iCheck(
+                            {
+                                checkboxClass: 'bb-check-checkbox'
+                            });
+                                    
+                            element.find('td .cbox').off('click');
+                            element.find('td .bb-check-checkbox').off('click');
+                            element.find('td .iCheck-helper').off('click');
+                                    
+                        }
+                        
+                        function destroyFancyCheck() {
+                            element.find('td .cbox').iCheck('destroy');
+                        }
+                        
                         function initGrid() {
                             var columns,
                                 jqGridOptions,
@@ -3360,9 +3587,10 @@ reloading the grid with the current data after the event has fired.
 
                             //Clear reference to the table body since it will be recreated.
                             tableBody = null;
-
+                            
                             //Unload grid if it already exists.
                             tableEl.jqGrid('GridUnload');
+                            destroyFancyCheck();
 
                             tableEl = element.find('table');
                             tableDomEl = tableEl[0];
@@ -3388,7 +3616,6 @@ reloading the grid with the current data after the event has fired.
 
                                     totalColumnWidth = totalColumnWidth + MULTISELECT_COLUMN_SIZE;
                                 }
-                                
                                 $scope.searchText = $scope.options.searchText;
                             }
                             
@@ -3410,6 +3637,7 @@ reloading the grid with the current data after the event has fired.
                                 jqGridOptions = {
                                     afterInsertRow: afterInsertRow,
                                     autoencode: true,
+                                    beforeSelectRow: beforeSelectRow,
                                     colModel: columnModel,
                                     datatype: angular.noop,
                                     gridComplete: gridComplete,
@@ -3478,6 +3706,8 @@ reloading the grid with the current data after the event has fired.
                                 });
          
                                 setSortStyles();
+                                
+                                setUpFancyCheckHeader();
 
                                 $scope.gridCreated = true;
                             }
@@ -3499,9 +3729,10 @@ reloading the grid with the current data after the event has fired.
                                 templateUrlsToLoad = {};
 
                             //Identify any template URLs that haven't been compiled
+                            /*istanbul ignore else: sanity check */
                             if ($scope.options) {
                                 columns = $scope.options.columns;
-
+                                /*istanbul ignore else: sanity check */
                                 if (columns) {
                                     angular.forEach(columns, function (column) {
                                         var templateUrl = column.template_url;
@@ -3522,9 +3753,11 @@ reloading the grid with the current data after the event has fired.
 
                                 // Compile templates and store them for use when adding rows.
                                 for (p in result.text) {
+                                    /*istanbul ignore else: sanity check */
                                     if (result.text.hasOwnProperty(p)) {
                                         template = result.text[p];
 
+                                        /*istanbul ignore else: sanity check */
                                         if (template) {
                                             compiledTemplates[p] = $compile(template);
                                         }
@@ -3554,17 +3787,28 @@ reloading the grid with the current data after the event has fired.
                                 tableWrapperWidth = newWidth;
                             }
                         }
-
+                        
+                        
+                        
                         function setRows(rows) {
+                            /*istanbul ignore else: sanity check */
                             if (tableDomEl.addJSONData) {
                                 loadColumnTemplates(function () {
                                     refreshMultiselect();
-
+                                    
+                                    destroyFancyCheck();
+                                    
                                     destroyCellScopes();
                                     tableDomEl.addJSONData(rows);
                                     $timeout(highlightSearchText);
                                     handleTableWrapperResize();
+                                    /*istanbul ignore next: sanity check */
                                     updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
+                                    
+                                    element.find('td').attr('unselectable', 'on');
+                                    
+                                    setUpFancyCheckCell();
+
                                 });
                             }
                         }
@@ -3578,6 +3822,7 @@ reloading the grid with the current data after the event has fired.
                                 vkActionBarAndBackToTop.destroy();
                             }
 
+                            /*istanbul ignore else: sanity check */
                             if ($scope.options) {
                                 verticalOffSetElId = $scope.options.viewKeeperOffsetElId;
                             }
@@ -3643,7 +3888,7 @@ reloading the grid with the current data after the event has fired.
                         }
                         
                         $scope.$watch('options.selectedColumnIds', function (newValue) {
-
+                            /*istanbul ignore else: sanity check */
                             if (newValue) {
                                 if (reorderingColumns) {
                                     reorderingColumns = false;
@@ -3661,12 +3906,14 @@ reloading the grid with the current data after the event has fired.
                         locals.applySearchText = applySearchText;
 
                         $scope.syncViewKeepers = function () {
+                            /*istanbul ignore else: sanity check */
                             if (vkToolbars) {
                                 vkToolbars.syncElPosition();
                             }
                         };
 
                         $scope.syncActionBarViewKeeper = function () {
+                            /*istanbul ignore else: sanity check */
                             if (vkActionBarAndBackToTop) {
                                 vkActionBarAndBackToTop.syncElPosition();
                             }
@@ -3732,92 +3979,15 @@ reloading the grid with the current data after the event has fired.
 
                             topScrollbar.off();
                             
+                            destroyFancyCheck();
+                            $(element.find('th .iCheck-helper')).off('click');
+                            
                             bbMediaBreakpoints.unregister(mediaBreakpointHandler);
                         });
                     },
                     templateUrl: 'sky/templates/grids/grid.html'
                 };
-            }])
-        
-        .directive('bbGridActionBar', ['bbMediaBreakpoints', 'bbResources', '$timeout', function (bbMediaBreakpoints, bbResources, $timeout) {
-            return {
-                require: '^bbGrid',
-                replace: true,
-                transclude: true,
-                restrict: 'E',
-                scope: {
-                    bbMultiselectActions: '=',
-                    bbSelectionsUpdated: '&'
-                },
-                controller: ['$scope', function ($scope) {
-                    $scope.locals = {
-                        actions: $scope.bbMultiselectActions,
-                        showActionBar: false,
-                        mobileButtons: false,
-                        showMobileActions: false
-                    };
-
-                    $scope.resources = bbResources;
-                }],
-                link: function ($scope, element, attrs, bbGrid) {
-                    /*jslint unparam: true */
-
-                    bbGrid.scope.$watchCollection('locals.selectedRows', function (newValue) {
-                        var action,
-                            i,
-                            showActionBar;
-
-                        if (newValue) {
-                            //this notation is necessary because the argument is passed through grid and then to the controller
-                            //in which grid resides.
-                            $scope.bbSelectionsUpdated({ selections: { selections: newValue } });
-
-                            showActionBar = false;
-                            if ($scope.locals.actions) {
-                                //only show the action bar if an action has an available selection
-                                for (i = 0; i < $scope.locals.actions.length; i++) {
-                                    action = $scope.locals.actions[i];
-                                    if (action.selections.length > 0) {
-                                        showActionBar = true;
-                                    }
-                                }
-                            }
-                            $scope.locals.showActionBar = showActionBar;
-
-                            if (showActionBar) {
-                                $timeout(function () {
-                                    bbGrid.syncActionBarViewKeeper();
-                                });
-                            }
-                        }
-                    });
-
-                    //on mobile do an ng-if that changes the stuff.
-                    function mediaBreakpointHandler(newBreakpoints) {
-                        $scope.locals.mobileButtons = newBreakpoints.xs;
-                    }
-
-                    bbMediaBreakpoints.register(mediaBreakpointHandler);
-
-                    element.on('$destroy', function () {
-                        bbMediaBreakpoints.unregister(mediaBreakpointHandler);
-                    });
-
-                    $scope.locals.clearSelection = function () {
-                        bbGrid.resetMultiselect();
-                    };
-
-                    $scope.locals.chooseAction = function () {
-                        $scope.locals.showMobileActions = true;
-                    };
-
-                    $scope.locals.cancelChooseAction = function () {
-                        $scope.locals.showMobileActions = false;
-                    };
-                },
-                templateUrl: 'sky/templates/grids/actionbar.html'
-            };
-        }]);
+            }]);
 }(jQuery));
 /*jslint browser: true, plusplus: true */
 /*global angular, jQuery */
@@ -4272,22 +4442,61 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 
 (function ($) {
     'use strict';
-
+    
+    var openModalCount = 0;
+    
     angular.module('sky.modal', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
-        .factory('bbModal', ['$modal', function ($modal) {
+        .factory('bbModal', ['$modal', '$window', function ($modal, $window) {
             return {
                 open: function (opts) {
+                    var bodyEl,
+                        isIOS,
+                        modalInstance,
+                        scrollTop;
+                    
+                    function modalClosed() {
+                        openModalCount--;
+                        if (isIOS) {
+                            bodyEl
+                                .removeClass('bb-modal-open-mobile')
+                                .scrollTop(scrollTop);
+                        }
+                        
+                        bodyEl = null;
+                    }
+                    
+                    isIOS = /iPad|iPod|iPhone/i.test($window.navigator.userAgent);
+                    bodyEl = $(document.body);
+                    
                     // Change default values for modal options
                     opts = angular.extend({
                         backdrop: 'static',
                         windowClass: 'bb-modal'
                     }, opts);
+                    
+                    // Mobile browsers exhibit weird behavior when focusing on an input element
+                    // inside a position: fixed element (in this case the modal), and it also
+                    // doesn't propery prohibit scrolling on the window.  Adding this CSS class
+                    // will change the body position to fixed and the modal position to absolute
+                    // to work around this behavior.
+                    if (isIOS) {
+                        // Setting the body position to be fixed causes it to be scrolled to the
+                        // top.  Cache the current scrollTop and set it back when the modal is 
+                        // closed.
+                        scrollTop = bodyEl.scrollTop();
+                        bodyEl.addClass('bb-modal-open-mobile');
+                    }
 
-                    return $modal.open(opts);
+                    modalInstance = $modal.open(opts);
+                    openModalCount++;
+                    
+                    modalInstance.result.then(modalClosed, modalClosed);
+                    
+                    return modalInstance;
                 }
             };
         }])
-        .directive('bbModal', ['$timeout', '$window', function ($timeout, $window) {
+        .directive('bbModal', ['$timeout', function ($timeout) {
             function getPixelValue(val) {
                 val = val || '0';
                 
@@ -4307,7 +4516,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                 link: function ($scope, el) {
                     var bodyEl,
                         resizeTimeout,
-                        windowEl = $($window);
+                        windowEl = $(window);
                     
                     function fitToWindow() {
                         var margin,
@@ -4627,6 +4836,7 @@ The Money Input directive formats currency values as the user types in the input
                         searchBox.on('keyup', function (event) {
                             var value = searchBox.val();
 
+                            /*istanbul ignore else */
                             if (value !== searchValue) {
                                 searchValue = value;
 
@@ -4687,6 +4897,7 @@ The Money Input directive formats currency values as the user types in the input
                                         $window.localStorage.omnibarIndicatesNullUserTime = (new Date()).toString();
                                     } catch (e) {
                                         // Safari private browsing will throw an exception on setting localStroage.
+                                        /*istanbul ignore next: super edge case */
                                         return;
                                     }
                                 } else {
@@ -4694,7 +4905,7 @@ The Money Input directive formats currency values as the user types in the input
                                 }
                             }
 
-                            // Log out and redirec to auth service.
+                            // Log out and redirect to auth service.
                             $window.location.href = bbOmnibarConfig.signOutUrl;
                         }
                     }
@@ -4777,24 +4988,14 @@ The Money Input directive formats currency values as the user types in the input
                     function noPageStatusSpecified() {
                         return element.attr('bb-page-status') === undefined;
                     }
-
-                    function onFirstViewLoaded() {
-                        scope.$emit("bbPageFirstViewLoaded");
-                    }
-
-                    function onPageLoadComplete(viewName) {
-                        scope.$emit("bbPageLoadComplete", { viewName: viewName });
-                    }
-
+                    
                     function onShowing() {
                         if (scope.bbPageUsesLoadManager) {
                             loadManager = locals.loadManager = bbData.loadManager({
                                 scope: scope,
                                 waitForFirstItem: true,
                                 nonblockWaitForAdditionalItems: true,
-                                isAggregate: true,
-                                onFirstItemLoaded: onFirstViewLoaded,
-                                onLastItemLoaded: onPageLoadComplete
+                                isAggregate: true
                             });
                         }
                     }
@@ -5269,26 +5470,34 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
                     reservedTop += 50;
                 }
                 
+                currentScrollTop = parentEl.scrollTop();
+                
                 elOffset = el.offset();
                 elHeight = el.outerHeight();
 
                 elTop = elOffset.top;
+                
+                if (!parentElIsBody) {
+                    elTop = (elTop - parentEl.offset().top) + currentScrollTop;
+                }
+                
                 elBottom = elTop + elHeight;
 
                 parentHeight = parentElIsBody ? angular.element(window).height() : parentEl.height();
-                currentScrollTop = parentEl.scrollTop();
 
                 isScrolledOffBottom = elBottom > parentHeight + (currentScrollTop - reservedBottom);
                 isScrolledOffTop = elTop < (currentScrollTop + reservedTop);
 
                 if (isScrolledOffBottom || isScrolledOffTop) {
                     if (isScrolledOffBottom) {
-                        newScrollTop = elBottom - (parentHeight + reservedBottom);
+                        newScrollTop = elBottom - (parentHeight - reservedBottom);
                     }
 
                     viewportHeight = parentHeight - (reservedTop + reservedBottom);
 
-                    if (!isScrolledOffBottom || newScrollTop + elHeight > viewportHeight) {
+                    // Ensure the top of the element is visible after scrolling even if it is currently
+                    // scrolled off the bottom of the viewport.
+                    if (!isScrolledOffBottom || elHeight > viewportHeight) {
                         newScrollTop = elTop - reservedTop;
                     }
                     
@@ -6476,13 +6685,14 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
 /*global angular */
 
 /** @module Tiles
- @description The `bb-tile` directive creates a collapsible container and is the bulding block for pages and forms in a Sky application.  The `bb-tile-section` directive is used to create padded sections inside a `bb-tile` element.
+ @description The `bb-tile` directive creates a collapsible container and is the bulding block for pages and forms in a Sky application.  The `bb-tile-section` directive is used to create padded sections inside a `bb-tile` element. Additionally, the `bb-tile-header-content` directive may be placed inside the `bb-tile` directive to add summary information to the tile.  If you simply need to show a check mark indicating the tile has data, you can add a `bb-tile-header-check` element to the `bb-tile-header-content` element.
 
 When used on forms, it automatically adjusts the background color on the form and shrinks the tile header.
 
 ### Tile Settings ###
 
  - `bb-tile-header` The header text for the tile.
+ - `bb-tile-settings-click` A function to call when the user clicks the settings button (indicated by a wrench icon) in the tile header.  If not specified, the settings button is not displayed.
  */
 
 (function () {
@@ -6551,6 +6761,18 @@ When used on forms, it automatically adjusts the background color on the form an
                         }
                     }
                     
+                    function updateHeaderContent() {
+                        var wrapperEl;
+                        
+                        scope.hasHeaderContent = !!scope.headerContentEl;
+                        
+                        if (scope.headerContentEl) {
+                            wrapperEl = el.find('.bb-tile-header-with-content:first');
+                            
+                            wrapperEl.append(scope.headerContentEl);
+                        }
+                    }
+                    
                     scope.isCollapsed = scope.bbTileCollapsed || false;
                     scope.smallTileDisplayMode = false;
                     scope.tileId = '';
@@ -6560,7 +6782,6 @@ When used on forms, it automatically adjusts the background color on the form an
                     if (parentModal && parentModal.length > 0) {
                         parentModal.addClass('modal-body-tiled');
                     }
-
 
                     scope.titleClick = function () {
                         scope.isCollapsed = !scope.isCollapsed;
@@ -6620,18 +6841,47 @@ When used on forms, it automatically adjusts the background color on the form an
                             scope.isCollapsed = newValue;
                         });
                     }
+                    
+                    scope.hasSettings = !!attrs.bbTileSettingsClick;
+                    
+                    updateHeaderContent();
                 },
                 replace: true,
                 restrict: 'E',
                 scope: {
                     bbTileCollapsed: '=?',
+                    bbTileSettingsClick: '&?',
                     tileHeader: '=bbTileHeader'
                 },
-                controller: angular.noop,
+                controller: ['$scope', function ($scope) {
+                    this.setHeaderContentEl = function (el) {
+                        $scope.headerContentEl = el;
+                    };
+                }],
                 templateUrl: 'sky/templates/tiles/tile.html',
                 transclude: true
             };
         }])
+        .directive('bbTileHeaderContent', function () {
+            return {
+                replace: true,
+                require: '^bbTile',
+                restrict: 'E',
+                link: function (scope, el, attrs, tileCtrl) {
+                    tileCtrl.setHeaderContentEl(el);
+                },
+                templateUrl: 'sky/templates/tiles/tileheadercontent.html',
+                transclude: true
+            };
+        })
+        .directive('bbTileHeaderCheck', function () {
+            return {
+                replace: true,
+                require: '^bbTileHeaderContent',
+                restrict: 'E',
+                templateUrl: 'sky/templates/tiles/tileheadercheck.html'
+            };
+        })
         .directive('bbTileSection', function () {
             return {
                 restrict: 'A',
@@ -7074,6 +7324,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
             "left": left
         });
 
+        /*istanbul ignore else: sanity check */
         if (width !== null) {
             elQ.css({ "width": width });
         }
@@ -7340,7 +7591,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                 }
             };
         })
-        .run(['bbMediaBreakpoints', 'bbViewKeeperConfig', function (bbMediaBreakpoints, bbViewKeeperConfig) {
+        .run(['$document', '$window', 'bbMediaBreakpoints', 'bbViewKeeperConfig', function ($document, $window, bbMediaBreakpoints, bbViewKeeperConfig) {
             function mediaBreakpointHandler(breakpoints) {
                 //For user agents in which the omnibar follows you down the page, the ViewKeeper needs
                 //to adjust for the height of the omnibar.
@@ -7349,13 +7600,13 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                 bbViewKeeperConfig.viewportMarginTop = breakpoints.xs ? 50 : 30;
             }
 
-            if (/iPad|iPod|iPhone/i.test(window.navigator.userAgent)) {
+            if (/iPad|iPod|iPhone/i.test($window.navigator.userAgent)) {
                 //On iOS the omnibar doesn't scroll with you.  Need to account for this on the styling.
                 angular.element('body').addClass('omnibar-not-fixed');
 
                 //On iOS we need to have special handling when entering textboxes to correct an issue with fixed
                 //elements used by view keeper when the keyboard flys out.
-                angular.element(window.document).on('focus', 'input', function () {
+                angular.element(document).on('focus', 'input', function () {
                     angular.element('body').addClass('bb-viewkeeper-ignore-fixed viewkeeper-ignore-fixed');
                 }).on('blur', 'input', function () {
                     angular.element('body').removeClass('bb-viewkeeper-ignore-fixed viewkeeper-ignore-fixed');
@@ -7383,9 +7634,11 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                     var boundaryEl,
                         bbBoundaryElId = scope.bbBoundaryElId;
 
+                    /*istanbul ignore else */
                     if (bbBoundaryElId) {
                         boundaryEl = angular.element('#' + bbBoundaryElId);
 
+                        /*istanbul ignore else */
                         if (boundaryEl.length === 1) {
                             destroyVk();
 
@@ -8227,6 +8480,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  </div>\n' +
         '  <div ng-transclude></div>\n' +
         '</div>');
+    $templateCache.put('sky/templates/datefield/datefield.html',
+        '<span class="add-on input-group-btn">\n' +
+        '    <button type="button" class="btn btn-default bb-date-field-calendar-button">\n' +
+        '        <i class="fa fa-calendar"></i>\n' +
+        '    </button>\n' +
+        '</span>');
     $templateCache.put('sky/templates/daterangepicker/daterangepicker.html',
         '<div>\n' +
         '    <select data-bbauto-field="{{bbDateRangePickerAutomationId}}_DateRangeType"\n' +
@@ -8457,12 +8716,18 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<section ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'" class="ibox bb-tile tile">\n' +
         '    <div bb-scroll-into-view="scrollIntoView">\n' +
         '        <div class="ibox-title" ng-click="titleClick()">\n' +
-        '            <h5 class="bb-tile-header tile-header">{{tileHeader}}</h5>\n' +
-        '            <div class="ibox-tools">\n' +
-        '                <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="glyphicon bb-tile-chevron tile-chevron"></i>\n' +
-        '                <i class="bb-tile-grab-handle tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
+        '            <div class="row">\n' +
+        '                <div class="bb-tile-header-with-content col-xs-10">\n' +
+        '                    <h5 class="bb-tile-header tile-header">{{tileHeader}}</h5>\n' +
+        '                </div>\n' +
+        '                <div class="col-xs-2">\n' +
+        '                    <div class="ibox-tools">\n' +
+        '                        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="glyphicon bb-tile-chevron tile-chevron"></i>\n' +
+        '                        <i ng-if="hasSettings" class="bb-tile-settings glyphicon glyphicon-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
+        '                        <i class="bb-tile-grab-handle tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
+        '                    </div>\n' +
+        '                </div>\n' +
         '            </div>\n' +
-        '            <div class="clearfix"></div>\n' +
         '        </div>\n' +
         '        <div collapse="isCollapsed" class="ibox-content bb-tile-content tile-content" ng-transclude>\n' +
         '        </div>\n' +
@@ -8478,6 +8743,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '  <div class="col-md-6 page-content-tile-column page-content-column-sortable" data-dashboard-column="2">\n' +
         '  </div>\n' +
         '</div>');
+    $templateCache.put('sky/templates/tiles/tileheadercheck.html',
+        '<i class="fa fa-check bb-tile-header-check"></i>');
+    $templateCache.put('sky/templates/tiles/tileheadercontent.html',
+        '<div class="bb-tile-header-content" ng-transclude></div>');
 }]);
 
 //# sourceMappingURL=sky.js.map

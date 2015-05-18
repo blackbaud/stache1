@@ -1,13 +1,13 @@
 /*Imports all of Sky including Bootstrap*/
 
 //Import variables and mixins from Sky and then Bootstrap
-@import "_mixins.scss";
+@import "mixins";
 
 //Import Bootstrap
-@import "_bootstrap.scss";
+@import "bootstrap";
 
 // Import Font Awesome
-@import "FontAwesome/font-awesome.scss";
+@import "FontAwesome/font-awesome";
 
 // Google Fonts
 @import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amplang=en");
@@ -30,36 +30,36 @@
 @import "Inspinia/media";
 
 //Load Sky styles
-@import '_jqgrid.scss';
-@import '_buttons.scss';
-@import '_check.scss';
-@import '_checklist.scss';
-@import '_datefield.scss';
-@import '_grid.scss';
-@import "_tables.scss";
-@import "_spinning.scss";
-@import "_imports.scss";
-@import "_navigation.scss";
-@import "_pagination.scss";
-@import "_tile.scss";
-@import "_toolbars.scss";
-@import "_forms.scss";
-@import "_modals.scss";
-@import "_viewkeeper.scss";
-@import "_responsivetabs.scss";
-@import "_charts.scss";
-@import "_omnibar.scss";
-@import "_helpbutton.scss";
-@import "_toast.scss";
-@import "_wait.scss";
-@import "_scrollintoview.scss";
-@import "_searchfield.scss";
-@import "_tabs.scss";
-@import "_textexpand.scss";
-@import "_wizard.scss";
+@import "_jqgrid";
+@import "_buttons";
+@import "_check";
+@import "_checklist";
+@import "_datefield";
+@import "_grid";
+@import "tables";
+@import "spinning";
+@import "imports";
+@import "navigation";
+@import "pagination";
+@import "tile";
+@import "toolbars";
+@import "forms";
+@import "modals";
+@import "viewkeeper";
+@import "responsivetabs";
+@import "charts";
+@import "omnibar";
+@import "helpbutton";
+@import "toast";
+@import "wait";
+@import "scrollintoview";
+@import "searchfield";
+@import "tabs";
+@import "textexpand";
+@import "wizard";
 
 
 // Default Sky Theme
-@import "_theme.scss";
+@import "theme";
 
-@import "_autonumeric.scss";
+@import "autonumeric";

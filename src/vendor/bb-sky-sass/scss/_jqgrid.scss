@@ -1,4 +1,4 @@
-@import '_mixins.scss';
+@import "mixins";
 
 /*Customizations to jqGrid styles.  Should be applied after the default jqGrid style are loaded*/
 
@@ -14,6 +14,14 @@
         background-color: $white;
     }
 
+    .ui-jqgrid-btable {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
     .ui-jqgrid-view {
         font-size: $font-size-base;
     }
@@ -49,7 +57,11 @@
         border-left: 0;
         border-right: 0;
         border-bottom: 1px dotted $gray-lighter;
+        -webkit-transform: translate3d(0, 0, 0);
         @include ellipsis(false);
+        .bb-check-checkbox.checked:before {
+            padding-left: 0;
+        }
     }
 
     tr th {
@@ -136,13 +148,21 @@
     .ui-jqgrid-htable th {
         cursor: pointer;
 
-        div {
+        >div {
             @include ellipsis(false);
             height: auto !important;
             max-height: 80px;
             max-width: 100%;
             vertical-align: middle;
             white-space: pre-wrap;
+        }
+        
+        .bb-check-checkbox {
+            height: 22px;
+        }
+        
+        .bb-check-checkbox:before {
+            padding-left: 0;
         }
     }
 
@@ -169,7 +189,8 @@
         text-decoration: none!important;
     }
     
-    tr.jqgrow td.grid-dropdown-cell {
+    tr.jqgrow td.grid-dropdown-cell, tr.jqgrow td.bb-grid-dropdown-cell {
         overflow: visible;
+        -webkit-transform: none;
     }
 }

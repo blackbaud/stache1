@@ -1,4 +1,0 @@
-demo/**/*.js
-dist/**/*.js
-js/**/docs/*.js
-js/**/patterns/**/*.js

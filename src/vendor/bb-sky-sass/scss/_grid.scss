@@ -1,4 +1,4 @@
-@import '_mixins.scss';
+@import "mixins";
 
 $filterWidth: 240px;
 
@@ -46,13 +46,16 @@ $filterWidth: 240px;
 
 .bb-grid-table-wrapper {
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .bb-grid-table-wrapper-overflow {
     overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .bb-grid-top-scrollbar {
+    background-color: #fff;
     overflow-x: auto;
     overflow-y: hidden;
 }

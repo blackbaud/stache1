@@ -1,1 +1,0 @@
-This file contains client-side libraries that cannot be installed via Bower.

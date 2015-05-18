@@ -1,4 +1,4 @@
-@import "_mixins.scss";
+@import "mixins";
 
 .bb-tile,
 .tile {
@@ -11,10 +11,22 @@
             font-family: $font-family-narrow;
             font-size: 22px;
             font-weight: 100;
-            margin: 9px $tile-header-tool-padding;
+            margin: 0;
+            padding: 9px $tile-header-tool-padding;
         }
     }
 
+    .bb-tile-header-with-content {
+        float: left;
+        vertical-align: baseline;
+        @include ellipsis();
+
+        .bb-tile-header {
+            float: none;
+            padding-right: $tile-header-tool-padding * (2 / 3);
+        }
+    }
+    
     .ibox-tools {
         margin-top: $tile-header-tool-padding - 1;
         -ms-touch-action: none;
@@ -59,6 +71,18 @@
         background-color: transparent;
     }
 }
+    
+.bb-tile-header-content {
+    color: $navy;
+    display: inline;
+    font-family: $font-family-narrow;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.bb-tile-header-check {
+    font-size: 16px;
+}
 
 /*NOTE -  This section is intentionally outside of the .tile wrapper above.  It defines how
 tiles behave on a modal form.*/
@@ -73,7 +97,8 @@ tiles behave on a modal form.*/
                 font-family: $font-family-base;
                 font-size: 13px;
                 font-weight: 600;
-                margin: 7px $tile-header-tool-padding;
+                margin: 0;
+                padding: 7px $tile-header-tool-padding;
             }
         }
 
@@ -115,7 +140,8 @@ tiles behave within a column of tiles.*/
 }
 
 .bb-tile-chevron,
-.tile-chevron {
+.tile-chevron,
+.bb-tile-settings {
     color: #D1DADE;
     float: left;
     margin: 1px 0;

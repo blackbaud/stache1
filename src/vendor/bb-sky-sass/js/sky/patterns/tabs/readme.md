@@ -1,1 +1,0 @@
-﻿Tab titles should be sentence-cased.  Titles may also display a number indicating the contents of a list in the associated tab.
