@@ -159,7 +159,8 @@ module.exports = function (grunt) {
               '*.eot',
               '*.svg',
               '*.ttf',
-              '*.woff'
+              '*.woff',
+              '*.woff2'
             ],
             dest: '<%= stache.config.build %>fonts/'
           },
