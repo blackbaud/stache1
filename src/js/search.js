@@ -6,7 +6,6 @@
 *
 **/
 var stache = angular.module('stache', [
-  'sky',
   'ui.router',
   'ngSanitize'
 ]);
