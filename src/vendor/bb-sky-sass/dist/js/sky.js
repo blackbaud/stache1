@@ -1552,7 +1552,6 @@ The DateField directive allows you to use a common textbox with calendar picker 
                 if (!required && !value) {
                     return true;
                 }
-
                 return !/Invalid|NaN/.test(bbMoment(value, bbDateFieldConfig.currentCultureDateFormatString.toUpperCase())) && dateHasSeparator(value);
             }
             
@@ -1624,7 +1623,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     try {
                         return stripLocaleCharacterFromDateString(bbMoment(value, upperFormat).format(upperFormat));
                     } catch (e) {
-                        //console.error("Error parsing date value '" + value + "': " + e.toString());
+                        /*istanbul ignore next: sanity check */
                         return value;
                     }
                 }
@@ -1706,6 +1705,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         function handleCustomFormattingValidation(result) {
                             var formattedValue;
 
+                            /*istanbul ignore next: sanity check */
                             result = result || {};
                             formattedValue = result.formattedValue;
 
@@ -1742,7 +1742,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                                 }
                             } else {
                                 value = beautifyDate(input.val(), bbDateFieldConfig.currentCultureDateFormatString);
-
+                                /*istanbul ignore else: sanity check */
                                 if (angular.isDefined(value)) {
                                     //Need to set input to value to validate
                                     localeDate = getLocaleDate(value);
@@ -1811,6 +1811,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
 
                     //Override the place function to align the picker with the left side of the input
                     el.datepicker.Constructor.prototype.place = function () {
+                        /*istanbul ignore next: sanity check */
                         var offset = this.component ? this.component.offset() : this.element.offset();
                         this.picker.css({
                             top: offset.top + this.height,
@@ -3105,8 +3106,36 @@ reloading the grid with the current data after the event has fired.
                             }
                         }
                         
+                        function getLastIndex() {
+                            var lastIndex = $scope.options.selectedColumnIds.length - 1;
+                            
+                            if (locals.multiselect) {
+                                lastIndex = lastIndex + 1;
+                            }
+                            if (getContextMenuItems) {
+                                lastIndex = lastIndex + 1;
+                            }
+                            
+                            return lastIndex;
+                        }
+                        
                         function resizeStart(event, index) {
-                            var thEls;
+                            var lastIndex = getLastIndex(),
+                                jqGridEl,
+                                thEls;
+                            
+                            jqGridEl = element.find('.ui-jqgrid');
+                            
+                            //if resizing last element and tableEl smaller than table wrapper
+                           
+                            if (index === lastIndex && tableWrapperWidth > jqGridEl.width()) {
+                                //increase width of child of table-responsive
+                                jqGridEl.width(tableWrapperWidth);
+                                //increase width of hdiv
+                                element.find('.ui-jqgrid-hdiv').width(tableWrapperWidth);
+                                //make padding right on tr of headers
+                                element.find('.ui-jqgrid-hdiv tr').css('padding-right', tableWrapperWidth.toString() + 'px');
+                            }
                             
                             fullGrid.find('.ui-jqgrid-resize-mark').height(fullGrid.height());
                             thEls = element.find('.ui-jqgrid .ui-jqgrid-hdiv .ui-jqgrid-htable th');
@@ -8717,10 +8746,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div bb-scroll-into-view="scrollIntoView">\n' +
         '        <div class="ibox-title" ng-click="titleClick()">\n' +
         '            <div class="row">\n' +
-        '                <div class="bb-tile-header-with-content col-xs-10">\n' +
+        '                <div class="bb-tile-header-with-content col-xs-8">\n' +
         '                    <h5 class="bb-tile-header tile-header">{{tileHeader}}</h5>\n' +
         '                </div>\n' +
-        '                <div class="col-xs-2">\n' +
+        '                <div class="col-xs-4">\n' +
         '                    <div class="ibox-tools">\n' +
         '                        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="glyphicon bb-tile-chevron tile-chevron"></i>\n' +
         '                        <i ng-if="hasSettings" class="bb-tile-settings glyphicon glyphicon-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +

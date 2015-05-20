@@ -28,7 +28,6 @@
     }
     
     .ibox-tools {
-        margin-top: $tile-header-tool-padding - 1;
         -ms-touch-action: none;
         touch-action: none;
     }
@@ -145,7 +144,7 @@ tiles behave within a column of tiles.*/
     color: #D1DADE;
     float: left;
     margin: 1px 0;
-    padding-right: $tile-header-tool-padding;
+    padding: $tile-header-tool-padding $tile-header-tool-padding $tile-header-tool-padding 0;
 }
 
 .bb-tile-content-section,
@@ -161,26 +160,22 @@ tiles behave within a column of tiles.*/
     cursor: -moz-grab;
     display: none;
     font-size: 15px;
-    padding: $tile-header-tool-padding;
-    margin-top: $tile-header-tool-padding;
+    padding: $tile-header-tool-padding $tile-header-tool-padding $tile-header-tool-padding 0;
 }
 
+.bb-page-content-multicolumn .bb-page-content-column-sortable,
 .page-content-multicolumn .page-content-column-sortable {
     margin-bottom: 50px;
 }
 
 // Hide the grab handle unless the tile's in a sortable column.
 
+.bb-page-content-column-sortable,
 .page-content-column-sortable {
     min-height: 100px;
 
     .bb-tile-grab-handle,
     .tile-grab-handle {
-        display: inline;
-    }
-
-    .bb-tile-chevron,
-    .tile-chevron {
-        padding-right: 0;
+        display: inline-block;
     }
 }
