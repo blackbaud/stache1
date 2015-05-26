@@ -108,7 +108,8 @@ module.exports = function (grunt) {
             'prepare',
             'publish',
             'serve',
-            'update'
+            'update',
+            'version'
           ]
         }
       }
@@ -608,7 +609,7 @@ module.exports = function (grunt) {
     'version',
     'Display the current installed stache version.',
     function() {
-      grunt.log.writeln('Current stache version: ' + grunt.file.readJSON('package.json').version);
+      grunt.log.writeln('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
   });
 
   grunt.registerTask('stache', function(optionalTask) {
