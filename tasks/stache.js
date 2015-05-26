@@ -604,6 +604,13 @@ module.exports = function (grunt) {
     ]
   );
 
+  grunt.registerTask(
+    'version',
+    'Display the current installed stache version.',
+    function() {
+      grunt.log.writeln('Current stache version: ' + grunt.file.readJSON('package.json').version);
+  });
+
   grunt.registerTask('stache', function(optionalTask) {
     var task = optionalTask || 'help';
     if (grunt.task._tasks[task]) {
