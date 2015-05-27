@@ -488,6 +488,14 @@ module.exports.register = function (Handlebars, options, params) {
         r = Math.round(dividend/divisor);
       }
       return r.toFixed(options.hash.toFixed || 0);
+    },
+
+    /**
+    * Many functions of the site, including grunt-yeomin fails on windows line endings.
+    * This helpers replaces those.
+    **/
+    newline: function(text) {
+      return text ? text.replace(/\r\n/g, '\n') : '';
     }
 
   });
