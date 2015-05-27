@@ -123,6 +123,13 @@ module.exports.register = function (Handlebars, options, params) {
     ].join('.');
   }
 
+  /**
+  * Fixes Windows Newlines
+  **/
+  function newline(text) {
+    return text ? text.replace(/\r\n/g, '\n') : '';
+  }
+
   Handlebars.registerHelper({
 
     /**
@@ -319,7 +326,9 @@ module.exports.register = function (Handlebars, options, params) {
     * See notes above for more information.
     **/
     markdown: function (options) {
-      return getMarked(options.fn(this));
+      var md = getMarked(options.fn(this));
+      var nl = typeof options.hash.newline !== 'undefined' ? options.hash.newline : true;
+      return nl ? newline(md) : md;
     },
 
     /**
@@ -395,7 +404,7 @@ module.exports.register = function (Handlebars, options, params) {
       // I spent an entire day tracking down this bug.
       // Files created on different systems with different line endings freaked this out.
       if (fixNewline) {
-        r = r.replace(/\r\n/g, '\n')
+        r = newline(r);
       }
 
       // Hide YAML Front Matter
@@ -495,7 +504,7 @@ module.exports.register = function (Handlebars, options, params) {
     * This helpers replaces those.
     **/
     newline: function(text) {
-      return text ? text.replace(/\r\n/g, '\n') : '';
+      return newline(text);
     }
 
   });
