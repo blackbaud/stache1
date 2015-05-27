@@ -110,48 +110,17 @@ module.exports.register = function (Handlebars, options, params) {
   }
 
   /**
-  *
+  * http://stackoverflow.com/questions/10015027/javascript-tofixed-not-rounding
   **/
-  function withCoverage(collection, options) {
-    var total = 0;
-    var coverage = 0;
-
-    for (var prop in collection){
-      if (collection.hasOwnProperty(prop)) {
-        total += collection[prop].length ? collection[prop].length : 1;
-        if (collection[prop].length) {
-          for (var m = 0, n = collection[prop].length; m < n; m++) {
-            coverage += collection[prop][m] === 0 ? 0 : 1;
-          }
-        } else if (collection[prop] !== 0) {
-          coverage++;
-        }
-      }
-    }
-
-    return instanbul(total, coverage, options);
-  }
-
-  /**
-  *
-  **/
-  function instanbul(total, coverage, options) {
-
-    var cssClass = 'success';
-    var percentage = total === 0 ? 100 : ((coverage / total) * 100);
-
-    if (percentage < 50) {
-      cssClass = 'danger';
-    } else if (percentage < 80) {
-      cssClass = 'warning';
-    }
-
-    return {
-      total: total,
-      coverage: coverage,
-      cssClass: cssClass,
-      percentage: percentage === 100 ? 100 : percentage.toFixed(options.hash.fixed)
-    };
+  function toFixed ( number, precision ) {
+    var multiplier  = Math.pow( 10, precision + 1 ),
+        wholeNumber = Math.round( number * multiplier ).toString(),
+        length      = wholeNumber.length - 1;
+    wholeNumber = wholeNumber.substr(0, length);
+    return [
+      wholeNumber.substr(0, length - precision),
+      wholeNumber.substr(-precision)
+    ].join('.');
   }
 
   Handlebars.registerHelper({
@@ -462,48 +431,43 @@ module.exports.register = function (Handlebars, options, params) {
       return length;
     },
 
+    /**
+    * Total all coverage from instanbul report
+    **/
     withCoverageTotal: function (collection, property, options) {
-      var total = 0;
-      var coverage = 0;
+
+      var r = {
+        total: 0,
+        covered: 0,
+        skipped: 0,
+        pct: 0
+      };
 
       for (var file in collection) {
         if (collection[file].hasOwnProperty(property)) {
-          var individual = withCoverage(collection[file][property], options);
-          total += individual.total;
-          coverage += individual.coverage;
+          r.total += parseInt(collection[file][property].total);
+          r.covered += parseInt(collection[file][property].covered);
+          r.skipped += parseInt(collection[file][property].skipped);
         }
       }
 
-      return options.fn(instanbul(total, coverage, options));
-    },
-
-    withCoverage: function (collection, property, options) {
-      return options.fn(withCoverage(collection[property], options));
-    },
-
-    withSkippedTotal: function (collection, key, options) {
-      var skipped = 0;
-
-      for (var file in collection) {
-        if (collection[file].hasOwnProperty(key)) {
-          for (var item in collection[file][key]) {
-            if (collection[file][key][item].skip) {
-              skipped++;
-            }
-            if (collection[file][key][item].locations) {
-              for (var i = 0, j = collection[file][key][item].locations.length; i < j; i++) {
-                if (collection[file][key][item].locations[i].skip) {
-                  skipped++;
-                }
-              }
-            }
-          }
-        }
+      if (r.total > 0) {
+        r.pct = (r.covered / r.total) * 100;
       }
 
-      return options.fn({
-        total: skipped
-      });
+      if (r.pct < 50) {
+        r.cssClass = 'danger';
+      } else if (r.pct < 80) {
+        r.cssClass = 'warning';
+      } else {
+        r.cssClass = 'success';
+      }
+
+      if (options.hash.fixed && r.pct !== 100) {
+        r.pct = toFixed(r.pct, options.hash.fixed);
+      }
+
+      return options.fn(r, options);
     },
 
     raw: function(options) {
