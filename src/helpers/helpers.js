@@ -505,6 +505,13 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     newline: function(text) {
       return newline(text);
+    },
+
+    /**
+    * Same as newline method but wraps context
+    **/
+    withNewline: function(options) {
+      return newline(options.fn(this));
     }
 
   });

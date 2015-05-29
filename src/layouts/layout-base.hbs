@@ -46,7 +46,7 @@
     {{# if stache.config.markdown }}
       {{# markdown }}{{ body }}{{/ markdown }}
     {{ else }}
-      {{ body }}
+      {{# withNewline }}{{ body }}{{/ withNewline }}
     {{/ if }}
 
     {{# if note }}
