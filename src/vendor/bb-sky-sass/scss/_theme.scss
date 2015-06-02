@@ -218,10 +218,26 @@ label.error {
 
 .btn-primary {
     @include button-variant($white, $blue, $blue);
+    font-family: 'Open Sans';
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 34px;
+    min-width: 76px;
+}
+
+.btn-white {
+    color: #676a6c;
+    font-family: 'Open Sans';
+    font-size: 14px;
+    min-height: 34px;
+    min-width: 76px;
 }
 
 .btn-link {
     color: $link-color;
+    font-family: 'Open Sans';
+    font-size: 14px;
+    padding: 0;
 
     &:hover {
         color: $link-hover-color;

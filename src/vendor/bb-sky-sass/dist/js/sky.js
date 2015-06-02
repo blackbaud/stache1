@@ -1,3 +1,87 @@
+/*global angular */
+
+/** @module Action Bar
+@description ### Additional dependencies ###
+   - **[enquire.js](http://wicky.nillia.ms/enquire.js/) (2.1.2 or later)**
+  ---
+
+
+### Included directives: ###
+    
+    - `bb-action-bar` Wraps the content in the action bar.
+    - `bb-action-bar-item` Wraps given content in an action button. Any `ng-click` applied to this directive will be applied to the action button.
+    - `bb-action-bar-item-group` When placed around `bb-action-bar-item` directives, it will collapse those buttons into a dropdown in extra small mode. You can also pass an optional `bb-action-bar-item-group-title` as a label for the dropdown (by default it will be labeled "Actions").
+*/
+
+(function () {
+    'use strict';
+    angular.module('sky.actionbar', ['sky.mediabreakpoints', 'sky.resources'])
+        .directive('bbActionBar', [
+            function () {
+                return {
+                    transclude: true,
+                    restrict: 'E',
+                    template: '<div class="bb-action-bar"><ng-transclude/></div>'
+                };    
+            }
+        ])
+        .directive('bbActionBarItemGroup', ['bbMediaBreakpoints', 'bbResources', 
+            function (bbMediaBreakpoints, bbResources) {
+                return {
+                    replace: true,
+                    transclude: true,
+                    restrict: 'E',
+                    scope: {
+                        title: '=?bbActionBarItemGroupTitle'
+                    },
+                    controller: function ($scope) {
+                        $scope.items = [];
+                        
+                        this.addItem = function (itemCallback, itemContent) {
+                            $scope.items.push({callback: itemCallback, content: itemContent});  
+                        };
+                    },
+                    link: function ($scope) {
+                        function mediaBreakpointHandler(newBreakpoints) {
+                            $scope.locals.isCollapsed = newBreakpoints.xs;
+                        }
+                        
+                        if ($scope.title === null || angular.isUndefined($scope.title)) {
+                            $scope.title = bbResources.action_bar_actions;
+                        }
+                                         
+                        $scope.locals = {
+                            isCollapsed: false
+                        };
+                        
+                        bbMediaBreakpoints.register(mediaBreakpointHandler);
+                    }, 
+                    templateUrl: 'sky/templates/actionbar/actionbaritemgroup.html'
+                };    
+            }
+        ])
+        .directive('bbActionBarItem', [
+            function () {
+                return {
+                    replace: true,
+                    transclude: true,
+                    restrict: 'E',
+                    require: '?^bbActionBarItemGroup',
+                    scope: {
+                        actionCallback: '&ngClick'
+                    },
+                    
+                    link: function ($scope, elem, attrs, itemGroup) {
+                        if (itemGroup !== null && !angular.isUndefined(itemGroup)) {
+                            itemGroup.addItem($scope.actionCallback, elem.text()); 
+                        }
+                         
+                    },
+                    template: '<button class="btn btn-white" type="button"><ng-transclude/></button>'
+                };
+            }
+        ]);
+}());
 /*jshint browser: true */
 
 /*global angular */
@@ -155,7 +239,13 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     formatted,
                     settings,
                     suffix,
-                    tempEl = $('<span></span>');
+                    tempEl;
+                
+                if (input === null || angular.isUndefined(input)) {
+                    return '';
+                }
+                
+                tempEl = $('<span></span>');
                 
                 settings = getBaseSettings(bbAutonumericConfig, configType);
                 
@@ -2610,7 +2700,9 @@ This service provides additional functionality that works closely with the direc
 /** @module Grids 
  
  @description ### Additional dependencies ###
-   - [jqGrid](http://www.trirand.com/blog/) (4.6.0 or higher)
+   - **[jqGrid](http://www.trirand.com/blog/) (4.6.0 or higher)**
+   - **[icheck.js](http://fronteed.com/iCheck/) (1.0.2 or higher)** 
+   - **[enquire.js](http://wicky.nillia.ms/enquire.js/) (2.1.2 or later)**
   ---
   
   The Grid directive allows you to build a full-featured grid with a search box, column picker and filter form.
@@ -8310,6 +8402,7 @@ The `bbWizardNavigator` also exposes the following methods:
     'use strict';
 
     var modules = [
+        'sky.actionbar',
         'sky.autofocus',
         'sky.autonumeric',
         'sky.charts',
@@ -8371,6 +8464,7 @@ The `bbWizardNavigator` also exposes the following methods:
 var bbResourcesOverrides;
     
 bbResourcesOverrides = {
+    "action_bar_actions": "Actions", // The label for the actions dropdown on the action button bar
     "autonumeric_abbr_billions": "b", // The suffix to show after an abbreviated value in the billions (e.g. $1.2b)
     "autonumeric_abbr_millions": "m", // The suffix to show after an abbreviated value in the millions (e.g. $1.2m)
     "autonumeric_abbr_thousands": "k", // The suffix to show after an abbreviated value in the thousands (e.g. $1.2k)
@@ -8467,6 +8561,20 @@ angular.module('sky.resources')
     }]);
 }());
 angular.module('sky.templates', []).run(['$templateCache', function($templateCache) {
+    $templateCache.put('sky/templates/actionbar/actionbaritemgroup.html',
+        '<div class="bb-action-bar-group">\n' +
+        '    <div ng-show="!locals.isCollapsed">\n' +
+        '        <ng-transclude/>\n' +
+        '    </div>\n' +
+        '    <div ng-show="locals.isCollapsed">\n' +
+        '        <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">\n' +
+        '            {{title}}<span class="caret"/>\n' +
+        '        </button>\n' +
+        '        <ul class="dropdown-menu" role="menu">\n' +
+        '            <li ng-repeat="item in items" role="presentation"><a role="menuitem" ng-click="item.callback()" href="javascript:void(0)">{{item.content}}</a></li>\n' +
+        '        </ul>\n' +
+        '    </div>\n' +
+        '</span>');
     $templateCache.put('sky/templates/charts/scatterplot.html',
         '<div class="bb-chart-container">\n' +
         '    <div ng-style="moveBackStyle()" ng-show="moveBackVisible">\n' +

@@ -46,10 +46,13 @@
 }
 
 .modal-footer {
-    padding: $padding-plus-half;
+    padding: 19px;
     margin: 0;
     text-align: left;
     background: $form-background;
+    .btn+.btn {
+        margin-left: 10px;
+    }
 }
 
 .bb-modal {

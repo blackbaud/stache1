@@ -7,6 +7,7 @@
 var bbResourcesOverrides;
     
 bbResourcesOverrides = {
+    "action_bar_actions": "Actions", // The label for the actions dropdown on the action button bar
     "autonumeric_abbr_billions": "b", // The suffix to show after an abbreviated value in the billions (e.g. $1.2b)
     "autonumeric_abbr_millions": "m", // The suffix to show after an abbreviated value in the millions (e.g. $1.2m)
     "autonumeric_abbr_thousands": "k", // The suffix to show after an abbreviated value in the thousands (e.g. $1.2k)
