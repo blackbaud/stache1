@@ -108,7 +108,6 @@ module.exports = function (grunt) {
             'prepare',
             'publish',
             'serve',
-            'update',
             'version'
           ]
         }
@@ -225,13 +224,6 @@ module.exports = function (grunt) {
           dest: '<%= stache.config.css %>',
           ext: '.css'
         }]
-      }
-    },
-
-    // Tasks to clone and fetch the latest SkyUI from TFS.
-    shell: {
-      'update': {
-        command: 'npm update && npm install blackbaud-stache-cli -g'
       }
     },
 
@@ -594,14 +586,6 @@ module.exports = function (grunt) {
       'sass',
       'connect',
       'watch'
-    ]
-  );
-
-  grunt.registerTask(
-    'update',
-    'Update current npm packages and blackcbaud-stache-cli globally',
-    [
-      'shell:update'
     ]
   );
 
