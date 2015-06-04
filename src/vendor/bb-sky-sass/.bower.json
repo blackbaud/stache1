@@ -1,6 +1,5 @@
 {
   "name": "bb-sky",
-  "version": "1.0.37",
   "private": true,
   "dependencies": {
     "jquery": "~2.1.3",
@@ -23,7 +22,7 @@
     "angular-ui-router": "~0.2.13"
   },
   "devDependencies": {
-    "angular-ui-select": "~0.11.1",
+    "angular-ui-select": "~0.11.2",
     "angular-mocks": "~1.3.14",
     "ui-select": "*",
     "jasmine-jquery": "~2.1.0",
@@ -42,13 +41,12 @@
     "*.sh"
   ],
   "homepage": "https://github.com/blackbaud/sky",
-  "_release": "1.0.37",
+  "_release": "db398aecb1",
   "_resolution": {
-    "type": "version",
-    "tag": "v1.0.37",
-    "commit": "d85c953e48025a44c5ab95c3ffe4df8c398e0039"
+    "type": "commit",
+    "commit": "db398aecb19937036d935355d1300763c5c03e84"
   },
   "_source": "git@github.com:blackbaud/sky.git",
-  "_target": "*",
+  "_target": "db398aecb19937036d935355d1300763c5c03e84",
   "_originalSource": "git@github.com:blackbaud/sky.git"
 }

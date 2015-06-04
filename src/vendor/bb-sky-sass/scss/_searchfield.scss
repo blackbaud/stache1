@@ -123,3 +123,7 @@
     padding: 3px 20px;
     color: $gray-light;
 }
+
+body > .ui-select-bootstrap.open {
+    z-index: 2000;
+}

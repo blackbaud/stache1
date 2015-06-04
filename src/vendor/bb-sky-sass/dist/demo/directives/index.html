@@ -3,10 +3,11 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="stylesheet" type="text/css" href="../../../bower_components/jqgrid/css/ui.jqgrid.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/sky.css" />
+  
   <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/rainbow/1.2.0/themes/github.css" />
   <link rel="stylesheet" type="text/css" href="../../../bower_components/angular-toastr/dist/angular-toastr.css" />
   <link rel="stylesheet" type="text/css" href="../../../bower_components/angular-ui-select/dist/select.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/sky.css" />
   <title>Interactive Kitchen Sink</title>
   <script src="../../../bower_components/jquery/dist/jquery.js"></script>
   <script src="../../../bower_components/jquery-ui/jquery-ui.js"></script>
@@ -463,13 +464,13 @@ Here focus is set in an in-page form as well as in a modal launched with bbmodal
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;AutoFocusTestController&#x27;, [&#x27;bbModal&#x27;, &#x27;$scope&#x27;, function (bbModal, $scope) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;AutoFocusTestController&#x27;, [&#x27;bbModal&#x27;, &#x27;$scope&#x27;, function (bbModal, $scope) {
 
     $scope.open = function () {
         bbModal.open({
             template: &#x27;&lt;bb-modal&gt;&#x27; +
                       &#x27;&lt;div class=&quot;modal-form&quot;&gt;&#x27; +
-                      &#x27;&lt;bb-modal-header bb-modal-help-key=&quot;\&#x27;bb-security-users.html\&#x27;&quot;&gt;My Header&lt;/bb-modal-header&gt;&#x27; +
+                      &#x27;&lt;bb-modal-header bb-modal-help-key=&quot;bb-security-users.html&quot;&gt;My Header&lt;/bb-modal-header&gt;&#x27; +
                       &#x27;&lt;div bb-modal-body&gt;&#x27; +
                       &#x27;&lt;input bb-autofocus/&gt;&#x27; +
                       &#x27;&lt;/div&gt;&#x27; +
@@ -483,20 +484,21 @@ Here focus is set in an in-page form as well as in a modal launched with bbmodal
         });
     };
 
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('AutoFocusTestController', ['bbModal', '$scope', function (bbModal, $scope) {
+          <script>angular.module('stache').controller('AutoFocusTestController', ['bbModal', '$scope', function (bbModal, $scope) {
 
     $scope.open = function () {
         bbModal.open({
             template: '<bb-modal>' +
                       '<div class="modal-form">' +
-                      '<bb-modal-header bb-modal-help-key="\'bb-security-users.html\'">My Header</bb-modal-header>' +
+                      '<bb-modal-header bb-modal-help-key="bb-security-users.html">My Header</bb-modal-header>' +
                       '<div bb-modal-body>' +
                       '<input bb-autofocus/>' +
                       '</div>' +
@@ -510,7 +512,8 @@ Here focus is set in an in-page form as well as in a modal launched with bbmodal
         });
     };
 
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -693,7 +696,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .config([&#x27;bbAutonumericConfig&#x27;, function (bbAutonumericConfig) {
         // Globally override money options for the entire application here.
         bbAutonumericConfig.money.aSep = &#x27;,&#x27;;
@@ -707,14 +710,15 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 aSign: &#x27;$&#x27;
             }
         };
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .config(['bbAutonumericConfig', function (bbAutonumericConfig) {
         // Globally override money options for the entire application here.
         bbAutonumericConfig.money.aSep = ',';
@@ -728,7 +732,8 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 aSign: '$'
             }
         };
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -831,7 +836,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                       <div>
                         <pre><code data-language="javascript" ng-non-bindable>/*global angular */
 
-angular.module(&#x27;KitchenSink&#x27;)
+angular.module(&#x27;stache&#x27;)
     .controller(&#x27;CheckTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
         &#x27;use strict&#x27;;
 
@@ -856,7 +861,8 @@ angular.module(&#x27;KitchenSink&#x27;)
             radioItems: radioItems,
             selectedRadioItem: radioItems[1].id
         };
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
@@ -865,7 +871,7 @@ angular.module(&#x27;KitchenSink&#x27;)
           </section>
           <script>/*global angular */
 
-angular.module('KitchenSink')
+angular.module('stache')
     .controller('CheckTestController', ['$scope', function ($scope) {
         'use strict';
 
@@ -890,7 +896,8 @@ angular.module('KitchenSink')
             radioItems: radioItems,
             selectedRadioItem: radioItems[1].id
         };
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -996,7 +1003,7 @@ angular.module('KitchenSink')
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .controller(&#x27;ChecklistTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
         var locals,
             items;
@@ -1029,14 +1036,15 @@ angular.module('KitchenSink')
         };
 
         loadItems();
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .controller('ChecklistTestController', ['$scope', function ($scope) {
         var locals,
             items;
@@ -1069,7 +1077,8 @@ angular.module('KitchenSink')
         };
 
         loadItems();
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -1171,7 +1180,7 @@ angular.module('KitchenSink')
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .controller(&#x27;DateFieldDemoController&#x27;, [&#x27;$scope&#x27;, &#x27;$q&#x27;, function ($scope, $q) {
 
         // Initial values...
@@ -1197,14 +1206,15 @@ angular.module('KitchenSink')
                 });
             }
         };
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .controller('DateFieldDemoController', ['$scope', '$q', function ($scope, $q) {
 
         // Initial values...
@@ -1230,7 +1240,8 @@ angular.module('KitchenSink')
                 });
             }
         };
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -1341,7 +1352,7 @@ angular.module('KitchenSink')
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .controller(&#x27;DateRangePickerDemoController&#x27;, [&#x27;$scope&#x27;, &#x27;bbDateRangePicker&#x27;, function ($scope, bbDateRangePicker) {
 
         var locals = $scope.locals = {
@@ -1370,14 +1381,15 @@ angular.module('KitchenSink')
             }
         });
 
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .controller('DateRangePickerDemoController', ['$scope', 'bbDateRangePicker', function ($scope, bbDateRangePicker) {
 
         var locals = $scope.locals = {
@@ -1406,7 +1418,8 @@ angular.module('KitchenSink')
             }
         });
 
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -1580,22 +1593,28 @@ reloading the grid with the current data after the event has fired.</li>
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>/*global angular */
+                        <pre><code data-language="javascript" ng-non-bindable>/*global angular, alert */
 //A comment
-angular.module(&#x27;KitchenSink&#x27;)
+angular.module(&#x27;stache&#x27;)
     .run([&#x27;$templateCache&#x27;, function ($templateCache) {
+        &#x27;use strict&#x27;;
+
+        $templateCache.put(&#x27;bbGrid/samples/date.html&#x27;, &#x27;&lt;div&gt;{{data | date: \&#x27;medium\&#x27;}}&lt;/div&gt;&#x27;);
+
+        $templateCache.put(&#x27;bbGrid/samples/gridtooltip.html&#x27;,
+                          &#x27;&lt;div style=&quot;height: 70px; width: 300px;&quot;&gt;&lt;a&gt;On your face&lt;/a&gt;&lt;/div&gt;&#x27;);
         $templateCache.put(&#x27;bbGrid/samples/mycolumn.html&#x27;,
-            &#x27;&lt;div&gt;&#x27; + 
+            &#x27;&lt;div&gt;&#x27; +
                 &#x27;&lt;div&gt;Title: {{data.title}}&lt;/div&gt;&#x27; +
-                &#x27;&lt;div tooltip=&quot;On your face&quot;&gt;Info: {{data.info}}&lt;/div&gt;&#x27; + 
+                &#x27;&lt;a href=&quot;&quot; tooltip-trigger=&quot;focus&quot; tooltip-placement=&quot;bottom&quot; bb-tooltip=&quot;bbGrid/samples/gridtooltip.html&quot;&gt; Info: {{data.info}}&lt;/a&gt;&#x27; +
                 &#x27;&lt;button class=&quot;btn btn-success&quot; ng-click=&quot;locals.clickIt()&quot;&gt;My Button&lt;/button&gt;&#x27; +
-            &#x27;&lt;/div&gt;&#x27;); 
+            &#x27;&lt;/div&gt;&#x27;);
     }])
-    .controller(&#x27;GridTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+    .controller(&#x27;GridTestController&#x27;, [&#x27;$scope&#x27;, &#x27;$filter&#x27;, function ($scope, $filter) {
     &#x27;use strict&#x27;;
     var action1,
         action2,
-        
+
         dataSet1 = [
             {
                 name: &#x27;Patrick&#x27;,
@@ -1674,10 +1693,12 @@ angular.module(&#x27;KitchenSink&#x27;)
             {
                 name: &#x27;John&#x27;,
                 instrument: &#x27;Rhythm guitar&#x27;,
+                bio: &#x27;&#x27;,
                 templated: {
                     title: &#x27;Johnny&#x27;,
-                    info: &#x27;JInfo&#x27;  
-                }
+                    info: &#x27;JInfo&#x27;
+                },
+                mydate: Date.parse(&#x27;1/21/2015&#x27;)
             },
             {
                 name: &#x27;Paul&#x27;,
@@ -1685,27 +1706,32 @@ angular.module(&#x27;KitchenSink&#x27;)
                 bio: &#x27;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in purus odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consequat ante et felis accumsan volutpat. Nulla leo leo, lacinia nec felis sit amet, tristique feugiat ipsum. Mauris ac velit in mi aliquam auctor vel ac leo. Nullam vehicula congue risus, vitae congue turpis iaculis at. Vestibulum imperdiet tellus erat, sit amet rhoncus neque fringilla vitae.&#x27;,
                 templated: {
                     title: &#x27;Paully&#x27;,
-                    info: &#x27;PInfo&#x27;  
-                }
+                    info: &#x27;PInfo&#x27;
+                },
+                mydate: Date.parse(&#x27;2/23/2012&#x27;)
             },
             {
                 name: &#x27;George&#x27;,
                 instrument: &#x27;Lead guitar&#x27;,
+                bio: &#x27;&#x27;,
                 templated: {
                     title: &#x27;Georgy&#x27;,
-                    info: &#x27;GInfo&#x27;  
-                }
+                    info: &#x27;GInfo&#x27;
+                },
+                mydate: Date.parse(&#x27;4/14/1999&#x27;)
             },
             {
                 name: &#x27;Ringo&#x27;,
                 instrument: &#x27;Drums&#x27;,
+                bio: &#x27;&#x27;,
                 templated: {
                     title: &#x27;Ringoy&#x27;,
-                    info: &#x27;RInfo&#x27;  
-                }
+                    info: &#x27;RInfo&#x27;
+                },
+                mydate: Date.parse(&#x27;6/22/1989&#x27;)
             }
         ];
-    
+
     function applyFilters() {
         $scope.locals.appliedFilters.instruments = [];
         if ($scope.locals.guitarFilter) {
@@ -1715,7 +1741,7 @@ angular.module(&#x27;KitchenSink&#x27;)
             $scope.locals.appliedFilters.instruments.push({name: &#x27;drums&#x27;});
         }
     }
-        
+
     function templateController($scope) {
         $scope.locals = {
             clickIt: function () {
@@ -1723,7 +1749,7 @@ angular.module(&#x27;KitchenSink&#x27;)
             }
         };
     }
-    
+
     function updateActions(selections) {
         var i,
             selection;
@@ -1740,7 +1766,7 @@ angular.module(&#x27;KitchenSink&#x27;)
             }
         }
     }
-    
+
     function action1Clicked() {
         var i,
             message = &#x27;The selected guitar players are &#x27;;
@@ -1754,14 +1780,14 @@ angular.module(&#x27;KitchenSink&#x27;)
             alert(message);
         }
     }
-    
+
     function action2Clicked() {
         var message = &#x27;Drum Drum Drum!&#x27;;
-        
+
         alert(message);
     }
-        
-    
+
+
     action1 = {
         actionCallback: action1Clicked,
         automationId: &#x27;Action1Button&#x27;,
@@ -1769,7 +1795,7 @@ angular.module(&#x27;KitchenSink&#x27;)
         selections: [],
         title: &#x27;Guitar Action&#x27;
     };
-    
+
     action2 = {
         actionCallback: action2Clicked,
         automationId: &#x27;Action2Button&#x27;,
@@ -1777,7 +1803,7 @@ angular.module(&#x27;KitchenSink&#x27;)
         selections: [],
         title: &#x27;Drum Action&#x27;
     };
-    
+
     $scope.locals = {
         appliedFilters: {
             instruments: []
@@ -1837,6 +1863,14 @@ angular.module(&#x27;KitchenSink&#x27;)
                     width_all: 300,
                     template_url: &#x27;bbGrid/samples/mycolumn.html&#x27;,
                     controller: templateController
+                },
+                {
+                    caption: &#x27;Date&#x27;,
+                    jsonmap: &#x27;mydate&#x27;,
+                    id: 5,
+                    name: &#x27;mydate&#x27;,
+                    width_all: 200,
+                    template_url: &#x27;bbGrid/samples/date.html&#x27;
                 }
             ],
             data: dataSetBand,
@@ -1844,8 +1878,8 @@ angular.module(&#x27;KitchenSink&#x27;)
                 if (rowid === &#x27;1&#x27; || rowObject.name === &#x27;Ringo&#x27;) {
                     return [
                         {
-                            id: &#x27;menu&#x27;, 
-                            title: &#x27;Option1&#x27;, 
+                            id: &#x27;menu&#x27;,
+                            title: &#x27;Option1&#x27;,
                             cmd: function () {
                                 alert(&#x27;Context menu option chosen!&#x27;);
                                 return false;
@@ -1855,11 +1889,11 @@ angular.module(&#x27;KitchenSink&#x27;)
                 }
             },
             multiselect: true,
-            
+
             sortOptions: {
                 excludedColumns: [&#x27;bio&#x27;]
             },
-            selectedColumnIds: [1, 2, 3],
+            selectedColumnIds: [1, 2, 3, 5],
             columnPickerHelpKey: &#x27;bb-security-users.html&#x27;
         },
         gridOptions2: {
@@ -1929,15 +1963,22 @@ angular.module(&#x27;KitchenSink&#x27;)
             }
         });
     }, true);
-    
+
     $scope.$watch(&#x27;locals.gridOptions.searchText&#x27;, function () {
         if (angular.isDefined($scope.locals.gridOptions.searchText) &amp;&amp; $scope.locals.gridOptions.searchText !== &#x27;&#x27;) {
-            $scope.locals.gridOptions.data = [dataSetBand[0]];
+            $scope.locals.gridOptions.data = dataSetBand.filter(function (element) {
+                return (element.name.includes($scope.locals.gridOptions.searchText) ||
+                       element.instrument.includes($scope.locals.gridOptions.searchText) ||
+                       element.bio.includes($scope.locals.gridOptions.searchText) ||
+                       element.templated.info.includes($scope.locals.gridOptions.searchText) ||
+                       $filter(&#x27;date&#x27;)(element.mydate, &#x27;medium&#x27;).includes($scope.locals.gridOptions.searchText));
+            });
+
         } else {
             $scope.locals.gridOptions.data = dataSetBand;
         }
     });
-    
+
     $scope.$watch(&#x27;locals.gridOptions.filters&#x27;, function () {
         var i,
             item,
@@ -1957,38 +1998,45 @@ angular.module(&#x27;KitchenSink&#x27;)
             $scope.locals.gridOptions.data = dataSetBand;
         }
     });
-    
+
     $scope.$on(&#x27;loadMoreRows&#x27;, function (event, data) {
         $scope.locals.gridOptions2.data = getDataSet(data.top, data.skip);
     });
-    
+
     $scope.$on(&#x27;includedColumnsChanged&#x27;, function (event, data) {
         // Optionally set the data&#x27;s willResetData property to true if the controller will handle reloading the results
         // after the user has changed the selected grid columns.
     });
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>/*global angular */
+          <script>/*global angular, alert */
 //A comment
-angular.module('KitchenSink')
+angular.module('stache')
     .run(['$templateCache', function ($templateCache) {
+        'use strict';
+
+        $templateCache.put('bbGrid/samples/date.html', '<div>{{data | date: \'medium\'}}</div>');
+
+        $templateCache.put('bbGrid/samples/gridtooltip.html',
+                          '<div style="height: 70px; width: 300px;"><a>On your face</a></div>');
         $templateCache.put('bbGrid/samples/mycolumn.html',
-            '<div>' + 
+            '<div>' +
                 '<div>Title: {{data.title}}</div>' +
-                '<div tooltip="On your face">Info: {{data.info}}</div>' + 
+                '<a href="" tooltip-trigger="focus" tooltip-placement="bottom" bb-tooltip="bbGrid/samples/gridtooltip.html"> Info: {{data.info}}</a>' +
                 '<button class="btn btn-success" ng-click="locals.clickIt()">My Button</button>' +
-            '</div>'); 
+            '</div>');
     }])
-    .controller('GridTestController', ['$scope', function ($scope) {
+    .controller('GridTestController', ['$scope', '$filter', function ($scope, $filter) {
     'use strict';
     var action1,
         action2,
-        
+
         dataSet1 = [
             {
                 name: 'Patrick',
@@ -2067,10 +2115,12 @@ angular.module('KitchenSink')
             {
                 name: 'John',
                 instrument: 'Rhythm guitar',
+                bio: '',
                 templated: {
                     title: 'Johnny',
-                    info: 'JInfo'  
-                }
+                    info: 'JInfo'
+                },
+                mydate: Date.parse('1/21/2015')
             },
             {
                 name: 'Paul',
@@ -2078,27 +2128,32 @@ angular.module('KitchenSink')
                 bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in purus odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consequat ante et felis accumsan volutpat. Nulla leo leo, lacinia nec felis sit amet, tristique feugiat ipsum. Mauris ac velit in mi aliquam auctor vel ac leo. Nullam vehicula congue risus, vitae congue turpis iaculis at. Vestibulum imperdiet tellus erat, sit amet rhoncus neque fringilla vitae.',
                 templated: {
                     title: 'Paully',
-                    info: 'PInfo'  
-                }
+                    info: 'PInfo'
+                },
+                mydate: Date.parse('2/23/2012')
             },
             {
                 name: 'George',
                 instrument: 'Lead guitar',
+                bio: '',
                 templated: {
                     title: 'Georgy',
-                    info: 'GInfo'  
-                }
+                    info: 'GInfo'
+                },
+                mydate: Date.parse('4/14/1999')
             },
             {
                 name: 'Ringo',
                 instrument: 'Drums',
+                bio: '',
                 templated: {
                     title: 'Ringoy',
-                    info: 'RInfo'  
-                }
+                    info: 'RInfo'
+                },
+                mydate: Date.parse('6/22/1989')
             }
         ];
-    
+
     function applyFilters() {
         $scope.locals.appliedFilters.instruments = [];
         if ($scope.locals.guitarFilter) {
@@ -2108,7 +2163,7 @@ angular.module('KitchenSink')
             $scope.locals.appliedFilters.instruments.push({name: 'drums'});
         }
     }
-        
+
     function templateController($scope) {
         $scope.locals = {
             clickIt: function () {
@@ -2116,7 +2171,7 @@ angular.module('KitchenSink')
             }
         };
     }
-    
+
     function updateActions(selections) {
         var i,
             selection;
@@ -2133,7 +2188,7 @@ angular.module('KitchenSink')
             }
         }
     }
-    
+
     function action1Clicked() {
         var i,
             message = 'The selected guitar players are ';
@@ -2147,14 +2202,14 @@ angular.module('KitchenSink')
             alert(message);
         }
     }
-    
+
     function action2Clicked() {
         var message = 'Drum Drum Drum!';
-        
+
         alert(message);
     }
-        
-    
+
+
     action1 = {
         actionCallback: action1Clicked,
         automationId: 'Action1Button',
@@ -2162,7 +2217,7 @@ angular.module('KitchenSink')
         selections: [],
         title: 'Guitar Action'
     };
-    
+
     action2 = {
         actionCallback: action2Clicked,
         automationId: 'Action2Button',
@@ -2170,7 +2225,7 @@ angular.module('KitchenSink')
         selections: [],
         title: 'Drum Action'
     };
-    
+
     $scope.locals = {
         appliedFilters: {
             instruments: []
@@ -2230,6 +2285,14 @@ angular.module('KitchenSink')
                     width_all: 300,
                     template_url: 'bbGrid/samples/mycolumn.html',
                     controller: templateController
+                },
+                {
+                    caption: 'Date',
+                    jsonmap: 'mydate',
+                    id: 5,
+                    name: 'mydate',
+                    width_all: 200,
+                    template_url: 'bbGrid/samples/date.html'
                 }
             ],
             data: dataSetBand,
@@ -2237,8 +2300,8 @@ angular.module('KitchenSink')
                 if (rowid === '1' || rowObject.name === 'Ringo') {
                     return [
                         {
-                            id: 'menu', 
-                            title: 'Option1', 
+                            id: 'menu',
+                            title: 'Option1',
                             cmd: function () {
                                 alert('Context menu option chosen!');
                                 return false;
@@ -2248,11 +2311,11 @@ angular.module('KitchenSink')
                 }
             },
             multiselect: true,
-            
+
             sortOptions: {
                 excludedColumns: ['bio']
             },
-            selectedColumnIds: [1, 2, 3],
+            selectedColumnIds: [1, 2, 3, 5],
             columnPickerHelpKey: 'bb-security-users.html'
         },
         gridOptions2: {
@@ -2322,15 +2385,22 @@ angular.module('KitchenSink')
             }
         });
     }, true);
-    
+
     $scope.$watch('locals.gridOptions.searchText', function () {
         if (angular.isDefined($scope.locals.gridOptions.searchText) && $scope.locals.gridOptions.searchText !== '') {
-            $scope.locals.gridOptions.data = [dataSetBand[0]];
+            $scope.locals.gridOptions.data = dataSetBand.filter(function (element) {
+                return (element.name.includes($scope.locals.gridOptions.searchText) ||
+                       element.instrument.includes($scope.locals.gridOptions.searchText) ||
+                       element.bio.includes($scope.locals.gridOptions.searchText) ||
+                       element.templated.info.includes($scope.locals.gridOptions.searchText) ||
+                       $filter('date')(element.mydate, 'medium').includes($scope.locals.gridOptions.searchText));
+            });
+
         } else {
             $scope.locals.gridOptions.data = dataSetBand;
         }
     });
-    
+
     $scope.$watch('locals.gridOptions.filters', function () {
         var i,
             item,
@@ -2350,16 +2420,17 @@ angular.module('KitchenSink')
             $scope.locals.gridOptions.data = dataSetBand;
         }
     });
-    
+
     $scope.$on('loadMoreRows', function (event, data) {
         $scope.locals.gridOptions2.data = getDataSet(data.top, data.skip);
     });
-    
+
     $scope.$on('includedColumnsChanged', function (event, data) {
         // Optionally set the data's willResetData property to true if the controller will handle reloading the results
         // after the user has changed the selected grid columns.
     });
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -2420,7 +2491,7 @@ angular.module('KitchenSink')
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;HelpTestController&#x27;, [&#x27;$scope&#x27;, &#x27;bbHelp&#x27;, function ($scope, bbHelp) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;HelpTestController&#x27;, [&#x27;$scope&#x27;, &#x27;bbHelp&#x27;, function ($scope, bbHelp) {
 
     $scope.open = function () {
         bbHelp.open(&#x27;bb-gifts.html&#x27;);
@@ -2429,14 +2500,15 @@ angular.module('KitchenSink')
     $scope.close = function () {
         bbHelp.close();
     };
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('HelpTestController', ['$scope', 'bbHelp', function ($scope, bbHelp) {
+          <script>angular.module('stache').controller('HelpTestController', ['$scope', 'bbHelp', function ($scope, bbHelp) {
 
     $scope.open = function () {
         bbHelp.open('bb-gifts.html');
@@ -2445,7 +2517,8 @@ angular.module('KitchenSink')
     $scope.close = function () {
         bbHelp.close();
     };
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -2572,7 +2645,7 @@ angular.module('KitchenSink')
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;HelpWidgetTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;HelpWidgetTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
 
     $scope.open = function () {
         window.BBHELP.HelpWidget.open(&#x27;bb-gifts.html&#x27;);
@@ -2581,14 +2654,15 @@ angular.module('KitchenSink')
     $scope.close = function () {
         window.BBHELP.HelpWidget.close();
     };
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('HelpWidgetTestController', ['$scope', function ($scope) {
+          <script>angular.module('stache').controller('HelpWidgetTestController', ['$scope', function ($scope) {
 
     $scope.open = function () {
         window.BBHELP.HelpWidget.open('bb-gifts.html');
@@ -2597,7 +2671,8 @@ angular.module('KitchenSink')
     $scope.close = function () {
         window.BBHELP.HelpWidget.close();
     };
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -2684,22 +2759,24 @@ angular.module('KitchenSink')
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;HighlightTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;HighlightTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
     $scope.locals = {
         highlightText: &#x27;&#x27;
     };
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('HighlightTestController', ['$scope', function ($scope) {
+          <script>angular.module('stache').controller('HighlightTestController', ['$scope', function ($scope) {
     $scope.locals = {
         highlightText: ''
     };
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -2766,7 +2843,7 @@ manipulating the UI programmatically in cases where CSS media queries are not su
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;MediaBreakpointsTestController&#x27;, [&#x27;$scope&#x27;, &#x27;bbMediaBreakpoints&#x27;, function ($scope, bbMediaBreakpoints) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;MediaBreakpointsTestController&#x27;, [&#x27;$scope&#x27;, &#x27;bbMediaBreakpoints&#x27;, function ($scope, bbMediaBreakpoints) {
     function mediaBreakpointCallback(breakpoint) {
         var p;
 
@@ -2786,14 +2863,15 @@ manipulating the UI programmatically in cases where CSS media queries are not su
         bbMediaBreakpoints.unregister(mediaBreakpointCallback);
     });
 
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('MediaBreakpointsTestController', ['$scope', 'bbMediaBreakpoints', function ($scope, bbMediaBreakpoints) {
+          <script>angular.module('stache').controller('MediaBreakpointsTestController', ['$scope', 'bbMediaBreakpoints', function ($scope, bbMediaBreakpoints) {
     function mediaBreakpointCallback(breakpoint) {
         var p;
 
@@ -2813,7 +2891,8 @@ manipulating the UI programmatically in cases where CSS media queries are not su
         bbMediaBreakpoints.unregister(mediaBreakpointCallback);
     });
 
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -2841,6 +2920,14 @@ manipulating the UI programmatically in cases where CSS media queries are not su
                     <div class="form-group">
                         <label class="control-label">Sample text box</label>
                         <input type="text" class="form-control" />
+                        <label class="control-label">Search</label>
+                        <ui-select ng-model="data.color_id" append-to-body="true">
+                            <ui-select-match allow-clear placeholder="{{resources.watermark_single}}" >{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices repeat="color.id as color in locals.colors | filter: $select.search">
+                                <span>{{color.name}}</span>
+                            <ui-select-choices/>
+                        </ui-select>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -2899,6 +2986,14 @@ manipulating the UI programmatically in cases where CSS media queries are not su
                     &lt;div class=&quot;form-group&quot;&gt;
                         &lt;label class=&quot;control-label&quot;&gt;Sample text box&lt;/label&gt;
                         &lt;input type=&quot;text&quot; class=&quot;form-control&quot; /&gt;
+                        &lt;label class=&quot;control-label&quot;&gt;Search&lt;/label&gt;
+                        &lt;ui-select ng-model=&quot;data.color_id&quot; append-to-body=&quot;true&quot;&gt;
+                            &lt;ui-select-match allow-clear placeholder=&quot;{{resources.watermark_single}}&quot; &gt;{{$select.selected.name}}&lt;/ui-select-match&gt;
+                            &lt;ui-select-choices repeat=&quot;color.id as color in locals.colors | filter: $select.search&quot;&gt;
+                                &lt;span&gt;{{color.name}}&lt;/span&gt;
+                            &lt;ui-select-choices/&gt;
+                        &lt;/ui-select&gt;
+                        &lt;/div&gt;
                     &lt;/div&gt;
                 &lt;/form&gt;
             &lt;/div&gt;
@@ -2914,30 +3009,92 @@ manipulating the UI programmatically in cases where CSS media queries are not su
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;ModalTestController&#x27;, [&#x27;bbModal&#x27;, &#x27;$scope&#x27;, function (bbModal, $scope) {
+                        <pre><code data-language="javascript" ng-non-bindable>/* global angular*/
+angular.module(&#x27;stache&#x27;)
+    .controller(&#x27;ModalContentController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+        &#x27;use strict&#x27;;
+        $scope.data = {
+            color_id: &#x27;2&#x27;
+        };
 
-    $scope.open = function () {
-        bbModal.open({
-            templateUrl: &#x27;demo/modal/modalform.html&#x27;
-        });
-    };
+        $scope.resources = {
+            watermark_single: &#x27;Search for a color&#x27;
+        };
 
-}]);</code></pre>
+        $scope.locals = {
+            colors: [
+                { id: &#x27;1&#x27;, name: &#x27;Aqua&#x27; },
+                { id: &#x27;2&#x27;, name: &#x27;Blue&#x27; },
+                { id: &#x27;3&#x27;, name: &#x27;Brown&#x27; },
+                { id: &#x27;4&#x27;, name: &#x27;Gold&#x27; },
+                { id: &#x27;5&#x27;, name: &#x27;Gray&#x27; },
+                { id: &#x27;6&#x27;, name: &#x27;Green&#x27; },
+                { id: &#x27;7&#x27;, name: &#x27;Navy&#x27; },
+                { id: &#x27;8&#x27;, name: &#x27;Pink&#x27; },
+                { id: &#x27;9&#x27;, name: &#x27;Purple&#x27; },
+                { id: &#x27;10&#x27;, name: &#x27;Silver&#x27; },
+                { id: &#x27;11&#x27;, name: &#x27;White&#x27; },
+                { id: &#x27;12&#x27;, name: &#x27;Yellow&#x27; }
+            ]
+        };
+
+    }])
+    .controller(&#x27;ModalTestController&#x27;, [&#x27;bbModal&#x27;, &#x27;$scope&#x27;, function (bbModal, $scope) {
+        &#x27;use strict&#x27;;
+        $scope.open = function () {
+            bbModal.open({
+                controller: &#x27;ModalContentController&#x27;,
+                templateUrl: &#x27;demo/modal/modalform.html&#x27;
+            });
+        };
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('ModalTestController', ['bbModal', '$scope', function (bbModal, $scope) {
+          <script>/* global angular*/
+angular.module('stache')
+    .controller('ModalContentController', ['$scope', function ($scope) {
+        'use strict';
+        $scope.data = {
+            color_id: '2'
+        };
 
-    $scope.open = function () {
-        bbModal.open({
-            templateUrl: 'demo/modal/modalform.html'
-        });
-    };
+        $scope.resources = {
+            watermark_single: 'Search for a color'
+        };
 
-}]);</script>
+        $scope.locals = {
+            colors: [
+                { id: '1', name: 'Aqua' },
+                { id: '2', name: 'Blue' },
+                { id: '3', name: 'Brown' },
+                { id: '4', name: 'Gold' },
+                { id: '5', name: 'Gray' },
+                { id: '6', name: 'Green' },
+                { id: '7', name: 'Navy' },
+                { id: '8', name: 'Pink' },
+                { id: '9', name: 'Purple' },
+                { id: '10', name: 'Silver' },
+                { id: '11', name: 'White' },
+                { id: '12', name: 'Yellow' }
+            ]
+        };
+
+    }])
+    .controller('ModalTestController', ['bbModal', '$scope', function (bbModal, $scope) {
+        'use strict';
+        $scope.open = function () {
+            bbModal.open({
+                controller: 'ModalContentController',
+                templateUrl: 'demo/modal/modalform.html'
+            });
+        };
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -2990,8 +3147,6 @@ manipulating the UI programmatically in cases where CSS media queries are not su
 <li><strong><a href="http://www.decorplanit.com/plugin/">autoNumeric</a> (1.9.27 or higher)</strong> Used to format money values</li>
 </ul>
 
-<hr />
-
 <p>The Money Input directive formats currency values as the user types in the input field.  The formatting options can be set globally using the <code>bbMoneyConfig</code> service.</p>
 
 <h3>Config Options</h3>
@@ -3002,7 +3157,7 @@ manipulating the UI programmatically in cases where CSS media queries are not su
 <li><code>currencyDecimalSeparator</code> <em>(Default: <code>.</code>)</em> The character to display before the decimal digits.</li>
 <li><code>currencyGroupSize</code> <em>(Default: <code>3</code>)</em> The number of digits each group should contain before displaying the group separator character.</li>
 <li><code>currencyGroupSeparator</code> <em>(Default: <code>,</code>)</em> The character to display between groups.</li>
-<li><code>currencySymbol</code> <em>(Default: <code>$</code>)</em> The symbol that represents the value's currency type.
+<li><code>currencySymbol</code> <em>(Default: <code>&amp;#36;</code>)</em> The symbol that represents the value's currency type.
 </s></li>
 </ul>
               </div>
@@ -3036,26 +3191,28 @@ manipulating the UI programmatically in cases where CSS media queries are not su
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .controller(&#x27;MoneyInputTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
         $scope.locals = {
             moneyFormattedValue: &#x27;$123,456.78&#x27;,
             moneyValue: 12345678
         };
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .controller('MoneyInputTestController', ['$scope', function ($scope) {
         $scope.locals = {
             moneyFormattedValue: '$123,456.78',
             moneyValue: 12345678
         };
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -3148,16 +3305,18 @@ manipulating the UI programmatically in cases where CSS media queries are not su
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
-    .controller(&#x27;NavbarTestController&#x27;, angular.noop);</code></pre>
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
+    .controller(&#x27;NavbarTestController&#x27;, angular.noop);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
-    .controller('NavbarTestController', angular.noop);</script>
+          <script>angular.module('stache')
+    .controller('NavbarTestController', angular.noop);
+</script>
         </div>
       </div>
       <br />
@@ -3225,7 +3384,7 @@ manipulating the UI programmatically in cases where CSS media queries are not su
                       <div>
                         <pre><code data-language="javascript" ng-non-bindable>/*global angular */
 
-angular.module(&#x27;KitchenSink&#x27;)
+angular.module(&#x27;stache&#x27;)
     .controller(&#x27;PageTestController&#x27;, [&#x27;$scope&#x27;, &#x27;$timeout&#x27;, &#x27;bbPage&#x27;, function ($scope, $timeout, bbPage) {
         &#x27;use strict&#x27;;
         var locals,
@@ -3258,7 +3417,8 @@ angular.module(&#x27;KitchenSink&#x27;)
         locals.pageStatus = bbPage.pageStatuses.LOADED;
         locals.simulateLoading = simulateLoading;
         locals.simulateNotAuthorized = simulateNotAuthorized;
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
@@ -3267,7 +3427,7 @@ angular.module(&#x27;KitchenSink&#x27;)
           </section>
           <script>/*global angular */
 
-angular.module('KitchenSink')
+angular.module('stache')
     .controller('PageTestController', ['$scope', '$timeout', 'bbPage', function ($scope, $timeout, bbPage) {
         'use strict';
         var locals,
@@ -3300,7 +3460,8 @@ angular.module('KitchenSink')
         locals.pageStatus = bbPage.pageStatuses.LOADED;
         locals.simulateLoading = simulateLoading;
         locals.simulateNotAuthorized = simulateNotAuthorized;
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -3396,7 +3557,7 @@ The <code>bbPaging</code> service is used to create the paged data and responds 
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .controller(&#x27;PaginationTestController&#x27;, [&#x27;$scope&#x27;, &#x27;bbPaging&#x27;, function ($scope, bbPaging) {
         var items = [
             {text: &#x27;Item 1&#x27;},
@@ -3416,14 +3577,15 @@ The <code>bbPaging</code> service is used to create the paged data and responds 
         $scope.locals = {
             itemsPaged: bbPaging.init(items)
         };
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .controller('PaginationTestController', ['$scope', 'bbPaging', function ($scope, bbPaging) {
         var items = [
             {text: 'Item 1'},
@@ -3443,7 +3605,8 @@ The <code>bbPaging</code> service is used to create the paged data and responds 
         $scope.locals = {
             itemsPaged: bbPaging.init(items)
         };
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -3534,7 +3697,7 @@ provided on the scope to dismiss the popover.</p>
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .run([&#x27;$templateCache&#x27;, function ($templateCache) {
         // Typically this would either point to a URL or generated using a Grunt task like html2js.  For demo
         // purposes we&#x27;ll just manually put the template in the cache.
@@ -3548,14 +3711,15 @@ provided on the scope to dismiss the popover.</p>
     .controller(&#x27;PopoverTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
         $scope.items = [&#x27;Coke&#x27;, &#x27;Sprite&#x27;, &#x27;Dr Pepper&#x27;, &#x27;Pibb&#x27;];
         $scope.selectedItem = &#x27;Coke&#x27;;
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .run(['$templateCache', function ($templateCache) {
         // Typically this would either point to a URL or generated using a Grunt task like html2js.  For demo
         // purposes we'll just manually put the template in the cache.
@@ -3569,7 +3733,8 @@ provided on the scope to dismiss the popover.</p>
     .controller('PopoverTestController', ['$scope', function ($scope) {
         $scope.items = ['Coke', 'Sprite', 'Dr Pepper', 'Pibb'];
         $scope.selectedItem = 'Coke';
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -3697,11 +3862,11 @@ provided on the scope to dismiss the popover.</p>
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;ScrollIntoViewTestController&#x27;, [&#x27;bbModal&#x27;, &#x27;$scope&#x27;, function (bbModal, $scope) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;ScrollIntoViewTestController&#x27;, [&#x27;bbModal&#x27;, &#x27;$scope&#x27;, function (bbModal, $scope) {
     $scope.resources = {
         tile_header: &#x27;Tile header&#x27;
     };
-    
+
     $scope.locals = {
         is_collapsed: false,
         scrollIntoView: function () {
@@ -3711,18 +3876,19 @@ provided on the scope to dismiss the popover.</p>
             $scope.scrollParentIntoViewCount = ($scope.scrollParentIntoViewCount || 0) + 1;
         }
     };
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('ScrollIntoViewTestController', ['bbModal', '$scope', function (bbModal, $scope) {
+          <script>angular.module('stache').controller('ScrollIntoViewTestController', ['bbModal', '$scope', function (bbModal, $scope) {
     $scope.resources = {
         tile_header: 'Tile header'
     };
-    
+
     $scope.locals = {
         is_collapsed: false,
         scrollIntoView: function () {
@@ -3732,7 +3898,8 @@ provided on the scope to dismiss the popover.</p>
             $scope.scrollParentIntoViewCount = ($scope.scrollParentIntoViewCount || 0) + 1;
         }
     };
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -3772,7 +3939,6 @@ provided on the scope to dismiss the popover.</p>
       </ui-select>
     </div>
   </div>
-
   <hr class="kitchen-sink-divider"/>
 
   <div ng-controller="SearchfieldRemoteTestController">
@@ -3888,7 +4054,6 @@ provided on the scope to dismiss the popover.</p>
       &lt;/ui-select&gt;
     &lt;/div&gt;
   &lt;/div&gt;
-
   &lt;hr class=&quot;kitchen-sink-divider&quot;/&gt;
 
   &lt;div ng-controller=&quot;SearchfieldRemoteTestController&quot;&gt;
@@ -3923,7 +4088,7 @@ provided on the scope to dismiss the popover.</p>
                       <div>
                         <pre><code data-language="javascript" ng-non-bindable>/*global angular */
 
-angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;SearchfieldLocalTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+angular.module(&#x27;stache&#x27;).controller(&#x27;SearchfieldLocalTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
     &#x27;use strict&#x27;;
 
     $scope.data = {
@@ -3935,7 +4100,6 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;SearchfieldLocalTestCon
         watermark_single: &#x27;Search for a color&#x27;,
         watermark_multiple: &#x27;Search for a color(s)&#x27;
     };
-
     $scope.locals = {
         colors: [
             { id: &#x27;1&#x27;, name: &#x27;Aqua&#x27; },
@@ -3954,7 +4118,7 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;SearchfieldLocalTestCon
     };
 }]);
 
-angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;SearchfieldRemoteTestController&#x27;, [&#x27;$scope&#x27;, &#x27;$http&#x27;, function ($scope, $http) {
+angular.module(&#x27;stache&#x27;).controller(&#x27;SearchfieldRemoteTestController&#x27;, [&#x27;$scope&#x27;, &#x27;$http&#x27;, function ($scope, $http) {
     &#x27;use strict&#x27;;
 
     $scope.data = {
@@ -4001,7 +4165,8 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;SearchfieldRemoteTestCo
         }
     };
 
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
@@ -4010,7 +4175,7 @@ angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;SearchfieldRemoteTestCo
           </section>
           <script>/*global angular */
 
-angular.module('KitchenSink').controller('SearchfieldLocalTestController', ['$scope', function ($scope) {
+angular.module('stache').controller('SearchfieldLocalTestController', ['$scope', function ($scope) {
     'use strict';
 
     $scope.data = {
@@ -4022,7 +4187,6 @@ angular.module('KitchenSink').controller('SearchfieldLocalTestController', ['$sc
         watermark_single: 'Search for a color',
         watermark_multiple: 'Search for a color(s)'
     };
-
     $scope.locals = {
         colors: [
             { id: '1', name: 'Aqua' },
@@ -4041,7 +4205,7 @@ angular.module('KitchenSink').controller('SearchfieldLocalTestController', ['$sc
     };
 }]);
 
-angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$scope', '$http', function ($scope, $http) {
+angular.module('stache').controller('SearchfieldRemoteTestController', ['$scope', '$http', function ($scope, $http) {
     'use strict';
 
     $scope.data = {
@@ -4088,7 +4252,8 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
         }
     };
 
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -4190,7 +4355,7 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;TabsTestController&#x27;, [&#x27;$scope&#x27;, &#x27;$timeout&#x27;, function ($scope, $timeout) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;TabsTestController&#x27;, [&#x27;$scope&#x27;, &#x27;$timeout&#x27;, function ($scope, $timeout) {
     &#x27;use strict&#x27;;
 
     $scope.locals = {
@@ -4212,14 +4377,15 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
     }, 500);
 
 
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('TabsTestController', ['$scope', '$timeout', function ($scope, $timeout) {
+          <script>angular.module('stache').controller('TabsTestController', ['$scope', '$timeout', function ($scope, $timeout) {
     'use strict';
 
     $scope.locals = {
@@ -4241,7 +4407,8 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
     }, 500);
 
 
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -4352,7 +4519,7 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;TabscrollTestController&#x27;, [&#x27;$scope&#x27;, &#x27;$timeout&#x27;, function ($scope, $timeout) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;TabscrollTestController&#x27;, [&#x27;$scope&#x27;, &#x27;$timeout&#x27;, function ($scope, $timeout) {
     $scope.locals = {
         replay: function () {
             $scope.locals.ready = false;
@@ -4361,18 +4528,19 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
             }, 200);
         }
     };
-    
+
     $timeout(function () {
         $scope.locals.ready = true;
     }, 2000);
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('TabscrollTestController', ['$scope', '$timeout', function ($scope, $timeout) {
+          <script>angular.module('stache').controller('TabscrollTestController', ['$scope', '$timeout', function ($scope, $timeout) {
     $scope.locals = {
         replay: function () {
             $scope.locals.ready = false;
@@ -4381,11 +4549,12 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
             }, 200);
         }
     };
-    
+
     $timeout(function () {
         $scope.locals.ready = true;
     }, 2000);
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -4462,7 +4631,7 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
       .config([&#x27;$stateProvider&#x27;, function ($stateProvider) {
         $stateProvider
             .state(&#x27;TabState1&#x27;, {
@@ -4478,14 +4647,15 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
     .controller(&#x27;TabSrefTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
         &#x27;use strict&#x27;;
 
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
       .config(['$stateProvider', function ($stateProvider) {
         $stateProvider
             .state('TabState1', {
@@ -4501,7 +4671,8 @@ angular.module('KitchenSink').controller('SearchfieldRemoteTestController', ['$s
     .controller('TabSrefTestController', ['$scope', function ($scope) {
         'use strict';
 
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -4557,26 +4728,28 @@ The string template is specified with the <code>bb-template</code> attribute, an
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;TemplateTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;TemplateTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
     $scope.locals = {
         template: &#x27;{0} is an important number. {1} is important, too, but not as important as {0}.&#x27;,
         number1: &#x27;39,210&#x27;,
         number2: &#x27;78&#x27;
     };
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('TemplateTestController', ['$scope', function ($scope) {
+          <script>angular.module('stache').controller('TemplateTestController', ['$scope', function ($scope) {
     $scope.locals = {
         template: '{0} is an important number. {1} is important, too, but not as important as {0}.',
         number1: '39,210',
         number2: '78'
     };
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -4656,7 +4829,7 @@ The string template is specified with the <code>bb-template</code> attribute, an
                         <pre><code data-language="javascript" ng-non-bindable>/*jslint browser: true, plusplus: true */
 /*global angular */
 
-angular.module(&#x27;KitchenSink&#x27;)
+angular.module(&#x27;stache&#x27;)
     .controller(&#x27;ReadMoreTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
         &#x27;use strict&#x27;;
 
@@ -4665,7 +4838,8 @@ angular.module(&#x27;KitchenSink&#x27;)
             repeaterData: [{ text: &#x27;Repeater item 1&#x27; }, { text: &#x27;Repeater item 2&#x27; }, { text: &#x27;Repeater item 3&#x27; }, { text: &#x27;Repeater item 4&#x27; }, { text: &#x27;Repeater item 5&#x27; }]
             //longText: &#x27;a\nb&#x27;
         };
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
@@ -4675,7 +4849,7 @@ angular.module(&#x27;KitchenSink&#x27;)
           <script>/*jslint browser: true, plusplus: true */
 /*global angular */
 
-angular.module('KitchenSink')
+angular.module('stache')
     .controller('ReadMoreTestController', ['$scope', function ($scope) {
         'use strict';
 
@@ -4684,7 +4858,8 @@ angular.module('KitchenSink')
             repeaterData: [{ text: 'Repeater item 1' }, { text: 'Repeater item 2' }, { text: 'Repeater item 3' }, { text: 'Repeater item 4' }, { text: 'Repeater item 5' }]
             //longText: 'a\nb'
         };
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -4792,11 +4967,11 @@ angular.module('KitchenSink')
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;).controller(&#x27;TileTestController&#x27;, [&#x27;bbModal&#x27;, &#x27;$scope&#x27;, function (bbModal, $scope) {
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;).controller(&#x27;TileTestController&#x27;, [&#x27;bbModal&#x27;, &#x27;$scope&#x27;, function (bbModal, $scope) {
     $scope.resources = {
         tile_header: &#x27;Tile header&#x27;
     };
-    
+
     $scope.locals = {
         is_collapsed: false,
         openSettings: function () {
@@ -4824,18 +4999,19 @@ angular.module('KitchenSink')
                       &#x27;&lt;/bb-modal&gt;&#x27;
         });
     };
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink').controller('TileTestController', ['bbModal', '$scope', function (bbModal, $scope) {
+          <script>angular.module('stache').controller('TileTestController', ['bbModal', '$scope', function (bbModal, $scope) {
     $scope.resources = {
         tile_header: 'Tile header'
     };
-    
+
     $scope.locals = {
         is_collapsed: false,
         openSettings: function () {
@@ -4863,7 +5039,8 @@ angular.module('KitchenSink')
                       '</bb-modal>'
         });
     };
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -4926,7 +5103,7 @@ angular.module('KitchenSink')
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
 .controller(&#x27;ToastTestController&#x27;, [&#x27;$scope&#x27;, &#x27;bbToast&#x27;, &#x27;$templateCache&#x27;, function ($scope, bbToast, $templateCache) {
     $templateCache.put(&#x27;bbToast/samples/complexToast.html&#x27;,
         &#x27;&lt;div&gt;&#x27; +
@@ -4958,14 +5135,15 @@ angular.module('KitchenSink')
     $interval(function () {
         $scope.timeOpen += 1;
     }, 1000);
-}]);</code></pre>
+}]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
 .controller('ToastTestController', ['$scope', 'bbToast', '$templateCache', function ($scope, bbToast, $templateCache) {
     $templateCache.put('bbToast/samples/complexToast.html',
         '<div>' +
@@ -4997,7 +5175,8 @@ angular.module('KitchenSink')
     $interval(function () {
         $scope.timeOpen += 1;
     }, 1000);
-}]);</script>
+}]);
+</script>
         </div>
       </div>
       <br />
@@ -5056,7 +5235,7 @@ to define markup in a template rather than directly in the view's controller.</p
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .run([&#x27;$templateCache&#x27;, function ($templateCache) {
         // Typically this would either point to a URL or generated using a Grunt task like html2js.  For demo
         // purposes we&#x27;ll just manually put the template in the cache.
@@ -5072,14 +5251,15 @@ to define markup in a template rather than directly in the view's controller.</p
     .controller(&#x27;TooltipTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
         $scope.tooltipTitle = &#x27;Tooltip title&#x27;;
         $scope.tooltipMessage = &#x27;Tooltip content.&#x27;;
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .run(['$templateCache', function ($templateCache) {
         // Typically this would either point to a URL or generated using a Grunt task like html2js.  For demo
         // purposes we'll just manually put the template in the cache.
@@ -5095,7 +5275,8 @@ to define markup in a template rather than directly in the view's controller.</p
     .controller('TooltipTestController', ['$scope', function ($scope) {
         $scope.tooltipTitle = 'Tooltip title';
         $scope.tooltipMessage = 'Tooltip content.';
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -5171,15 +5352,16 @@ to define markup in a template rather than directly in the view's controller.</p
                       <div>
                         <pre><code data-language="javascript" ng-non-bindable>/*global angular */
 
-angular.module(&#x27;KitchenSink&#x27;)
+angular.module(&#x27;stache&#x27;)
     .controller(&#x27;ValidationTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
         &#x27;use strict&#x27;;
-        
+
         $scope.locals = {
             email: &#x27;&#x27;
         };
-        
-    }]);</code></pre>
+
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
@@ -5188,15 +5370,16 @@ angular.module(&#x27;KitchenSink&#x27;)
           </section>
           <script>/*global angular */
 
-angular.module('KitchenSink')
+angular.module('stache')
     .controller('ValidationTestController', ['$scope', function ($scope) {
         'use strict';
-        
+
         $scope.locals = {
             email: ''
         };
-        
-    }]);</script>
+
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -5366,7 +5549,7 @@ This service supports the following functions</p>
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .controller(&#x27;WaitDemoController&#x27;, [&#x27;$scope&#x27;, &#x27;$timeout&#x27;, &#x27;bbWait&#x27;, function ($scope, $timeout, bbWait) {
 
         $scope.waitCount = 0;
@@ -5413,14 +5596,15 @@ This service supports the following functions</p>
             }, 1000);
         };
 
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .controller('WaitDemoController', ['$scope', '$timeout', 'bbWait', function ($scope, $timeout, bbWait) {
 
         $scope.waitCount = 0;
@@ -5467,7 +5651,8 @@ This service supports the following functions</p>
             }, 1000);
         };
 
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />
@@ -5625,7 +5810,7 @@ This service supports the following functions</p>
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;KitchenSink&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .controller(&#x27;WizardTestController&#x27;, [&#x27;$scope&#x27;, &#x27;bbModal&#x27;, function ($scope, bbModal) {
         $scope.locals = {
             openForm: function () {
@@ -5689,14 +5874,15 @@ This service supports the following functions</p>
                 return !!$scope.locals.requiredValue2;
             }
         };
-    }]);</code></pre>
+    }]);
+</code></pre>
                       </div>
                     </tab>
                 </tabset>
               </div>
             </div>
           </section>
-          <script>angular.module('KitchenSink')
+          <script>angular.module('stache')
     .controller('WizardTestController', ['$scope', 'bbModal', function ($scope, bbModal) {
         $scope.locals = {
             openForm: function () {
@@ -5760,7 +5946,8 @@ This service supports the following functions</p>
                 return !!$scope.locals.requiredValue2;
             }
         };
-    }]);</script>
+    }]);
+</script>
         </div>
       </div>
       <br />

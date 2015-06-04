@@ -1,6 +1,6 @@
 {
   "name": "bb-sky",
-  "version": "1.0.37",
+  "version": "1.0.38",
   "private": true,
   "dependencies": {
     "jquery": "~2.1.3",
@@ -23,7 +23,7 @@
     "angular-ui-router": "~0.2.13"
   },
   "devDependencies": {
-    "angular-ui-select": "~0.11.1",
+    "angular-ui-select": "~0.11.2",
     "angular-mocks": "~1.3.14",
     "ui-select": "*",
     "jasmine-jquery": "~2.1.0",

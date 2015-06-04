@@ -10,7 +10,7 @@
 @import "FontAwesome/font-awesome";
 
 // Google Fonts
-@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amplang=en");
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Oswald:300,400,700");
 
 // Variables, Mixins
 @import "Inspinia/variables";
@@ -39,7 +39,6 @@
 @import "_grid";
 @import "tables";
 @import "spinning";
-@import "imports";
 @import "navigation";
 @import "pagination";
 @import "tile";

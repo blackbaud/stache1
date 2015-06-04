@@ -1119,9 +1119,14 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                     };
 
                     locals.clear = function () {
-                        var selected = $scope.bbChecklistSelectedItems;
-                        while (selected.length) {
-                            selected.pop();
+                        var i,
+                            item,
+                            items = $scope.bbChecklistItems,
+                            selected = $scope.bbChecklistSelectedItems;
+
+                        for (i = 0; i < items.length; i += 1) {
+                            item = items[i];
+                            remove(selected, item);
                         }
                     };
 
@@ -2909,7 +2914,12 @@ reloading the grid with the current data after the event has fired.
                         function mediaBreakpointHandler(newBreakpoints) {
                             breakpoints = newBreakpoints;
                             if ($scope.options && $scope.options.selectedColumnIds && $scope.options.selectedColumnIds.length > 0 && tableEl[0].grid) {
-                                reinitializeGrid();
+                                
+                                initGrid();
+
+                                if ($scope.options.data && $scope.options.data.length > 0) {
+                                    setRows($scope.options.data);
+                                }
                             }
                         }
 
@@ -3915,6 +3925,12 @@ reloading the grid with the current data after the event has fired.
                             /*istanbul ignore else: sanity check */
                             if (tableDomEl.addJSONData) {
                                 loadColumnTemplates(function () {
+                                    
+                                    if (locals.multiselect) {
+                                        element.find('td').off('mousedown.gridmousedown');  
+                                    }
+                                    
+                                    
                                     refreshMultiselect();
                                     
                                     destroyFancyCheck();
@@ -3925,8 +3941,19 @@ reloading the grid with the current data after the event has fired.
                                     handleTableWrapperResize();
                                     /*istanbul ignore next: sanity check */
                                     updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
+
+                                    if (locals.multiselect) {
+                                        //This prevents annoying highlighting on IE when trying to shift click
+                                        element.find('td').on('mousedown.gridmousedown', function () {
+
+                                            this.onselectstart = function () { 
+                                                return false; 
+                                            };
                                     
-                                    element.find('td').attr('unselectable', 'on');
+                                        });
+                                    }
+                                   
+                                    
                                     
                                     setUpFancyCheckCell();
 
@@ -3989,26 +4016,10 @@ reloading the grid with the current data after the event has fired.
                         //Apply unique id to the table.  ID is required by jqGrid.
                         toolbarContainer.attr('id', toolbarContainerId);
 
-                        function reinitializeGrid() {
-                            var columnChangedData;
-                            
-                            initGrid();
-
-                            // As an optimization, allow the consumer to specify whether changing columns will cause the row data to be
-                            // re-evaluated so the grid won't automatically be reloaded with existing data.
-                            columnChangedData = {
-                                willResetData: false
-                            };
-
-                            $scope.$emit('includedColumnsChanged', columnChangedData);
-
-                            if (!columnChangedData.willResetData && $scope.options.data) {
-                                // Data won't change as a result of the columns changing; reload existing data.
-                                setRows($scope.options.data);
-                            }
-                        }
                         
                         $scope.$watch('options.selectedColumnIds', function (newValue) {
+                            var columnChangedData;
+                            
                             /*istanbul ignore else: sanity check */
                             if (newValue) {
                                 if (reorderingColumns) {
@@ -4016,7 +4027,20 @@ reloading the grid with the current data after the event has fired.
                                     return;
                                 }
                                 
-                                reinitializeGrid();
+                                initGrid();
+                                
+                                // re-evaluated so the grid won't automatically be reloaded with existing data.
+                                columnChangedData = {
+                                    willResetData: false
+                                };
+
+                                $scope.$emit('includedColumnsChanged', columnChangedData);
+
+                                
+                                if (!columnChangedData.willResetData && $scope.options.data && $scope.options.data.length > 0) {
+                                    // Data won't change as a result of the columns changing; reload existing data.
+                                    setRows($scope.options.data);
+                                }
                             }
                         }, true);
                         
@@ -4788,8 +4812,6 @@ This directive is no longer being maintained.  For formatting currency in a text
 
  - **[autoNumeric](http://www.decorplanit.com/plugin/) (1.9.27 or higher)** Used to format money values
 
----
-
 The Money Input directive formats currency values as the user types in the input field.  The formatting options can be set globally using the `bbMoneyConfig` service.
 
 ### Config Options ###
@@ -4799,7 +4821,7 @@ The Money Input directive formats currency values as the user types in the input
  - `currencyDecimalSeparator` *(Default: `.`)* The character to display before the decimal digits.
  - `currencyGroupSize` *(Default: `3`)* The number of digits each group should contain before displaying the group separator character.
  - `currencyGroupSeparator` *(Default: `,`)* The character to display between groups.
- - `currencySymbol` *(Default: `$`)* The symbol that represents the value's currency type.
+ - `currencySymbol` *(Default: `&#36;`)* The symbol that represents the value's currency type.
  </s>
  */
 
