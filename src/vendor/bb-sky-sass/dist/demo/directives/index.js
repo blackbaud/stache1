@@ -4,7 +4,7 @@
 (function () {
     'use strict';
 
-    angular.module('KitchenSink', ['sky', 'ui.bootstrap', 'ui.router', 'ngAnimate', 'ui.select'])
+    angular.module('stache', ['sky', 'ui.bootstrap', 'ui.router', 'ngAnimate', 'ui.select'])
         .run(['bbOmnibarConfig', 'bbHelpwidgetConfig', 'bbScrollIntoViewConfig', function (bbOmnibarConfig, bbHelpwidgetConfig, bbScrollIntoViewConfig) {
             bbOmnibarConfig.enableSearch = true;
             bbOmnibarConfig.enableHelp = true;
