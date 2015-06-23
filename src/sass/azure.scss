@@ -6,6 +6,7 @@
 
 @import "_variables";
 @import "bb-sky-sass/scss/_variables";
+@import "bootstrap-sass/assets/stylesheets/bootstrap/_buttons";
 @import "bootstrap-sass/assets/stylesheets/bootstrap/_variables";
 
 @import "_omnibar";
@@ -118,6 +119,10 @@ h5 {
   padding: 0;
 }
 
+.tab-content {
+  margin-top: 0;
+}
+
 /*
 * ==========================================================================
 * LAYOUT
@@ -148,7 +153,7 @@ h5 {
 
 /*
 * ==========================================================================
-* NAVIGATION
+* MAIN NAVIGATION
 * ==========================================================================
 */
 
@@ -182,34 +187,33 @@ h5 {
   padding-bottom: 11px;
 }
 
+/*
+* ==========================================================================
+* SIDEBAR NAVIGATION
+* ==========================================================================
+*/
+
 .zone-aside-first {
   background: #FFF;
 }
 
-.zone-aside-first .navbar-nav,
-.zone-aside-first .navbar-nav li {
-  float: none;
+.zone-aside-first .zone-pills li {
+  margin: 0;
 }
 
-.zone-aside-first .nav-pills {
-  border-top: solid 1px #EFEFEF;
-  margin-top: 10px;
-  padding-top: 10px;
-}
-
-.zone-aside-first .navbar-nav li a,
 .zone-aside-first .nav-pills li a {
   color: #a7b1c2;
+  border-left: transparent solid 5px;
   display: block;
   font-weight: 600;
   font-size: 13px;
-  padding: 6px 5px 9px 16px;
+  margin: 10px 5px;
+  padding: 0 5px;
 }
 
-.zone-aside-first .navbar-nav li.active a,
 .zone-aside-first .nav-pills li.active a {
-  background: #293846;
-  border-left: 4px solid #19aa8d;
+  background: none;
+  border-left-color: $blue;
 }
 
 .zone-aside-first .navbar-nav li a:hover,
@@ -218,6 +222,6 @@ h5 {
 .zone-aside-first .navbar-nav li.active a:focus,
 .zone-aside-first .nav-pills li.active a:hover,
 .zone-aside-first .nav-pills li.active a:focus {
-  background: #cccccc;
-  color: #293846;
+  background: none;
+  color: #a7b1c2;
 }
