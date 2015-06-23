@@ -181,6 +181,14 @@ module.exports = function (grunt) {
             cwd: '<%= stache.config.static %>',
             src: '**/*.*',
             dest: '<%= stache.config.build %>'
+          },
+          {
+            src: '<%= stache.config.src %>css/azure.css',
+            dest: '<%= stache.config.build %>css/azure.css'
+          },
+          {
+            src: '<%= stache.config.src %>js/azure.js',
+            dest: '<%= stache.config.build %>js/azure.js'
           }
         ]
       }
