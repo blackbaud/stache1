@@ -130,6 +130,32 @@ module.exports.register = function (Handlebars, options, params) {
     return text ? text.replace(/\r\n/g, '\n') : '';
   }
 
+  /**
+  * Function for arranging an array for vertical display.
+  **/
+  function forVertical (arr, cols) {
+
+    var temp;
+    var r = [];
+    var row = 0;
+    var col = 0;
+    var len = arr.length;
+    var rows = Math.ceil(len / cols);
+
+    while (row < rows) {
+      temp = row + (col * rows);
+      if (temp >= len) {
+        row++;
+        col = 0;
+      } else {
+        r.push(arr[temp]);
+        col++;
+      }
+    }
+
+    return r;
+  }
+
   Handlebars.registerHelper({
 
     /**
@@ -269,45 +295,54 @@ module.exports.register = function (Handlebars, options, params) {
       return Handlebars.helpers.eachWithMod(active, options);
     },
 
-    /**
-    * A supplement to the normal each.  Adds modulus parameters:
-    *   - firstOrMod0
-    *   - lastOrMod1
-    **/
     eachWithMod: function (context, options) {
       var r = '',
+        slim = [],
         counter = 0,
         i = 0,
         m = 0,
         mod = options.hash.mod || 0,
         limit = options.hash.limit || -1,
+        layout = options.hash.layout || 'horizontal',
         j;
 
       if (context && context.length) {
+
         j = context.length;
         for (i; i < j; i++) {
 
+          // Don't go past our limit
           if (limit !== -1 && counter >= limit) {
             break;
           }
 
+          // Make sure the page doesn't say ignore
           var show = true;
           if (typeof context[i].showInNav !== 'undefined' && context[i].showInNav === false) {
             show = false;
           }
 
-
          if (show) {
-            m = counter % mod;
-            context[i].first = counter === 0;
-            context[i].last = counter === j - 1;
-            context[i].mod0 = m === 0;
-            context[i].mod1 = m === mod - 1;
-            context[i].firstOrMod0 = context[i].first || context[i].mod0;
-            context[i].lastOrMod1 = context[i].last || context[i].mod1;
-            r += options.fn(context[i]);
-            counter++;
+           slim.push(context[i]);
+           counter++;
           }
+        }
+
+        // Organize vertically
+        if (layout === 'vertical' && mod > 0) {
+          slim = forVertical(slim, mod);
+        }
+
+        // Display the real items
+        for (i = 0, j = slim.length; i < j; i++) {
+          m = i % mod;
+          slim[i].first = i === 0;
+          slim[i].last = i === j - 1;
+          slim[i].mod0 = m === 0;
+          slim[i].mod1 = m === mod - 1;
+          slim[i].firstOrMod0 = slim[i].first || slim[i].mod0;
+          slim[i].lastOrMod1 = slim[i].last || slim[i].mod1;
+          r += options.fn(slim[i]);
         }
       }
       return r;
