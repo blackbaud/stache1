@@ -109,7 +109,7 @@
 }
 
 .zone-aside-first .nav-pills li a {
-  color: #a7b1c2;
+  color: #8c8f90;
   border-left: transparent solid 5px;
   border-radius: 0;
   display: block;
@@ -119,9 +119,12 @@
   padding: 0 5px;
 }
 
-.zone-aside-first .nav-pills li.active a {
+.zone-aside-first .nav-pills li.active a,
+.zone-aside-first .nav-pills li.acitve a:hover,
+.zone-aside-first .nav-pills li.active a:focus {
   background: none;
   border-left-color: $blue;
+  color: #8c8f90;
   font-weight: 700;
 }
 
@@ -129,12 +132,10 @@
 .zone-aside-first .navbar-nav li a:focus,
 .zone-aside-first .navbar-nav li.active a:hover,
 .zone-aside-first .navbar-nav li.active a:focus,
-.zone-aside-first .nav-pills li.active a:hover,
-.zone-aside-first .nav-pills li.active a:focus,
 .zone-aside-first .nav > li > a:hover,
 .zone-aside-first .nav > li > a:focus {
   background: none;
-  color: #a7b1c2;
+  color: #8c8f90;
 }
 
 /*
