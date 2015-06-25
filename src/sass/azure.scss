@@ -154,6 +154,7 @@
   padding-top: 60px;
 }
 
+.zone-aside-first .badge-default,
 .zone-aside-first .badge-success,
 .zone-aside-first .badge-warning,
 .zone-aside-first .badge-danger,
@@ -161,18 +162,22 @@
   color: #FFF !important;
 }
 
+.zone-aside-first .badge-default {
+  background-color: #d1dade !important;
+}
+
 .zone-aside-first .badge-success {
-  background-color: $blue !important;
+  background-color: #5cb85c !important;
 }
 
 .zone-aside-first .badge-warning {
-  background-color: $yellow !important;
+  background-color: #f0ad4e !important;
 }
 
 .zone-aside-first .badge-danger {
-  background-color: $red !important;
+  background-color: #d9534f !important;
 }
 
 .zone-aside-first .badge-info {
-  background-color: $lazur !important;
+  background-color: #5bc0de !important;
 }
