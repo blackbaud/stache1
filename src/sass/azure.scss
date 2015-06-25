@@ -37,10 +37,6 @@
   margin-top: 0;
 }
 
-.zone-aside-first .badge {
-  display: none;
-}
-
 .snippet {
   height: auto;
 }
@@ -156,4 +152,27 @@
 
 .showcase {
   padding-top: 60px;
+}
+
+.zone-aside-first .badge-success,
+.zone-aside-first .badge-warning,
+.zone-aside-first .badge-danger,
+.zone-aside-first .badge-info {
+  color: #FFF !important;
+}
+
+.zone-aside-first .badge-success {
+  background-color: $blue !important;
+}
+
+.zone-aside-first .badge-warning {
+  background-color: $yellow !important;
+}
+
+.zone-aside-first .badge-danger {
+  background-color: $red !important;
+}
+
+.zone-aside-first .badge-info {
+  background-color: $lazur !important;
 }
