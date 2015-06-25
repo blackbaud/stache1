@@ -9,10 +9,10 @@ $nav-item-padding: 16px;
 $nav-selected-border-width: 4px;
 
 .bb-navbar {
-    margin-bottom: $margin-double;
     border-bottom: 1px solid $light-gray;
     background-color: $nav-bg;
-
+    margin-bottom: 0;
+    
     @media (max-width: $screen-xs-max) {
         &:not(.bb-navbar-showmobile) {
             display: none;

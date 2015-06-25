@@ -47,6 +47,14 @@ h6,
     font-weight: 600;
     margin-bottom: 10px;
 }
+
+/* Bootstrap class */
+.page-header {
+    border-bottom: none;
+    margin: $margin-double 0;
+    padding-bottom: 0;
+}
+
 /*End Headings*/
 
 /* Links */
@@ -111,19 +119,25 @@ input, textarea, select {
 
 /* End Data Elements */
 
-/*//$screen-xs-max
+//$screen-xs-max
 @media (max-width: $screen-xs-max) {
-    .page-content-column-container, .page-content-column, .page-content-tile-column {
-        margin-left: -($grid-gutter-width / 2);
-        margin-right: -($grid-gutter-width / 2);
+    .bb-page-content-column-container,
+    .bb-page-content-column,
+    .bb-page-content-tile-column {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
     }
-}*/
-
-//$screen-sm-min
-@media (min-width: $screen-sm-min) {
-    .page-content-column-container, .page-content-column, .page-content-tile-column {
-        padding-left: $padding;
-        padding-right: $padding;
+    
+    // Since we remove the gutters on the sides of tiles on small screens, we need to remove
+    // the right margin and padding from the header so it doesn't create a horizontal scroll.
+    .bb-tile .ibox-title > .row {
+        margin-right: 0;
+    }
+    
+    .bb-tile-header-column-tools {
+        padding-right: 0;
     }
 }
 
@@ -221,16 +235,12 @@ label.error {
     font-family: 'Open Sans';
     font-size: 14px;
     font-weight: 600;
-    min-height: 34px;
-    min-width: 76px;
 }
 
 .btn-white {
     color: #676a6c;
     font-family: 'Open Sans';
     font-size: 14px;
-    min-height: 34px;
-    min-width: 76px;
 }
 
 .btn-link {
@@ -238,7 +248,7 @@ label.error {
     font-family: 'Open Sans';
     font-size: 14px;
     padding: 0;
-
+    
     &:hover {
         color: $link-hover-color;
     }
@@ -254,8 +264,4 @@ dt {
     margin: 0;
     padding: 0;
     min-height: 0;
-}
-
-.page-content-header {
-    padding: 0 $padding $padding-double $padding;
 }

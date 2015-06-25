@@ -4,7 +4,7 @@
 
 @description ### Additional dependencies ###
 
-- **[enquire.js](http://wicky.nillia.ms/enquire.js/) (2.1.2 or later)**
+- None
 
 ---
 
@@ -17,7 +17,7 @@
 
 (function () {
     'use strict';
-    angular.module('sky.actionbar', ['sky.mediabreakpoints', 'sky.resources'])
+    angular.module('sky.actionbar', ['sky.resources'])
         .directive('bbActionBar', [
             function () {
                 return {
@@ -27,8 +27,8 @@
                 };
             }
         ])
-        .directive('bbActionBarItemGroup', ['bbMediaBreakpoints', 'bbResources',
-            function (bbMediaBreakpoints, bbResources) {
+        .directive('bbActionBarItemGroup', ['bbResources',
+            function (bbResources) {
                 return {
                     replace: true,
                     transclude: true,
@@ -44,19 +44,9 @@
                         };
                     },
                     link: function ($scope) {
-                        function mediaBreakpointHandler(newBreakpoints) {
-                            $scope.locals.isCollapsed = newBreakpoints.xs;
-                        }
-
                         if ($scope.title === null || angular.isUndefined($scope.title)) {
                             $scope.title = bbResources.action_bar_actions;
                         }
-
-                        $scope.locals = {
-                            isCollapsed: false
-                        };
-
-                        bbMediaBreakpoints.register(mediaBreakpointHandler);
                     },
                     templateUrl: 'sky/templates/actionbar/actionbaritemgroup.html'
                 };
@@ -2823,8 +2813,7 @@ reloading the grid with the current data after the event has fired.
         MULTISELECT_COLUMN_SIZE = 35,
         DROPDOWN_TOGGLE_COLUMN_SIZE = 40,
         DROPDOWN_TOGGLE_COLUMN_NAME = 'dropdownToggle',
-        MULTISELECT_COLUMN_NAME = 'cb',
-        TOP_SCROLLBAR_HEIGHT = 18;
+        MULTISELECT_COLUMN_NAME = 'cb';
 
     angular.module('sky.grids', ['sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters', 'sky.grids.actionbar'])
         .directive('bbGrid', ['bbModal', '$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout',
@@ -2985,7 +2974,7 @@ reloading the grid with the current data after the event has fired.
 
                             //if this column does not allow search then add the appropriate class. This is used when highlighting search results
                             if (column.exclude_from_search) {
-                                classes += "bb-grid-no-search grid-no-search ";
+                                classes += "bb-grid-no-search ";
                             }
 
                             return classes;
@@ -3095,7 +3084,7 @@ reloading the grid with the current data after the event has fired.
 
                             if (getContextMenuItems) {
                                 colModel.push({
-                                    classes: 'grid-dropdown-cell bb-grid-dropdown-cell',
+                                    classes: 'bb-grid-dropdown-cell',
                                     fixed: true,
                                     sortable: false,
                                     name: DROPDOWN_TOGGLE_COLUMN_NAME,
@@ -3206,14 +3195,20 @@ reloading the grid with the current data after the event has fired.
                             return width;
                         }
 
-                        function getScrollbarHeight() {
-                            return (totalColumnWidth > (topScrollbar.width())) && !breakpoints.xs ? TOP_SCROLLBAR_HEIGHT : 0;
+                        function setScrollbarHeight() {
+                            
+                            if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
+                                topScrollbar.addClass('bb-grid-scrollbar-visible');
+                                topScrollbarDiv.addClass('bb-grid-scrollbar-visible');
+                            } else {
+                                topScrollbar.removeClass('bb-grid-scrollbar-visible');
+                                topScrollbarDiv.removeClass('bb-grid-scrollbar-visible');
+                            }
                         }
 
                         function resetTopScrollbar() {
                             topScrollbarDiv.width(totalColumnWidth);
-                            topScrollbarDiv.height(getScrollbarHeight());
-                            topScrollbar.height(getScrollbarHeight());
+                            setScrollbarHeight();
                         }
 
                         function resizeExtendedColumn(changedWidth, isIncreasing) {
@@ -3544,7 +3539,11 @@ reloading the grid with the current data after the event has fired.
                             //Need to account for context menu if it exists.  It will always be the first
                             //column before and after the reorder
                             if (angular.isFunction(getContextMenuItems)) {
-                                offset = 1;
+                                offset += 1;
+                            }
+                            
+                            if (locals.multiselect) {
+                                offset += 1;
                             }
 
                             for (i = offset; i < orderedColumns.length; i++) {
@@ -4049,7 +4048,7 @@ reloading the grid with the current data after the event has fired.
                             });
 
                             vkActionBarAndBackToTop = new bbViewKeeperBuilder.create({
-                                el: element.find('.grid-action-bar-and-back-to-top')[0],
+                                el: element.find('.bb-grid-action-bar-and-back-to-top')[0],
                                 boundaryEl: element[0],
                                 setWidth: true,
                                 verticalOffSetElId: verticalOffSetElId,
@@ -4179,7 +4178,7 @@ reloading the grid with the current data after the event has fired.
                                 vkHeader.syncElPosition();
                             }
 
-                            if (header.hasClass('viewkeeper-fixed')) {
+                            if (header.hasClass('bb-viewkeeper-fixed')) {
                                 header.scrollLeft(tableWrapper.scrollLeft());
                             }
 
@@ -4194,7 +4193,7 @@ reloading the grid with the current data after the event has fired.
 
                         topScrollbar.on('scroll', function () {
                             tableWrapper.scrollLeft(topScrollbar.scrollLeft());
-                            if (header.hasClass('viewkeeper-fixed')) {
+                            if (header.hasClass('bb-viewkeeper-fixed')) {
                                 header.scrollLeft(topScrollbar.scrollLeft());
                             }
                         });
@@ -4583,7 +4582,8 @@ manipulating the UI programmatically in cases where CSS media queries are not su
         },
         bp = {},
         handlers = [],
-        mediaBreakpoints;
+        mediaBreakpoints,
+        timeout;
 
     function updateStatus(newSize) {
         var handler,
@@ -4599,6 +4599,11 @@ manipulating the UI programmatically in cases where CSS media queries are not su
             if (handler) {
                 handler(bp);
             }
+        }
+        
+        // Trigger a digest cycle if it's available
+        if (timeout) {
+            timeout(angular.noop, 0);
         }
     }
 
@@ -4629,7 +4634,6 @@ manipulating the UI programmatically in cases where CSS media queries are not su
         }
     }));
 
-
     mediaBreakpoints = {
         register: function (callback) {
             handlers.push(callback);
@@ -4656,9 +4660,10 @@ manipulating the UI programmatically in cases where CSS media queries are not su
 
     angular.module('sky.mediabreakpoints', [])
         .constant('bbMediaBreakpointsConfig', mediaBreakpointsConfig)
-        .factory('bbMediaBreakpoints', function () {
+        .factory('bbMediaBreakpoints', ['$timeout', function ($timeout) {
+            timeout = $timeout;
             return mediaBreakpoints;
-        });
+        }]);
 }(this));
 /*jshint browser: true */
 /*global angular, jQuery */
@@ -5664,6 +5669,10 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
                 }
             }
             
+            function getHtmlOrBodyScrollTop() {
+                return angular.element('html').scrollTop() || angular.element('body').scrollTop();
+            }
+            
             function scrollIntoView(el, options) {
                 var currentScrollTop,
                     elBottom,
@@ -5710,7 +5719,11 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
                     reservedTop += 50;
                 }
                 
-                currentScrollTop = parentEl.scrollTop();
+                if (parentElIsBody) {
+                    currentScrollTop = getHtmlOrBodyScrollTop();
+                } else {
+                    currentScrollTop = parentEl.scrollTop();
+                }
                 
                 elOffset = el.offset();
                 elHeight = el.outerHeight();
@@ -5745,7 +5758,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
 
                     elToScroll.animate(
                         {
-                            scrollTop: newScrollTop
+                            scrollTop: Math.round(newScrollTop)
                         },
                         {
                             duration: 250,
@@ -7002,7 +7015,7 @@ When used on forms, it automatically adjusts the background color on the form an
                             //   this will ensure that the tile is styled corretly and the tile is completely collapsed
                             $timeout(function () {
                                 var contentEl;
-                                contentEl = el.find('.tile-content');
+                                contentEl = el.find('.bb-tile-content');
                                 contentEl.removeClass('collapsing').addClass('collapse');
                             }, 1);
                         }
@@ -7133,7 +7146,7 @@ When used on forms, it automatically adjusts the background color on the form an
             return {
                 restrict: 'A',
                 template: function (el) {
-                    el.addClass('tile-content-section');
+                    el.addClass('bb-tile-content-section');
                 }
             };
         })
@@ -7193,10 +7206,10 @@ When used on forms, it automatically adjusts the background color on the form an
                         layoutTiles();
 
                         if (singleColumnMode) {
-                            element.removeClass('page-content-multicolumn');
+                            element.removeClass('bb-page-content-multicolumn');
                             column2.hide();
                         } else {
-                            element.addClass('page-content-multicolumn');
+                            element.addClass('bb-page-content-multicolumn');
                             column2.show();
                         }
 
@@ -7210,7 +7223,7 @@ When used on forms, it automatically adjusts the background color on the form an
                         connectWith: '[data-dashboard-column]',
                         update: parseColumnTiles,
                         opacity: 0.8,
-                        handle: '.tile-grab-handle',
+                        handle: '.bb-tile-grab-handle',
                         placeholder: 'placeholder ibox',
                         forcePlaceholderSize: true,
                         revert: 250
@@ -7548,7 +7561,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
 (function () {
     'use strict';
 
-    var CLS_VIEWKEEPER_FIXED = 'bb-viewkeeper-fixed viewkeeper-fixed',
+    var CLS_VIEWKEEPER_FIXED = 'bb-viewkeeper-fixed',
         config = {
             viewportMarginTop: 0
         },
@@ -7854,9 +7867,9 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                 //On iOS we need to have special handling when entering textboxes to correct an issue with fixed
                 //elements used by view keeper when the keyboard flys out.
                 angular.element(document).on('focus', 'input', function () {
-                    angular.element('body').addClass('bb-viewkeeper-ignore-fixed viewkeeper-ignore-fixed');
+                    angular.element('body').addClass('bb-viewkeeper-ignore-fixed');
                 }).on('blur', 'input', function () {
-                    angular.element('body').removeClass('bb-viewkeeper-ignore-fixed viewkeeper-ignore-fixed');
+                    angular.element('body').removeClass('bb-viewkeeper-ignore-fixed');
                 });
             } else {
                 bbMediaBreakpoints.register(mediaBreakpointHandler);
@@ -7951,7 +7964,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                             if (element.height() + verticalOffset < $window.innerHeight) {
                                 tempTop = 0;
 
-                                element.removeClass('bb-grid-filters-fixed-bottom grid-filters-fixed-bottom').addClass('bb-grid-filters-fixed-top grid-filters-fixed-top');
+                                element.removeClass('bb-grid-filters-fixed-bottom').addClass('bb-grid-filters-fixed-top');
 
                                 element.css({
                                     top: verticalOffset + 'px'
@@ -7963,7 +7976,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                                         tempTop = element.offset().top - elementStart;
                                     }
 
-                                    element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom grid-filters-fixed-top grid-filters-fixed-bottom');
+                                    element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom');
 
                                     element.css({
                                         top: tempTop
@@ -7973,7 +7986,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                                     element.css({
                                         top: ''
                                     });
-                                    element.removeClass('bb-grid-filters-fixed-top grid-filters-fixed-top').addClass('bb-grid-filters-fixed-bottom grid-filters-fixed-bottom');
+                                    element.removeClass('bb-grid-filters-fixed-top').addClass('bb-grid-filters-fixed-bottom');
                                 }
                             } else {
                                 if (element.offset().top < scrollPos + verticalOffset) {
@@ -7982,7 +7995,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                                         tempTop = element.offset().top - elementStart;
                                     }
 
-                                    element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom grid-filters-fixed-top grid-filters-fixed-bottom');
+                                    element.removeClass('bb-grid-filters-fixed-top bb-grid-filters-fixed-bottom ');
 
                                     element.css({
                                         top: tempTop
@@ -7990,7 +8003,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                                 } else {
                                     tempTop = 0;
 
-                                    element.removeClass('bb-grid-filters-fixed-bottom grid-filters-fixed-bottom').addClass('bb-grid-filters-fixed-top grid-filters-fixed-top');
+                                    element.removeClass('bb-grid-filters-fixed-bottom').addClass('bb-grid-filters-fixed-top');
 
                                     element.css({
                                         top: verticalOffset + 'px'
@@ -8689,10 +8702,10 @@ angular.module('sky.resources')
 angular.module('sky.templates', []).run(['$templateCache', function($templateCache) {
     $templateCache.put('sky/templates/actionbar/actionbaritemgroup.html',
         '<div class="bb-action-bar-group">\n' +
-        '    <div ng-show="!locals.isCollapsed">\n' +
+        '    <div class="hidden-xs">\n' +
         '        <ng-transclude/>\n' +
         '    </div>\n' +
-        '    <div ng-show="locals.isCollapsed">\n' +
+        '    <div class="hidden-sm hidden-md hidden-lg">\n' +
         '        <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">\n' +
         '            {{title}}<span class="caret"/>\n' +
         '        </button>\n' +
@@ -8700,7 +8713,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            <li ng-repeat="item in items" role="presentation"><a role="menuitem" ng-click="item.callback()" href="javascript:void(0)">{{item.content}}</a></li>\n' +
         '        </ul>\n' +
         '    </div>\n' +
-        '</span>');
+        '</span>\n' +
+        '');
     $templateCache.put('sky/templates/charts/scatterplot.html',
         '<div class="bb-chart-container">\n' +
         '    <div ng-style="moveBackStyle()" ng-show="moveBackVisible">\n' +
@@ -8717,29 +8731,29 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>');
     $templateCache.put('sky/templates/checklist/checklist.html',
         '<div>\n' +
-        '  <div ng-if="bbChecklistIncludeSearch" class="bb-checklist-filter-bar checklist-filter-bar">\n' +
+        '  <div ng-if="bbChecklistIncludeSearch" class="bb-checklist-filter-bar">\n' +
         '    <input type="text" maxlength="255" placeholder="{{bbChecklistSearchPlaceholder}}" ng-model="locals.searchText" ng-model-options="{debounce: bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">\n' +
         '  </div>\n' +
-        '  <div class="bb-checklist-filter-bar checklist-filter-bar">\n' +
-        '    <a class="bb-checklist-link checklist-link" data-bbauto-field="ChecklistSelectAll" href="#" ng-click="locals.selectAll()">{{locals.selectAllText}}</a>\n' +
-        '    <a class="bb-checklist-link checklist-link" data-bbauto-field="ChecklistClear" href="#" ng-click="locals.clear()">{{locals.clearAllText}}</a>\n' +
+        '  <div class="bb-checklist-filter-bar">\n' +
+        '    <a class="bb-checklist-link" data-bbauto-field="ChecklistSelectAll" href="#" ng-click="locals.selectAll()">{{locals.selectAllText}}</a>\n' +
+        '    <a class="bb-checklist-link" data-bbauto-field="ChecklistClear" href="#" ng-click="locals.clear()">{{locals.clearAllText}}</a>\n' +
         '  </div>\n' +
-        '  <div class="bb-checklist-wrapper checklist-wrapper">\n' +
-        '    <table class="table bb-checklist-table checklist-table">\n' +
+        '  <div class="bb-checklist-wrapper">\n' +
+        '    <table class="table bb-checklist-table">\n' +
         '      <thead>\n' +
         '        <tr>\n' +
-        '          <th class="bb-checklist-checkbox-column checklist-checkbox-column"></th>\n' +
+        '          <th class="bb-checklist-checkbox-column"></th>\n' +
         '          <th ng-repeat="column in locals.columns" class="{{column.class}}" ng-style="{\'width\': column.width}">{{column.caption}}</th>\n' +
         '        </tr>\n' +
         '      </thead>\n' +
         '      <tbody bb-highlight="locals.searchText" bb-highlight-beacon="locals.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklistItems.length}}">\n' +
-        '        <tr ng-repeat="item in bbChecklistItems" ng-click="locals.rowClicked(item);" class="bb-checklist-row checklist-row">\n' +
+        '        <tr ng-repeat="item in bbChecklistItems" ng-click="locals.rowClicked(item);" class="bb-checklist-row">\n' +
         '          <td><input bb-check type="checkbox" checklist-model="bbChecklistSelectedItems" checklist-value="item" ng-click="$event.stopPropagation();" data-bbauto-field="{{item[bbChecklistAutomationField]}}" /></td>\n' +
         '          <td ng-repeat="column in locals.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>\n' +
         '        </tr>\n' +
         '      </tbody>\n' +
         '    </table>\n' +
-        '    <div class="bb-checklist-no-items checklist-no-items" ng-if="!bbChecklistItems.length">{{locals.noItemsText || locals.defaultNoItemsText}}</div>\n' +
+        '    <div class="bb-checklist-no-items" ng-if="!bbChecklistItems.length">{{locals.noItemsText || locals.defaultNoItemsText}}</div>\n' +
         '  </div>\n' +
         '  <div ng-transclude></div>\n' +
         '</div>');
@@ -8758,27 +8772,27 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>');
     $templateCache.put('sky/templates/grids/actionbar.html',
         '<div ng-show="locals.showActionBar" data-bbauto-view="GridActionBar">\n' +
-        '    <div ng-if="!locals.showMobileActions" class="bb-grid-action-bar grid-action-bar">\n' +
-        '        <div ng-if="!locals.mobileButtons" class="bb-grid-action-bar-buttons grid-action-bar-buttons" ng-repeat="action in locals.actions">\n' +
-        '            <button class="btn" ng-class="{\'btn-success\': action.isPrimary, \'btn-white\': !action.isPrimary}" data-bbauto-field="{{action.automationId}}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
+        '    <div ng-if="!locals.showMobileActions" class="bb-grid-action-bar">\n' +
+        '        <div ng-if="!locals.mobileButtons" class="bb-grid-action-bar-buttons" ng-repeat="action in locals.actions">\n' +
+        '            <button class="btn" ng-class="{\'btn-primary\': action.isPrimary, \'btn-white\': !action.isPrimary}" data-bbauto-field="{{action.automationId}}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
         '        </div>\n' +
-        '        <div ng-if="locals.mobileButtons" class="bb-grid-action-bar-buttons grid-action-bar-buttons">\n' +
-        '            <button class="btn btn-success" ng-click="locals.chooseAction()">\n' +
+        '        <div ng-if="locals.mobileButtons" class="bb-grid-action-bar-buttons">\n' +
+        '            <button class="btn btn-primary" ng-click="locals.chooseAction()">\n' +
         '                <span class="sky-icon sky-icon-multi-action"></span>\n' +
         '                <span>{{resources.grid_action_bar_choose_action}}</span>\n' +
         '            </button>\n' +
         '        </div>\n' +
-        '        <button class="btn bb-grid-action-bar-clear-selection grid-action-bar-clear-selection" ng-click="locals.clearSelection()">\n' +
+        '        <button class="btn bb-grid-action-bar-clear-selection" ng-click="locals.clearSelection()">\n' +
         '            {{resources.grid_action_bar_clear_selection}}\n' +
         '        </button>\n' +
         '    </div>\n' +
-        '    <div ng-if="locals.showMobileActions" class="bb-grid-action-bar-mobile-buttons grid-action-bar-mobile-buttons">\n' +
-        '        <div class="bb-grid-action-bar-btn-container grid-action-bar-btn-container">\n' +
+        '    <div ng-if="locals.showMobileActions" class="bb-grid-action-bar-mobile-buttons">\n' +
+        '        <div class="bb-grid-action-bar-btn-container">\n' +
         '            <div ng-repeat="action in locals.actions">\n' +
-        '                <button class="bb-grid-action-bar-mobile-btn grid-action-bar-mobile-btn btn btn-block btn-lg" ng-class="{\'btn-success\': action.isPrimary, \'btn-white\': !action.isPrimary}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
+        '                <button class="bb-grid-action-bar-mobile-btn btn btn-block btn-lg" ng-class="{\'btn-primary\': action.isPrimary, \'btn-white\': !action.isPrimary}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
         '            </div>\n' +
         '        </div>\n' +
-        '        <button class="btn bb-grid-action-bar-mobile-cancel grid-action-bar-mobile-cancel bb-grid-action-bar-clear-selection grid-action-bar-clear-selection" ng-click="locals.cancelChooseAction()">\n' +
+        '        <button class="btn bb-grid-action-bar-mobile-cancel bb-grid-action-bar-clear-selection" ng-click="locals.cancelChooseAction()">\n' +
         '            {{resources.grid_action_bar_cancel_mobile_actions}}\n' +
         '        </button>\n' +
         '    </div>\n' +
@@ -8787,19 +8801,19 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<bb-modal data-bbauto-view="ColumnPicker">\n' +
         '  <bb-modal-header bb-modal-help-key="$parent.columnPickerHelpKey">{{resources.grid_column_picker_header}}</bb-modal-header>\n' +
         '  <div bb-modal-body>\n' +
-        '    <div class="bb-checklist-filter-bar checklist-filter-bar">\n' +
+        '    <div class="bb-checklist-filter-bar">\n' +
         '      <input type="text" placeholder="{{resources.grid_column_picker_search_placeholder}}" ng-model="locals.searchText" ng-change="applyFilters()" data-bbauto-field="ColumnPickerSearchBox">\n' +
         '    </div>\n' +
-        '    <div class="bb-checklist-filter-bar checklist-filter-bar">\n' +
+        '    <div class="bb-checklist-filter-bar">\n' +
         '      <button ng-repeat="category in categories" type="button" class="btn btn-sm" ng-click="filterByCategory(category)" ng-class="locals.selectedCategory === category ? \'btn-primary\' : \'btn-default\'" data-bbauto-field="{{category}}">{{category}}</button>\n' +
         '    </div>\n' +
-        '    <div class="bb-checklist-wrapper checklist-wrapper bb-grid-column-picker-wrapper grid-column-picker-wrapper">\n' +
-        '      <table data-bbauto-field="ColumnPickerTable" class="table bb-grid-column-picker-table grid-column-picker-table">\n' +
+        '    <div class="bb-checklist-wrapper bb-grid-column-picker-wrapper">\n' +
+        '      <table data-bbauto-field="ColumnPickerTable" class="table bb-grid-column-picker-table">\n' +
         '        <thead>\n' +
         '          <tr>\n' +
-        '            <th class="bb-checklist-checkbox-column checklist-checkbox-column"></th>\n' +
-        '            <th class="bb-checklist-name-column name-column" data-bbauto-field="ColumnNameHeader">{{resources.grid_column_picker_name_header}}</th>\n' +
-        '            <th class="bb-checklist-description-column description-column" data-bbauto-field="ColumnDescriptionHeader">{{resources.grid_column_picker_description_header}}</th>\n' +
+        '            <th class="bb-checklist-checkbox-column"></th>\n' +
+        '            <th class="bb-checklist-name-column" data-bbauto-field="ColumnNameHeader">{{resources.grid_column_picker_name_header}}</th>\n' +
+        '            <th class="bb-checklist-description-column" data-bbauto-field="ColumnDescriptionHeader">{{resources.grid_column_picker_description_header}}</th>\n' +
         '          </tr>\n' +
         '        </thead>\n' +
         '        <tbody bb-highlight="locals.searchText" data-bbauto-repeater="ColumnChooserFields" data-bbauto-repeater-count="{{columns.length}}">\n' +
@@ -8820,15 +8834,15 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/grids/filters.html',
         '<div style="display:none;">\n' +
         '    <div bb-scrolling-view-keeper="viewKeeperOptions" class="bb-grid-filters grid-filters">\n' +
-        '        <div class="bb-grid-filters-box grid-filters-box" bb-scroll-into-view="expanded">\n' +
-        '            <div class="bb-grid-filters-icon grid-filters-icon" ng-click="expanded = !expanded"></div>\n' +
-        '            <div class="bb-grid-filters-container grid-filters-container" style="display:none;">\n' +
-        '                <div class="bb-grid-filters-header grid-filters-header" ng-click="expanded = !expanded">\n' +
-        '                    <h4 class="bb-grid-filters-header-title grid-filters-header-title">{{resources.grid_filters_header}}</h4>\n' +
-        '                    <span class="bb-grid-filters-header-hide grid-filters-header-hide">{{resources.grid_filters_hide}}</span>\n' +
+        '        <div class="bb-grid-filters-box" bb-scroll-into-view="expanded">\n' +
+        '            <div class="bb-grid-filters-icon" ng-click="expanded = !expanded"></div>\n' +
+        '            <div class="bb-grid-filters-container" style="display:none;">\n' +
+        '                <div class="bb-grid-filters-header" ng-click="expanded = !expanded">\n' +
+        '                    <h4 class="bb-grid-filters-header-title">{{resources.grid_filters_header}}</h4>\n' +
+        '                    <span class="bb-grid-filters-header-hide">{{resources.grid_filters_hide}}</span>\n' +
         '                </div>\n' +
-        '                <div class="bb-grid-filters-body grid-filters-body" ng-transclude></div>\n' +
-        '                <div class="bb-grid-filters-footer grid-filters-footer">\n' +
+        '                <div class="bb-grid-filters-body" ng-transclude></div>\n' +
+        '                <div class="bb-grid-filters-footer">\n' +
         '                    <button data-bbauto-field="ApplyGridFilters" class="btn btn-primary" type="submit" ng-click="applyFilters()">{{resources.grid_filters_apply}}</button>\n' +
         '                    <button data-bbauto-field="ClearGridFilters" class="btn btn-white" type="button" ng-click="clearFilters()">{{resources.grid_filters_clear}}</button>\n' +
         '                </div>\n' +
@@ -8839,42 +8853,42 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/grids/filtersgroup.html',
         '<div class="form-group" ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'">\n' +
         '    <div ng-click="isCollapsed = !isCollapsed">\n' +
-        '        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="bb-grid-filters-body-group-header-icon grid-filters-body-group-header-icon glyphicon"></i>\n' +
+        '        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="bb-grid-filters-body-group-header-icon glyphicon"></i>\n' +
         '        <label>{{bbGridFiltersGroupLabel}}</label>\n' +
         '    </div>\n' +
-        '    <div class="bb-grid-filters-body-group-content grid-filters-body-group-content" collapse="!!isCollapsed" ng-transclude></div>\n' +
+        '    <div class="bb-grid-filters-body-group-content" collapse="!!isCollapsed" ng-transclude></div>\n' +
         '</div>');
     $templateCache.put('sky/templates/grids/filterssummary.html',
-        '<div class="toolbar bb-table-toolbar table-toolbar bb-applied-filter-bar applied-filter-bar">\n' +
-        '    <div class="bb-applied-filter-header applied-filter-header">\n' +
+        '<div class="toolbar bb-table-toolbar bb-applied-filter-bar">\n' +
+        '    <div class="bb-applied-filter-header">\n' +
         '        <span>{{resources.grid_filters_summary_header}}</span>\n' +
         '    </div>\n' +
-        '    <div class="bb-applied-filter-content applied-filter-content" ng-click="openFilterMenu()">\n' +
-        '        <span class="bb-applied-filter-text applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>\n' +
-        '        <span class="sky-icon-close bb-applied-filter-remove applied-filter-remove" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>\n' +
+        '    <div class="bb-applied-filter-content" ng-click="openFilterMenu()">\n' +
+        '        <span class="bb-applied-filter-text" data-bbauto-field="FilterSummaryText" ng-transclude></span>\n' +
+        '        <span class="sky-icon-close bb-applied-filter-remove" data-bbauto-field="FilterSummaryRemove" ng-click="clearFilters(); $event.stopPropagation();"></span>\n' +
         '    </div>\n' +
         '</div>\n' +
         '');
     $templateCache.put('sky/templates/grids/grid.html',
-        '<section class="col-xs-12 bb-grid-container" data-bbauto-grid="{{options.automationId}}" data-bbauto-timestamp="{{locals.timestamp}}" data-bbauto-repeater="{{options.automationId}}" data-bbauto-repeater-count="{{locals.rowcount}}">\n' +
+        '<section class="bb-grid-container" data-bbauto-grid="{{options.automationId}}" data-bbauto-timestamp="{{locals.timestamp}}" data-bbauto-repeater="{{options.automationId}}" data-bbauto-repeater-count="{{locals.rowcount}}">\n' +
         '    <div ng-transclude></div>\n' +
-        '    <div class="bb-grid-toolbar-container grid-toolbar-container" style="display:none;">\n' +
-        '        <div class="toolbar bb-table-toolbar table-toolbar">\n' +
-        '            <div data-bbauto-field="AddButton" class="bb-grid-toolbar-btn-add add-button btn-success btn btn-sm" ng-show="locals.hasAdd" ng-click="locals.onAddClick()">\n' +
-        '                <span class="toolbar-button-icon sky-icon sky-icon-add-fill"></span>\n' +
-        '                <span class="toolbar-button-label">{{options.onAddClickLabel}}</span>\n' +
+        '    <div class="bb-grid-toolbar-container" style="display:none;">\n' +
+        '        <div class="toolbar bb-table-toolbar">\n' +
+        '            <div data-bbauto-field="AddButton" class="bb-grid-toolbar-btn-add btn-success btn btn-sm" ng-show="locals.hasAdd" ng-click="locals.onAddClick()">\n' +
+        '                <span class="bb-toolbar-btn-icon sky-icon sky-icon-add-fill"></span>\n' +
+        '                <span class="bb-toolbar-btn-label" ng-show="options.onAddClickLabel">{{options.onAddClickLabel}}</span>\n' +
         '            </div>\n' +
         '            <div class="bb-search-container search-container">\n' +
         '                <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && locals.applySearchText();" data-bbauto-field="SearchBox">\n' +
-        '                <div class="bb-search-icon search-icon" data-bbauto-field="SearchButton" ng-click="locals.applySearchText();"></div>\n' +
+        '                <div class="bb-search-icon" data-bbauto-field="SearchButton" ng-click="locals.applySearchText();"></div>\n' +
         '            </div>\n' +
-        '            <div class="bb-toolbar-btn toolbar-button bb-column-picker-btn column-picker-button" data-bbauto-field="ColumnPickerButton" ng-show="locals.hasColPicker" ng-click="locals.openColumnPicker()">\n' +
-        '                <span class="bb-toolbar-btn-icon toolbar-button-icon bb-column-picker-btn-icon column-picker-button-icon"></span>\n' +
-        '                <span class="bb-toolbar-btn-label toolbar-button-label">{{resources.grid_columns_button}}</span>\n' +
+        '            <div class="bb-toolbar-btn bb-column-picker-btn" data-bbauto-field="ColumnPickerButton" ng-show="locals.hasColPicker" ng-click="locals.openColumnPicker()">\n' +
+        '                <span class="bb-toolbar-btn-icon bb-column-picker-btn-icon"></span>\n' +
+        '                <span class="bb-toolbar-btn-label">{{resources.grid_columns_button}}</span>\n' +
         '            </div>\n' +
-        '            <div class="bb-toolbar-btn toolbar-button bb-filter-btn filter-button" data-bbauto-field="FilterButton" ng-show="locals.hasFilters" ng-click="locals.toggleFilterMenu();">\n' +
-        '                <span class="bb-toolbar-btn-icon toolbar-button-icon bb-filter-btn-icon filter-button-icon"></span>\n' +
-        '                <span class="bb-toolbar-btn-label toolbar-button-label">{{resources.grid_filters_button}}</span>\n' +
+        '            <div class="bb-toolbar-btn bb-filter-btn" data-bbauto-field="FilterButton" ng-show="locals.hasFilters" ng-click="locals.toggleFilterMenu();">\n' +
+        '                <span class="bb-toolbar-btn-icon bb-filter-btn-icon"></span>\n' +
+        '                <span class="bb-toolbar-btn-label">{{resources.grid_filters_button}}</span>\n' +
         '            </div>\n' +
         '        </div>\n' +
         '        <div class="bb-grid-filter-summary-container">\n' +
@@ -8891,7 +8905,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <table id="{{locals.gridId}}" class="bb-grid-table" bb-wait="options.loading" ng-class="{\'grid-multiselect\' : locals.multiselect}"></table>\n' +
         '    </div>\n' +
         '    \n' +
-        '    <div ng-if="!paginationOptions" class="bb-table-loadmore table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore();">\n' +
+        '    <div ng-if="!paginationOptions" class="bb-table-loadmore" data-bbauto-field="LoadMoreButton" ng-show="options.hasMoreRows" ng-click="locals.loadMore();">\n' +
         '        <span class="fa fa-cloud-download"></span>\n' +
         '        <a href="#">{{resources.grid_load_more}}</a>\n' +
         '    </div>\n' +
@@ -8901,10 +8915,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div class="clearfix"></div>\n' +
         '    </div>\n' +
         '    \n' +
-        '    <div class="bb-grid-action-bar-and-back-to-top grid-action-bar-and-back-to-top">\n' +
+        '    <div class="bb-grid-action-bar-and-back-to-top">\n' +
         '        <bb-grid-action-bar ng-if="locals.multiselect && multiselectActions && updateMultiselectActions" bb-multiselect-actions="multiselectActions" bb-selections-updated="updateMultiselectActions(selections)">\n' +
         '        </bb-grid-action-bar>\n' +
-        '        <div class="bb-table-backtotop table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">\n' +
+        '        <div class="bb-table-backtotop" data-bbauto-field="BackToTopButton" ng-show="locals.isScrolled" ng-click="locals.backToTop();">\n' +
         '            <span style="float:left">\n' +
         '                <span class="fa fa-arrow-up "></span>\n' +
         '                <a href="#">{{resources.grid_back_to_top}}</a>\n' +
@@ -8933,7 +8947,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/modal/modalheader.html',
         '<div class="modal-header">\n' +
         '    <h4 class="bb-dialog-header" ng-transclude></h4>\n' +
-        '    <button type="button" class="close" ng-click="$parent.$parent.$dismiss(\'cancel\');">&times;</button>\n' +
+        '    <div class="fa fa-times close" ng-click="$parent.$parent.$dismiss(\'cancel\');"></div>\n' +
         '    <div bb-help-button bb-help-key="{{bbModalHelpKey}}" bb-set-help-key-override="true" data-bbauto-field="ModalHelpButton"></div>\n' +
         '    <div class="clearfix"></div>\n' +
         '</div>');
@@ -8943,9 +8957,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<section ng-if="locals.noPageStatusSpecified() || bbPageStatus === locals.pageStatuses.LOADED">\n' +
         '    <div ng-transclude ng-init="locals.onShowing()"></div>\n' +
         '</section>\n' +
-        '<section class="container-fluid page-content-column-container" ng-show="bbPageStatus === locals.pageStatuses.NOT_AUTHORIZED">\n' +
+        '<section class="container-fluid bb-page-content-column-container" ng-show="bbPageStatus === locals.pageStatuses.NOT_AUTHORIZED">\n' +
         '    <div class="row">\n' +
-        '        <section class="page-content-column col-xs-12 m-t-xl text-center">\n' +
+        '        <section class="bb-page-content-column col-xs-12 m-t-xl text-center">\n' +
         '            <div class="m">\n' +
         '                <h3>\n' +
         '                    {{resources.page_noaccess_header}}\n' +
@@ -8976,34 +8990,34 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </ul>\n' +
         '</div>');
     $templateCache.put('sky/templates/tiles/tile.html',
-        '<section ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'" class="ibox bb-tile tile">\n' +
+        '<section ng-class="isCollapsed ? \'collapsed\' : \'collapsible\'" class="ibox bb-tile">\n' +
         '    <div bb-scroll-into-view="scrollIntoView">\n' +
         '        <div class="ibox-title" ng-click="titleClick()">\n' +
         '            <div class="row">\n' +
         '                <div class="bb-tile-header-with-content col-xs-8">\n' +
-        '                    <h5 class="bb-tile-header tile-header">{{tileHeader}}</h5>\n' +
+        '                    <h5 class="bb-tile-header">{{tileHeader}}</h5>\n' +
         '                </div>\n' +
-        '                <div class="col-xs-4">\n' +
+        '                <div class="col-xs-4 bb-tile-header-column-tools">\n' +
         '                    <div class="ibox-tools">\n' +
-        '                        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="glyphicon bb-tile-chevron tile-chevron"></i>\n' +
+        '                        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="glyphicon bb-tile-chevron"></i>\n' +
         '                        <i ng-if="hasSettings" class="bb-tile-settings glyphicon glyphicon-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
-        '                        <i class="bb-tile-grab-handle tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
+        '                        <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
         '                    </div>\n' +
         '                </div>\n' +
         '            </div>\n' +
         '        </div>\n' +
-        '        <div collapse="isCollapsed" class="ibox-content bb-tile-content tile-content" ng-transclude>\n' +
+        '        <div collapse="isCollapsed" class="ibox-content bb-tile-content" ng-transclude>\n' +
         '        </div>\n' +
         '    </div>\n' +
         '</section>');
     $templateCache.put('sky/templates/tiles/tiledashboard.html',
-        '<div class="row-fluid">\n' +
-        '  <div class="col-md-6 page-content-tile-column page-content-column-sortable" data-dashboard-column="1">\n' +
+        '<div class="row">\n' +
+        '  <div class="col-md-6 bb-page-content-tile-column bb-page-content-tile-column-sortable" data-dashboard-column="1">\n' +
         '    <div ng-repeat="tile in tiles" data-tile-id="{{tile.id}}" data-ui-view="{{tile.view_name}}" id="{{tile.view_name}}">\n' +
         '    </div>\n' +
         '  </div>\n' +
         '\n' +
-        '  <div class="col-md-6 page-content-tile-column page-content-column-sortable" data-dashboard-column="2">\n' +
+        '  <div class="col-md-6 bb-page-content-tile-column bb-page-content-tile-column-sortable" data-dashboard-column="2">\n' +
         '  </div>\n' +
         '</div>');
     $templateCache.put('sky/templates/tiles/tileheadercheck.html',

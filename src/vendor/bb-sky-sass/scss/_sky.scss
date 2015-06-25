@@ -30,16 +30,17 @@
 @import "Inspinia/media";
 
 //Load Sky styles
-@import "_jqgrid";
+@import "jqgrid";
 @import "actionbar";
-@import "_buttons";
-@import "_check";
-@import "_checklist";
-@import "_datefield";
-@import "_grid";
+@import "buttons";
+@import "check";
+@import "checklist";
+@import "datefield";
+@import "grid";
 @import "tables";
 @import "spinning";
 @import "navigation";
+@import "page";
 @import "pagination";
 @import "tile";
 @import "toolbars";

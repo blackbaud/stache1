@@ -1,13 +1,11 @@
 @import "mixins";
 
-.bb-tile,
-.tile {
+.bb-tile {
     .ibox-title {
         cursor: pointer;
         padding: 0;
 
-        .bb-tile-header,
-        .tile-header {
+        .bb-tile-header {
             font-family: $font-family-narrow;
             font-size: 22px;
             font-weight: 100;
@@ -86,13 +84,11 @@
 /*NOTE -  This section is intentionally outside of the .tile wrapper above.  It defines how
 tiles behave on a modal form.*/
 .modal-body {
-    .bb-tile,
-    .tile {
+    .bb-tile {
         .ibox-title {
             height: 32px;
 
-            .bb-tile-header,
-            .tile-header {
+            .bb-tile-header {
                 font-family: $font-family-base;
                 font-size: 13px;
                 font-weight: 600;
@@ -109,9 +105,8 @@ tiles behave on a modal form.*/
 
 /*NOTE -  This section is intentionally outside of the .tile wrapper above.  It defines how
 tiles behave within a column of tiles.*/
-.page-content-tile-column {
-    .bb-tile,
-    .tile {
+.bb-page-content-tile-column {
+    .bb-tile {
         //When columns are stacked in a tile, there is special behavior on extra small devices
         @media (max-width: $screen-xs-max) {
             padding-bottom: 0;
@@ -129,8 +124,7 @@ tiles behave within a column of tiles.*/
 }
 
 .toolbar {
-    &.bb-tile-toolbar,
-    &.tile-toolbar {
+    &.bb-tile-toolbar {
         border: 1px solid $border-color;
         border-right: none;
         border-left: none;
@@ -139,7 +133,6 @@ tiles behave within a column of tiles.*/
 }
 
 .bb-tile-chevron,
-.tile-chevron,
 .bb-tile-settings {
     color: #D1DADE;
     float: left;
@@ -147,13 +140,18 @@ tiles behave within a column of tiles.*/
     padding: $tile-header-tool-padding $tile-header-tool-padding $tile-header-tool-padding 0;
 }
 
-.bb-tile-content-section,
-.tile-content-section {
+.modal-body {
+    .bb-tile-chevron {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.bb-tile-content-section {
     padding: 15px;
 }
 
-.bb-tile-grab-handle,
-.tile-grab-handle {
+.bb-tile-grab-handle {
     color: #E7EAEC;
     cursor: move;
     cursor: -webkit-grab;
@@ -163,19 +161,12 @@ tiles behave within a column of tiles.*/
     padding: $tile-header-tool-padding $tile-header-tool-padding $tile-header-tool-padding 0;
 }
 
-.bb-page-content-multicolumn .bb-page-content-column-sortable,
-.page-content-multicolumn .page-content-column-sortable {
-    margin-bottom: 50px;
-}
-
 // Hide the grab handle unless the tile's in a sortable column.
 
-.bb-page-content-column-sortable,
-.page-content-column-sortable {
+.bb-page-content-tile-column-sortable {
     min-height: 100px;
 
-    .bb-tile-grab-handle,
-    .tile-grab-handle {
+    .bb-tile-grab-handle {
         display: inline-block;
     }
 }

@@ -1,7 +1,6 @@
 @import "mixins";
 
-.bb-checklist-wrapper,
-.checklist-wrapper {
+.bb-checklist-wrapper {
     border: 1px solid $gray-lighter;
     overflow-y: auto;
 
@@ -16,18 +15,15 @@
     }
 }
 
-.bb-checklist-checkbox-column,
-.checklist-checkbox-column {
+.bb-checklist-checkbox-column {
     width: 30px;
 }
 
-.bb-checklist-row,
-.checklist-row {
+.bb-checklist-row {
     cursor: pointer;
 }
 
-.bb-checklist-filter-bar,
-.checklist-filter-bar {
+.bb-checklist-filter-bar {
     background-color: $gray-lightest;
     border: 1px solid $gray-lighter;
     border-bottom: 0;
@@ -48,13 +44,11 @@
     }
 }
 
-.bb-checklist-link,
-.checklist-link {
+.bb-checklist-link {
     margin-right: $margin;
 }
 
-.bb-checklist-no-items,
-.checklist-no-items {
+.bb-checklist-no-items {
     text-align: center;
     margin-top: $margin;
     margin-bottom: $margin;

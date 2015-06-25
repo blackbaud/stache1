@@ -5,7 +5,6 @@
 .modal-header {
     min-height: 45px;
     
-    .dialogHeader, /* Legacy; should eventually be removed */
     .bb-dialog-header {
         white-space: nowrap;
         -ms-text-overflow: ellipsis;
@@ -20,11 +19,12 @@
     .bb-helpbutton {
         float: right;
         margin-right: 20px;
-        margin-top: 3px !important;
+        margin-top: 2px !important;
+        font-size: 16px;
     }
     
     .close {
-        margin-top: 0;
+        margin-top: 3px;
     }
 }
 
@@ -53,6 +53,12 @@
     .btn+.btn {
         margin-left: 10px;
     }
+    
+    .btn-primary, btn-white {
+        min-height: 34px;
+        min-width: 76px;
+    }
+
 }
 
 .bb-modal {
@@ -82,7 +88,7 @@
         display: inline-block;
         margin-top: 1px;
         margin-bottom: 0;
-    }    
+    }
 
     .form-horizontal {
         .radio,

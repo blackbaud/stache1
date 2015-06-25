@@ -4,10 +4,8 @@
 $viewkeeper-margin-top: $omnibar-height !default;
 $viewkeeper-margin-top-small: $omnibar-height-small !default;
 
-body:not(.bb-viewkeeper-ignore-fixed),
-body:not(.viewkeeper-ignore-fixed) {
-    .bb-viewkeeper-fixed,
-    .viewkeeper-fixed {
+body:not(.bb-viewkeeper-ignore-fixed) {
+    .bb-viewkeeper-fixed {
         position: fixed;
         z-index: 100;
         opacity: 0.95;
