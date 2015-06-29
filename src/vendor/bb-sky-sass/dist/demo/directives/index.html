@@ -29,6 +29,7 @@
   <script src="../../../bower_components/jquery-icheck/icheck.js"></script>
   <script src="../../../bower_components/angular-ui-select/dist/select.js"></script>
   <script src="../../../bower_components/fastclick/lib/fastclick.js"></script>
+  <script src="../../../bower_components/ng-file-upload/ng-file-upload.js"></script>
 
   <script src="../../js/sky.js"></script>
   <script src="index.js"></script>
@@ -69,7 +70,7 @@
   </style>
 </head>
 <body ng-view ng-controller="MainController" id="body">
-  <div bb-omnibar></div>
+<!--  <div bb-omnibar></div>-->
   <bb-navbar class="bb-omnibar-height-margin">
     <div class="container-fluid">
       <ul class="nav navbar-nav">
@@ -147,7 +148,15 @@
                 </li>
               
                 <li>
+                  <strong><a href="##datepicker">Datepicker</a></strong> (sky.datepicker)
+                </li>
+              
+                <li>
                   <strong><a href="##daterangepicker">Daterangepicker</a></strong> (sky.daterangepicker)
+                </li>
+              
+                <li>
+                  <strong><a href="##fileattachments">Fileattachments</a></strong> (sky.fileattachments)
                 </li>
               
                 <li>
@@ -436,7 +445,6 @@
             <div class="row">
               <div class="col-md-12 kitchen-sink-example">
                 <div ng-controller="AutoFocusTestController">
-    <input bb-autofocus/>
     <button ng-click="open()">Open</button>
 </div>
               </div>
@@ -459,7 +467,6 @@ Here focus is set in an in-page form as well as in a modal launched with bbmodal
                     <tab heading="Markup">
                       <div>
                         <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;AutoFocusTestController&quot;&gt;
-    &lt;input bb-autofocus/&gt;
     &lt;button ng-click=&quot;open()&quot;&gt;Open&lt;/button&gt;
 &lt;/div&gt;</code></pre>
                       </div>
@@ -1097,23 +1104,33 @@ angular.module('stache')
               <div class="col-md-12 kitchen-sink-example">
                 <div ng-controller="DateFieldDemoController">
     <form name="testform" novalidate>
-        <div class="form-group">
-            <label>Date Field</label>
-            <bb-date-field name="testDate1"
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label>Date Field</label>
+                    <bb-date-field name="testDate1"
                             required
                             ng-model="testdate1"></bb-date-field>
 
-            <label class="error">{{testform.testDate1.invalidFormatMessage}}</label>
+                    <label class="error">{{testform.testDate1.invalidFormatMessage}}</label>
+                </div>
+            </div>
         </div>
-
-        <div class="form-group">
-            <label>Date Field - Custom Formatting</label>
-            <bb-date-field name="testDate2"
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <div class="form-group">
+                    <label>Date Field - Custom Formatting</label>
+                    <bb-date-field name="testDate2"
                             required
+                            id="yoMom"
                             ng-model="testdate2"
                             bb-date-field-options="dateFieldOptions"></bb-date-field>
-
-            <label class="error">{{testform.testDate2.invalidFormatMessage}}</label>
+<div class="col-md-6 col-xs-12"> 
+                {{testdate2}}
+            </div>
+                    <label class="error">{{testform.testDate2.invalidFormatMessage}}</label>
+                </div>
+            </div>
         </div>
     </form>
 </div>
@@ -1158,23 +1175,33 @@ angular.module('stache')
                       <div>
                         <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;DateFieldDemoController&quot;&gt;
     &lt;form name=&quot;testform&quot; novalidate&gt;
-        &lt;div class=&quot;form-group&quot;&gt;
-            &lt;label&gt;Date Field&lt;/label&gt;
-            &lt;bb-date-field name=&quot;testDate1&quot;
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label&gt;Date Field&lt;/label&gt;
+                    &lt;bb-date-field name=&quot;testDate1&quot;
                             required
                             ng-model=&quot;testdate1&quot;&gt;&lt;/bb-date-field&gt;
 
-            &lt;label class=&quot;error&quot;&gt;{{testform.testDate1.invalidFormatMessage}}&lt;/label&gt;
+                    &lt;label class=&quot;error&quot;&gt;{{testform.testDate1.invalidFormatMessage}}&lt;/label&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
         &lt;/div&gt;
-
-        &lt;div class=&quot;form-group&quot;&gt;
-            &lt;label&gt;Date Field - Custom Formatting&lt;/label&gt;
-            &lt;bb-date-field name=&quot;testDate2&quot;
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label&gt;Date Field - Custom Formatting&lt;/label&gt;
+                    &lt;bb-date-field name=&quot;testDate2&quot;
                             required
+                            id=&quot;yoMom&quot;
                             ng-model=&quot;testdate2&quot;
                             bb-date-field-options=&quot;dateFieldOptions&quot;&gt;&lt;/bb-date-field&gt;
-
-            &lt;label class=&quot;error&quot;&gt;{{testform.testDate2.invalidFormatMessage}}&lt;/label&gt;
+&lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
+                {{testdate2}}
+            &lt;/div&gt;
+                    &lt;label class=&quot;error&quot;&gt;{{testform.testDate2.invalidFormatMessage}}&lt;/label&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
         &lt;/div&gt;
     &lt;/form&gt;
 &lt;/div&gt;</code></pre>
@@ -1182,18 +1209,21 @@ angular.module('stache')
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
+                        <pre><code data-language="javascript" ng-non-bindable>/*global angular */
+(function () {
+    &#x27;use strict&#x27;;
+    angular.module(&#x27;stache&#x27;)
     .controller(&#x27;DateFieldDemoController&#x27;, [&#x27;$scope&#x27;, &#x27;$q&#x27;, function ($scope, $q) {
 
         // Initial values...
-        $scope.testdate1 = &quot;2015-05-28T00:00:00&quot;;
+        $scope.testdate1 = &quot;05282015&quot;;
         
         $scope.testdate2 = &quot;02/05/2003&quot;;
 
         // Custom date formatting method
         $scope.dateFieldOptions = {
             formatValue: function (value) {
-                return $q(function (resolve, reject) {
+                return $q(function (resolve) {
                     var formattedValue = value,
                         formattingErrorMessage;
 
@@ -1209,7 +1239,28 @@ angular.module('stache')
                 });
             }
         };
+
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            
+            $scope.locals.opened = !$scope.locals.opened;
+        };
+        
+        $scope.locals = {
+            opened: false,
+            customFormat: function () {
+                return false;  
+            },
+            date: &#x27;&#x27;,
+            dt: new Date(),
+            formats: [&#x27;dd-MMMM-yyyy&#x27;, &#x27;MM/dd/yyyy&#x27;, &#x27;yyyy/MM/dd&#x27;, &#x27;dd.MM.yyyy&#x27;, &#x27;shortDate&#x27;],
+            format: &#x27;dd-MMMM-yyyy&#x27;
+        };
+        
     }]);
+
+}());
 </code></pre>
                       </div>
                     </tab>
@@ -1217,18 +1268,21 @@ angular.module('stache')
               </div>
             </div>
           </section>
-          <script>angular.module('stache')
+          <script>/*global angular */
+(function () {
+    'use strict';
+    angular.module('stache')
     .controller('DateFieldDemoController', ['$scope', '$q', function ($scope, $q) {
 
         // Initial values...
-        $scope.testdate1 = "2015-05-28T00:00:00";
+        $scope.testdate1 = "05282015";
         
         $scope.testdate2 = "02/05/2003";
 
         // Custom date formatting method
         $scope.dateFieldOptions = {
             formatValue: function (value) {
-                return $q(function (resolve, reject) {
+                return $q(function (resolve) {
                     var formattedValue = value,
                         formattingErrorMessage;
 
@@ -1244,8 +1298,326 @@ angular.module('stache')
                 });
             }
         };
+
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            
+            $scope.locals.opened = !$scope.locals.opened;
+        };
+        
+        $scope.locals = {
+            opened: false,
+            customFormat: function () {
+                return false;  
+            },
+            date: '',
+            dt: new Date(),
+            formats: ['dd-MMMM-yyyy', 'MM/dd/yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'],
+            format: 'dd-MMMM-yyyy'
+        };
+        
     }]);
+
+}());
 </script>
+        </div>
+      </div>
+      <br />
+      
+      <a name="#/datepicker"></a>
+      <div class="page-content-tile-column">
+        <div class="demo-content">
+          <section id="datepicker" class="page-content-column">
+            <h1>
+                Datepicker <small>(sky.datepicker)</small>
+            </h1>
+            <hr class="kitchen-sink-divider" />
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-example">
+                <div ng-controller="DatepickerDemoController">
+    <form name="testform" novalidate>
+        
+        <div class="row">
+            <div class="col-md-6 col-xs-12"> 
+                <label>Date Field</label>
+                <bb-datepicker name="date2" ng-model="locals.date2" ng-required="{{true}}" placeholder="locals.placeholder"></bb-datepicker>
+                <label class="error">{{testform.date2.invalidFormatMessage}}</label>
+            </div>
+            <div class="col-md-6 col-xs-12"> 
+                <label>Date Value</label>
+                <div>{{locals.date2}}</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <button class="btn btn-primary" type="button" ng-click="locals.setDate()">Set date</button>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 col-xs-12"> 
+                <label>Date Field - Custom Formatting</label>
+                <bb-datepicker name="date1" ng-model="locals.date1" bb-custom-validation="locals.customFormat"></bb-datepicker>
+                <label class="error">{{testform.date1.invalidFormatMessage}}</label>
+            </div>
+            <div class="col-md-6 col-xs-12"> 
+                <label>Date Value</label>
+                <div>{{locals.date1}}</div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md6 col-xs-12">
+                <button class="btn btn-primary" type="button" ng-click="locals.openModal()">Open Datepicker Modal</button>
+            </div>
+        </div>
+        
+        
+    </form>
+</div>
+
+<script type="text/ng-template" id="demo/datepicker/datepickermodal.html">
+    <bb-modal>
+        <div class="modal-form">
+            <bb-modal-header >Modal Datepicker</bb-modal-header>
+            <div bb-modal-body>
+                <form name="datepickerModal" novalidate>
+                    <div class="row">
+                        <div class="col-md-6 col-xs-12"> 
+                            <label>Date Field</label>
+                                <bb-datepicker name="date2" ng-model="locals.date" ng-required="{{true}}" bb-date-format="'dd/MM/yyyy'" datepicker-append-to-body="true"></bb-datepicker>
+                                <label class="error">{{testform.date2.invalidFormatMessage}}</label>
+                        </div>
+                        <div class="col-md-6 col-xs-12"> 
+                            <label>Date Value</label>
+                            <div>{{locals.date}}</div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <bb-modal-footer>
+                <bb-modal-footer-button-primary ng-disabled="datepickerModal.$invalid"></bb-modal-footer-button-primary>
+                <bb-modal-footer-button>Sample button</bb-modal-footer-button>
+                <bb-modal-footer-button-cancel></bb-modal-footer-button-cancel>
+            </bb-modal-footer>
+        </div>
+    </bb-modal>
+</script>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-readme" ng-non-bindable>
+                <p><a name="module_Datepicker"></a></p>
+
+<h2>Datepicker</h2>
+
+<p>The <code>bb-datepicker</code> directive wraps the ui.bootstrap.datepicker directive from <a href="https://angular-ui.github.io/bootstrap/">angular ui bootstrap</a>. It creates a input text box and a calendar picker for choosing the date.</p>
+
+<h2>Datepicker settings</h2>
+
+<ul>
+<li><code>ng-model</code> An object to bind the date value in and out of the datepicker. This will be set to a Javascript Date object when set or parsed from the bootstrap datepicker.</li>
+<li><code>ng-required</code> Boolean value that indicates whether the field is required.</li>
+<li><code>bb-date-options</code> Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap <code>datepicker-options</code> object. You can set application defaults for the <code>showWeeks</code> and <code>startingDay</code> properties of the angular ui bootstrap datepicker in the <code>bbDateFieldConfig</code> object. In sky the default for <code>showWeeks</code> is false and <code>startingDay</code> is 0 unless overridden in <code>bbDateFieldConfig</code>. </li>
+<li><code>bb-custom-validation</code> an object containing the following:
+<ul><li><code>formatValue</code> A function that will be called when text is entered directly into the textbox. The only parameter to the function will be the raw value of the textbox. The function should return an object or a promise of an object with properties of <code>formattedValue</code> and optionally <code>formattingErrorMessage</code> if there was a problem when trying to format the input value.</li></ul></li>
+<li><code>bb-date-format</code> The format string that the date should display as in the input text box. This will override the default set in the <code>bbDateFieldConfig</code> <code>dateFormat</code> property. The format string should be set up like the <a href="https://docs.angularjs.org/api/ng/filter/date">angular</a> date filter format strings.</li>
+<li><code>close-on-date-selection</code> <em>(Default: true):</em>  Whether to close calendar when a date is chosen.</li>
+<li><code>datepicker-append-to-body</code> <em>(Default: false):</em>  Append the datepicker popup element to <code>body</code>, rather than inserting after the datepicker input.</li>
+<li><code>placeholder</code> overrides the default placeholder text of the <code>bb-datepicker</code> input</li>
+<li><code>show-button-bar</code> <em>(Default: false):</em>  Whether to display a button bar underneath the datepicker. (see angular ui bootstrap datepicker)</li>
+</ul>
+              </div>
+            </div>
+                
+            <hr class="kitchen-sink-divider" />
+            <div class="row code">
+              <div class="col-md-12">
+                <tabset>
+                    <tab heading="Markup">
+                      <div>
+                        <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;DatepickerDemoController&quot;&gt;
+    &lt;form name=&quot;testform&quot; novalidate&gt;
+        
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
+                &lt;label&gt;Date Field&lt;/label&gt;
+                &lt;bb-datepicker name=&quot;date2&quot; ng-model=&quot;locals.date2&quot; ng-required=&quot;{{true}}&quot; placeholder=&quot;locals.placeholder&quot;&gt;&lt;/bb-datepicker&gt;
+                &lt;label class=&quot;error&quot;&gt;{{testform.date2.invalidFormatMessage}}&lt;/label&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
+                &lt;label&gt;Date Value&lt;/label&gt;
+                &lt;div&gt;{{locals.date2}}&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt;
+                &lt;button class=&quot;btn btn-primary&quot; type=&quot;button&quot; ng-click=&quot;locals.setDate()&quot;&gt;Set date&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
+                &lt;label&gt;Date Field - Custom Formatting&lt;/label&gt;
+                &lt;bb-datepicker name=&quot;date1&quot; ng-model=&quot;locals.date1&quot; bb-custom-validation=&quot;locals.customFormat&quot;&gt;&lt;/bb-datepicker&gt;
+                &lt;label class=&quot;error&quot;&gt;{{testform.date1.invalidFormatMessage}}&lt;/label&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
+                &lt;label&gt;Date Value&lt;/label&gt;
+                &lt;div&gt;{{locals.date1}}&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&quot;row&quot;&gt;
+            &lt;div class=&quot;col-md6 col-xs-12&quot;&gt;
+                &lt;button class=&quot;btn btn-primary&quot; type=&quot;button&quot; ng-click=&quot;locals.openModal()&quot;&gt;Open Datepicker Modal&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+        
+    &lt;/form&gt;
+&lt;/div&gt;
+
+&lt;script type=&quot;text/ng-template&quot; id=&quot;demo/datepicker/datepickermodal.html&quot;&gt;
+    &lt;bb-modal&gt;
+        &lt;div class=&quot;modal-form&quot;&gt;
+            &lt;bb-modal-header &gt;Modal Datepicker&lt;/bb-modal-header&gt;
+            &lt;div bb-modal-body&gt;
+                &lt;form name=&quot;datepickerModal&quot; novalidate&gt;
+                    &lt;div class=&quot;row&quot;&gt;
+                        &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
+                            &lt;label&gt;Date Field&lt;/label&gt;
+                                &lt;bb-datepicker name=&quot;date2&quot; ng-model=&quot;locals.date&quot; ng-required=&quot;{{true}}&quot; bb-date-format=&quot;&#x27;dd/MM/yyyy&#x27;&quot; datepicker-append-to-body=&quot;true&quot;&gt;&lt;/bb-datepicker&gt;
+                                &lt;label class=&quot;error&quot;&gt;{{testform.date2.invalidFormatMessage}}&lt;/label&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
+                            &lt;label&gt;Date Value&lt;/label&gt;
+                            &lt;div&gt;{{locals.date}}&lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/form&gt;
+            &lt;/div&gt;
+            &lt;bb-modal-footer&gt;
+                &lt;bb-modal-footer-button-primary ng-disabled=&quot;datepickerModal.$invalid&quot;&gt;&lt;/bb-modal-footer-button-primary&gt;
+                &lt;bb-modal-footer-button&gt;Sample button&lt;/bb-modal-footer-button&gt;
+                &lt;bb-modal-footer-button-cancel&gt;&lt;/bb-modal-footer-button-cancel&gt;
+            &lt;/bb-modal-footer&gt;
+        &lt;/div&gt;
+    &lt;/bb-modal&gt;
+&lt;/script&gt;</code></pre>
+                      </div>
+                    </tab>
+                    <tab heading="JavaScript">
+                      <div>
+                        <pre><code data-language="javascript" ng-non-bindable>/*global angular */
+(function () {
+    &#x27;use strict&#x27;;
+    angular.module(&#x27;stache&#x27;)
+        .controller(&#x27;DatepickerModalController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+            $scope.locals = {
+                date: &#x27;18/5/2014&#x27;
+            };
+        
+        }])
+        .controller(&#x27;DatepickerDemoController&#x27;, [&#x27;$scope&#x27;, &#x27;bbModal&#x27;, &#x27;$q&#x27;, function ($scope, bbModal, $q) {
+            // Custom date formatting method
+            function formatValue(value) {
+                return $q(function (resolve) {
+                    var formattedValue = value,
+                        formattingErrorMessage;
+
+                    if (value.toUpperCase() !== value) {
+                        formattingErrorMessage = &quot;Any letters should be capitalized.&quot;;
+                    } else {
+                        formattedValue = &quot;[&quot; + value.toUpperCase() + &quot;]&quot;;
+                    }
+                   
+                    resolve({
+                        formattedValue: formattedValue,
+                        formattingErrorMessage: formattingErrorMessage
+                    });
+                });
+            }
+            
+            function openModal() {
+                bbModal.open({
+                    controller: &#x27;DatepickerModalController&#x27;,
+                    templateUrl: &#x27;demo/datepicker/datepickermodal.html&#x27;
+                });
+            }
+            
+            $scope.locals = {
+                openModal: openModal,
+                setDate: function () {
+                    $scope.locals.date2 = &#x27;22/05/2014&#x27;;  
+                },
+                customFormat: {
+                    formatValue: formatValue
+                },
+                date1: &#x27;2015-05-28T00:00:00&#x27;,
+                date2: &#x27;&#x27;,
+                placeholder: &#x27;Your date here&#x27;
+            };   
+        }]);
+}());</code></pre>
+                      </div>
+                    </tab>
+                </tabset>
+              </div>
+            </div>
+          </section>
+          <script>/*global angular */
+(function () {
+    'use strict';
+    angular.module('stache')
+        .controller('DatepickerModalController', ['$scope', function ($scope) {
+            $scope.locals = {
+                date: '18/5/2014'
+            };
+        
+        }])
+        .controller('DatepickerDemoController', ['$scope', 'bbModal', '$q', function ($scope, bbModal, $q) {
+            // Custom date formatting method
+            function formatValue(value) {
+                return $q(function (resolve) {
+                    var formattedValue = value,
+                        formattingErrorMessage;
+
+                    if (value.toUpperCase() !== value) {
+                        formattingErrorMessage = "Any letters should be capitalized.";
+                    } else {
+                        formattedValue = "[" + value.toUpperCase() + "]";
+                    }
+                   
+                    resolve({
+                        formattedValue: formattedValue,
+                        formattingErrorMessage: formattingErrorMessage
+                    });
+                });
+            }
+            
+            function openModal() {
+                bbModal.open({
+                    controller: 'DatepickerModalController',
+                    templateUrl: 'demo/datepicker/datepickermodal.html'
+                });
+            }
+            
+            $scope.locals = {
+                openModal: openModal,
+                setDate: function () {
+                    $scope.locals.date2 = '22/05/2014';  
+                },
+                customFormat: {
+                    formatValue: formatValue
+                },
+                date1: '2015-05-28T00:00:00',
+                date2: '',
+                placeholder: 'Your date here'
+            };   
+        }]);
+}());</script>
         </div>
       </div>
       <br />
@@ -1423,6 +1795,225 @@ angular.module('stache')
         });
 
     }]);
+</script>
+        </div>
+      </div>
+      <br />
+      
+      <a name="#/fileattachments"></a>
+      <div class="page-content-tile-column">
+        <div class="demo-content">
+          <section id="fileattachments" class="page-content-column">
+            <h1>
+                Fileattachments <small>(sky.fileattachments)</small>
+            </h1>
+            <hr class="kitchen-sink-divider" />
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-example">
+                <div ng-controller="FileAttachmentDemoController as fileAttachmentDemo">
+    <div class="row">
+        <div class="col-md-6">
+            <div 
+                 bb-file-drop
+                 bb-file-drop-change="fileAttachmentDemo.fileDropped(files, rejectedFiles)"
+                 bb-file-drop-multiple="true"
+                 bb-file-drop-max-size="5000000"
+                 bb-file-drop-link
+                 bb-file-drop-link-change="fileAttachmentDemo.fileLinked(link)"
+                 >
+            </div>
+            <div class="alert alert-danger alert-dismissable" ng-show="fileAttachmentDemo.rejected.length > 0">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="fileAttachmentDemo.rejected.length = 0"><span aria-hidden="true">&times;</span></button>
+                The file <strong>{{fileAttachmentDemo.rejected[fileAttachmentDemo.rejected.length - 1].name}}</strong> is invalid.  Files must be an image and less than 500 KB.
+            </div>
+            <div ng-repeat="item in fileAttachmentDemo.allItems" bb-file-item="item" bb-file-item-delete="fileAttachmentDemo.deleteAttachment(item)" style="margin-bottom: 10px">
+                <div class="form-group">
+                    <label>Name for this attachment</label>
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Tags for this attachment</label>
+                    <input type="text" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-readme" ng-non-bindable>
+                <p><a name="module_File attachments"></a></p>
+
+<h2>File attachments</h2>
+
+<p>The file attachments module contains two directives to make it easier to add multiple files to a form.
+The <code>bb-file-drop</code> directive provides an element that can both be clicked to select a file from the user's
+local drive or serve as a drop zone where files can be dragged from the user's local drive.  The directive can
+also optionally display controls for the user to add a hyperlink to a file on the web.</p>
+
+<p>The contents of the directive may be left blank to display the default UI for the drop zone, or you may include your
+own custom content to be displayed instead of the default UI.</p>
+
+<h3>File Drop Settings</h3>
+
+<ul>
+<li><code>bb-file-drop-accept</code> <em>(Optional)</em> A comma-delimited list of MIME types that may be dropped or selected.</li>
+<li><code>bb-file-drop-multiple</code> <em>(Default: <code>true</code>)</em> A flag indicating whether multiple files may be dropped at once.</li>
+<li><code>bb-file-drop-allow-dir</code> <em>(Default: <code>true</code>)</em> A flag indicating whether a directory can be selected.</li>
+<li><code>bb-file-drop-min-size</code> <em>(Optional)</em> The minimum size in bytes of a valid file.</li>
+<li><code>bb-file-drop-max-size</code> <em>(Optional)</em> The maximum size in bytes of a valid file.</li>
+<li><code>bb-file-drop-change</code> A function that is called when a file or files are selected when the user drops files onto the
+drop zone or selects them by clicking the element.  This function accepts 2 parameters:
+<ul><li><code>files</code> An array of valid files that were dropped or selected.</li>
+<li><code>rejectedFiles</code> An array of files that did not meet the specified file type and/or size requirements.</li></ul></li>
+<li><code>bb-file-drop-link</code> <em>(Optional)</em> The attribute with no value can be specified)* Indicates that an option to add hyperlinks
+should be displayed.</li>
+<li><code>bb-file-drop-link-change</code> <em>(Optional)</em> A function that is called when the user adds a hyperlink.  The function accepts one
+<code>link</code> parameter.  The <code>link</code> will have a <code>url</code> property containing the link the user added.</li>
+</ul>
+
+<p>The <code>bb-file-item</code> directive displays summary information about a file that has been added to a form.  By default
+it displays the file's name and a delete button, and if the file from the user's local drive rather than a hyperlink,
+a the file's size and thumbnail will also be displayed.  Any content inside this directive will be displayed to the right
+of the preview image.</p>
+
+<h3>File Item Settings</h3>
+
+<ul>
+<li><code>bb-file-item</code> The file or hyperlink to display.  If the item is a file, the file size and a preview will be displayed.</li>
+<li><code>bb-file-item-delete</code> A function to call when an item's delete button is clicked.  The deleted item will be passed
+to the function.</li>
+</ul>
+              </div>
+            </div>
+                
+            <hr class="kitchen-sink-divider" />
+            <div class="row code">
+              <div class="col-md-12">
+                <tabset>
+                    <tab heading="Markup">
+                      <div>
+                        <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;FileAttachmentDemoController as fileAttachmentDemo&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-6&quot;&gt;
+            &lt;div 
+                 bb-file-drop
+                 bb-file-drop-change=&quot;fileAttachmentDemo.fileDropped(files, rejectedFiles)&quot;
+                 bb-file-drop-multiple=&quot;true&quot;
+                 bb-file-drop-max-size=&quot;5000000&quot;
+                 bb-file-drop-link
+                 bb-file-drop-link-change=&quot;fileAttachmentDemo.fileLinked(link)&quot;
+                 &gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;alert alert-danger alert-dismissable&quot; ng-show=&quot;fileAttachmentDemo.rejected.length &gt; 0&quot;&gt;
+                &lt;button type=&quot;button&quot; class=&quot;close&quot; data-dismiss=&quot;alert&quot; aria-label=&quot;Close&quot; ng-click=&quot;fileAttachmentDemo.rejected.length = 0&quot;&gt;&lt;span aria-hidden=&quot;true&quot;&gt;&amp;times;&lt;/span&gt;&lt;/button&gt;
+                The file &lt;strong&gt;{{fileAttachmentDemo.rejected[fileAttachmentDemo.rejected.length - 1].name}}&lt;/strong&gt; is invalid.  Files must be an image and less than 500 KB.
+            &lt;/div&gt;
+            &lt;div ng-repeat=&quot;item in fileAttachmentDemo.allItems&quot; bb-file-item=&quot;item&quot; bb-file-item-delete=&quot;fileAttachmentDemo.deleteAttachment(item)&quot; style=&quot;margin-bottom: 10px&quot;&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label&gt;Name for this attachment&lt;/label&gt;
+                    &lt;input type=&quot;text&quot; class=&quot;form-control&quot; /&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label&gt;Tags for this attachment&lt;/label&gt;
+                    &lt;input type=&quot;text&quot; class=&quot;form-control&quot; /&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                      </div>
+                    </tab>
+                    <tab heading="JavaScript">
+                      <div>
+                        <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
+    .controller(&#x27;FileAttachmentDemoController&#x27;, function () {
+        var self = this;
+    
+        function removeFromArray(items, obj) {
+            var i,
+                n;
+            
+            if (items) {
+                for (i = 0, n = items.length; i &lt; n; i++) {
+                    if (items[i] === obj) {
+                        items.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+        }
+    
+        self.attachments = [];
+        self.links = [];
+        self.rejected = [];
+        self.allItems = [];
+    
+        self.fileDropped = function (files, rejectedFiles) {
+            self.attachments = self.attachments.concat(files);
+            self.allItems = self.allItems.concat(files);
+            self.rejected = rejectedFiles;
+        };
+        
+        self.fileLinked = function (link) {
+            self.links.push(link);
+            self.allItems.push(link);
+        };
+        
+        self.deleteAttachment = function (file) {
+            removeFromArray(self.links, file);
+            removeFromArray(self.attachments, file);
+            removeFromArray(self.allItems, file);
+        };
+    });
+</code></pre>
+                      </div>
+                    </tab>
+                </tabset>
+              </div>
+            </div>
+          </section>
+          <script>angular.module('stache')
+    .controller('FileAttachmentDemoController', function () {
+        var self = this;
+    
+        function removeFromArray(items, obj) {
+            var i,
+                n;
+            
+            if (items) {
+                for (i = 0, n = items.length; i < n; i++) {
+                    if (items[i] === obj) {
+                        items.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+        }
+    
+        self.attachments = [];
+        self.links = [];
+        self.rejected = [];
+        self.allItems = [];
+    
+        self.fileDropped = function (files, rejectedFiles) {
+            self.attachments = self.attachments.concat(files);
+            self.allItems = self.allItems.concat(files);
+            self.rejected = rejectedFiles;
+        };
+        
+        self.fileLinked = function (link) {
+            self.links.push(link);
+            self.allItems.push(link);
+        };
+        
+        self.deleteAttachment = function (file) {
+            removeFromArray(self.links, file);
+            removeFromArray(self.attachments, file);
+            removeFromArray(self.allItems, file);
+        };
+    });
 </script>
         </div>
       </div>

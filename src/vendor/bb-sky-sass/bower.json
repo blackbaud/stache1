@@ -20,7 +20,8 @@
     "bootstrap-datepicker-eyecon": "~1.0.0",
     "jquery-icheck": "~1.0.2",
     "blockui": "*",
-    "angular-ui-router": "~0.2.13"
+    "angular-ui-router": "~0.2.13",
+    "ng-file-upload": "~5.0.6"
   },
   "devDependencies": {
     "angular-ui-select": "~0.11.2",

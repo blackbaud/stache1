@@ -1601,6 +1601,9 @@ The DateField directive allows you to use a common textbox with calendar picker 
     angular.module('sky.datefield', ['sky.resources', 'sky.moment'])
         .constant('bbDateFieldConfig', {
             currentCultureDateFormatString: 'mm/dd/yyyy',
+            dateFormat: 'MM/dd/yyyy',
+            showWeeks: false,
+            startingDay: 0,
             twoDigitYearRolloverMax: 29
         })
         .directive('bbDateField', ['$q', '$templateCache', 'bbMoment', 'bbDateFieldConfig', 'bbResources', function ($q, $templateCache, bbMoment, bbDateFieldConfig, bbResources) {
@@ -1949,6 +1952,455 @@ The DateField directive allows you to use a common textbox with calendar picker 
 
 }());
 /*jshint browser: true */
+/*global angular, jQuery */
+
+/** @module Datepicker
+@description The `bb-datepicker` directive wraps the ui.bootstrap.datepicker directive from [angular ui bootstrap](https://angular-ui.github.io/bootstrap/). It creates a input text box and a calendar picker for choosing the date.
+
+## Datepicker settings
+  - `ng-model` An object to bind the date value in and out of the datepicker. This will be set to a Javascript Date object when set or parsed from the bootstrap datepicker.
+  - `ng-required` Boolean value that indicates whether the field is required.
+  - `bb-date-options` Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the angular ui bootstrap datepicker in the `bbDateFieldConfig` object. In sky the default for `showWeeks` is false and `startingDay` is 0 unless overridden in `bbDateFieldConfig`. 
+  - `bb-custom-validation` an object containing the following:
+    - `formatValue` A function that will be called when text is entered directly into the textbox. The only parameter to the function will be the raw value of the textbox. The function should return an object or a promise of an object with properties of `formattedValue` and optionally `formattingErrorMessage` if there was a problem when trying to format the input value.
+  - `bb-date-format` The format string that the date should display as in the input text box. This will override the default set in the `bbDateFieldConfig` `dateFormat` property. The format string should be set up like the [angular](https://docs.angularjs.org/api/ng/filter/date) date filter format strings.
+  - `close-on-date-selection` *(Default: true):*  Whether to close calendar when a date is chosen.
+  - `datepicker-append-to-body` *(Default: false):*  Append the datepicker popup element to `body`, rather than inserting after the datepicker input.
+  - `placeholder` overrides the default placeholder text of the `bb-datepicker` input
+  - `show-button-bar` *(Default: false):*  Whether to display a button bar underneath the datepicker. (see angular ui bootstrap datepicker)
+
+*/
+
+(function ($) {
+    'use strict';
+    angular.module('sky.datepicker', ['sky.resources', 'sky.datefield', 'sky.moment'])
+    
+        .directive('bbDatepicker', ['bbResources', 'bbDateFieldConfig', 'bbDatepickerParser', '$timeout', '$q', '$filter', function (bbResources, bbDateFieldConfig, bbDatepickerParser, $timeout, $q, $filter) {
+            return {
+                replace: true,
+                restrict: 'E',
+                require: 'ngModel',
+                scope: {
+                    date: '=ngModel',
+                    dateOptions: '=?bbDateOptions',
+                    customValidation: '=?bbCustomValidation',
+                    format: '=?bbDateFormat',
+                    placeholderText: '=?placeholder'
+                },
+                templateUrl: 'sky/templates/datepicker/datepicker.html',
+                link: function ($scope, el, attr, ngModel) {
+                    var parsedDate,
+                        firstOpen = true,
+                        form,
+                        inputEl,
+                        skipValidation = false,
+                        dateChangeInternal = false;
+                     
+                    function getBodyDatepicker() {
+                        return $('body > ul[datepicker-popup-wrap]');
+                    }
+                    
+                    function positionAbsoluteDatepicker() {
+                        var calendarButtonEl = el.find('span.bb-datepicker-button-container'),
+                            inputEl = el.find('input'),
+                            datepickerScope = el.find('input').isolateScope(),
+                            datepickerEl = getBodyDatepicker(),
+                            inputWidth,
+                            buttonWidth,
+                            datepickerWidth;
+                        
+                        inputWidth = inputEl.innerWidth();
+                        buttonWidth = calendarButtonEl.innerWidth();
+                        datepickerWidth = datepickerEl.innerWidth();
+                        
+                        if (datepickerWidth < (inputWidth + buttonWidth)) {
+                            datepickerScope.position.left = datepickerScope.position.left + inputWidth + buttonWidth - datepickerWidth;
+                        }
+                    }
+                    
+                    function open($event) {
+                        $event.preventDefault();
+                        $event.stopPropagation();
+                        
+                        //add syle class when datepicker appended to body because bb-datefield will no longer be wrapping it.
+                        if (firstOpen && $scope.locals.appendToBody) {
+                            getBodyDatepicker().addClass('bb-datefield');
+                        
+                            firstOpen = false;
+                        }
+                        
+                        if ($scope.locals.appendToBody) {
+                            $timeout(function () {
+                                positionAbsoluteDatepicker();
+                            });
+                        }
+                        
+                        
+                        $scope.locals.opened = !$scope.locals.opened;
+                    }
+                    
+                    function getForm() {
+                        var form,
+                            formEl,
+                            formName;
+                        
+                        formEl = el.parents('form');
+                        if (formEl.length > 0) {
+                            formName = formEl.attr('name');
+                            form = $scope.$parent[formName];
+                        }
+                        return form;
+                    }
+                    
+                    function setDate() {
+                        if (angular.isDate($scope.date)) {
+                            $scope.locals.date = $filter('date')($scope.date, $scope.format);
+                        } else if (!$scope.locals.hasCustomValidation) {
+                            parsedDate = bbDatepickerParser.runParsers($scope.date, $scope.format);
+                            if (angular.isDate(parsedDate)) {
+                                $scope.date = parsedDate;
+                                $scope.locals.date = $filter('date')($scope.date, $scope.format);
+                            } else {
+                                $scope.locals.date = $scope.date;
+                            }
+                        } else {
+                            $scope.locals.date = $scope.date;
+                        }
+                    }
+                    
+                    $scope.locals = {
+                        showButtonBar: false,
+                        appendToBody: false,
+                        date: '',
+                        opened: false,
+                        open: open,
+                        loaded: false,
+                        closeOnSelection: true,
+                        dateOptions: {
+                            showWeeks: bbDateFieldConfig.showWeeks,
+                            startingDay: bbDateFieldConfig.startingDay
+                        },
+                        hasCustomValidation: false
+                    };
+                    
+                    $scope.resources = bbResources;
+            
+                    if (angular.isDefined(attr.showButtonBar)) {
+                        $scope.locals.showButtonBar = attr.showButtonBar;
+                    }
+            
+                    if (angular.isDefined(attr.closeOnDateSelection)) {
+                        $scope.locals.closeOnSelection = attr.closeOnDateSelection;
+                    }
+                    
+                    if (angular.isDefined(attr.datepickerAppendToBody)) {
+                        $scope.locals.appendToBody = (attr.datepickerAppendToBody === 'true');
+                    }
+                    
+                    if (angular.isUndefined($scope.format)) {
+                        $scope.format = bbDateFieldConfig.dateFormat;
+                    }
+                    
+                    if (angular.isDefined($scope.dateOptions)) {
+                        angular.extend($scope.locals.dateOptions, $scope.dateOptions);
+
+                    }
+                    
+                    if (angular.isDefined($scope.customValidation)) {
+                        if (angular.isFunction($scope.customValidation.formatValue)) {
+                            $scope.locals.hasCustomValidation = true; 
+                        }
+                    }
+                    
+                    if ($scope.placeholderText === null || angular.isUndefined($scope.placeholderText)) {
+                        $scope.placeholderText = $scope.format.toLowerCase();
+                    }
+                    
+                    form = getForm();
+                     
+                    setDate();
+                    
+                    $scope.$watch('date', function (newValue, oldValue) {
+                        if (newValue !== oldValue && !dateChangeInternal) {
+                            setDate();
+                        } else if (dateChangeInternal) {
+                            dateChangeInternal = false;
+                        }
+                    });
+                    
+                    $scope.$watch('locals.date', function () {
+                        if ($scope.date !== $scope.locals.date) {
+                            if (angular.isDate($scope.locals.date)) {
+                                dateChangeInternal = true;
+                                $scope.date = $scope.locals.date;
+                            }
+                            ngModel.$setDirty();
+                        }
+                        if ($scope.locals.hasCustomValidation && form) {
+                            $timeout(function () {                            
+                                if (form.$error && form.$error.date) {
+                                    form.$error.date[0].$setValidity('date', true); 
+                                }
+                            });
+                        }
+                        
+                    });
+                    
+                    ngModel.$asyncValidators.dateFormat = function () {
+                        var customFormattingResult,
+                            deferred;
+                        
+                        function resolveValidation() {
+                            deferred[ngModel.invalidFormatMessage ? 'reject' : 'resolve']();
+                        }
+                        
+                        function handleCustomFormattingValidation(result) {
+                            result = result || {};
+                            
+                            ngModel.invalidFormatMessage = result.formattingErrorMessage;
+                            resolveValidation();
+                            if (result.formattedValue !== $scope.date) {
+                                skipValidation = true;
+                                dateChangeInternal = true;
+                                $scope.date = result.formattedValue;
+                                $scope.locals.date = result.formattedValue;
+                            }
+                           
+                        }
+                        
+                        deferred = $q.defer();
+                        
+                        if (skipValidation || angular.isDate($scope.locals.date) || ngModel.$pristine || $scope.locals.date === '') {
+                            ngModel.invalidFormatMessage = null;
+                            resolveValidation();
+                        } else if ($scope.locals.hasCustomValidation && angular.isString($scope.locals.date)) {
+                            customFormattingResult = $scope.customValidation.formatValue($scope.locals.date);
+                            if (customFormattingResult.then) {
+                                customFormattingResult.then(handleCustomFormattingValidation);
+                            } else {
+                                handleCustomFormattingValidation(customFormattingResult);
+                                return deferred.promise;
+                            }
+                        } else {
+                            if (form && form.$error && form.$error.date) {
+                                ngModel.invalidFormatMessage = bbResources.date_field_invalid_date_message;
+                            }
+                            resolveValidation();
+                        }
+                        
+                        skipValidation = false;
+                        return deferred.promise;
+                    };
+                    
+                    $scope.locals.loaded = true;
+                    
+                    //Timeout allows the locals.loaded to be applied to dom and ng-if=true to go into effect.
+                    $timeout(function () {
+                        inputEl = el.find('input');
+                        inputEl.on('change blur', function () {
+                            $timeout(function () {
+                                if ($scope.date !== $scope.locals.date) {
+                                    dateChangeInternal = true;
+                                    $scope.date = $scope.locals.date;
+                                }
+                                
+                            });
+                        });
+                    });
+            
+                }
+            };
+        }])
+        .directive('bbDatepickerCustomValidate', ['$filter', 'bbDatepickerParser', function ($filter, bbDatepickerParser) {
+            return {
+                restrict: 'A',
+                require: 'ngModel',
+                link: function ($scope, el, attr, ngModel) {
+                    var format = attr.datepickerPopup;
+                    
+                     
+                    if (attr.bbDatepickerCustomValidate && attr.bbDatepickerCustomValidate === 'true') {
+                        ngModel.$parsers = [];
+                    } else {
+                        ngModel.$parsers.unshift(function (viewValue) {
+                            var newDate = ngModel.$viewValue,
+                                date = null;
+                        
+                            //date was changed from datepicker or is empty so just return
+                            if (typeof newDate === 'object' || newDate === '') {
+                                return newDate;
+                            }
+                        
+                            date = bbDatepickerParser.runParsers(newDate, format);
+                        
+                            if (angular.isDate(date)) {
+                                el.val($filter('date')(date, format));
+                            }
+                        
+                            return date ? date : viewValue;
+                        });
+                    }
+                    
+                    
+                }
+            };
+        }])
+    .factory('bbDatepickerParser', ['bbMoment', function (bbMoment) {
+        
+        function parseUTCString(value) {
+            var date = null,
+                dateArray,
+                datePart;
+                
+            if (angular.isString(value) && value.indexOf('T00:00:00') !== -1) {
+                datePart = value.split('T')[0];
+                        
+                dateArray = datePart.split('-');
+                date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+            }
+            return date;
+        }
+        
+        function parseNoSeparatorDateString(value, format) {
+            var date = null,
+                yearBegin = format.indexOf('y'),
+                monthBegin = format.indexOf('M'),
+                dayBegin = format.indexOf('d'),
+                yearIndex,
+                monthIndex,
+                dayIndex;
+            if (angular.isString(value) && value.length === 8 && !isNaN(value)) {
+                if ((dayBegin < yearBegin) && (monthBegin < yearBegin)) {
+                    yearIndex = 4;
+                    if (monthBegin < dayBegin) {
+                        dayIndex = 2;
+                        monthIndex = 0;
+                    } else {
+                        dayIndex = 0;
+                        monthIndex = 2;
+                    }
+                } else if ((yearBegin < monthBegin) && (monthBegin < dayBegin)) {
+                    yearIndex = 0;
+                    monthIndex = 4;
+                    dayIndex = 6;
+                } else {
+                    return null;
+                }
+                        
+                date = new Date(value.substr(yearIndex, 4), (value.substr(monthIndex, 2) - 1), value.substr(dayIndex, 2)); 
+            }                  
+            return date;
+        }
+        
+        function matchSeparator(value) {
+            return value.match(/[.\/\-\s].*?/);
+        }
+        
+        function dateHasSeparator(value) {
+            /*
+            * Validation criteria:
+            * A separator exists
+            * There is no separator at the beginning
+            * There is no separator at the end
+            * Two separators exist
+            * All parts of the date have a non-zero value
+            */
+
+            var separator = matchSeparator(value),
+                valueArray = value.split(separator),
+                separatorAtEnd = value.indexOf(separator, value.length - 1) !== -1,
+                separatorAtBeginning = value.indexOf(separator) === 0,
+                hasTwoSeparators = valueArray.length - 1 === 2,
+                anyPartIsZero = valueArray.some(function (e) {
+                    return Number(e) === 0;
+                });
+
+            return (separator && !separatorAtEnd && !separatorAtBeginning && hasTwoSeparators && !anyPartIsZero);
+        }
+        
+        function isMomentParsable(value, format) {
+            var yearParts,
+                yearIndex,
+                monthIndex,
+                dayIndex,
+                separator;
+            
+            if (angular.isString(value) && dateHasSeparator(value)) {
+                
+                if (value.length === 10) {
+                    return true;
+                } else if (value.length === 9 || value.length === 8) {
+                    //insure that years have 4 characters
+                    separator = matchSeparator(value);
+                    yearParts = value.split(separator);
+                    yearIndex = format.indexOf('y');
+                    monthIndex = format.indexOf('M');
+                    dayIndex = format.indexOf('d');
+                    if (yearIndex > monthIndex && yearIndex > dayIndex) {
+                        return yearParts[2].length === 4;
+                    }
+                    
+                    if (yearIndex < monthIndex && yearIndex < dayIndex) {
+                        return yearParts[0].length === 4;
+                    }
+                    
+                }
+
+            }
+            
+            return false;
+        }
+                        
+        
+                    
+        function parseMoment(value, format) {
+            var date = null,
+                momentDate;
+            
+            if (isMomentParsable(value, format)) {
+                momentDate = bbMoment(value, format.toUpperCase());
+                if (momentDate.isValid()) {
+                    date = momentDate.toDate();
+                }
+            }
+            
+            return date;
+        }
+        
+        return {
+            parseUTCString: parseUTCString,
+            parseNoSeparatorDateString: parseNoSeparatorDateString,
+            parseMoment: parseMoment,
+            runParsers: function (value, format) {
+                var date = null;
+                
+                if (!value || angular.isDate(value) || value === '') {
+                    return value;
+                }
+                
+                date = parseUTCString(value);
+                
+                if (angular.isDate(date)) {
+                    return date;
+                }
+                
+                date = parseNoSeparatorDateString(value, format);
+                
+                if (angular.isDate(date)) {
+                    return date;
+                }
+                 
+                date = parseMoment(value, format);
+
+                return date;
+                
+            }
+        };
+    }]);
+
+        
+}(jQuery));
+/*jshint browser: true */
 /*global angular */
 
 /** @module Daterangepicker
@@ -2230,6 +2682,266 @@ This service provides additional functionality that works closely with the direc
             };
         }]);
 
+}());
+/*jshint browser: true */
+/*global angular */
+
+/** @module File attachments
+@description The file attachments module contains two directives to make it easier to add multiple files to a form.
+The `bb-file-drop` directive provides an element that can both be clicked to select a file from the user's
+local drive or serve as a drop zone where files can be dragged from the user's local drive.  The directive can
+also optionally display controls for the user to add a hyperlink to a file on the web.
+
+The contents of the directive may be left blank to display the default UI for the drop zone, or you may include your
+own custom content to be displayed instead of the default UI.
+
+### File Drop Settings ###
+
+- `bb-file-drop-accept` *(Optional)* A comma-delimited list of MIME types that may be dropped or selected.
+- `bb-file-drop-multiple` *(Default: `true`)* A flag indicating whether multiple files may be dropped at once.
+- `bb-file-drop-allow-dir` *(Default: `true`)* A flag indicating whether a directory can be selected.
+- `bb-file-drop-min-size` *(Optional)* The minimum size in bytes of a valid file.
+- `bb-file-drop-max-size` *(Optional)* The maximum size in bytes of a valid file.
+- `bb-file-drop-change` A function that is called when a file or files are selected when the user drops files onto the
+drop zone or selects them by clicking the element.  This function accepts 2 parameters:
+ - `files` An array of valid files that were dropped or selected.
+ - `rejectedFiles` An array of files that did not meet the specified file type and/or size requirements.
+- `bb-file-drop-link` *(Optional)* The attribute with no value can be specified)* Indicates that an option to add hyperlinks
+should be displayed.
+- `bb-file-drop-link-change` *(Optional)* A function that is called when the user adds a hyperlink.  The function accepts one
+`link` parameter.  The `link` will have a `url` property containing the link the user added.
+
+The `bb-file-item` directive displays summary information about a file that has been added to a form.  By default
+it displays the file's name and a delete button, and if the file from the user's local drive rather than a hyperlink,
+a the file's size and thumbnail will also be displayed.  Any content inside this directive will be displayed to the right
+of the preview image.
+
+### File Item Settings ###
+
+- `bb-file-item` The file or hyperlink to display.  If the item is a file, the file size and a preview will be displayed.
+- `bb-file-item-delete` A function to call when an item's delete button is clicked.  The deleted item will be passed
+to the function.
+ */
+(function () {
+    'use strict';
+    
+    angular.module(
+        'sky.fileattachments', 
+        [
+            'sky.fileattachments.filedrop', 
+            'sky.fileattachments.fileitem', 
+            'sky.fileattachments.filesize'
+        ]
+    );
+}());
+/*global angular, jQuery */
+
+(function ($) {
+    'use strict';
+    
+    function bbFileDrop($parse, $templateCache) {
+        return {
+            link: function (scope, el, attrs) {
+                scope.bbFileDrop = {
+                    hasTranscludeContents: $.trim(el.find('.bb-file-drop-contents-custom').html()).length > 0,
+                    allowLinks: angular.isDefined(attrs.bbFileDropLink),
+                    addLink: function () {
+                        scope.bbFileDropLinkChange({
+                            link: {
+                                url: scope.bbFileDrop.url
+                            }
+                        });
+                        
+                        scope.bbFileDrop.url = null;
+                    },
+                    fileChange: function ($files, $event, $rejectedFiles) {
+                        scope.bbFileDropChange({
+                            files: $files,
+                            rejectedFiles: $rejectedFiles 
+                        });
+                    }
+                };
+            },
+            scope: {
+                bbFileDropChange: '&',
+                bbFileDropLinkChange: '&'
+            },
+            template: function (el, attrs) {
+                el.html($templateCache.get('sky/templates/fileattachments/filedrop.html'));
+                
+                el.find('.bb-file-drop').attr({
+                    'ngf-allow-dir': attrs.bbFileDropAllowDir,
+                    'ngf-accept': attrs.bbFileDropAccept,
+                    'ngf-multiple': attrs.bbFileDropMultiple || 'true',
+                    'ngf-min-size': attrs.bbFileDropMinSize || '0',
+                    'ngf-max-size': attrs.bbFileDropMaxSize || '500000'
+                });
+            },
+            transclude: true
+        };
+    }
+    
+    bbFileDrop.$inject = ['$parse', '$templateCache'];
+    
+    angular.module('sky.fileattachments.filedrop', ['ngFileUpload', 'sky.resources'])
+        .directive('bbFileDrop', bbFileDrop);
+}(jQuery));
+/*global angular */
+
+(function () {
+    'use strict';
+    
+    function bbFileItem() {
+        return {
+            link: function (scope) {
+                function getFileTypeUpper() {
+                    var fileType = '';
+                    
+                    if (scope.item) {
+                        fileType = scope.item.type || '';
+                    }
+                    
+                    return fileType.toUpperCase();
+                }
+                
+                function getFileExtensionUpper() {
+                    var extension = '',
+                        name;
+                    
+                    if (scope.item) {
+                        name = scope.item.name || '';
+                        
+                        extension = name.substr(name.lastIndexOf('.')) || '';
+                    }
+                    
+                    return extension.toUpperCase();
+                }
+                
+                scope.bbFileItem = {
+                    isFile: function () {
+                        var item = scope.item;
+                        
+                        return item && angular.isDefined(item.size);
+                    },
+                    isImg: function () {
+                        var fileTypeUpper = getFileTypeUpper();
+                        return fileTypeUpper.indexOf("IMAGE/") === 0;
+                    }
+                };
+                
+                scope.$watch('item.type', function () {
+                    var cls,
+                        extensionUpper = getFileExtensionUpper(),
+                        fileTypeUpper;
+                    
+                    switch (extensionUpper) {
+                        case '.PDF':
+                            cls = 'pdf';
+                            break;
+                        case '.GZ':
+                        case '.RAR':
+                        case '.TGZ':
+                        case '.ZIP':
+                            cls = 'archive';
+                            break;
+                        case '.PPT':
+                        case '.PPTX':
+                            cls = 'powerpoint';
+                            break;
+                        case '.DOC':
+                        case '.DOCX':
+                            cls = 'word';
+                            break;
+                        case '.XLS':
+                        case '.XLSX':
+                            cls  = 'excel';
+                            break;
+                        case '.TXT':
+                            cls = 'text';
+                            break;
+                        case '.HTM':
+                        case '.HTML':
+                            cls = 'code';
+                            break;
+                    }
+                    
+                    if (!cls) {
+                        fileTypeUpper = getFileTypeUpper();
+                        
+                        switch (fileTypeUpper.substr(0, fileTypeUpper.indexOf('/'))) {
+                            case 'AUDIO':
+                                cls = 'audio';
+                                break;
+                            case 'TEXT':
+                                cls = 'text';
+                                break;
+                            case 'VIDEO':
+                                cls = 'video';
+                                break;
+                        }
+                    }
+                    
+                    scope.bbFileItem.otherCls = 'fa-file-' + (cls ? cls + '-' : '') + 'o';
+                });
+            },
+            scope: {
+                item: '=bbFileItem',
+                itemDelete: '&bbFileItemDelete'
+            },
+            templateUrl: 'sky/templates/fileattachments/fileitem.html',
+            transclude: true
+        };
+    }
+    
+    angular.module('sky.fileattachments.fileitem', ['ngFileUpload', 'sky.fileattachments.filesize', 'sky.resources'])
+        .directive('bbFileItem', bbFileItem);
+}());
+/*global angular */
+
+(function () {
+    'use strict';
+    
+    function bbFileSize($filter, bbFormat, bbResources) {
+        return function (input) {
+            var decimalPlaces = 0,
+                dividend = 1,
+                formattedSize,
+                roundedSize,
+                template;
+            
+            if (input === null || angular.isUndefined(input)) {
+                return '';
+            }
+            
+            if (Math.abs(input) === 1) {
+                template = bbResources.file_size_b_singular;
+            } else if (input < 1000) {
+                template = bbResources.file_size_b_plural;
+            } else if (input < 1e6) {
+                template = bbResources.file_size_kb;
+                dividend = 1000;
+            } else if (input < 1e9) {
+                template = bbResources.file_size_mb;
+                dividend = 1e6;
+                decimalPlaces = 1;
+            } else {
+                template = bbResources.file_size_gb;
+                dividend = 1e9;
+                decimalPlaces = 1;
+            }
+
+            roundedSize = Math.floor(input / (dividend / Math.pow(10, decimalPlaces))) / Math.pow(10, decimalPlaces);
+
+            formattedSize = $filter('number')(roundedSize);
+
+            return bbFormat.formatText(template, formattedSize);
+        };
+    }
+    
+    bbFileSize.$inject = ['$filter', 'bbFormat', 'bbResources'];
+    
+    angular.module('sky.fileattachments.filesize', ['sky.format', 'sky.resources'])
+        .filter('bbFileSize', bbFileSize);
 }());
 /*global angular */
 
@@ -5596,11 +6308,20 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
     'use strict';
 
     var serviceModules = [];
+    
+    function bbResoucesFilter(bbResources) {
+        return function (name) {
+            return bbResources[name];
+        };
+    }
+    
+    bbResoucesFilter.$inject = ['bbResources'];
 
     angular.module('sky.resources', serviceModules)
         .constant('bbResources', {
             /* Strings are defined in separate JSON files located in js/sky/locales. */
-        });
+        })
+        .filter('bbResources', bbResoucesFilter);
 }());
 /*jshint browser: true */
 /*global angular */
@@ -8549,6 +9270,7 @@ The `bbWizardNavigator` also exposes the following methods:
         'sky.checklist',
         'sky.data',
         'sky.datefield',
+        'sky.datepicker',
         'sky.daterangepicker',
         'sky.filters',
         'sky.format',
@@ -8589,6 +9311,13 @@ The `bbWizardNavigator` also exposes the following methods:
         modules.push('sky.toast');
     } catch (ignore) {
         /* The toastr module isn't defined.  Do not load sky.toast module */
+    }
+
+    try {
+        angular.module('ngFileUpload');
+        modules.push('sky.fileattachments');
+    } catch (ignore) {
+        
     }
 
     angular.module('sky', modules);
@@ -8687,11 +9416,26 @@ bbResourcesOverrides = {
     "date_range_picker_filter_description_today": "{0} for today", //text for date range picker
     "date_range_picker_filter_description_yesterday": "{0} from yesterday", //text for date range picker
     "date_range_picker_filter_description_tomorrow": "{0} for tomorrow", //text for date range picker
+    "file_size_b_plural": "{0} bytes",
+    "file_size_b_singular": "{0} byte",
+    "file_size_kb": "{0} KB",
+    "file_size_mb": "{0} MB",
+    "file_size_gb": "{0} GB",
+    "file_upload_drag_file_here": "Drag a file here",
+    "file_upload_drop_files_here": "Drop files here",
+    "file_upload_invalid_file": "This file type is invalid",
+    "file_upload_link_placeholder": "http://www.something.com/file",
+    "file_upload_or_click_to_browse": "or click to browse",
+    "file_upload_paste_link": "Paste a link to a file",
+    "file_upload_paste_link_done": "Done",
     "searchfield_searching": "Searching...", //text for ui-select search control while performing a remote search
     "searchfield_no_records": "Sorry, no matching records found", // text for ui-select search control when no records are found,
     "wizard_navigator_finish": "Finish", // Text displayed on the next button when a wizard is ready for completion.
     "wizard_navigator_next": "Next", // Text displayed on a wizard"s next button.
-    "wizard_navigator_previous": "Previous" // Text displayed on a wizard"s previous button.
+    "wizard_navigator_previous": "Previous", // Text displayed on a wizard"s previous button.
+    "datepicker_today": "Today", //Text displayed in the Today button of the datepicker
+    "datepicker_clear": "Clear", //Text displayed in the Clear button of the datepicker
+    "datepicker_close": "Done" //Text displayed in the Close button of the datepicker
 };
 
 angular.module('sky.resources')
@@ -8763,12 +9507,103 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <i class="fa fa-calendar"></i>\n' +
         '    </button>\n' +
         '</span>');
+    $templateCache.put('sky/templates/datepicker/datepicker.html',
+        '<div>\n' +
+        '    <div ng-if="locals.loaded" class="input-group bb-datefield">\n' +
+        '        <input type="text" class="form-control" ng-model="locals.date" is-open="locals.opened" datepicker-options="locals.dateOptions" datepicker-popup="{{format}}" show-button-bar="locals.showButtonBar" current-text="{{resources.datepicker_today}}" clear-text="{{resources.datepicker_clear}}" close-text="{{resources.datepicker_close}}" datepicker-append-to-body="{{locals.appendToBody}}" close-on-date-selection="{{locals.closeOnSelection}}" bb-datepicker-custom-validate="{{locals.hasCustomValidation}}" placeholder="{{placeholderText}}"/>\n' +
+        '        <span class="bb-datepicker-button-container add-on input-group-btn" ng-class="{\'bb-datefield-open\': locals.opened}">\n' +
+        '            <button type="button" class="btn btn-default bb-date-field-calendar-button" ng-click="locals.open($event)">\n' +
+        '                <i class="fa fa-calendar"></i>\n' +
+        '            </button>\n' +
+        '        </span>\n' +
+        '    </div>\n' +
+        '</div>');
     $templateCache.put('sky/templates/daterangepicker/daterangepicker.html',
         '<div>\n' +
         '    <select data-bbauto-field="{{bbDateRangePickerAutomationId}}_DateRangeType"\n' +
         '            class="form-control"\n' +
         '            ng-options="locals.bbDateRangePicker.getDateRangeTypeCaption(t) for t in (bbDateRangePickerOptions.availableDateRangeTypes || locals.bbDateRangePicker.defaultDateRangeOptions)"\n' +
         '            ng-model="bbDateRangePickerValue.dateRangeType" />\n' +
+        '</div>');
+    $templateCache.put('sky/templates/fileattachments/filedrop.html',
+        '<div class="row bb-file-drop-row">\n' +
+        '    <div class="col-sm-6 col-xs-12 bb-file-drop-col">\n' +
+        '        <div \n' +
+        '             class="bb-file-drop"\n' +
+        '             ngf-select \n' +
+        '             ngf-drop \n' +
+        '             ngf-keep="false"\n' +
+        '             ngf-drag-over-class="{accept: \'bb-file-drop-accept\', reject: \'bb-file-drop-reject\'}"\n' +
+        '             ngf-change="bbFileDrop.fileChange($files, $event, $rejectedFiles)"\n' +
+        '             >\n' +
+        '            <div class="bb-file-drop-contents" ng-if="!bbFileDrop.hasTranscludeContents">\n' +
+        '                <div class="bb-file-drop-contents-not-over">\n' +
+        '                    <h4>{{\'file_upload_drag_file_here\' | bbResources}}</h4>\n' +
+        '                    <h5>{{\'file_upload_or_click_to_browse\' | bbResources}}</h5>\n' +
+        '                    <i class="fa fa-cloud-upload bb-file-upload-icon"></i>\n' +
+        '                </div>\n' +
+        '                <div class="bb-file-drop-contents-accept">\n' +
+        '                    <h4>{{\'file_upload_drop_files_here\' | bbResources}}</h4>\n' +
+        '                    <i class="fa fa-bullseye bb-file-upload-icon"></i>\n' +
+        '                </div>\n' +
+        '                <div class="bb-file-drop-contents-reject">\n' +
+        '                    <h4>{{\'file_upload_invalid_file\' | bbResources}}</h4>\n' +
+        '                    <i class="fa fa-times-circle bb-file-upload-icon"></i>\n' +
+        '                </div>\n' +
+        '            </div>\n' +
+        '            <div class="bb-file-drop-contents-custom" ng-transclude></div>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '    <div class="col-sm-6 col-xs-12 bb-file-drop-col" ng-if="bbFileDrop.allowLinks">\n' +
+        '        <div class="bb-file-drop-contents">\n' +
+        '            <div class="bb-file-drop-link">\n' +
+        '                <h4 class="bb-file-drop-link-header">{{\'file_upload_paste_link\' | bbResources}}</h4>\n' +
+        '                <form ng-submit="bbFileDrop.addLink()">\n' +
+        '                    <div class="form-group">\n' +
+        '                        <input \n' +
+        '                               type="text" \n' +
+        '                               class="form-control" \n' +
+        '                               placeholder="{{\'file_upload_link_placeholder\' | bbResources}}"\n' +
+        '                               ng-model="bbFileDrop.url"  \n' +
+        '                               />\n' +
+        '                    </div>\n' +
+        '                    <button type="submit" class="btn btn-primary" ng-disabled="!bbFileDrop.url">\n' +
+        '                        {{\'file_upload_paste_link_done\' | bbResources}}\n' +
+        '                    </button>\n' +
+        '                </form>\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/fileattachments/fileitem.html',
+        '<div class="bb-file-item">\n' +
+        '    <div class="row bb-file-item-title">\n' +
+        '        <div class="col-xs-10">\n' +
+        '            <div class="bb-file-item-name">\n' +
+        '                <strong>{{item.name || item.url}}</strong>\n' +
+        '            </div>\n' +
+        '            <div class="bb-file-item-size" ng-if="bbFileItem.isFile()">\n' +
+        '                ({{item.size | bbFileSize}})\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '        <div class="col-xs-2">\n' +
+        '            <div class="pull-right">\n' +
+        '                <button type="button" class="btn btn-white bb-file-item-btn-delete" ng-click="itemDelete()">\n' +
+        '                    <i class="glyphicon glyphicon-trash"></i>\n' +
+        '                </button>\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '    <div class="row">\n' +
+        '        <div class="col-xs-3" ng-switch="bbFileItem.isImg()">\n' +
+        '            <img class="bb-file-item-preview-img center-block" ngf-src="item" ng-switch-when="true" />\n' +
+        '            <div class="bb-file-item-preview-other" ng-switch-when="false">\n' +
+        '                <i class="fa" ng-class="bbFileItem.otherCls"></i>\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '        <div class="col-xs-9" ng-transclude>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
         '</div>');
     $templateCache.put('sky/templates/grids/actionbar.html',
         '<div ng-show="locals.showActionBar" data-bbauto-view="GridActionBar">\n' +

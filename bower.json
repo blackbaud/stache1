@@ -11,7 +11,7 @@
     "angular-ui-router": "~0.2.13",
     "angular-ui-select": "~0.11.1",
     "autoNumeric": "~1.9.30",
-    "bb-sky-sass": "git@github.com:blackbaud/sky.git",
+    "bb-sky-sass": "git@github.com:blackbaud/sky.git#344c26a137ec86e46a97b013705464ecb12ec281",
     "blockui": "*",
     "bootbox": "~4.3.0",
     "bootstrap-datepicker-eyecon": "~1.0.0",

@@ -91,11 +91,26 @@ bbResourcesOverrides = {
     "date_range_picker_filter_description_today": "{0} for today", //text for date range picker
     "date_range_picker_filter_description_yesterday": "{0} from yesterday", //text for date range picker
     "date_range_picker_filter_description_tomorrow": "{0} for tomorrow", //text for date range picker
+    "file_size_b_plural": "{0} bytes",
+    "file_size_b_singular": "{0} byte",
+    "file_size_kb": "{0} KB",
+    "file_size_mb": "{0} MB",
+    "file_size_gb": "{0} GB",
+    "file_upload_drag_file_here": "Drag a file here",
+    "file_upload_drop_files_here": "Drop files here",
+    "file_upload_invalid_file": "This file type is invalid",
+    "file_upload_link_placeholder": "http://www.something.com/file",
+    "file_upload_or_click_to_browse": "or click to browse",
+    "file_upload_paste_link": "Paste a link to a file",
+    "file_upload_paste_link_done": "Done",
     "searchfield_searching": "Searching...", //text for ui-select search control while performing a remote search
     "searchfield_no_records": "Sorry, no matching records found", // text for ui-select search control when no records are found,
     "wizard_navigator_finish": "Finish", // Text displayed on the next button when a wizard is ready for completion.
     "wizard_navigator_next": "Next", // Text displayed on a wizard"s next button.
-    "wizard_navigator_previous": "Previous" // Text displayed on a wizard"s previous button.
+    "wizard_navigator_previous": "Previous", // Text displayed on a wizard"s previous button.
+    "datepicker_today": "Today", //Text displayed in the Today button of the datepicker
+    "datepicker_clear": "Clear", //Text displayed in the Clear button of the datepicker
+    "datepicker_close": "Done" //Text displayed in the Close button of the datepicker
 };
 
 angular.module('sky.resources')
