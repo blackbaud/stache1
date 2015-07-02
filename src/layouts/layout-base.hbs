@@ -109,7 +109,7 @@
     <!-- Omnibar Placeholder -->
     <div id="omnibar"></div>
 
-    <!-- build:js {{ assets }}js/lib.js -->
+    <!-- build:js {{ assets }}js/lib.min.js -->
     <script src="{{ assets }}js/libs/easyXDM.min.js"></script>
     <script src="{{ assets }}vendor/jquery/dist/jquery.min.js"></script>
     <script src="{{ assets }}vendor/angular/angular.min.js"></script>
@@ -119,10 +119,7 @@
     <script src="{{ assets }}vendor/holderjs/holder.min.js"></script>
     <script src="{{ assets }}vendor/moment/moment.js"></script>
     <script src="{{ assets }}vendor/stellar/jquery.stellar.js"></script>
-    <!-- endbuild -->
-
     {{# if stache.config.sky }}
-      <!-- build:js {{ assets }}js/sky-and-lib.js -->
       <script src="{{ assets }}vendor/angular-animate/angular-animate.js"></script>
       <script src="{{ assets }}vendor/angular-toastr/dist/angular-toastr.tpls.js"></script>
       <script src="{{ assets }}vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"></script>
@@ -138,7 +135,12 @@
       <script src="{{ assets }}vendor/responsive-tabs/js/jquery.responsiveTabs.js"></script>
       <script src="{{ assets }}vendor/bootstrap-datepicker-eyecon/js/bootstrap-datepicker.js"></script>
       <script src="{{ assets }}vendor/ng-file-upload/ng-file-upload.js"></script>
-      <script src="{{ assets }}vendor/bb-sky-sass/dist/js/sky.min.js"></script>
+    {{/ if }}
+    <!-- endbuild -->
+
+    {{# if stache.config.sky }}
+      <!-- build:js {{ assets }}js/sky.min.js -->
+      <script src="{{ assets }}vendor/bb-sky-sass/dist/js/sky.js"></script>
       <!-- endbuild -->
     {{/ if }}
 
