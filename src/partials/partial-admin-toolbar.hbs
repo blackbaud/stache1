@@ -1,0 +1,32 @@
+<div id="admin-toolbar-wrapper" class="collapse">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="admin-toolbar clearfix">
+          {{# inherit stache.config.showAdminTrigger showAdminTrigger }}
+            <ul class="list-inline pull-left">
+              <li>
+                <a href="{{ triggerSiteRebuildLink }}" class="admin-toolbar-trigger">
+                  <i class="fa fa-bolt"></i>
+                  Trigger Site Rebuild
+                  <i class="state-loading fa fa-spin fa-spinner"></i>
+                  <i class="state-success fa fa-check text-success"></i>
+                  <i class="state-error fa fa-times text-danger"></i>
+                </a>
+              </li>
+            </ul>
+          {{/ inherit }}
+          <ul class="list-inline pull-right">
+            {{# inherit stache.config.editInGitHub editInGitHub }}
+              <li>{{{ include stache.config.partial_edit_github }}}</li>
+            {{/ inherit }}
+
+            {{# inherit stache.config.editInProse editInProse }}
+              <li>{{{ include stache.config.partial_edit_prose }}}</li>
+            {{/ inherit }}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

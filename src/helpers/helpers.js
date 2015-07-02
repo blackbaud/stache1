@@ -14,6 +14,7 @@
 
 module.exports.register = function (Handlebars, options, params) {
 
+  var stache = params.assemble.options.stache;
   var merge = require('merge');
   var cheerio = require('cheerio');
   var fs = require('fs');
@@ -51,7 +52,7 @@ module.exports.register = function (Handlebars, options, params) {
       path = path.replace('index', '');
 
       // Remove our build folder
-      path = path.replace(params.assemble.options.stache.config.build, '');
+      path = path.replace(stache.config.build, '');
 
       // Remove leading & trailing slash
       path = path.replace(/^\/|\/$/g, '');
@@ -371,7 +372,7 @@ module.exports.register = function (Handlebars, options, params) {
     * If settings say to render, wrap content in div
     **/
     draft: function (options) {
-      return params.assemble.options.stache.config.draft ? ('<div class="draft">\r\n\r\n' + getMarked(options.fn(this)) + '\r\n\r\n</div>') : '';
+      return stache.config.draft ? ('<div class="draft">\r\n\r\n' + getMarked(options.fn(this)) + '\r\n\r\n</div>') : '';
     },
 
     /**
@@ -417,7 +418,7 @@ module.exports.register = function (Handlebars, options, params) {
         if (!fs.existsSync(fileWithPath)) {
           fileWithPath = this.page.src.substr(0, this.page.src.lastIndexOf('/')) + '/' + file;
           if (!fs.existsSync(fileWithPath)) {
-            fileWithPath = params.assemble.options.stache.config.content + file;
+            fileWithPath = stache.config.content + file;
             if (!fs.existsSync(fileWithPath)) {
               fileWithPath = '';
             }
@@ -548,7 +549,92 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     withNewline: function(options) {
       return newline(options.fn(this));
+    },
+
+    /**
+    * Block helper to emulate the following logic:
+    * If Globally true then
+    *   Unless locally false (blank is true)
+    *     TRUE
+    * Else if globally false then
+    *   If locally true then
+    *     TRUE
+    **/
+    inherit: function (globally, locally, options) {
+      var r = false;
+      if (globally) {
+        r = typeof locally === 'undefined' || locally.toString() !== 'false';
+      } else {
+        r = locally;
+      }
+      return r ? options.fn(this) : options.inverse(this);
+    },
+
+    /**
+    * Consistently generate the edit link for a file in GitHub
+    **/
+    editInGitHubLink: function (options) {
+      var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
+      return [
+        stache.config.github_protocol,
+        stache.config.github_base,
+        '/',
+        stache.config.github_org,
+        '/',
+        stache.config.github_repo,
+        '/blob/',
+        stache.config.github_branch,
+        '/',
+        src
+      ].join('');
+    },
+
+    /**
+    * Consistently generate the edit link for a file in Prose
+    **/
+    editInProseLink: function (options) {
+      var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
+      return [
+        stache.config.prose_base,
+        '/#',
+        stache.config.github_org,
+        '/',
+        stache.config.github_repo,
+        '/edit/',
+        stache.config.github_branch,
+        '/',
+        src
+      ].join('');
+    },
+
+    /**
+    * Consistently generate the trigger link for a site rebuild
+    **/
+    triggerSiteRebuildLink: function (options) {
+      return [
+        stache.config.kudu_protocol,
+        stache.config.github_repo,
+        stache.config.kudu_suffix
+      ].join('');
+    },
+
+    /**
+    * Consistently generate the GitHub repo link (for site rebuild)
+    **/
+    gitSourceLink: function (options) {
+      return [
+        stache.config.github_protocol,
+        stache.config.github_token,
+        '@',
+        stache.config.github_base,
+        '/',
+        stache.config.github_org,
+        '/',
+        stache.config.github_repo,
+        '.git'
+      ].join('');
     }
+    //https://cc74265fea9af4b4b2cae6a8170e1beec4e79064@github.com/{{ stache.config.github_org }}/sdk-docs.git
 
   });
 };

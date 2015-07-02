@@ -1,0 +1,33 @@
+/*jslint browser: true, es5: true*/
+/*global jQuery */
+(function ($, window, document, undefined) {
+  'use strict';
+  $(function() {
+
+    $('.admin-toolbar-trigger').on('click', function (e) {
+      e.preventDefault();
+      var el = $(this);
+      var url = el.attr('href');
+      var data = JSON.stringify({
+        format: 'basic',
+        url: '{{ gitSourceLink }}'
+      });
+
+      el.addClass('state-loading');
+      $.post(url, data).done(function () {
+        el.addClass('state-success');
+        setTimeout(resetState, 2000);
+      }).fail(function () {
+        el.addClass('state-error');
+        setTimeout(resetState, 2000);
+      }).always(function () {
+        el.removeClass('state-loading');
+      });
+
+      function resetState () {
+        el.removeClass('state-loading state-success state-error');
+      }
+
+    })
+  });
+}(jQuery, window, document));

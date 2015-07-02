@@ -40,6 +40,7 @@
               <div class="col-sm-12">
                 {{{ include stache.config.partial_header_nav }}}
                 {{{ include stache.config.partial_header_search }}}
+                {{{ include stache.config.partial_header_admin }}}
               </div>
             </div>
           </div>
@@ -47,6 +48,10 @@
 
       {{/ if }}
     {{/ if }}
+
+    {{# inherit stache.config.showAdminToolbar showAdminToolbar }}
+      {{{ include stache.config.partial_admin_toolbar }}}
+    {{/ inherit }}
 
     {{# if stache.config.markdown }}
       {{# markdown }}{{ body }}{{/ markdown }}
@@ -149,6 +154,12 @@
     {{# each files.js }}
       <script src="{{ this }}"></script>
     {{/ each }}
+
+    {{# inherit stache.config.showAdminToolbar showAdminToolbar }}
+      <script>
+      {{{ include stache.config.partial_admin_script }}}
+      </script>
+    {{/ inherit }}
 
     {{# if stache.config.showOmnibar }}
       <script src="//signin.blackbaud.com/omnibar.min.js"></script>

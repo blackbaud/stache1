@@ -1,0 +1,39 @@
+/*
+* ==========================================================================
+* ADMIN TOOLBAR
+* ==========================================================================
+*/
+
+
+  #admin-toolbar-wrapper {
+    background-color: rgba(127, 127, 127, .1);
+  }
+
+  .admin-toolbar {
+    padding: 10px 0;
+  }
+
+  .admin-toolbar ul {
+    margin-bottom: 0;
+  }
+
+  .admin-toolbar li {
+    border-left: solid 1px #ccc;
+    padding-left: 10px;
+  }
+
+  .admin-toolbar li:first-child {
+    border-left: 0;
+  }
+
+  .admin-toolbar-trigger .state-loading,
+  .admin-toolbar-trigger .state-error,
+  .admin-toolbar-trigger .state-success {
+    display: none;
+  }
+
+  .admin-toolbar-trigger.state-loading .state-loading,
+  .admin-toolbar-trigger.state-error .state-error,
+  .admin-toolbar-trigger.state-success .state-success {
+    display: inline-block;
+  }

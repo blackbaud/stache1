@@ -17,6 +17,11 @@ partials: <%= stache.config.src %>partials/
 partial_omnibar: <%= stache.config.partials %>partial-omnibar.hbs
 partial_header_nav: <%= stache.config.partials %>partial-header-nav.hbs
 partial_header_search:
+partial_header_admin: <%= stache.config.partials %>partial-header-admin.hbs
+partial_admin_toolbar: <%= stache.config.partials %>partial-admin-toolbar.hbs
+partial_admin_script: <%= stache.config.partials %>partial-admin-script.hbs
+partial_edit_github: <%= stache.config.partials %>partial-edit-github.hbs
+partial_edit_prose: <%= stache.config.partials %>partial-edit-prose.hbs
 partial_footer_logo: <%= stache.config.partials %>partial-footer-logo.hbs
 partial_footer_navigation: <%= stache.config.partials %>partial-footer-navigation.hbs
 partial_footer_internal: <%= stache.config.partials %>partial-footer-internal.hbs
@@ -46,6 +51,10 @@ draft: true
 showHeader: true
 showFooter: true
 showOmnibar: true
+showAdminToolbar: false
+showAdminTrigger: true
+editInGitHub: true
+editInProse: true
 markdown: true
 comments: true
 comments_key: blackbaud
@@ -64,6 +73,14 @@ nav_exclude:
   - .DS_Store
 
 # =============================================
-# STACHE - LINKS
+# STACHE - EDIT LINKS
 # =============================================
-githubbase: https://github.com/blackbaud-community
+kudu_protocol: http://
+kudu_suffix: .scm.docs.blackbaudhosting.com/deploy
+prose_base: http://prose.io
+github_protocol: https://
+github_base: github.com
+github_token:
+github_org: blackbaud
+github_repo: qa-docs
+github_branch: master
