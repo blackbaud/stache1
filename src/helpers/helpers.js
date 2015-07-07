@@ -634,7 +634,6 @@ module.exports.register = function (Handlebars, options, params) {
         '.git'
       ].join('');
     }
-    //https://cc74265fea9af4b4b2cae6a8170e1beec4e79064@github.com/{{ stache.config.github_org }}/sdk-docs.git
 
   });
 };
