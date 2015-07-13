@@ -613,7 +613,7 @@ module.exports.register = function (Handlebars, options, params) {
     triggerSiteRebuildLink: function (options) {
       return [
         stache.config.kudu_protocol,
-        stache.config.github_repo,
+        stache.config.kudu_repo,
         stache.config.kudu_suffix
       ].join('');
     },

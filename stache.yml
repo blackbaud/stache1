@@ -82,5 +82,6 @@ github_protocol: https://
 github_base: github.com
 github_token:
 github_org: blackbaud
-github_repo: qa-docs
+github_repo:
 github_branch: master
+kudu_repo: <%= stache.config.github_repo %>
