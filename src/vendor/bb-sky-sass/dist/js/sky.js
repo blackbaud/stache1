@@ -2,7 +2,9 @@
 
 /** @module Action Bar
 
-@description ### Additional dependencies ###
+@description The action bar is used to create a sky themed container for buttons. It has the option to collapse a group of buttons into a dropdown view when the screen is in xtra small mode.
+
+### Additional dependencies ###
 
 - None
 
@@ -36,15 +38,15 @@
                     scope: {
                         title: '=?bbActionBarItemGroupTitle'
                     },
-                    controller: function ($scope) {
+                    controller: ['$scope', function ($scope) {
                         $scope.items = [];
 
                         this.addItem = function (itemCallback, itemContent) {
                             $scope.items.push({callback: itemCallback, content: itemContent});
                         };
-                    },
+                    }],
                     link: function ($scope) {
-                        if ($scope.title === null || angular.isUndefined($scope.title)) {
+                        if ($scope.title === null || angular.isUndefined($scope.title)) { 
                             $scope.title = bbResources.action_bar_actions;
                         }
                     },
@@ -58,16 +60,14 @@
                     replace: true,
                     transclude: true,
                     restrict: 'E',
-                    require: '?^bbActionBarItemGroup',
+                    require: '?^^bbActionBarItemGroup',
                     scope: {
                         actionCallback: '&ngClick'
                     },
-
-                    link: function ($scope, elem, attrs, itemGroup) {
-                        if (itemGroup !== null && !angular.isUndefined(itemGroup)) {
-                            itemGroup.addItem($scope.actionCallback, elem.text());
+                    link: function ($scope, elem, attrs, itemGroupCtrl) {
+                        if (itemGroupCtrl !== null && !angular.isUndefined(itemGroupCtrl) && angular.isFunction(itemGroupCtrl.addItem)) {
+                            itemGroupCtrl.addItem($scope.actionCallback, elem.text());
                         }
-
                     },
                     template: '<button class="btn btn-white" type="button"><ng-transclude/></button>'
                 };
@@ -1399,6 +1399,7 @@ The bbCheck directive allows you to change an input element of type checkbox or 
 
             function createAjaxPromise(item, isPost, requestType) {
                 var data,
+                    httpOptions,
                     isGet,
                     textContent,
                     type,
@@ -1432,14 +1433,28 @@ The bbCheck directive allows you to change an input element of type checkbox or 
 
                 url = ajaxUrl(url, requestType);
 
-                return $http({
+                httpOptions = {
                     method: type,
                     url: url,
                     cache: requestType !== 0,
                     data: data ? JSON.stringify(data) : null,
                     dataType: requestType !== 0 ? 'text' : 'json',
                     withCredentials: requestType === 0
-                });
+                };
+                
+                if (data instanceof window.FormData) {
+                    // Angular sets the Content-Type to application/json by default, but when posting FormData
+                    // it should clear out the Content-Type and let the browser determine it.
+                    // https://uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs
+                    angular.extend(httpOptions, {
+                        transformRequest: angular.identity,
+                        headers: {
+                            'Content-Type': undefined
+                        }
+                    });
+                }
+                
+                return $http(httpOptions);
             }
 
             function addPromises(items, urls, requestType) {
@@ -1960,10 +1975,10 @@ The DateField directive allows you to use a common textbox with calendar picker 
 ## Datepicker settings
   - `ng-model` An object to bind the date value in and out of the datepicker. This will be set to a Javascript Date object when set or parsed from the bootstrap datepicker.
   - `ng-required` Boolean value that indicates whether the field is required.
-  - `bb-date-options` Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the angular ui bootstrap datepicker in the `bbDateFieldConfig` object. In sky the default for `showWeeks` is false and `startingDay` is 0 unless overridden in `bbDateFieldConfig`. 
+  - `bb-date-options` Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the angular ui bootstrap datepicker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. In sky the default for `showWeeks` is false and `startingDay` is 0 unless overridden in `bbDatepickerConfig`. 
   - `bb-custom-validation` an object containing the following:
     - `formatValue` A function that will be called when text is entered directly into the textbox. The only parameter to the function will be the raw value of the textbox. The function should return an object or a promise of an object with properties of `formattedValue` and optionally `formattingErrorMessage` if there was a problem when trying to format the input value.
-  - `bb-date-format` The format string that the date should display as in the input text box. This will override the default set in the `bbDateFieldConfig` `dateFormat` property. The format string should be set up like the [angular](https://docs.angularjs.org/api/ng/filter/date) date filter format strings.
+  - `bb-date-format` The format string that the date should display as in the input text box. This will override the default set in the `bbDatepickerConfig` `currentCultureDateFormatString` property. The default format in sky is set as `MM/dd/yyyy`. The format string should be set up like the [angular](https://docs.angularjs.org/api/ng/filter/date) date filter format strings.
   - `close-on-date-selection` *(Default: true):*  Whether to close calendar when a date is chosen.
   - `datepicker-append-to-body` *(Default: false):*  Append the datepicker popup element to `body`, rather than inserting after the datepicker input.
   - `placeholder` overrides the default placeholder text of the `bb-datepicker` input
@@ -1973,9 +1988,13 @@ The DateField directive allows you to use a common textbox with calendar picker 
 
 (function ($) {
     'use strict';
-    angular.module('sky.datepicker', ['sky.resources', 'sky.datefield', 'sky.moment'])
-    
-        .directive('bbDatepicker', ['bbResources', 'bbDateFieldConfig', 'bbDatepickerParser', '$timeout', '$q', '$filter', function (bbResources, bbDateFieldConfig, bbDatepickerParser, $timeout, $q, $filter) {
+    angular.module('sky.datepicker', ['sky.resources', 'sky.moment'])
+        .constant('bbDatepickerConfig', {
+            currentCultureDateFormatString: 'MM/dd/yyyy',
+            showWeeks: false,
+            startingDay: 0
+        })
+        .directive('bbDatepicker', ['bbResources', 'bbDatepickerConfig', 'bbDatepickerParser', '$timeout', '$q', '$filter', function (bbResources, bbDatepickerConfig, bbDatepickerParser, $timeout, $q, $filter) {
             return {
                 replace: true,
                 restrict: 'E',
@@ -2077,8 +2096,8 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         loaded: false,
                         closeOnSelection: true,
                         dateOptions: {
-                            showWeeks: bbDateFieldConfig.showWeeks,
-                            startingDay: bbDateFieldConfig.startingDay
+                            showWeeks: bbDatepickerConfig.showWeeks,
+                            startingDay: bbDatepickerConfig.startingDay
                         },
                         hasCustomValidation: false
                     };
@@ -2098,7 +2117,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     }
                     
                     if (angular.isUndefined($scope.format)) {
-                        $scope.format = bbDateFieldConfig.dateFormat;
+                        $scope.format = bbDatepickerConfig.currentCultureDateFormatString;
                     }
                     
                     if (angular.isDefined($scope.dateOptions)) {
@@ -2704,12 +2723,14 @@ own custom content to be displayed instead of the default UI.
 - `bb-file-drop-max-size` *(Optional)* The maximum size in bytes of a valid file.
 - `bb-file-drop-change` A function that is called when a file or files are selected when the user drops files onto the
 drop zone or selects them by clicking the element.  This function accepts 2 parameters:
- - `files` An array of valid files that were dropped or selected.
+ - `files` An array of valid files that were dropped or selected.  Each item is a JavaScript [File](https://developer.mozilla.org/en-US/docs/Web/API/File)
+ object.
  - `rejectedFiles` An array of files that did not meet the specified file type and/or size requirements.
 - `bb-file-drop-link` *(Optional)* The attribute with no value can be specified)* Indicates that an option to add hyperlinks
 should be displayed.
 - `bb-file-drop-link-change` *(Optional)* A function that is called when the user adds a hyperlink.  The function accepts one
 `link` parameter.  The `link` will have a `url` property containing the link the user added.
+- `bb-file-drop-noclick` Specify this attribute when you want to disable the ability to select a file from a file dialog by clicking the element.
 
 The `bb-file-item` directive displays summary information about a file that has been added to a form.  By default
 it displays the file's name and a delete button, and if the file from the user's local drive rather than a hyperlink,
@@ -2767,15 +2788,25 @@ to the function.
                 bbFileDropLinkChange: '&'
             },
             template: function (el, attrs) {
+                var dropEl;
+                
                 el.html($templateCache.get('sky/templates/fileattachments/filedrop.html'));
                 
-                el.find('.bb-file-drop').attr({
+                dropEl = el.find('.bb-file-drop');
+                
+                dropEl.attr({
                     'ngf-allow-dir': attrs.bbFileDropAllowDir,
                     'ngf-accept': attrs.bbFileDropAccept,
                     'ngf-multiple': attrs.bbFileDropMultiple || 'true',
                     'ngf-min-size': attrs.bbFileDropMinSize || '0',
                     'ngf-max-size': attrs.bbFileDropMaxSize || '500000'
                 });
+                
+                if (angular.isDefined(attrs.bbFileDropNoclick)) {
+                    dropEl.addClass('bb-file-drop-noclick');
+                } else {
+                    dropEl.attr('ngf-select', '');
+                }
             },
             transclude: true
         };
@@ -2945,6 +2976,15 @@ to the function.
 }());
 /*global angular */
 
+/** @module Filter
+
+@description The sky filters module gives you the following filters:
+
+  - `encodeURIComponent` Uses the $window.encodeURIComponent function on your string
+  - `format` Formats the args with a given format string
+  
+*/
+
 (function () {
     'use strict';
 
@@ -2954,13 +2994,22 @@ to the function.
                 return $window.encodeURIComponent(value);
             };
         }])
-        .filter("format", ['bbFormat', function (bbFormat) {
+        .filter('format', ['bbFormat', function (bbFormat) {
             return function () {
                 return bbFormat.formatText.apply(this, arguments);
             };
         }]);
 }());
 /*global angular */
+
+/** @module Format
+
+@description The format service gives you the following functions:
+
+  - `formatText(formatString, args)` Formats the args with a given format string
+  - `escape(text)` Replaces the `<`, `>`, and `&` tags with `&lt;`, `&gt;`, and `&amp;`
+
+*/
 
 (function () {
     'use strict';
@@ -3457,7 +3506,7 @@ The Grid directive allows you to build a full-featured grid with a search box, c
         - `caption` The text to display in the column header and column chooser.
         - `category` A category for the column, can be used to filter in the column chooser.
         - `center_align` True if the column header and contents should be center aligned.
-        - `controller` The controller function if the column is templated. This allows a cell to perform logic while displaying formatted or complex data.
+        - `controller` The controller function if the column is templated. This allows a cell to perform logic while displaying formatted or complex data. You can access row data from the grid in the column template controller using `$scope.rowData`.
         - `description` A description for the column, seen in the column chooser.
         - `exclude_from_search` If true, then the column does not highlight text on search.
         - `id` A unique identifier for the column.  The ID is referenced by the option object's `selectedColumnIds` property.
@@ -3471,6 +3520,7 @@ The Grid directive allows you to build a full-featured grid with a search box, c
         - `width_md` The width of the column for screen sizes from 992px to 1199px.
         - `width_lg` The width of the column for screen sizes greater than 1199px.
   - `data` An array of objects representing the rows in the grid.  Each row should have properties that correspond to the `columns` `jsonmap` properties.
+  - `fixedToolbar` Prevents the toolbar and grid headers from scrolling with the window. Defaults to false.
   - `getContextMenuItems` If a function is specified, then the grid rows will attempt to create a bootstrap dropdown based on the return value of the function. The return value should be an array of objects that represent the items in a dropdown. The objects should contain the following properties:
       - `id` A unique string identifier for the option.
       - `title` The title shown for the dropdown option.
@@ -3527,10 +3577,10 @@ reloading the grid with the current data after the event has fired.
         DROPDOWN_TOGGLE_COLUMN_NAME = 'dropdownToggle',
         MULTISELECT_COLUMN_NAME = 'cb';
 
-    angular.module('sky.grids', ['sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters', 'sky.grids.actionbar'])
-        .directive('bbGrid', ['bbModal', '$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout',
+    angular.module('sky.grids', ['sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters', 'sky.grids.actionbar', 'sky.window'])
+        .directive('bbGrid', ['bbModal', '$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow',
 
-            function (bbModal, $window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout) {
+            function (bbModal, $window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow) {
                 return {
                     replace: true,
                     transclude: true,
@@ -3548,6 +3598,9 @@ reloading the grid with the current data after the event has fired.
 
                         self.setFilters = function (filters) {
                             $scope.options.filters = filters;
+
+                            $scope.locals.applySearchText();
+                            
                         };
 
                         self.syncViewKeepers = function () {
@@ -3662,8 +3715,12 @@ reloading the grid with the current data after the event has fired.
                             vkHeader,
                             windowEl = $($window),
                             windowEventId,
-                            resizeStartColWidth;
+                            resizeStartColWidth,
+                            hasPristineColumns = true,
+                            scrollbarWidth;
 
+                        
+                        
                         function updateGridLoadedTimestampAndRowCount(count) {
                             $scope.locals.timestamp = new Date().getTime();
                             $scope.locals.rowcount = count;
@@ -3698,7 +3755,7 @@ reloading the grid with the current data after the event has fired.
 
                         function buildCellAttribute(rowId, cellValue, rawObject, column) {
                             /*jslint unparam: true*/
-                            return "data-grid-field='" + column.name + "'" + "data-bbauto-field='" + column.name + "'" + "data-bbauto-index='" + (rowId - 1) + "'";
+                            return "data-grid-field='" + column.name + "'" + "data-bbauto-field='" + column.name + "'" + "data-bbauto-index='" + (tableEl.getInd(rowId) - 1) + "'";
                         }
 
                         function buildMenuId(rowid) {
@@ -3715,15 +3772,18 @@ reloading the grid with the current data after the event has fired.
                                 i,
                                 item,
                                 items,
-                                rowid,
+                                rowId,
+                                prefixedRowId,
                                 template;
+                            
                             /*istanbul ignore else: sanity check */
                             if (angular.isFunction(getContextMenuItems)) {
-                                rowid = options.rowId;
-                                menuid = buildMenuId(rowid);
-                                items = getContextMenuItems(rowid, rowObject);
+                                rowId = options.rowId;
+                                prefixedRowId = getIdPrefix() + rowId;
+                                menuid = buildMenuId(prefixedRowId);
+                                items = getContextMenuItems(rowId, rowObject);
                                 //cache for later
-                                contextMenuItems[rowid] = items;
+                                contextMenuItems[prefixedRowId] = items;
 
                                 if (items && items.length) {
                                     template =
@@ -3910,11 +3970,11 @@ reloading the grid with the current data after the event has fired.
                         function setScrollbarHeight() {
                             
                             if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
-                                topScrollbar.addClass('bb-grid-scrollbar-visible');
-                                topScrollbarDiv.addClass('bb-grid-scrollbar-visible');
+                                topScrollbar.height(scrollbarWidth);
+                                topScrollbarDiv.height(scrollbarWidth);
                             } else {
-                                topScrollbar.removeClass('bb-grid-scrollbar-visible');
-                                topScrollbarDiv.removeClass('bb-grid-scrollbar-visible');
+                                topScrollbar.height(0);
+                                topScrollbarDiv.height(0);
                             }
                         }
 
@@ -3962,10 +4022,14 @@ reloading the grid with the current data after the event has fired.
                                 changedWidth = oldWidth - newWidth;
                                 resizeExtendedColumn(changedWidth, false);
                             } else {
+                                if (totalColumnWidth === oldWidth) {
+                                    totalColumnWidth = newWidth;
+                                }
+                                
                                 width = getDesiredGridWidth();
 
                                 /*istanbul ignore else: sanity check */
-                                if (width > 0) {
+                                if (width > 0) {     
                                     tableEl.setGridWidth(width);
                                     resetTopScrollbar();
                                 }
@@ -3990,6 +4054,8 @@ reloading the grid with the current data after the event has fired.
                                 jqGridEl,
                                 thEls;
 
+                            hasPristineColumns = false;
+                            
                             jqGridEl = element.find('.ui-jqgrid');
 
                             //if resizing last element and tableEl smaller than table wrapper
@@ -4010,7 +4076,7 @@ reloading the grid with the current data after the event has fired.
                         }
 
                         function syncHeaderToTableWrapper() {
-                            if (vkHeader.isFixed) {
+                            if (vkHeader && vkHeader.isFixed) {
                                 header.width(tableWrapper.width());
                                 header.scrollLeft(tableWrapper.scrollLeft());
                             }
@@ -4127,7 +4193,7 @@ reloading the grid with the current data after the event has fired.
                             });
                         }
 
-                        function afterInsertRow(rowid, rowdata) {
+                        function afterInsertRow(rowid, rowdata, rowelem) {
                             /*jshint validthis: true */
                             var actionEl,
                                 cell,
@@ -4139,14 +4205,15 @@ reloading the grid with the current data after the event has fired.
                                 items,
                                 itemScope,
                                 menuid,
-                                row;
+                                row,
+                                rowIndex;
 
                             if (hasTemplatedColumns) {
                                 if (!tableBody) {
                                     tableBody = $(this);
                                 }
 
-                                row = tableBody.find('tr:eq(' + rowid + ')');
+                                row = tableBody.find('#' + rowid);
 
                                 for (i = 0; i < columnModel.length; i++) {
                                     column = columnModel[i];
@@ -4159,6 +4226,7 @@ reloading the grid with the current data after the event has fired.
                                         itemScope = $scope.$new(true);
 
                                         itemScope.data = columnData;
+                                        itemScope.rowData = rowelem;
 
                                         if (column.allow_see_more) {
                                             itemScope.skyResources = $scope.resources;
@@ -4181,6 +4249,8 @@ reloading the grid with the current data after the event has fired.
                                     }
                                 }
                             }
+        
+                            rowIndex = tableEl.getInd(rowid);
 
                             invoke = function (cmd, actionEl) {
                                 return function () {
@@ -4201,9 +4271,11 @@ reloading the grid with the current data after the event has fired.
                                 }
                             }
 
+                            
                             //check if row should be multiselected
                             if ($scope.selectedRows && $scope.selectedRows.length > 0) {
-                                row = $scope.options.data[(rowid - 1)];
+                                
+                                row = $scope.options.data[(rowIndex - 1)];
                                 if (row && arrayObjectIndexOf($scope.selectedRows, row) > -1) {
                                     tableEl.setSelection(rowid, false);
                                 }
@@ -4319,14 +4391,14 @@ reloading the grid with the current data after the event has fired.
                             $scope.$apply();
                         }
 
-                        function updateFancyCheckboxCell(rowId, status) {
+                        function updateFancyCheckboxCell(rowIndex, status) {
                             var checkboxEl;
 
                             checkboxEl = element.find('td .cbox');
                             /*istanbul ignore else: sanity check */
-                            if (checkboxEl.length > (rowId - 1)) {
-                                checkboxEl[(rowId - 1)].checked = status;
-                                checkboxEl.eq(rowId - 1).iCheck('update');
+                            if (checkboxEl.length > (rowIndex - 1)) {
+                                checkboxEl[(rowIndex - 1)].checked = status;
+                                checkboxEl.eq(rowIndex - 1).iCheck('update');
                             }
                         }
 
@@ -4344,23 +4416,29 @@ reloading the grid with the current data after the event has fired.
 
                         function toggleMultiselectRows(visibleSelectedRows) {
                             var i,
-                                index;
+                                index,
+                                rowIds;
 
                             /*istanbul ignore else: sanity check */
                             if (visibleSelectedRows.length > 0) {
                                 updateFancyCheckboxHeader(false);
                             }
+                            
+                            rowIds = tableEl.getDataIDs();
 
                             for (i = 0; i < visibleSelectedRows.length; i++) {
                                 index = arrayObjectIndexOf($scope.options.data, visibleSelectedRows[i]);
-                                tableEl.setSelection((index + 1), true);
+                                tableEl.setSelection(rowIds[index], true);
                             }
                         }
+                        
 
                         function onSelectRow(rowId, status) {
                             $timeout(function () {
                                 var index,
-                                    row = $scope.options.data[(rowId - 1)];
+                                    rowIndex = tableEl.getInd(rowId),
+                                    row;
+                                row = $scope.options.data[(rowIndex - 1)];
 
                                 localRowSelect = true;
 
@@ -4370,33 +4448,34 @@ reloading the grid with the current data after the event has fired.
 
                                 if (status === true && index === -1 && row) {
                                     $scope.selectedRows.push(row);
-                                    updateFancyCheckboxCell(rowId, true);
+                                    updateFancyCheckboxCell(rowIndex, true);
                                 } else if (status === false && index > -1) {
                                     $scope.selectedRows.splice(index, 1);
-                                    updateFancyCheckboxCell(rowId, false);
+                                    updateFancyCheckboxCell(rowIndex, false);
                                 }
                             });
                         }
 
-                        function setMultiselectRow(i) {
+                        function setMultiselectRow(rowId, rowIndex) {
                             var row;
 
-                            tableEl.setSelection(i, false);
-                            row  = $scope.options.data[(i - 1)];
+                            tableEl.setSelection(rowId, false);
+                            row  = $scope.options.data[(rowIndex - 1)];
                             $scope.selectedRows.push(row);
-                            updateFancyCheckboxCell(i, true);
+                            updateFancyCheckboxCell(rowIndex, true);
                         }
 
                         function beforeSelectRow(rowId, e) {
                             var endIndex,
                                 i,
                                 lastSelectedRow,
-                                startIndex = parseInt(rowId);
+                                rowIds,
+                                startIndex = parseInt(tableEl.getInd(rowId));
 
                             localRowSelect = true;
 
                             if (e.shiftKey) {
-                                lastSelectedRow = tableEl.getGridParam('selrow');
+                                lastSelectedRow = tableEl.getInd(tableEl.getGridParam('selrow'));
                                 resetMultiselect();
 
                                 //if lastSelectedRow is undefined or null, set to 1
@@ -4406,14 +4485,16 @@ reloading the grid with the current data after the event has fired.
 
                                 endIndex = parseInt(lastSelectedRow);
 
+                                rowIds = tableEl.getDataIDs();
+                                
                                 //set shift click selection first so last selected row is set properly
                                 if (endIndex < startIndex) {
                                     for (i = startIndex; i >  endIndex - 1; i = i - 1) {
-                                        setMultiselectRow(i);
+                                        setMultiselectRow(rowIds[(i - 1)], i);
                                     }
                                 } else if (endIndex > startIndex) {
                                     for (i = startIndex; i <  endIndex + 1; i = i + 1) {
-                                        setMultiselectRow(i);
+                                        setMultiselectRow(rowIds[(i - 1)], i);
                                     }
                                 } else {
                                     $scope.$apply();
@@ -4486,6 +4567,10 @@ reloading the grid with the current data after the event has fired.
                             element.find('td .cbox').iCheck('destroy');
                         }
 
+                        function getIdPrefix() {
+                            return 'bb-grid-row-' + $scope.$id + '-';
+                        }
+                        
                         function initGrid() {
                             var columns,
                                 jqGridOptions,
@@ -4495,6 +4580,8 @@ reloading the grid with the current data after the event has fired.
 
                             totalColumnWidth = 0;
 
+                            hasPristineColumns = true;
+                            
                             tableWrapperWidth = tableWrapper.width();
 
                             locals.multiselect = false;
@@ -4558,6 +4645,7 @@ reloading the grid with the current data after the event has fired.
                                     gridView: useGridView,
                                     height: 'auto',
                                     hoverrows: hoverrows,
+                                    idPrefix: getIdPrefix(),
                                     multiselect: locals.multiselect,
                                     multiselectWidth: MULTISELECT_COLUMN_SIZE,
                                     onSelectAll: onSelectAll,
@@ -4604,21 +4692,23 @@ reloading the grid with the current data after the event has fired.
                                 topScrollbar.width(tableWrapper.width());
                                 resetTopScrollbar();
 
-                                vkHeader = new bbViewKeeperBuilder.create({
-                                    el: header[0],
-                                    boundaryEl: tableWrapper[0],
-                                    verticalOffSetElId: toolbarContainerId,
-                                    setWidth: true,
-                                    onStateChanged: function () {
-                                        if (vkHeader.isFixed) {
-                                            header.scrollLeft(tableWrapper.scrollLeft());
-                                        } else {
-                                            header.scrollLeft(0);
+                                if (!$scope.options.fixedToolbar) {
+                                    vkHeader = new bbViewKeeperBuilder.create({
+                                        el: header[0],
+                                        boundaryEl: tableWrapper[0],
+                                        verticalOffSetElId: toolbarContainerId,
+                                        setWidth: true,
+                                        onStateChanged: function () {
+                                            if (vkHeader.isFixed) {
+                                                header.scrollLeft(tableWrapper.scrollLeft());
+                                            } else {
+                                                header.scrollLeft(0);
+                                            }
+
                                         }
-
-                                    }
-                                });
-
+                                    });
+                                }
+                                
                                 setSortStyles();
 
                                 setUpFancyCheckHeader();
@@ -4686,14 +4776,16 @@ reloading the grid with the current data after the event has fired.
                             var newWidth = tableWrapper.width();
 
                             if (tableWrapperWidth && tableWrapperWidth !== newWidth) {
-                                resetGridWidth(tableWrapperWidth, newWidth);
+                                if (hasPristineColumns) {
+                                    resetGridWidth(tableWrapperWidth, newWidth);
+                                } else {
+                                    topScrollbar.width(newWidth);
+                                }
                                 tableWrapperWidth = newWidth;
                             } else {
                                 tableWrapperWidth = newWidth;
                             }
                         }
-
-
 
                         function setRows(rows) {
                             /*istanbul ignore else: sanity check */
@@ -4747,17 +4839,21 @@ reloading the grid with the current data after the event has fired.
                             if ($scope.options) {
                                 verticalOffSetElId = $scope.options.viewKeeperOffsetElId;
                             }
-
-                            vkToolbars = new bbViewKeeperBuilder.create({
-                                el: toolbarContainer[0],
-                                boundaryEl: element[0],
-                                setWidth: true,
-                                verticalOffSetElId: verticalOffSetElId,
-                                onStateChanged: function () {
-                                    locals.isScrolled = vkToolbars.isFixed;
-                                    $scope.$apply();
-                                }
-                            });
+                            
+                            if (!$scope.options.fixedToolbar) {
+                                vkToolbars = new bbViewKeeperBuilder.create({
+                                    el: toolbarContainer[0],
+                                    boundaryEl: tableWrapper[0],
+                                    setWidth: true,
+                                    verticalOffSetElId: verticalOffSetElId,
+                                    onStateChanged: function () {
+                                        $timeout(function () {
+                                            locals.isScrolled = vkToolbars.isFixed;
+                                        });
+                                    }
+                                });
+                            }
+                            
 
                             vkActionBarAndBackToTop = new bbViewKeeperBuilder.create({
                                 el: element.find('.bb-grid-action-bar-and-back-to-top')[0],
@@ -4769,7 +4865,14 @@ reloading the grid with the current data after the event has fired.
                         }
 
                         function applySearchText() {
-                            element.find('.bb-search-container input').select();
+                            var searchEl;
+                            
+                            searchEl = element.find('.bb-search-container input');
+                            /*istanbul ignore else: sanity check */
+                            if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.searchText) {
+                                searchEl.eq(0).select();
+                            }
+                            
                             $scope.options.searchText = $scope.searchText;
                         }
 
@@ -4784,6 +4887,8 @@ reloading the grid with the current data after the event has fired.
                         if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                             $scope.selectedRows = [];
                         }
+                        
+                        scrollbarWidth = bbWindow.getScrollbarWidth();
 
                         id = $scope.$id;
                         toolbarContainerId = id + '-toolbar-container';
@@ -4825,7 +4930,8 @@ reloading the grid with the current data after the event has fired.
 
                         $scope.$watchCollection('selectedRows', function (newSelections) {
                             var i,
-                                index;
+                                index,
+                                rowIds;
 
                             if (localRowSelect) {
                                 localRowSelect = false;
@@ -4837,12 +4943,14 @@ reloading the grid with the current data after the event has fired.
                                 tableEl.resetSelection();
                                 setAllFancyCheck(false);
 
+                                rowIds = tableEl.getDataIDs();
+                                
                                 for (i = 0; i < newSelections.length; i++) {
 
                                     index = arrayObjectIndexOf($scope.options.data, newSelections[i]);
 
                                     if (index > -1) {
-                                        tableEl.setSelection((index + 1), false);
+                                        tableEl.setSelection(rowIds[index], false);
                                         updateFancyCheckboxCell((index + 1), true);
                                     }
 
@@ -5088,7 +5196,7 @@ The Help service allows other Angular components to open or close the help panel
 /** @module Helpwidget
  @description ### *Deprecated* ###
 
-This directive is no longer being maintained.  For showing the help panel from a controller, see the [Help](#help) service.
+This directive is no longer being maintained.  For showing the help panel from a controller, see the [Help](../help) service.
 
 <s>
 ### Additional Dependencies ###
@@ -5462,6 +5570,18 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                 return parseFloat(val.replace('px', ''));
             }
             
+            function getModalBodyWrapperMargin(el) {
+                var margin = 0;
+                
+                while (el.not('.modal-dialog') && el.length > 0) { 
+                    margin += el.outerHeight() - el.height();
+                        
+                    el = el.parent();
+                }
+                
+                return margin;
+            }
+            
             return {
                 controller: ['$scope', function ($scope) {
                     this.setBodyEl = function (bodyEl) {
@@ -5483,16 +5603,21 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                             newMaxHeight,
                             reservedHeight;
                         
-                        if (bodyEl) {
+                        if (bodyEl && bodyEl.length > 0) {
                             modalParentEl = el.parents('.modal-dialog');
-
-                            margin = getPixelValue(modalParentEl.css('margin-bottom')) + getPixelValue(modalParentEl.css('margin-top'));
                             
-                            reservedHeight = margin + el.find('.modal-header').outerHeight() + el.find('.modal-footer').outerHeight();
+                            if (modalParentEl.length > 0) {
+                                margin = getPixelValue(modalParentEl.css('margin-bottom')) + getPixelValue(modalParentEl.css('margin-top'));
+                             
+                                reservedHeight = margin + el.find('.modal-header').outerHeight() + el.find('.modal-footer').outerHeight();
 
-                            newMaxHeight = windowEl.height() - reservedHeight;
+                                // Account for the border, padding, etc. of the elements that wrap the modal body.
+                                reservedHeight += getModalBodyWrapperMargin(el);
 
-                            bodyEl.css('max-height', newMaxHeight);
+                                newMaxHeight = windowEl.height() - reservedHeight;
+
+                                bodyEl.css('max-height', newMaxHeight);
+                            }
                         }
                     }
                              
@@ -5619,7 +5744,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 /** @module Money
  @description ### *Deprecated* ###
 
-This directive is no longer being maintained.  For formatting currency in a textbox, see the [Autonumeric](#autonumeric) directive.
+This directive is no longer being maintained.  For formatting currency in a textbox, see the [Autonumeric](../autonumeric) directive.
 
 <s>
 ### Additional Dependencies ###
@@ -6738,7 +6863,7 @@ The search field can be used for a local search (i.e. dropdown box where you hav
 /** @module Tabs
  @description ### *Deprecated* ###
 
-This directive is no longer being maintained.  For creating tabs, see the [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/) tabs directive and use it in conjunction with the [Tabscroll](#tabscroll) and [Tabsref](#tabsref) components if needed.
+This directive is no longer being maintained.  For creating tabs, see the [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/) tabs directive and use it in conjunction with the [Tabscroll](../tabscroll) and [Tabsref](../tabsref) components if needed.
 
 <s>
 ### Additional Dependencies ###
@@ -7693,8 +7818,9 @@ When used on forms, it automatically adjusts the background color on the form an
     angular.module('sky.tiles', ['sky.mediabreakpoints'])
         .directive('bbTile', ['$timeout', function ($timeout) {
             return {
-                link: function (scope, el, attrs) {
-                    var displayModeChanging = false,
+                link: function (scope, el, attrs, dashboardCtrl) {
+                    var dashboardState = {},
+                        displayModeChanging = false,
                         tileInitialized = false,
                         parentModal;
 
@@ -7754,6 +7880,20 @@ When used on forms, it automatically adjusts the background color on the form an
                         }
                     }
                     
+                    function initializeTile(data) {
+                        var tiles = data.tiles || /*istanbul ignore next: default value */ [];
+                        
+                        if (!tileInitialized) {
+                            //retrieve the tile id from the parent container
+                            scope.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
+                            scope.smallTileDisplayMode = data.smallTileDisplayMode || false;
+                        }
+
+                        updateTileState(tiles);
+
+                        tileInitialized = true;
+                    }
+                    
                     scope.isCollapsed = scope.bbTileCollapsed || false;
                     scope.smallTileDisplayMode = false;
                     scope.tileId = '';
@@ -7783,17 +7923,8 @@ When used on forms, it automatically adjusts the background color on the form an
                     //listens for the tilesInitialized event from the tileDashboard and updates the initial collapsed state of the tiles
                     scope.$on('tilesInitialized', function (event, data) {
                         /*jslint unparam: true */
-                        var tiles = data.tiles || /*istanbul ignore next: default value */ [];
 
-                        if (!tileInitialized) {
-                            //retrieve the tile id from the parent container
-                            scope.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
-                            scope.smallTileDisplayMode = data.smallTileDisplayMode || false;
-                        }
-
-                        updateTileState(tiles);
-
-                        tileInitialized = true;
+                        initializeTile(data);
                     });
 
                     //if the collapsed state changes, notify the tileDashboard
@@ -7826,9 +7957,15 @@ When used on forms, it automatically adjusts the background color on the form an
                     scope.hasSettings = !!attrs.bbTileSettingsClick;
                     
                     updateHeaderContent();
+                    
+                    if (dashboardCtrl !== null) {
+                        dashboardState = dashboardCtrl.getDashboardState();
+                        initializeTile(dashboardState);
+                    }
                 },
                 replace: true,
                 restrict: 'E',
+                require: '?^^bbTileDashboard',
                 scope: {
                     bbTileCollapsed: '=?',
                     bbTileSettingsClick: '&?',
@@ -7884,9 +8021,10 @@ When used on forms, it automatically adjusts the background color on the form an
                     var column1 = element.find('[data-dashboard-column="1"]'),
                         column2 = element.find('[data-dashboard-column="2"]'),
                         singleColumnMode = false,
-                        smallTileDisplayMode = false,
                         sortableOptions;
 
+                    scope.smallTileDisplayMode = false;
+                    
                     //Inspects the tiles in each column and updates model accordingly.
                     function parseColumnTiles() {
                         scope.$apply(function () {
@@ -7917,7 +8055,7 @@ When used on forms, it automatically adjusts the background color on the form an
                     
                     function fireDisplayModeChanged() {
                         scope.$broadcast('tileDisplayModeChanged', {
-                            smallTileDisplayMode: smallTileDisplayMode,
+                            smallTileDisplayMode: scope.smallTileDisplayMode,
                             tiles: scope.tiles
                         });
                     }
@@ -7934,7 +8072,7 @@ When used on forms, it automatically adjusts the background color on the form an
                             column2.show();
                         }
 
-                        smallTileDisplayMode = breakPoints.xs;
+                        scope.smallTileDisplayMode = breakPoints.xs;
                         
                         fireDisplayModeChanged();
                     }
@@ -7964,7 +8102,7 @@ When used on forms, it automatically adjusts the background color on the form an
                         $timeout(function () {
                             layoutTiles();
                             scope.$broadcast('tilesInitialized', {
-                                smallTileDisplayMode: smallTileDisplayMode,
+                                smallTileDisplayMode: scope.smallTileDisplayMode,
                                 tiles: scope.tiles
                             });
                         });
@@ -7979,7 +8117,7 @@ When used on forms, it automatically adjusts the background color on the form an
                         // indeterminate state.
                         if (newValue === true || newValue === false) {
                             for (i = 0, n = tiles.length; i < n; i++) {
-                                if (smallTileDisplayMode) {
+                                if (scope.smallTileDisplayMode) {
                                     tiles[i].collapsed_small = newValue;
                                 } else {
                                     tiles[i].collapsed = newValue;
@@ -8003,7 +8141,7 @@ When used on forms, it automatically adjusts the background color on the form an
                                 tiles = scope.tiles;
 
                             collapsed = data.collapsed || false;
-                            collapsedProp = smallTileDisplayMode ? 'collapsed_small' : 'collapsed';
+                            collapsedProp = scope.smallTileDisplayMode ? 'collapsed_small' : 'collapsed';
                             
                             for (i = 0, n = tiles.length; i < n; i++) {
                                 tile = tiles[i];
@@ -8025,7 +8163,11 @@ When used on forms, it automatically adjusts the background color on the form an
                         });
                     });
                 },
-                controller: angular.noop,
+                controller: ['$scope', function ($scope) {
+                    this.getDashboardState = function () {
+                        return {tiles: $scope.tiles, smallTileDisplayMode: $scope.smallTileDisplayMode};
+                    };
+                }],
                 templateUrl: 'sky/templates/tiles/tiledashboard.html'
             };
         }]);
@@ -8339,6 +8481,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
         if (vk.verticalOffSetEl) {
             verticalOffSetElTop = vk.verticalOffSetEl.css('top');
 
+            /*istanbul ignore else: sanity check */
             if (verticalOffSetElTop) {
                 verticalOffSetElTop = parseInt(verticalOffSetElTop, 10);
                 if (isNaN(verticalOffSetElTop)) {
@@ -9067,7 +9210,16 @@ This service supports the following functions
         }]);
 
 }(jQuery));
-/*global angular */
+/*global angular*/
+
+/** @module Window
+
+@description An angular service with the following functions:
+
+  - `setWindowTitle(title)` Changes the browser window's title. If a product name is specified in `bbWindowConfig`, then the product name will be appended to the passed title.
+  - `getScrollbarWidth` Calculates and returns the width of the scrollbar for the current browser.
+
+*/
 
 (function () {
     'use strict';
@@ -9076,7 +9228,45 @@ This service supports the following functions
         .constant('bbWindowConfig', {
             productName: ''
         })
-        .factory('bbWindow', ['$window', 'bbWindowConfig', '$timeout', function ($window, bbWindowConfig, $timeout) {
+        .factory('bbWindow', ['$window', 'bbWindowConfig', '$timeout', '$document', function ($window, bbWindowConfig, $timeout, $document) {
+            var scrollbarWidth;
+            
+            function calculateScrollbarWidth() {
+                var inner, 
+                    outer, 
+                    w1,
+                    w2;
+                      
+                inner = angular.element('<p></p>');
+                inner.css('width', '100%');
+                inner.css('height', '200px');
+                            
+                outer = angular.element('<div></div>');
+                outer.css('position', 'absolute');
+                outer.css('top', '0px');
+                outer.css('left', '0px');
+                outer.css('visibility', 'hidden');
+                outer.css('width', '200px');
+                outer.css('height', '150px');
+                outer.css('overflow', 'hidden');
+                            
+                outer.append(inner);
+                            
+                $document.find('body').append(outer);
+
+                w1 = inner[0].offsetWidth;
+
+                outer.css('overflow', 'scroll');
+                w2 = inner[0].offsetWidth;
+               
+                /*istanbul ignore else: sanity check */
+                if (w1 === w2) {
+                    w2 = outer[0].clientWidth;
+                }
+                outer.remove();
+                return (w1 - w2);
+            }
+            
             return {
                 setWindowTitle: function (title) {
                     var textToAppend = bbWindowConfig.productName;
@@ -9093,10 +9283,17 @@ This service supports the following functions
 
                     //Adding a delay so the setWindowTitle method can be safely called after an angular
                     //state change without taking affect until after the browser has completed its
-                    //state chagne.  Without this, the previous page will be renamed in the browser history.
+                    //state change.  Without this, the previous page will be renamed in the browser history.
                     $timeout(function () {
                         $window.document.title = title;
                     });
+                }, 
+                getScrollbarWidth: function () {
+                    if (!scrollbarWidth && scrollbarWidth !== 0) {
+                        scrollbarWidth = calculateScrollbarWidth();
+                    }
+                    
+                    return scrollbarWidth;
                 }
             };
         }]);
@@ -9450,12 +9647,14 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <ng-transclude/>\n' +
         '    </div>\n' +
         '    <div class="hidden-sm hidden-md hidden-lg">\n' +
-        '        <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">\n' +
+        '        <div class="dropdown">\n' +
+        '             <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown" href="javascript:void(0)">\n' +
         '            {{title}}<span class="caret"/>\n' +
-        '        </button>\n' +
-        '        <ul class="dropdown-menu" role="menu">\n' +
-        '            <li ng-repeat="item in items" role="presentation"><a role="menuitem" ng-click="item.callback()" href="javascript:void(0)">{{item.content}}</a></li>\n' +
-        '        </ul>\n' +
+        '            </button>\n' +
+        '            <ul class="dropdown-menu" role="menu">\n' +
+        '                <li ng-repeat="item in items" role="presentation"><a role="menuitem" ng-click="item.callback()" href="javascript:void(0)">{{item.content}}</a></li>\n' +
+        '            </ul>\n' +
+        '        </div>\n' +
         '    </div>\n' +
         '</span>\n' +
         '');
@@ -9527,10 +9726,9 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>');
     $templateCache.put('sky/templates/fileattachments/filedrop.html',
         '<div class="row bb-file-drop-row">\n' +
-        '    <div class="col-sm-6 col-xs-12 bb-file-drop-col">\n' +
+        '    <div class="col-xs-12 bb-file-drop-col" ng-class="{\'col-sm-6\': bbFileDrop.allowLinks}">\n' +
         '        <div \n' +
         '             class="bb-file-drop"\n' +
-        '             ngf-select \n' +
         '             ngf-drop \n' +
         '             ngf-keep="false"\n' +
         '             ngf-drag-over-class="{accept: \'bb-file-drop-accept\', reject: \'bb-file-drop-reject\'}"\n' +

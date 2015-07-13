@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="stache" xmlns="http://www.w3.org/1999/xhtml">
+<html ng-app="stache" xmlns="http://www.w3.org/1999/xhtml" ng-strict-di>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="stylesheet" type="text/css" href="../../../bower_components/jqgrid/css/ui.jqgrid.css" />
@@ -160,6 +160,14 @@
                 </li>
               
                 <li>
+                  <strong><a href="##filters">Filters</a></strong> (sky.filters)
+                </li>
+              
+                <li>
+                  <strong><a href="##format">Format</a></strong> (sky.format)
+                </li>
+              
+                <li>
                   <strong><a href="##grids">Grids</a></strong> (sky.grids)
                 </li>
               
@@ -256,6 +264,10 @@
                 </li>
               
                 <li>
+                  <strong><a href="##window">Window</a></strong> (sky.window)
+                </li>
+              
+                <li>
                   <strong><a href="##wizard">Wizard</a></strong> (sky.wizard)
                 </li>
               
@@ -308,6 +320,8 @@
                 <p><a name="module_Action Bar"></a></p>
 
 <h2>Action Bar</h2>
+
+<p>The action bar is used to create a sky themed container for buttons. It has the option to collapse a group of buttons into a dropdown view when the screen is in xtra small mode.</p>
 
 <h3>Additional dependencies</h3>
 
@@ -363,7 +377,8 @@
                         <pre><code data-language="javascript" ng-non-bindable>/*global angular, alert*/
 (function () {
     &#x27;use strict&#x27;;
-    angular.module(&#x27;stache&#x27;).controller(&#x27;ActionButtonBarTestController&#x27;,
+    angular.module(&#x27;stache&#x27;)
+    .controller(&#x27;ActionButtonBarTestController&#x27;,
         [&#x27;$scope&#x27;, &#x27;$timeout&#x27;, function ($scope, $timeout) {
 
             $scope.locals = {
@@ -385,10 +400,11 @@
                 actionsText: null
             };
 
-
+            
             $timeout(function () {
                 $scope.locals.actionsText = &#x27;My actions&#x27;;
             }, 3000);
+            
         }]);
 }());
 </code></pre>
@@ -401,7 +417,8 @@
           <script>/*global angular, alert*/
 (function () {
     'use strict';
-    angular.module('stache').controller('ActionButtonBarTestController',
+    angular.module('stache')
+    .controller('ActionButtonBarTestController',
         ['$scope', '$timeout', function ($scope, $timeout) {
 
             $scope.locals = {
@@ -423,10 +440,11 @@
                 actionsText: null
             };
 
-
+            
             $timeout(function () {
                 $scope.locals.actionsText = 'My actions';
             }, 3000);
+            
         }]);
 }());
 </script>
@@ -1419,10 +1437,10 @@ angular.module('stache')
 <ul>
 <li><code>ng-model</code> An object to bind the date value in and out of the datepicker. This will be set to a Javascript Date object when set or parsed from the bootstrap datepicker.</li>
 <li><code>ng-required</code> Boolean value that indicates whether the field is required.</li>
-<li><code>bb-date-options</code> Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap <code>datepicker-options</code> object. You can set application defaults for the <code>showWeeks</code> and <code>startingDay</code> properties of the angular ui bootstrap datepicker in the <code>bbDateFieldConfig</code> object. In sky the default for <code>showWeeks</code> is false and <code>startingDay</code> is 0 unless overridden in <code>bbDateFieldConfig</code>. </li>
+<li><code>bb-date-options</code> Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap <code>datepicker-options</code> object. You can set application defaults for the <code>showWeeks</code> and <code>startingDay</code> properties of the angular ui bootstrap datepicker in the <code>bbDatepickerConfig</code> constant defined in <code>sky.datepicker</code>. In sky the default for <code>showWeeks</code> is false and <code>startingDay</code> is 0 unless overridden in <code>bbDatepickerConfig</code>. </li>
 <li><code>bb-custom-validation</code> an object containing the following:
 <ul><li><code>formatValue</code> A function that will be called when text is entered directly into the textbox. The only parameter to the function will be the raw value of the textbox. The function should return an object or a promise of an object with properties of <code>formattedValue</code> and optionally <code>formattingErrorMessage</code> if there was a problem when trying to format the input value.</li></ul></li>
-<li><code>bb-date-format</code> The format string that the date should display as in the input text box. This will override the default set in the <code>bbDateFieldConfig</code> <code>dateFormat</code> property. The format string should be set up like the <a href="https://docs.angularjs.org/api/ng/filter/date">angular</a> date filter format strings.</li>
+<li><code>bb-date-format</code> The format string that the date should display as in the input text box. This will override the default set in the <code>bbDatepickerConfig</code> <code>currentCultureDateFormatString</code> property. The default format in sky is set as <code>MM/dd/yyyy</code>. The format string should be set up like the <a href="https://docs.angularjs.org/api/ng/filter/date">angular</a> date filter format strings.</li>
 <li><code>close-on-date-selection</code> <em>(Default: true):</em>  Whether to close calendar when a date is chosen.</li>
 <li><code>datepicker-append-to-body</code> <em>(Default: false):</em>  Append the datepicker popup element to <code>body</code>, rather than inserting after the datepicker input.</li>
 <li><code>placeholder</code> overrides the default placeholder text of the <code>bb-datepicker</code> input</li>
@@ -1865,12 +1883,14 @@ own custom content to be displayed instead of the default UI.</p>
 <li><code>bb-file-drop-max-size</code> <em>(Optional)</em> The maximum size in bytes of a valid file.</li>
 <li><code>bb-file-drop-change</code> A function that is called when a file or files are selected when the user drops files onto the
 drop zone or selects them by clicking the element.  This function accepts 2 parameters:
-<ul><li><code>files</code> An array of valid files that were dropped or selected.</li>
+<ul><li><code>files</code> An array of valid files that were dropped or selected.  Each item is a JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/API/File">File</a>
+object.</li>
 <li><code>rejectedFiles</code> An array of files that did not meet the specified file type and/or size requirements.</li></ul></li>
 <li><code>bb-file-drop-link</code> <em>(Optional)</em> The attribute with no value can be specified)* Indicates that an option to add hyperlinks
 should be displayed.</li>
 <li><code>bb-file-drop-link-change</code> <em>(Optional)</em> A function that is called when the user adds a hyperlink.  The function accepts one
 <code>link</code> parameter.  The <code>link</code> will have a <code>url</code> property containing the link the user added.</li>
+<li><code>bb-file-drop-noclick</code> Specify this attribute when you want to disable the ability to select a file from a file dialog by clicking the element.</li>
 </ul>
 
 <p>The <code>bb-file-item</code> directive displays summary information about a file that has been added to a form.  By default
@@ -2019,6 +2039,254 @@ to the function.</li>
       </div>
       <br />
       
+      <a name="#/filters"></a>
+      <div class="page-content-tile-column">
+        <div class="demo-content">
+          <section id="filters" class="page-content-column">
+            <h1>
+                Filters <small>(sky.filters)</small>
+            </h1>
+            <hr class="kitchen-sink-divider" />
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-example">
+                <div ng-controller="FilterController">
+    <div class="row">
+        <div class="col-md-6">
+            <div>
+                <label for="formatFilter">Enter Some Text</label>
+                <input name="formatFilter" ng-model="locals.formattedText" />
+            </div>
+            <div>Formatted result is: {{'*{0}{0}*' | format:locals.formattedText}}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div>
+                <label for="encodeURIFilter">Enter URI to encode</label>
+                <input name="encodeURIFilter" ng-model="locals.encodedText" />
+            </div>
+            <div>Encoded result is: {{locals.encodedText | encodeURIComponent}}</div>
+        </div>
+    </div>
+</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-readme" ng-non-bindable>
+                <p><a name="module_Filter"></a></p>
+
+<h2>Filter</h2>
+
+<p>The sky filters module gives you the following filters:</p>
+
+<ul>
+<li><code>encodeURIComponent</code> Uses the $window.encodeURIComponent function on your string</li>
+<li><code>format</code> Formats the args with a given format string</li>
+</ul>
+              </div>
+            </div>
+                
+            <hr class="kitchen-sink-divider" />
+            <div class="row code">
+              <div class="col-md-12">
+                <tabset>
+                    <tab heading="Markup">
+                      <div>
+                        <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;FilterController&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-6&quot;&gt;
+            &lt;div&gt;
+                &lt;label for=&quot;formatFilter&quot;&gt;Enter Some Text&lt;/label&gt;
+                &lt;input name=&quot;formatFilter&quot; ng-model=&quot;locals.formattedText&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;Formatted result is: {{&#x27;*{0}{0}*&#x27; | format:locals.formattedText}}&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-6&quot;&gt;
+            &lt;div&gt;
+                &lt;label for=&quot;encodeURIFilter&quot;&gt;Enter URI to encode&lt;/label&gt;
+                &lt;input name=&quot;encodeURIFilter&quot; ng-model=&quot;locals.encodedText&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;Encoded result is: {{locals.encodedText | encodeURIComponent}}&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                      </div>
+                    </tab>
+                    <tab heading="JavaScript">
+                      <div>
+                        <pre><code data-language="javascript" ng-non-bindable>/*global angular */
+(function () {
+    &#x27;use strict&#x27;;
+    
+    angular.module(&#x27;stache&#x27;)
+    .controller(&#x27;FilterController&#x27;, [&#x27;$scope&#x27;,
+        function ($scope) {
+            $scope.locals = {
+                formattedText: &#x27;&#x27;,
+                encodedText: &#x27;amp=&amp;&#x27;
+            };
+            
+        }]);
+}());</code></pre>
+                      </div>
+                    </tab>
+                </tabset>
+              </div>
+            </div>
+          </section>
+          <script>/*global angular */
+(function () {
+    'use strict';
+    
+    angular.module('stache')
+    .controller('FilterController', ['$scope',
+        function ($scope) {
+            $scope.locals = {
+                formattedText: '',
+                encodedText: 'amp=&'
+            };
+            
+        }]);
+}());</script>
+        </div>
+      </div>
+      <br />
+      
+      <a name="#/format"></a>
+      <div class="page-content-tile-column">
+        <div class="demo-content">
+          <section id="format" class="page-content-column">
+            <h1>
+                Format <small>(sky.format)</small>
+            </h1>
+            <hr class="kitchen-sink-divider" />
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-example">
+                <div ng-controller="FormatServiceController">
+    <div class="row">
+        <div class="col-md-6">
+            <div>
+                <label for="formattedText">Enter Some Text</label>
+                <input name="formattedText" ng-model="locals.formattedText" />
+            </div>
+            <div>Formatted result is: {{locals.formattedResult}}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div>
+                <label for="htmlText">Enter Some Html</label>
+                <input name="htmlText" ng-model="locals.htmlText" />
+            </div>
+            <div>Html stripped result is: {{locals.htmlResult}}</div>
+        </div>
+    </div>
+</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-readme" ng-non-bindable>
+                <p><a name="module_Format"></a></p>
+
+<h2>Format</h2>
+
+<p>The format service gives you the following functions:</p>
+
+<ul>
+<li><code>formatText(formatString, args)</code> Formats the args with a given format string</li>
+<li><code>escape(text)</code> Replaces the <code>&lt;</code>, <code>&gt;</code>, and <code>&amp;</code> tags with <code>&amp;lt;</code>, <code>&amp;gt;</code>, and <code>&amp;amp;</code></li>
+</ul>
+              </div>
+            </div>
+                
+            <hr class="kitchen-sink-divider" />
+            <div class="row code">
+              <div class="col-md-12">
+                <tabset>
+                    <tab heading="Markup">
+                      <div>
+                        <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;FormatServiceController&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-6&quot;&gt;
+            &lt;div&gt;
+                &lt;label for=&quot;formattedText&quot;&gt;Enter Some Text&lt;/label&gt;
+                &lt;input name=&quot;formattedText&quot; ng-model=&quot;locals.formattedText&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;Formatted result is: {{locals.formattedResult}}&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-6&quot;&gt;
+            &lt;div&gt;
+                &lt;label for=&quot;htmlText&quot;&gt;Enter Some Html&lt;/label&gt;
+                &lt;input name=&quot;htmlText&quot; ng-model=&quot;locals.htmlText&quot; /&gt;
+            &lt;/div&gt;
+            &lt;div&gt;Html stripped result is: {{locals.htmlResult}}&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                      </div>
+                    </tab>
+                    <tab heading="JavaScript">
+                      <div>
+                        <pre><code data-language="javascript" ng-non-bindable>/*global angular */
+
+(function () {
+    &#x27;use strict&#x27;;
+    
+    angular.module(&#x27;stache&#x27;)
+    .controller(&#x27;FormatServiceController&#x27;, [&#x27;$scope&#x27;, &#x27;bbFormat&#x27;, function ($scope, bbFormat) {
+        $scope.locals = {
+            formattedResult: &#x27;&#x27;,
+            formattedText: &#x27;&#x27;,
+            htmlText: &#x27;&#x27;,
+            htmlResult: &#x27;&#x27;
+        };
+        
+        $scope.$watch(&#x27;locals.formattedText&#x27;, function () {
+            $scope.locals.formattedResult = bbFormat.formatText(&#x27;[{0}]&#x27;, $scope.locals.formattedText);
+        });
+        
+        $scope.$watch(&#x27;locals.htmlText&#x27;, function () {
+            $scope.locals.htmlResult = bbFormat.escape($scope.locals.htmlText);
+        });
+    }]);
+}());</code></pre>
+                      </div>
+                    </tab>
+                </tabset>
+              </div>
+            </div>
+          </section>
+          <script>/*global angular */
+
+(function () {
+    'use strict';
+    
+    angular.module('stache')
+    .controller('FormatServiceController', ['$scope', 'bbFormat', function ($scope, bbFormat) {
+        $scope.locals = {
+            formattedResult: '',
+            formattedText: '',
+            htmlText: '',
+            htmlResult: ''
+        };
+        
+        $scope.$watch('locals.formattedText', function () {
+            $scope.locals.formattedResult = bbFormat.formatText('[{0}]', $scope.locals.formattedText);
+        });
+        
+        $scope.$watch('locals.htmlText', function () {
+            $scope.locals.htmlResult = bbFormat.escape($scope.locals.htmlText);
+        });
+    }]);
+}());</script>
+        </div>
+      </div>
+      <br />
+      
       <a name="#/grids"></a>
       <div class="page-content-tile-column">
         <div class="demo-content">
@@ -2030,7 +2298,7 @@ to the function.</li>
             <div class="row">
               <div class="col-md-12 kitchen-sink-example">
                 <div ng-controller="GridTestController">
-    <button class="btn btn-primary" ng-click="locals.setSelections()">Set Drum Selection</button>
+    <button class="btn btn-primary" style="margin-bottom: 10px;" ng-click="locals.setSelections()">Set Drum Selection</button>
     <bb-grid bb-grid-options="locals.gridOptions" bb-multiselect-actions="locals.gridActions" bb-selections-updated="locals.updateActions(selections)" bb-selected-rows="locals.selectedRows">
             <bb-grid-filters-summary ng-show="locals.appliedFilters.instruments.length > 0" bb-options="locals.filterOptions">
             <span ng-repeat="item in locals.appliedFilters.instruments">{{item.name}}<span ng-if="!$last">, </span></span>
@@ -2046,9 +2314,11 @@ to the function.</li>
             </bb-grid-filters-group>
         </bb-grid-filters>
     </bb-grid>
-
-    <button ng-click="locals.gridOptions.loading = true;">Begin loading</button>
-    <button ng-click="locals.gridOptions.loading = false;">End loading</button>
+    <div style="margin-top: 10px; margin-bottom: 10px;">
+        <button ng-click="locals.gridOptions.loading = true;">Begin loading</button>
+        <button ng-click="locals.gridOptions.loading = false;">End loading</button>
+    </div>
+    
 
     <div class="clearfix"></div>
     
@@ -2097,7 +2367,7 @@ to the function.</li>
 <li><code>caption</code> The text to display in the column header and column chooser.</li>
 <li><code>category</code> A category for the column, can be used to filter in the column chooser.</li>
 <li><code>center_align</code> True if the column header and contents should be center aligned.</li>
-<li><code>controller</code> The controller function if the column is templated. This allows a cell to perform logic while displaying formatted or complex data.</li>
+<li><code>controller</code> The controller function if the column is templated. This allows a cell to perform logic while displaying formatted or complex data. You can access row data from the grid in the column template controller using <code>$scope.rowData</code>.</li>
 <li><code>description</code> A description for the column, seen in the column chooser.</li>
 <li><code>exclude_from_search</code> If true, then the column does not highlight text on search.</li>
 <li><code>id</code> A unique identifier for the column.  The ID is referenced by the option object's <code>selectedColumnIds</code> property.</li>
@@ -2111,6 +2381,7 @@ to the function.</li>
 <li><code>width_md</code> The width of the column for screen sizes from 992px to 1199px.</li>
 <li><code>width_lg</code> The width of the column for screen sizes greater than 1199px.</li></ul></li>
 <li><code>data</code> An array of objects representing the rows in the grid.  Each row should have properties that correspond to the <code>columns</code> <code>jsonmap</code> properties.</li>
+<li><code>fixedToolbar</code> Prevents the toolbar and grid headers from scrolling with the window. Defaults to false.</li>
 <li><code>getContextMenuItems</code> If a function is specified, then the grid rows will attempt to create a bootstrap dropdown based on the return value of the function. The return value should be an array of objects that represent the items in a dropdown. The objects should contain the following properties:
 <ul><li><code>id</code> A unique string identifier for the option.</li>
 <li><code>title</code> The title shown for the dropdown option.</li>
@@ -2157,7 +2428,7 @@ reloading the grid with the current data after the event has fired.</li>
                     <tab heading="Markup">
                       <div>
                         <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;GridTestController&quot;&gt;
-    &lt;button class=&quot;btn btn-primary&quot; ng-click=&quot;locals.setSelections()&quot;&gt;Set Drum Selection&lt;/button&gt;
+    &lt;button class=&quot;btn btn-primary&quot; style=&quot;margin-bottom: 10px;&quot; ng-click=&quot;locals.setSelections()&quot;&gt;Set Drum Selection&lt;/button&gt;
     &lt;bb-grid bb-grid-options=&quot;locals.gridOptions&quot; bb-multiselect-actions=&quot;locals.gridActions&quot; bb-selections-updated=&quot;locals.updateActions(selections)&quot; bb-selected-rows=&quot;locals.selectedRows&quot;&gt;
             &lt;bb-grid-filters-summary ng-show=&quot;locals.appliedFilters.instruments.length &gt; 0&quot; bb-options=&quot;locals.filterOptions&quot;&gt;
             &lt;span ng-repeat=&quot;item in locals.appliedFilters.instruments&quot;&gt;{{item.name}}&lt;span ng-if=&quot;!$last&quot;&gt;, &lt;/span&gt;&lt;/span&gt;
@@ -2173,9 +2444,11 @@ reloading the grid with the current data after the event has fired.</li>
             &lt;/bb-grid-filters-group&gt;
         &lt;/bb-grid-filters&gt;
     &lt;/bb-grid&gt;
-
-    &lt;button ng-click=&quot;locals.gridOptions.loading = true;&quot;&gt;Begin loading&lt;/button&gt;
-    &lt;button ng-click=&quot;locals.gridOptions.loading = false;&quot;&gt;End loading&lt;/button&gt;
+    &lt;div style=&quot;margin-top: 10px; margin-bottom: 10px;&quot;&gt;
+        &lt;button ng-click=&quot;locals.gridOptions.loading = true;&quot;&gt;Begin loading&lt;/button&gt;
+        &lt;button ng-click=&quot;locals.gridOptions.loading = false;&quot;&gt;End loading&lt;/button&gt;
+    &lt;/div&gt;
+    
 
     &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt;
     
@@ -2190,7 +2463,7 @@ reloading the grid with the current data after the event has fired.</li>
                     </tab>
                     <tab heading="JavaScript">
                       <div>
-                        <pre><code data-language="javascript" ng-non-bindable>/*global angular, alert */
+                        <pre><code data-language="javascript" ng-non-bindable>/*global angular, alert*/
 //A comment
 angular.module(&#x27;stache&#x27;)
     .run([&#x27;$templateCache&#x27;, function ($templateCache) {
@@ -2206,6 +2479,14 @@ angular.module(&#x27;stache&#x27;)
                 &#x27;&lt;a href=&quot;&quot; tooltip-trigger=&quot;focus&quot; tooltip-placement=&quot;bottom&quot; bb-tooltip=&quot;bbGrid/samples/gridtooltip.html&quot;&gt; Info: {{data.info}}&lt;/a&gt;&#x27; +
                 &#x27;&lt;button class=&quot;btn btn-success&quot; ng-click=&quot;locals.clickIt()&quot;&gt;My Button&lt;/button&gt;&#x27; +
             &#x27;&lt;/div&gt;&#x27;);
+    }])
+    .controller(&#x27;TemplateController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
+        &#x27;use strict&#x27;;
+        $scope.locals = {
+            clickIt: function () {
+                alert(&#x27;Column button clicked, id: &#x27; + $scope.rowData.id);
+            }
+        };
     }])
     .controller(&#x27;GridTestController&#x27;, [&#x27;$scope&#x27;, &#x27;$filter&#x27;, function ($scope, $filter) {
     &#x27;use strict&#x27;;
@@ -2288,6 +2569,7 @@ angular.module(&#x27;stache&#x27;)
         ],
         dataSetBand = [
             {
+                id: &#x27;blaarrrh&#x27;,
                 name: &#x27;John&#x27;,
                 instrument: &#x27;Rhythm guitar&#x27;,
                 bio: &#x27;&#x27;,
@@ -2298,6 +2580,7 @@ angular.module(&#x27;stache&#x27;)
                 mydate: Date.parse(&#x27;1/21/2015&#x27;)
             },
             {
+                id: &#x27;PaulId&#x27;,
                 name: &#x27;Paul&#x27;,
                 instrument: &#x27;Bass&#x27;,
                 bio: &#x27;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in purus odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consequat ante et felis accumsan volutpat. Nulla leo leo, lacinia nec felis sit amet, tristique feugiat ipsum. Mauris ac velit in mi aliquam auctor vel ac leo. Nullam vehicula congue risus, vitae congue turpis iaculis at. Vestibulum imperdiet tellus erat, sit amet rhoncus neque fringilla vitae.&#x27;,
@@ -2308,6 +2591,7 @@ angular.module(&#x27;stache&#x27;)
                 mydate: Date.parse(&#x27;2/23/2012&#x27;)
             },
             {
+                id: &#x27;GeorgeId&#x27;,
                 name: &#x27;George&#x27;,
                 instrument: &#x27;Lead guitar&#x27;,
                 bio: &#x27;&#x27;,
@@ -2318,6 +2602,7 @@ angular.module(&#x27;stache&#x27;)
                 mydate: Date.parse(&#x27;4/14/1999&#x27;)
             },
             {
+                id: &#x27;RingoId&#x27;,
                 name: &#x27;Ringo&#x27;,
                 instrument: &#x27;Drums&#x27;,
                 bio: &#x27;&#x27;,
@@ -2337,14 +2622,6 @@ angular.module(&#x27;stache&#x27;)
         if ($scope.locals.drumsFilter) {
             $scope.locals.appliedFilters.instruments.push({name: &#x27;drums&#x27;});
         }
-    }
-
-    function templateController($scope) {
-        $scope.locals = {
-            clickIt: function () {
-                alert(&#x27;Column button clicked!&#x27;);
-            }
-        };
     }
 
     function updateActions(selections) {
@@ -2459,7 +2736,7 @@ angular.module(&#x27;stache&#x27;)
                     name: &#x27;templated&#x27;,
                     width_all: 300,
                     template_url: &#x27;bbGrid/samples/mycolumn.html&#x27;,
-                    controller: templateController
+                    controller: &#x27;TemplateController&#x27;
                 },
                 {
                     caption: &#x27;Date&#x27;,
@@ -2472,7 +2749,7 @@ angular.module(&#x27;stache&#x27;)
             ],
             data: dataSetBand,
             getContextMenuItems: function (rowid, rowObject) {
-                if (rowid === &#x27;1&#x27; || rowObject.name === &#x27;Ringo&#x27;) {
+                if (rowid === &#x27;blaarrrh&#x27; || rowObject.name === &#x27;Ringo&#x27;) {
                     return [
                         {
                             id: &#x27;menu&#x27;,
@@ -2520,6 +2797,7 @@ angular.module(&#x27;stache&#x27;)
             ],
             data: dataSet1,
             hideFilters: true,
+            fixedToolbar: true,
             onAddClick: function () {
                 alert(&#x27;Add button clicked!!&#x27;);
             },
@@ -2567,28 +2845,29 @@ angular.module(&#x27;stache&#x27;)
         });
     }, true);
 
-    $scope.$watch(&#x27;locals.gridOptions.searchText&#x27;, function () {
-        if (angular.isDefined($scope.locals.gridOptions.searchText) &amp;&amp; $scope.locals.gridOptions.searchText !== &#x27;&#x27;) {
-            $scope.locals.gridOptions.data = dataSetBand.filter(function (element) {
-                return (element.name.includes($scope.locals.gridOptions.searchText) ||
-                       element.instrument.includes($scope.locals.gridOptions.searchText) ||
-                       element.bio.includes($scope.locals.gridOptions.searchText) ||
-                       element.templated.info.includes($scope.locals.gridOptions.searchText) ||
-                       $filter(&#x27;date&#x27;)(element.mydate, &#x27;medium&#x27;).includes($scope.locals.gridOptions.searchText));
+    function search(array, text) {
+        if (angular.isDefined(text) &amp;&amp; text !== &#x27;&#x27;) {
+            return array.filter(function (element) {
+                var check = ((element.name.indexOf(text) &gt; -1) ||
+                       (element.instrument.indexOf(text) &gt; -1) ||
+                       (element.bio.indexOf(text) &gt; -1) ||
+                       (element.templated.info.indexOf(text) !== -1) ||
+                       (($filter(&#x27;date&#x27;)(element.mydate, &#x27;medium&#x27;)).indexOf(text) &gt; -1));
+                return check;
             });
 
         } else {
-            $scope.locals.gridOptions.data = dataSetBand;
+            return array;
         }
-    });
-
-    $scope.$watch(&#x27;locals.gridOptions.filters&#x27;, function () {
+    }
+        
+    function filter(array, filters) {
         var i,
             item,
             newData = [];
-        if (angular.isDefined($scope.locals.gridOptions.filters) &amp;&amp; $scope.locals.gridOptions.filters.instruments &amp;&amp; $scope.locals.gridOptions.filters.instruments.length &gt; 0) {
-            for (i = 0; i &lt; $scope.locals.gridOptions.filters.instruments.length; i++) {
-                item = $scope.locals.gridOptions.filters.instruments[i];
+        if (angular.isDefined(filters) &amp;&amp; filters.instruments &amp;&amp; filters.instruments.length &gt; 0) {
+            for (i = 0; i &lt; filters.instruments.length; i++) {
+                item = filters.instruments[i];
                 if (item.name === &#x27;guitars&#x27;) {
                     newData.push.apply(newData, [dataSetBand[0], dataSetBand[1], dataSetBand[2]]);
                 }
@@ -2596,10 +2875,28 @@ angular.module(&#x27;stache&#x27;)
                     newData.push(dataSetBand[3]);
                 }
             }
-            $scope.locals.gridOptions.data = newData;
+            return newData;
         } else {
-            $scope.locals.gridOptions.data = dataSetBand;
+            return array;
         }
+    }
+        
+    function filterAndSearch() {
+        var filteredData = [],
+            searchedData = [];
+        
+        filteredData = filter(dataSetBand, $scope.locals.gridOptions.filters);
+        searchedData = search(filteredData, $scope.locals.gridOptions.searchText);
+        $scope.locals.gridOptions.data = searchedData;
+        
+    }
+        
+    $scope.$watch(&#x27;locals.gridOptions.searchText&#x27;, function () {
+        filterAndSearch();
+    });
+
+    $scope.$watch(&#x27;locals.gridOptions.filters&#x27;, function () {
+        filterAndSearch();
     });
 
     $scope.$on(&#x27;loadMoreRows&#x27;, function (event, data) {
@@ -2618,7 +2915,7 @@ angular.module(&#x27;stache&#x27;)
               </div>
             </div>
           </section>
-          <script>/*global angular, alert */
+          <script>/*global angular, alert*/
 //A comment
 angular.module('stache')
     .run(['$templateCache', function ($templateCache) {
@@ -2634,6 +2931,14 @@ angular.module('stache')
                 '<a href="" tooltip-trigger="focus" tooltip-placement="bottom" bb-tooltip="bbGrid/samples/gridtooltip.html"> Info: {{data.info}}</a>' +
                 '<button class="btn btn-success" ng-click="locals.clickIt()">My Button</button>' +
             '</div>');
+    }])
+    .controller('TemplateController', ['$scope', function ($scope) {
+        'use strict';
+        $scope.locals = {
+            clickIt: function () {
+                alert('Column button clicked, id: ' + $scope.rowData.id);
+            }
+        };
     }])
     .controller('GridTestController', ['$scope', '$filter', function ($scope, $filter) {
     'use strict';
@@ -2716,6 +3021,7 @@ angular.module('stache')
         ],
         dataSetBand = [
             {
+                id: 'blaarrrh',
                 name: 'John',
                 instrument: 'Rhythm guitar',
                 bio: '',
@@ -2726,6 +3032,7 @@ angular.module('stache')
                 mydate: Date.parse('1/21/2015')
             },
             {
+                id: 'PaulId',
                 name: 'Paul',
                 instrument: 'Bass',
                 bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in purus odio. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consequat ante et felis accumsan volutpat. Nulla leo leo, lacinia nec felis sit amet, tristique feugiat ipsum. Mauris ac velit in mi aliquam auctor vel ac leo. Nullam vehicula congue risus, vitae congue turpis iaculis at. Vestibulum imperdiet tellus erat, sit amet rhoncus neque fringilla vitae.',
@@ -2736,6 +3043,7 @@ angular.module('stache')
                 mydate: Date.parse('2/23/2012')
             },
             {
+                id: 'GeorgeId',
                 name: 'George',
                 instrument: 'Lead guitar',
                 bio: '',
@@ -2746,6 +3054,7 @@ angular.module('stache')
                 mydate: Date.parse('4/14/1999')
             },
             {
+                id: 'RingoId',
                 name: 'Ringo',
                 instrument: 'Drums',
                 bio: '',
@@ -2765,14 +3074,6 @@ angular.module('stache')
         if ($scope.locals.drumsFilter) {
             $scope.locals.appliedFilters.instruments.push({name: 'drums'});
         }
-    }
-
-    function templateController($scope) {
-        $scope.locals = {
-            clickIt: function () {
-                alert('Column button clicked!');
-            }
-        };
     }
 
     function updateActions(selections) {
@@ -2887,7 +3188,7 @@ angular.module('stache')
                     name: 'templated',
                     width_all: 300,
                     template_url: 'bbGrid/samples/mycolumn.html',
-                    controller: templateController
+                    controller: 'TemplateController'
                 },
                 {
                     caption: 'Date',
@@ -2900,7 +3201,7 @@ angular.module('stache')
             ],
             data: dataSetBand,
             getContextMenuItems: function (rowid, rowObject) {
-                if (rowid === '1' || rowObject.name === 'Ringo') {
+                if (rowid === 'blaarrrh' || rowObject.name === 'Ringo') {
                     return [
                         {
                             id: 'menu',
@@ -2948,6 +3249,7 @@ angular.module('stache')
             ],
             data: dataSet1,
             hideFilters: true,
+            fixedToolbar: true,
             onAddClick: function () {
                 alert('Add button clicked!!');
             },
@@ -2995,28 +3297,29 @@ angular.module('stache')
         });
     }, true);
 
-    $scope.$watch('locals.gridOptions.searchText', function () {
-        if (angular.isDefined($scope.locals.gridOptions.searchText) && $scope.locals.gridOptions.searchText !== '') {
-            $scope.locals.gridOptions.data = dataSetBand.filter(function (element) {
-                return (element.name.includes($scope.locals.gridOptions.searchText) ||
-                       element.instrument.includes($scope.locals.gridOptions.searchText) ||
-                       element.bio.includes($scope.locals.gridOptions.searchText) ||
-                       element.templated.info.includes($scope.locals.gridOptions.searchText) ||
-                       $filter('date')(element.mydate, 'medium').includes($scope.locals.gridOptions.searchText));
+    function search(array, text) {
+        if (angular.isDefined(text) && text !== '') {
+            return array.filter(function (element) {
+                var check = ((element.name.indexOf(text) > -1) ||
+                       (element.instrument.indexOf(text) > -1) ||
+                       (element.bio.indexOf(text) > -1) ||
+                       (element.templated.info.indexOf(text) !== -1) ||
+                       (($filter('date')(element.mydate, 'medium')).indexOf(text) > -1));
+                return check;
             });
 
         } else {
-            $scope.locals.gridOptions.data = dataSetBand;
+            return array;
         }
-    });
-
-    $scope.$watch('locals.gridOptions.filters', function () {
+    }
+        
+    function filter(array, filters) {
         var i,
             item,
             newData = [];
-        if (angular.isDefined($scope.locals.gridOptions.filters) && $scope.locals.gridOptions.filters.instruments && $scope.locals.gridOptions.filters.instruments.length > 0) {
-            for (i = 0; i < $scope.locals.gridOptions.filters.instruments.length; i++) {
-                item = $scope.locals.gridOptions.filters.instruments[i];
+        if (angular.isDefined(filters) && filters.instruments && filters.instruments.length > 0) {
+            for (i = 0; i < filters.instruments.length; i++) {
+                item = filters.instruments[i];
                 if (item.name === 'guitars') {
                     newData.push.apply(newData, [dataSetBand[0], dataSetBand[1], dataSetBand[2]]);
                 }
@@ -3024,10 +3327,28 @@ angular.module('stache')
                     newData.push(dataSetBand[3]);
                 }
             }
-            $scope.locals.gridOptions.data = newData;
+            return newData;
         } else {
-            $scope.locals.gridOptions.data = dataSetBand;
+            return array;
         }
+    }
+        
+    function filterAndSearch() {
+        var filteredData = [],
+            searchedData = [];
+        
+        filteredData = filter(dataSetBand, $scope.locals.gridOptions.filters);
+        searchedData = search(filteredData, $scope.locals.gridOptions.searchText);
+        $scope.locals.gridOptions.data = searchedData;
+        
+    }
+        
+    $scope.$watch('locals.gridOptions.searchText', function () {
+        filterAndSearch();
+    });
+
+    $scope.$watch('locals.gridOptions.filters', function () {
+        filterAndSearch();
     });
 
     $scope.$on('loadMoreRows', function (event, data) {
@@ -3213,7 +3534,7 @@ angular.module('stache')
 
 <h3><em>Deprecated</em></h3>
 
-<p>This directive is no longer being maintained.  For showing the help panel from a controller, see the <a href="#help">Help</a> service.</p>
+<p>This directive is no longer being maintained.  For showing the help panel from a controller, see the <a href="../help">Help</a> service.</p>
 
 <p><s></p>
 
@@ -3746,7 +4067,7 @@ angular.module('stache')
 
 <h3><em>Deprecated</em></h3>
 
-<p>This directive is no longer being maintained.  For formatting currency in a textbox, see the <a href="#autonumeric">Autonumeric</a> directive.</p>
+<p>This directive is no longer being maintained.  For formatting currency in a textbox, see the <a href="../autonumeric">Autonumeric</a> directive.</p>
 
 <p><s></p>
 
@@ -4907,7 +5228,7 @@ angular.module('stache').controller('SearchfieldRemoteTestController', ['$scope'
 
 <h3><em>Deprecated</em></h3>
 
-<p>This directive is no longer being maintained.  For creating tabs, see the <a href="https://angular-ui.github.io/bootstrap/">Angular UI Bootstrap</a> tabs directive and use it in conjunction with the <a href="#tabscroll">Tabscroll</a> and <a href="#tabsref">Tabsref</a> components if needed.</p>
+<p>This directive is no longer being maintained.  For creating tabs, see the <a href="https://angular-ui.github.io/bootstrap/">Angular UI Bootstrap</a> tabs directive and use it in conjunction with the <a href="../tabscroll">Tabscroll</a> and <a href="../tabsref">Tabsref</a> components if needed.</p>
 
 <p><s></p>
 
@@ -6262,6 +6583,123 @@ This service supports the following functions</p>
 
     }]);
 </script>
+        </div>
+      </div>
+      <br />
+      
+      <a name="#/window"></a>
+      <div class="page-content-tile-column">
+        <div class="demo-content">
+          <section id="window" class="page-content-column">
+            <h1>
+                Window <small>(sky.window)</small>
+            </h1>
+            <hr class="kitchen-sink-divider" />
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-example">
+                <div ng-controller="WindowServiceController">
+    <div class="row">
+        <div class="col-md-6">
+            <label>Change Window Title</label>
+            <input ng-model="locals.windowTitle" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div>Current browser scrollbar width is: {{locals.scrollbarWidth}}px</div>
+        </div>
+    </div>
+</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 kitchen-sink-readme" ng-non-bindable>
+                <p><a name="module_Window"></a></p>
+
+<h2>Window</h2>
+
+<p>An angular service with the following functions:</p>
+
+<ul>
+<li><code>setWindowTitle(title)</code> Changes the browser window's title. If a product name is specified in <code>bbWindowConfig</code>, then the product name will be appended to the passed title.</li>
+<li><code>getScrollbarWidth</code> Calculates and returns the width of the scrollbar for the current browser.</li>
+</ul>
+              </div>
+            </div>
+                
+            <hr class="kitchen-sink-divider" />
+            <div class="row code">
+              <div class="col-md-12">
+                <tabset>
+                    <tab heading="Markup">
+                      <div>
+                        <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;WindowServiceController&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-6&quot;&gt;
+            &lt;label&gt;Change Window Title&lt;/label&gt;
+            &lt;input ng-model=&quot;locals.windowTitle&quot; ng-model-options=&quot;{ updateOn: &#x27;default blur&#x27;, debounce: { &#x27;default&#x27;: 500, &#x27;blur&#x27;: 0 } }&quot;/&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-6&quot;&gt;
+            &lt;div&gt;Current browser scrollbar width is: {{locals.scrollbarWidth}}px&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                      </div>
+                    </tab>
+                    <tab heading="JavaScript">
+                      <div>
+                        <pre><code data-language="javascript" ng-non-bindable>/*global angular */
+
+(function () {
+    &#x27;use strict&#x27;;
+    
+    angular.module(&#x27;stache&#x27;)
+    .controller(&#x27;WindowServiceController&#x27;, [&#x27;$scope&#x27;, &#x27;bbWindow&#x27;, function ($scope, bbWindow) {
+        $scope.locals = {
+            windowTitle: &#x27;&#x27;,
+            scrollbarWidth: null
+        };
+        
+        $scope.locals.scrollbarWidth = bbWindow.getScrollbarWidth();
+        
+        $scope.$watch(&#x27;locals.windowTitle&#x27;, function () {
+            if ($scope.locals.windowTitle) {
+                bbWindow.setWindowTitle($scope.locals.windowTitle);
+            }
+        });
+        
+    }]);
+}());</code></pre>
+                      </div>
+                    </tab>
+                </tabset>
+              </div>
+            </div>
+          </section>
+          <script>/*global angular */
+
+(function () {
+    'use strict';
+    
+    angular.module('stache')
+    .controller('WindowServiceController', ['$scope', 'bbWindow', function ($scope, bbWindow) {
+        $scope.locals = {
+            windowTitle: '',
+            scrollbarWidth: null
+        };
+        
+        $scope.locals.scrollbarWidth = bbWindow.getScrollbarWidth();
+        
+        $scope.$watch('locals.windowTitle', function () {
+            if ($scope.locals.windowTitle) {
+                bbWindow.setWindowTitle($scope.locals.windowTitle);
+            }
+        });
+        
+    }]);
+}());</script>
         </div>
       </div>
       <br />

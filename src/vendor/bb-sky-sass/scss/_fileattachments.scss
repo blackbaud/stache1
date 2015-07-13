@@ -39,6 +39,16 @@
     }
 }
 
+.bb-file-drop-noclick {
+    .bb-file-drop-contents {
+        cursor: default;
+        
+        h5 {
+            display: none;
+        }
+    }
+}
+
 .bb-file-drop-contents-not-over,
 .bb-file-drop-contents-accept,
 .bb-file-drop-contents-reject,

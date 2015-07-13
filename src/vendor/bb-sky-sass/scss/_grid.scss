@@ -48,13 +48,13 @@ $filterWidth: 240px;
     }
 }
 
-.bb-grid-scrollbar-visible {
-    height: 18px;
-}
-
 .bb-tile {
-    .bb-grid-scrollbar-visible {
-        height: 0px;
+    .bb-grid-top-scrollbar {
+        display: none;
+    }
+    
+    .bb-table-backtotop {
+        display: none;
     }
 }
 
