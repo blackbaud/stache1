@@ -37,7 +37,7 @@ module.exports = function (grunt) {
       // Used to determine file locations, build or serve
       // This means when a user calls build or serve, the assembled files
       // will go into app-build or app-serve.
-      status: 'serve',
+      status: '',
 
       // Configuration file paths
       cli: grunt.option('cli'),
@@ -356,8 +356,12 @@ module.exports = function (grunt) {
   **/
 
   // Internal task - sets current build/serve status
+  // Doesn't overwrite previous status (allows for external builds)
   grunt.registerTask('status', function (status) {
-    grunt.config('stache.status', status);
+    var key = 'stache.status';
+    if (grunt.config.get(key) === '') {
+      grunt.config.set(key, status);
+    }
   });
 
   // Internal task to control header logging

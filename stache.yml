@@ -46,6 +46,7 @@ omnibar_link_enabled: true
 # STACHE - LAYOUTS
 # =============================================
 
+prism: true
 sky: true
 draft: true
 showHeader: true

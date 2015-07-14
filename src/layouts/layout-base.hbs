@@ -13,6 +13,7 @@
       <link rel="stylesheet" href="{{ assets }}vendor/angular-toastr/dist/angular-toastr.css">
       <link rel="stylesheet" href="{{ assets }}vendor/angular-ui-select/dist/select.css">
       {{/ if }}
+      {{/ if }}
     <!-- endbuild -->
 
     {{# each stache.config.files.css }}
@@ -147,6 +148,9 @@
     <!-- build:js {{ assets }}js/app.js -->
     <script src="{{ assets }}js/search.js"></script>
     <script src="{{ assets }}js/app.js"></script>
+    {{# if stache.config.prism }}
+      <script src="{{ assets }}js/prism.js"></script>
+    {{/ if }}
     <!-- endbuild -->
 
     {{# each stache.config.files.js }}
