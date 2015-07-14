@@ -53,7 +53,7 @@ showHeader: true
 showFooter: true
 showOmnibar: true
 showAdminToolbar: false
-showAdminTrigger: true
+showAdminTrigger: false
 editInGitHub: true
 editInProse: true
 markdown: true
