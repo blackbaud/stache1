@@ -218,7 +218,8 @@ module.exports = function (grunt) {
       }
     },
 
-    sass: {
+    // Renamed sass since its config is shared between grunt-contrib-sass and grunt-contrib-sass
+    libsass: {
       options: {
         includePaths: [
           '<%= stache.dir %><%= stache.bower %>'
@@ -647,6 +648,7 @@ module.exports = function (grunt) {
 
   // Dynamically load our modules
   require('jit-grunt')(grunt, {
+    libsass: 'grunt-sass',
     usemin: 'grunt-usemin',
     useminPrepare: 'grunt-usemin',
     availabletasks: 'grunt-available-tasks'
