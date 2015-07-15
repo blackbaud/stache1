@@ -219,7 +219,7 @@ module.exports = function (grunt) {
     },
 
     // Renamed sass since its config is shared between grunt-contrib-sass and grunt-contrib-sass
-    libsass: {
+    'sass-blackbaud': {
       options: {
         includePaths: [
           '<%= stache.dir %><%= stache.bower %>'
@@ -280,7 +280,7 @@ module.exports = function (grunt) {
           '<%= stache.config.src %>sass/**/*.*'
         ],
         tasks: [
-          'sass'
+          'sass-blackbaud'
         ]
       }
     }
@@ -550,7 +550,7 @@ module.exports = function (grunt) {
       'assemble:stache',
       'assemble:custom',
       'prepareSearch',
-      'sass',
+      'sass-blackbaud',
       'useminPrepare',
       'concat:generated',
       'cssmin:generated',
@@ -596,7 +596,7 @@ module.exports = function (grunt) {
       'assemble:stache',
       'assemble:custom',
       'prepareSearch',
-      'sass',
+      'sass-blackbaud',
       'connect',
       'watch'
     ]
@@ -648,10 +648,10 @@ module.exports = function (grunt) {
 
   // Dynamically load our modules
   require('jit-grunt')(grunt, {
-    libsass: 'grunt-sass',
     usemin: 'grunt-usemin',
     useminPrepare: 'grunt-usemin',
-    availabletasks: 'grunt-available-tasks'
+    availabletasks: 'grunt-available-tasks',
+    'sass-blackbaud': 'grunt-sass'
   })({
     pluginsRoot: defaults.stache.dir + 'node_modules/'
   });
