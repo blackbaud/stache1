@@ -270,6 +270,7 @@ module.exports = function (grunt) {
           'stache.yml'
         ],
         tasks: [
+          'status:serve',
           'createAutoNav',
           'assemble',
           'copy:build'
