@@ -578,14 +578,6 @@ module.exports = function (grunt) {
     function() {}
   );
 
-  // This method is registered here in order to show up in the available tasks help screen.
-  // It's defined in the blackbaud-stache-cli package though.
-  grunt.registerTask(
-    'prepare',
-    'Installs npm packages.',
-    function() {}
-  );
-
   grunt.registerTask(
     'serve',
     'Serve the documentation',
