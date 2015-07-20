@@ -3,9 +3,20 @@
 .ui-select-container {
     &.ui-select-multiple {
         //Fix the minimum height of multiple search container to match other fields
+        &.open {
+            box-shadow: 0 0 8px rgba(28, 132, 198, 0.6);
+            border: 1px solid #1f90d8;
+        }
+        
+        &.open.ng-invalid {
+            box-shadow: 0 0 8px rgba(237, 85, 101, 0.6);
+            border: 1px solid #ed5565;
+        }
+        
         &.ui-select-bootstrap {
             min-height: $input-height-base;
         }
+        
 
         .ui-select-match-item {
             text-align: left;
@@ -40,6 +51,11 @@
             font-size: $font-size-base;
             @include placeholder();
             padding-left: 2px;  //Adjust padding so that input text lines up with normal input boxes when lined up on a form
+        }
+        
+        input.ui-select-search:focus, input.ng-invalid.ui-select-search:focus {
+            box-shadow: none;
+            border: none;
         }
     }
 

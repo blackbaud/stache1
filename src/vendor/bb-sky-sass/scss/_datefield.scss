@@ -254,9 +254,9 @@ ul.bb-datefield.dropdown-menu {
 }
 
 .ng-invalid > .bb-datefield > input.form-control {
-    border: 1px solid #ca2a2a;
-    box-shadow: 0 0 4px 1px #ca2a2a;
-    outline: medium none;
+    border: 1px solid #ed5565;
+    box-shadow: 0 0 8px rgba(237, 85, 101, 0.6);
+    outline: none;
 }
 
 .ng-invalid-required > .bb-datefield > input.form-control.ng-untouched {

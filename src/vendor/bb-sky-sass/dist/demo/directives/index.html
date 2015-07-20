@@ -775,8 +775,8 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
             <hr class="kitchen-sink-divider" />
             <div class="row">
               <div class="col-md-12 kitchen-sink-example">
-                <div ng-controller="CheckTestController">
-    <div style="float: left;">
+                <div class="row" ng-controller="CheckTestController">
+    <div class="col-sm-6">
         <label>Checkboxes:</label>
         <div ng-repeat="checkBoxItem in locals.checkBoxItems" class="m-b-xs">
             <input bb-check type="checkbox" ng-model="checkBoxItem.checked" ng-disabled="checkBoxItem.disabled">
@@ -789,7 +789,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
             </ul>
         </div>
     </div>
-    <div style="float: right;">
+    <div class="col-sm-6">
         <label>Radio buttons:</label>
         <div ng-repeat="radioItem in locals.radioItems" class="m-b-xs">
             <input bb-check type="radio" ng-model="locals.selectedRadioItem" ng-value="radioItem.id" ng-disabled="radioItem.disabled">
@@ -803,6 +803,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
         </div>
     </div>
 </div>
+
               </div>
             </div>
             <div class="row">
@@ -829,8 +830,8 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 <tabset>
                     <tab heading="Markup">
                       <div>
-                        <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;CheckTestController&quot;&gt;
-    &lt;div style=&quot;float: left;&quot;&gt;
+                        <pre><code data-language="html" ng-non-bindable>&lt;div class=&quot;row&quot; ng-controller=&quot;CheckTestController&quot;&gt;
+    &lt;div class=&quot;col-sm-6&quot;&gt;
         &lt;label&gt;Checkboxes:&lt;/label&gt;
         &lt;div ng-repeat=&quot;checkBoxItem in locals.checkBoxItems&quot; class=&quot;m-b-xs&quot;&gt;
             &lt;input bb-check type=&quot;checkbox&quot; ng-model=&quot;checkBoxItem.checked&quot; ng-disabled=&quot;checkBoxItem.disabled&quot;&gt;
@@ -843,7 +844,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
             &lt;/ul&gt;
         &lt;/div&gt;
     &lt;/div&gt;
-    &lt;div style=&quot;float: right;&quot;&gt;
+    &lt;div class=&quot;col-sm-6&quot;&gt;
         &lt;label&gt;Radio buttons:&lt;/label&gt;
         &lt;div ng-repeat=&quot;radioItem in locals.radioItems&quot; class=&quot;m-b-xs&quot;&gt;
             &lt;input bb-check type=&quot;radio&quot; ng-model=&quot;locals.selectedRadioItem&quot; ng-value=&quot;radioItem.id&quot; ng-disabled=&quot;radioItem.disabled&quot;&gt;
@@ -856,7 +857,8 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
             &lt;/ul&gt;
         &lt;/div&gt;
     &lt;/div&gt;
-&lt;/div&gt;</code></pre>
+&lt;/div&gt;
+</code></pre>
                       </div>
                     </tab>
                     <tab heading="JavaScript">
@@ -1160,7 +1162,12 @@ angular.module('stache')
 
 <h2>Datefield</h2>
 
-<h3>Additional Dependencies</h3>
+<h3><em>Deprecated</em></h3>
+
+<p>This directive is no longer being maintained. For showing a date popup and input, see the <a href="../datepicker">Datepicker</a> directive.</p>
+
+<p><s>
+ ### Additional Dependencies ###</p>
 
 <ul>
 <li><strong><a href="https://libraries.io/bower/bootstrap-datepicker-eyecon">bootstrap-datepicker.js</a> (1.0.0 or higher)</strong></li>
@@ -1180,7 +1187,8 @@ angular.module('stache')
 <h3>Date Field Options</h3>
 
 <ul>
-<li><code>formatValue</code> Optional.  A function that will be called when text is entered directly into the textbox.  The only paramter to the function will be the raw value of the textbox.  The function should return an object or a promise of an object with properties of <code>formattedValue</code> and optionally <code>formattingErrorMessage</code> if there was a problem when trying to format the input value.</li>
+<li><code>formatValue</code> Optional.  A function that will be called when text is entered directly into the textbox.  The only paramter to the function will be the raw value of the textbox.  The function should return an object or a promise of an object with properties of <code>formattedValue</code> and optionally <code>formattingErrorMessage</code> if there was a problem when trying to format the input value.
+</s></li>
 </ul>
               </div>
             </div>
@@ -2052,18 +2060,18 @@ to the function.</li>
                 <div ng-controller="FilterController">
     <div class="row">
         <div class="col-md-6">
-            <div>
+            <div class="input-group">
                 <label for="formatFilter">Enter Some Text</label>
-                <input name="formatFilter" ng-model="locals.formattedText" />
+                <input class="form-control" type="text" name="formatFilter" ng-model="locals.formattedText" />
             </div>
             <div>Formatted result is: {{'*{0}{0}*' | format:locals.formattedText}}</div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <div>
+            <div class="input-group">
                 <label for="encodeURIFilter">Enter URI to encode</label>
-                <input name="encodeURIFilter" ng-model="locals.encodedText" />
+                <input class="form-control" type="text" name="encodeURIFilter" ng-model="locals.encodedText" />
             </div>
             <div>Encoded result is: {{locals.encodedText | encodeURIComponent}}</div>
         </div>
@@ -2095,18 +2103,18 @@ to the function.</li>
                         <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;FilterController&quot;&gt;
     &lt;div class=&quot;row&quot;&gt;
         &lt;div class=&quot;col-md-6&quot;&gt;
-            &lt;div&gt;
+            &lt;div class=&quot;input-group&quot;&gt;
                 &lt;label for=&quot;formatFilter&quot;&gt;Enter Some Text&lt;/label&gt;
-                &lt;input name=&quot;formatFilter&quot; ng-model=&quot;locals.formattedText&quot; /&gt;
+                &lt;input class=&quot;form-control&quot; type=&quot;text&quot; name=&quot;formatFilter&quot; ng-model=&quot;locals.formattedText&quot; /&gt;
             &lt;/div&gt;
             &lt;div&gt;Formatted result is: {{&#x27;*{0}{0}*&#x27; | format:locals.formattedText}}&lt;/div&gt;
         &lt;/div&gt;
     &lt;/div&gt;
     &lt;div class=&quot;row&quot;&gt;
         &lt;div class=&quot;col-md-6&quot;&gt;
-            &lt;div&gt;
+            &lt;div class=&quot;input-group&quot;&gt;
                 &lt;label for=&quot;encodeURIFilter&quot;&gt;Enter URI to encode&lt;/label&gt;
-                &lt;input name=&quot;encodeURIFilter&quot; ng-model=&quot;locals.encodedText&quot; /&gt;
+                &lt;input class=&quot;form-control&quot; type=&quot;text&quot; name=&quot;encodeURIFilter&quot; ng-model=&quot;locals.encodedText&quot; /&gt;
             &lt;/div&gt;
             &lt;div&gt;Encoded result is: {{locals.encodedText | encodeURIComponent}}&lt;/div&gt;
         &lt;/div&gt;
@@ -2167,18 +2175,18 @@ to the function.</li>
                 <div ng-controller="FormatServiceController">
     <div class="row">
         <div class="col-md-6">
-            <div>
+            <div class="input-group">
                 <label for="formattedText">Enter Some Text</label>
-                <input name="formattedText" ng-model="locals.formattedText" />
+                <input class="form-control" type="text" name="formattedText" ng-model="locals.formattedText" />
             </div>
             <div>Formatted result is: {{locals.formattedResult}}</div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6">
-            <div>
+            <div class="input-group">
                 <label for="htmlText">Enter Some Html</label>
-                <input name="htmlText" ng-model="locals.htmlText" />
+                <input class="form-control" type="text" name="htmlText" ng-model="locals.htmlText" />
             </div>
             <div>Html stripped result is: {{locals.htmlResult}}</div>
         </div>
@@ -2210,18 +2218,18 @@ to the function.</li>
                         <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;FormatServiceController&quot;&gt;
     &lt;div class=&quot;row&quot;&gt;
         &lt;div class=&quot;col-md-6&quot;&gt;
-            &lt;div&gt;
+            &lt;div class=&quot;input-group&quot;&gt;
                 &lt;label for=&quot;formattedText&quot;&gt;Enter Some Text&lt;/label&gt;
-                &lt;input name=&quot;formattedText&quot; ng-model=&quot;locals.formattedText&quot; /&gt;
+                &lt;input class=&quot;form-control&quot; type=&quot;text&quot; name=&quot;formattedText&quot; ng-model=&quot;locals.formattedText&quot; /&gt;
             &lt;/div&gt;
             &lt;div&gt;Formatted result is: {{locals.formattedResult}}&lt;/div&gt;
         &lt;/div&gt;
     &lt;/div&gt;
     &lt;div class=&quot;row&quot;&gt;
         &lt;div class=&quot;col-md-6&quot;&gt;
-            &lt;div&gt;
+            &lt;div class=&quot;input-group&quot;&gt;
                 &lt;label for=&quot;htmlText&quot;&gt;Enter Some Html&lt;/label&gt;
-                &lt;input name=&quot;htmlText&quot; ng-model=&quot;locals.htmlText&quot; /&gt;
+                &lt;input class=&quot;form-control&quot; type=&quot;text&quot; name=&quot;htmlText&quot; ng-model=&quot;locals.htmlText&quot; /&gt;
             &lt;/div&gt;
             &lt;div&gt;Html stripped result is: {{locals.htmlResult}}&lt;/div&gt;
         &lt;/div&gt;
@@ -6223,17 +6231,17 @@ to define markup in a template rather than directly in the view's controller.</p
               <div class="col-md-12 kitchen-sink-example">
                 <div ng-controller="ValidationTestController">
     <div class="tile-form">
-        Type in email here:
-        <ng-form name="validationTest">
+        <form name="validationTest">
             <div class="form-group row">
                 <div class="input-group col-md-4">
+                    <label for="testField1">Type in email here: </label>
                     <input class="form-control" type="email" name="testField1" ng-model="locals.email" bb-email-validation />
                     <label class="error" ng-show="validationTest.testField1.$dirty && validationTest.testField1.$error.email">
                     Invalid Email format!
                     </label>
                 </div>
             </div>        
-        </ng-form>
+        </form>
     </div>
 </div>
               </div>
@@ -6263,17 +6271,17 @@ to define markup in a template rather than directly in the view's controller.</p
                       <div>
                         <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;ValidationTestController&quot;&gt;
     &lt;div class=&quot;tile-form&quot;&gt;
-        Type in email here:
-        &lt;ng-form name=&quot;validationTest&quot;&gt;
+        &lt;form name=&quot;validationTest&quot;&gt;
             &lt;div class=&quot;form-group row&quot;&gt;
                 &lt;div class=&quot;input-group col-md-4&quot;&gt;
+                    &lt;label for=&quot;testField1&quot;&gt;Type in email here: &lt;/label&gt;
                     &lt;input class=&quot;form-control&quot; type=&quot;email&quot; name=&quot;testField1&quot; ng-model=&quot;locals.email&quot; bb-email-validation /&gt;
                     &lt;label class=&quot;error&quot; ng-show=&quot;validationTest.testField1.$dirty &amp;&amp; validationTest.testField1.$error.email&quot;&gt;
                     Invalid Email format!
                     &lt;/label&gt;
                 &lt;/div&gt;
             &lt;/div&gt;        
-        &lt;/ng-form&gt;
+        &lt;/form&gt;
     &lt;/div&gt;
 &lt;/div&gt;</code></pre>
                       </div>

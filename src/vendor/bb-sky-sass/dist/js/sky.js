@@ -1593,7 +1593,12 @@ The bbCheck directive allows you to change an input element of type checkbox or 
 /*global angular */
 
 /** @module Datefield
- @description ### Additional Dependencies ###
+ @description ### *Deprecated* ###
+ 
+ This directive is no longer being maintained. For showing a date popup and input, see the [Datepicker](../datepicker) directive.
+ 
+ <s>
+ ### Additional Dependencies ###
 
  - **[bootstrap-datepicker.js](https://libraries.io/bower/bootstrap-datepicker-eyecon) (1.0.0 or higher)**
 
@@ -1609,6 +1614,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
 
 ### Date Field Options ###
  - `formatValue` Optional.  A function that will be called when text is entered directly into the textbox.  The only paramter to the function will be the raw value of the textbox.  The function should return an object or a promise of an object with properties of `formattedValue` and optionally `formattingErrorMessage` if there was a problem when trying to format the input value.
+ </s>
  */
 
 (function () {
@@ -4840,7 +4846,7 @@ reloading the grid with the current data after the event has fired.
                                 verticalOffSetElId = $scope.options.viewKeeperOffsetElId;
                             }
                             
-                            if (!$scope.options.fixedToolbar) {
+                            if (!$scope.options || !$scope.options.fixedToolbar) {
                                 vkToolbars = new bbViewKeeperBuilder.create({
                                     el: toolbarContainer[0],
                                     boundaryEl: tableWrapper[0],
@@ -4981,7 +4987,7 @@ reloading the grid with the current data after the event has fired.
 
                         $scope.$watch('options.sortOptions', setSortStyles, true);
 
-                        $scope.$watch('options.viewKeeperOffsetElId', function () {
+                        $scope.$watchGroup(['options.viewKeeperOffsetElId', 'options.fixedToolbar'], function () {
                             setupToolbarViewKeepers();
                         });
 
