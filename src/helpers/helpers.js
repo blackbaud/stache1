@@ -633,6 +633,46 @@ module.exports.register = function (Handlebars, options, params) {
         stache.config.github_repo,
         '.git'
       ].join('');
+    },
+
+    /**
+    * Allows context against specific item in object
+    **/
+    withItem: function (object, options) {
+      return typeof object[options.hash.key] !== 'undefined'
+        ? options.fn(object[options.hash.key]) : '';
+    },
+
+    /**
+    * Removes the extension from a filename
+    **/
+    removeExt: function (filename) {
+      var dot = filename.lastIndexOf('.');
+      return dot > -1 ? filename.substr(0, dot) : filename;
+    },
+
+    /**
+    * Is the item an array or object?
+    **/
+    isArray: function (item, options) {
+      return Handlebars.Utils.isArray(item) ? options.fn(this) : options.inverse(this);
+    },
+
+    /**
+    * Helper for converting Sandcastle types to Prism types
+    **/
+    getPrismType: function (type) {
+      var r = type;
+      switch (type.toUpperCase()) {
+        case 'C#':
+        case 'VB':
+          r = 'csharp';
+        break;
+        case 'C++':
+          r = 'cpp';
+        break;
+      }
+      return r;
     }
 
   });
