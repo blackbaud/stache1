@@ -6,7 +6,11 @@ limit: <%= stache.config.blog_recent_limit %>
 {{ include 'partial-blog-header' }}
 
 <div class="blog-post">
-  {{# markdown }}{{> body }}{{/ markdown }}
+  {{# inherit stache.config.markdown markdown }}
+    {{# markdown }}{{ body }}{{/ markdown }}
+  {{ else }}
+    {{# withNewline }}{{ body }}{{/ withNewline }}
+  {{/ inherit }}
 </div>
 
 {{# if stache.config.comments }}

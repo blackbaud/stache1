@@ -6,11 +6,11 @@ layout: layout-base
   <div class="container">
     <div class="row">
       <div class="col-sm-12">
-        {{# if stache.config.markdown }}
+        {{# inherit stache.config.markdown markdown }}
           {{# markdown }}{{ body }}{{/ markdown }}
         {{ else }}
-          {{ body }}
-        {{/ if }}
+          {{# withNewline }}{{ body }}{{/ withNewline }}
+        {{/ inherit }}
       </div>
     </div>
   </div>

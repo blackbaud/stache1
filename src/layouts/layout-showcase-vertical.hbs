@@ -2,11 +2,11 @@
 layout: layout-container
 ---
 
-{{# if stache.config.markdown }}
+{{# inherit stache.config.markdown markdown }}
   {{# markdown }}{{ body }}{{/ markdown }}
 {{ else }}
-  {{ body }}
-{{/ if }}
+  {{# withNewline }}{{ body }}{{/ withNewline }}
+{{/ inherit }}
 
 <div class="showcase">
   {{# eachChildLink layout="vertical" mod=3 }}

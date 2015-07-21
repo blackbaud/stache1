@@ -36,10 +36,10 @@ showHeadings: true
     </div>
   </div>
   <div class="col-sm-9">
-    {{# if stache.config.markdown }}
+    {{# inherit stache.config.markdown markdown }}
       {{# markdown }}{{ body }}{{/ markdown }}
     {{ else }}
-      {{ body }}
-    {{/ if }}
+      {{# withNewline }}{{ body }}{{/ withNewline }}
+    {{/ inherit }}
   </div>
 </div>
