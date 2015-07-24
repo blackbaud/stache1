@@ -247,18 +247,6 @@ ul.bb-datefield.dropdown-menu {
     }
 }
 
-.bb-datefield > input.ng-invalid-date.ng-invalid {
-    border: 1px solid #e5e6e7;
-    box-shadow: none;
-    outline: none;
-}
-
-.ng-invalid > .bb-datefield > input.form-control {
-    border: 1px solid #ed5565;
-    box-shadow: 0 0 8px rgba(237, 85, 101, 0.6);
-    outline: none;
-}
-
 .ng-invalid-required > .bb-datefield > input.form-control.ng-untouched {
     border: 1px solid #e5e6e7;
     box-shadow: none;

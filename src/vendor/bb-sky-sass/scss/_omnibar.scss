@@ -9,6 +9,14 @@ $omnibar-zindex: $zindex-modal-background - 1 !default;
 .bb-omnibar {
     .search {
         font-family: $font-family-base;
+        
+        > .searchContainer > input.searchbox:focus {
+            box-shadow: none;
+        }
+        
+        > .searchContainer > input.searchbox:focus + .searchButton {
+            box-shadow: none;
+        }
     }
 
     .desktop, .mobile {

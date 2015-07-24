@@ -143,3 +143,10 @@
 body > .ui-select-bootstrap.open {
     z-index: 2000;
 }
+
+.ui-select-search.ng-hide:not(.ng-hide-animate) {
+    display: block !important;
+      overflow: hidden;
+      height: 0;
+      opacity: 0;
+}

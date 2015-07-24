@@ -942,28 +942,66 @@ angular.module('stache')
             <div class="row">
               <div class="col-md-12 kitchen-sink-example">
                 <div ng-controller="ChecklistTestController">
-  <bb-checklist bb-checklist-items="locals.items"
-                bb-checklist-selected-items="locals.selectedItems"
-                bb-checklist-filter-callback="locals.onSearch"
-                bb-checklist-include-search="locals.includeSearch"
-                bb-checklist-search-placeholder="'Search for columns'"
-                bb-checklist-no-items-message="'No columns found'">
-    <bb-checklist-columns>
-      <bb-checklist-column bb-checklist-column-caption="'Column Name'" bb-checklist-column-field="'column'" bb-checklist-column-width="'30%'"></bb-checklist-column>
-      <bb-checklist-column bb-checklist-column-caption="'Column Description'" bb-checklist-column-field="'description'" bb-checklist-column-width="'70%'"></bb-checklist-column>
-    </bb-checklist-columns>
-  </bb-checklist>
+    <h3>Grid example</h3>
+    <bb-checklist 
+                  bb-checklist-items="locals.items" 
+                  bb-checklist-selected-items="locals.selectedItems" 
+                  bb-checklist-filter-callback="locals.onSearch" 
+                  bb-checklist-include-search="locals.includeSearch" 
+                  bb-checklist-search-placeholder="'Search for columns'" 
+                  bb-checklist-no-items-message="'No columns found'"
+                  >
+        <bb-checklist-columns>
+            <bb-checklist-column 
+                                 bb-checklist-column-caption="'Column Name'" 
+                                 bb-checklist-column-field="'column'" 
+                                 bb-checklist-column-width="'30%'"
+                                 >
+            </bb-checklist-column>
+            <bb-checklist-column 
+                                 bb-checklist-column-caption="'Column Description'" 
+                                 bb-checklist-column-field="'description'" 
+                                 bb-checklist-column-width="'70%'"
+                                 >
+            </bb-checklist-column>
+        </bb-checklist-columns>
+    </bb-checklist>
 
-  <label>
-    <input type="checkbox" ng-model="locals.includeSearch" /> Include searchbox
-  </label>
+    <label>
+        <input type="checkbox" ng-model="locals.includeSearch" /> Include searchbox
+    </label>
+    <br>
+    <hr>
+    <br>
 
-  <div>
-    <label>Selected items:</label>
-    <ul>
-      <li ng-repeat="item in locals.selectedItems">{{item.column}}</li>
-    </ul>
-  </div>
+    <div>
+        <label>Selected items:</label>
+        <ul>
+            <li ng-repeat="item in locals.selectedItems">{{item.column}}</li>
+        </ul>
+    </div>
+
+    <h3>List example</h3>
+    
+    <bb-checklist 
+                  bb-checklist-items="locals.listItems" 
+                  bb-checklist-selected-items="locals.selectedListItems" 
+                  bb-checklist-include-search="locals.includeSearch" 
+                  bb-checklist-search-placeholder="Search for columns" 
+                  bb-checklist-no-items-message="No columns found" 
+                  bb-checklist-categories="['Constituent', 'Giving', 'Miscellaneous']" 
+                  bb-checklist-mode="list" 
+                  bb-checklist-filter-local
+                  >
+    </bb-checklist>
+
+    <div>
+        <label>Selected items:</label>
+        <ul>
+            <li ng-repeat="item in locals.selectedListItems">{{item.title}}</li>
+        </ul>
+    </div>
+
 </div>
               </div>
             </div>
@@ -982,9 +1020,14 @@ angular.module('stache')
 <li><code>bb-checklist-selected-items</code> An array representing the selected items in the list.</li>
 <li><code>bb-checklist-include-search</code> A boolean to optionally include a search textbox for filtering the items.  The search text will be highlighted in the columns of the list.  A callback function can be used to filter the items based on the search text.</li>
 <li><code>bb-checklist-search-placeholder</code> Placeholder text for the search textbox.</li>
-<li><code>bb-checklist-filter-callback</code> A function to be called when the search text is modified.  Used by the consumer to update the <code>bb-checklist-items</code> array as desired based on the search text.  The function will be passed a single object as a parameter containing a <code>searchText</code> property.</li>
+<li><code>bb-checklist-filter-callback</code> A function to be called when the search text is modified.  Used by the consumer to update the <code>bb-checklist-items</code> array as desired based on the search text.  The function will be passed a single object as a parameter containing <code>searchText</code> and <code>category</code> properties.  Useful when loading items remotely or using custom logic other than simple case-insensitive string matching to filter items.</li>
+<li><code>bb-checklist-filter-local</code> When specified, items are filtered by the <code>bbChecklist</code> directive by examining the properties of each item to match the specified category or search text.</li>
 <li><code>bb-checklist-search-debounce</code> Number of milliseconds to debounce changes to the search text.  Useful if making a web request in the <code>bb-checklist-filter-callback</code> to avoid making the request after every character typed.</li>
 <li><code>bb-checklist-no-items-message</code> <em>(Default: <code>'No items found'</code>)</em> Message to display when no items are in the list.</li>
+<li><code>bb-checklist-mode</code> <em>(Optional. Default: 'grid')</em> one of two possible values:
+<ul><li><code>grid</code> Displays items in a grid with any number of columns.  Columns are specified using the <code>bbChecklistColumn</code> directive.</li>
+<li><code>list</code> Displays items in a list with a title and description.  Items are expected to have <code>title</code>, <code>description</code> and <code>category</code> properties.</li></ul></li>
+<li><code>bb-checklist-categories</code> An array of category names used to build category filter buttons at the top of the list.</li>
 </ul>
 
 <h3>Checklist Column Settings</h3>
@@ -1005,28 +1048,66 @@ angular.module('stache')
                     <tab heading="Markup">
                       <div>
                         <pre><code data-language="html" ng-non-bindable>&lt;div ng-controller=&quot;ChecklistTestController&quot;&gt;
-  &lt;bb-checklist bb-checklist-items=&quot;locals.items&quot;
-                bb-checklist-selected-items=&quot;locals.selectedItems&quot;
-                bb-checklist-filter-callback=&quot;locals.onSearch&quot;
-                bb-checklist-include-search=&quot;locals.includeSearch&quot;
-                bb-checklist-search-placeholder=&quot;&#x27;Search for columns&#x27;&quot;
-                bb-checklist-no-items-message=&quot;&#x27;No columns found&#x27;&quot;&gt;
-    &lt;bb-checklist-columns&gt;
-      &lt;bb-checklist-column bb-checklist-column-caption=&quot;&#x27;Column Name&#x27;&quot; bb-checklist-column-field=&quot;&#x27;column&#x27;&quot; bb-checklist-column-width=&quot;&#x27;30%&#x27;&quot;&gt;&lt;/bb-checklist-column&gt;
-      &lt;bb-checklist-column bb-checklist-column-caption=&quot;&#x27;Column Description&#x27;&quot; bb-checklist-column-field=&quot;&#x27;description&#x27;&quot; bb-checklist-column-width=&quot;&#x27;70%&#x27;&quot;&gt;&lt;/bb-checklist-column&gt;
-    &lt;/bb-checklist-columns&gt;
-  &lt;/bb-checklist&gt;
+    &lt;h3&gt;Grid example&lt;/h3&gt;
+    &lt;bb-checklist 
+                  bb-checklist-items=&quot;locals.items&quot; 
+                  bb-checklist-selected-items=&quot;locals.selectedItems&quot; 
+                  bb-checklist-filter-callback=&quot;locals.onSearch&quot; 
+                  bb-checklist-include-search=&quot;locals.includeSearch&quot; 
+                  bb-checklist-search-placeholder=&quot;&#x27;Search for columns&#x27;&quot; 
+                  bb-checklist-no-items-message=&quot;&#x27;No columns found&#x27;&quot;
+                  &gt;
+        &lt;bb-checklist-columns&gt;
+            &lt;bb-checklist-column 
+                                 bb-checklist-column-caption=&quot;&#x27;Column Name&#x27;&quot; 
+                                 bb-checklist-column-field=&quot;&#x27;column&#x27;&quot; 
+                                 bb-checklist-column-width=&quot;&#x27;30%&#x27;&quot;
+                                 &gt;
+            &lt;/bb-checklist-column&gt;
+            &lt;bb-checklist-column 
+                                 bb-checklist-column-caption=&quot;&#x27;Column Description&#x27;&quot; 
+                                 bb-checklist-column-field=&quot;&#x27;description&#x27;&quot; 
+                                 bb-checklist-column-width=&quot;&#x27;70%&#x27;&quot;
+                                 &gt;
+            &lt;/bb-checklist-column&gt;
+        &lt;/bb-checklist-columns&gt;
+    &lt;/bb-checklist&gt;
 
-  &lt;label&gt;
-    &lt;input type=&quot;checkbox&quot; ng-model=&quot;locals.includeSearch&quot; /&gt; Include searchbox
-  &lt;/label&gt;
+    &lt;label&gt;
+        &lt;input type=&quot;checkbox&quot; ng-model=&quot;locals.includeSearch&quot; /&gt; Include searchbox
+    &lt;/label&gt;
+    &lt;br&gt;
+    &lt;hr&gt;
+    &lt;br&gt;
 
-  &lt;div&gt;
-    &lt;label&gt;Selected items:&lt;/label&gt;
-    &lt;ul&gt;
-      &lt;li ng-repeat=&quot;item in locals.selectedItems&quot;&gt;{{item.column}}&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/div&gt;
+    &lt;div&gt;
+        &lt;label&gt;Selected items:&lt;/label&gt;
+        &lt;ul&gt;
+            &lt;li ng-repeat=&quot;item in locals.selectedItems&quot;&gt;{{item.column}}&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+
+    &lt;h3&gt;List example&lt;/h3&gt;
+    
+    &lt;bb-checklist 
+                  bb-checklist-items=&quot;locals.listItems&quot; 
+                  bb-checklist-selected-items=&quot;locals.selectedListItems&quot; 
+                  bb-checklist-include-search=&quot;locals.includeSearch&quot; 
+                  bb-checklist-search-placeholder=&quot;Search for columns&quot; 
+                  bb-checklist-no-items-message=&quot;No columns found&quot; 
+                  bb-checklist-categories=&quot;[&#x27;Constituent&#x27;, &#x27;Giving&#x27;, &#x27;Miscellaneous&#x27;]&quot; 
+                  bb-checklist-mode=&quot;list&quot; 
+                  bb-checklist-filter-local
+                  &gt;
+    &lt;/bb-checklist&gt;
+
+    &lt;div&gt;
+        &lt;label&gt;Selected items:&lt;/label&gt;
+        &lt;ul&gt;
+            &lt;li ng-repeat=&quot;item in locals.selectedListItems&quot;&gt;{{item.title}}&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+
 &lt;/div&gt;</code></pre>
                       </div>
                     </tab>
@@ -1035,7 +1116,8 @@ angular.module('stache')
                         <pre><code data-language="javascript" ng-non-bindable>angular.module(&#x27;stache&#x27;)
     .controller(&#x27;ChecklistTestController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
         var locals,
-            items;
+            items,
+            listItems;
 
         function loadItems(searchText) {
             var filteredItems = [],
@@ -1055,10 +1137,34 @@ angular.module('stache')
             { column: &#x27;Soft credits&#x27;, description: &#x27;Soft credits for the gift&#x27; },
             { column: &#x27;Amount&#x27;, description: &#x27;Amount of the gift&#x27; }
         ];
+        
+        listItems = [
+            {
+                title: &#x27;Constituent summary&#x27;,
+                description: &#x27;Summary information about the constituent who gave the gift&#x27;,
+                category: &#x27;Constituent&#x27;
+            },
+            {
+                title: &#x27;Soft credits&#x27;,
+                description: &#x27;Soft credits for the gift&#x27;,
+                category: &#x27;Giving&#x27;
+            },
+            {
+                title: &#x27;Amount&#x27;,
+                description: &#x27;Amount of the gift&#x27;,
+                category: &#x27;Giving&#x27;
+            },
+            {
+                title: &#x27;Sweatshirt&#x27;,
+                description: &#x27;This column has nothing to do with the other ones&#x27;,
+                category: &#x27;Miscellaneous&#x27;
+            }
+        ];
 
         $scope.locals = locals = {
             selectedItems: [],
             includeSearch: true,
+            listItems: listItems,
             onSearch: function (args) {
                 loadItems(args.searchText);
             }
@@ -1076,7 +1182,8 @@ angular.module('stache')
           <script>angular.module('stache')
     .controller('ChecklistTestController', ['$scope', function ($scope) {
         var locals,
-            items;
+            items,
+            listItems;
 
         function loadItems(searchText) {
             var filteredItems = [],
@@ -1096,10 +1203,34 @@ angular.module('stache')
             { column: 'Soft credits', description: 'Soft credits for the gift' },
             { column: 'Amount', description: 'Amount of the gift' }
         ];
+        
+        listItems = [
+            {
+                title: 'Constituent summary',
+                description: 'Summary information about the constituent who gave the gift',
+                category: 'Constituent'
+            },
+            {
+                title: 'Soft credits',
+                description: 'Soft credits for the gift',
+                category: 'Giving'
+            },
+            {
+                title: 'Amount',
+                description: 'Amount of the gift',
+                category: 'Giving'
+            },
+            {
+                title: 'Sweatshirt',
+                description: 'This column has nothing to do with the other ones',
+                category: 'Miscellaneous'
+            }
+        ];
 
         $scope.locals = locals = {
             selectedItems: [],
             includeSearch: true,
+            listItems: listItems,
             onSearch: function (args) {
                 loadItems(args.searchText);
             }
@@ -1367,8 +1498,9 @@ angular.module('stache')
         <div class="row">
             <div class="col-md-6 col-xs-12"> 
                 <label>Date Field</label>
-                <bb-datepicker name="date2" ng-model="locals.date2" ng-required="{{true}}" placeholder="locals.placeholder"></bb-datepicker>
-                <label class="error">{{testform.date2.invalidFormatMessage}}</label>
+                <bb-datepicker bb-datepicker-name="date2" ng-model="locals.date2" ng-required="false" placeholder="locals.placeholder"></bb-datepicker>
+                <label class="error" ng-show="testform.date2.$error.dateFormat">{{testform.date2.invalidFormatMessage}}</label>
+                <label class="error" ng-show="testform.date2.$error.required && testform.date2.$touched">Date is required</label>
             </div>
             <div class="col-md-6 col-xs-12"> 
                 <label>Date Value</label>
@@ -1377,15 +1509,16 @@ angular.module('stache')
         </div>
         <div class="row">
             <div class="col-md-6 col-xs-12">
-                <button class="btn btn-primary" type="button" ng-click="locals.setDate()">Set date</button>
+                <button class="btn btn-primary"  style="margin-top: 5px; margin-bottom: 5px;" type="button" ng-click="locals.setDate()">Set date</button>
             </div>
         </div>
         
         <div class="row">
             <div class="col-md-6 col-xs-12"> 
                 <label>Date Field - Custom Formatting</label>
-                <bb-datepicker name="date1" ng-model="locals.date1" bb-custom-validation="locals.customFormat"></bb-datepicker>
-                <label class="error">{{testform.date1.invalidFormatMessage}}</label>
+                <bb-datepicker bb-datepicker-name="date1" ng-model="locals.date1" ng-required="true" bb-custom-validation="locals.customFormat"></bb-datepicker>
+                <label class="error" ng-show="testform.date1.$error.dateFormat">{{testform.date1.invalidFormatMessage}}</label>
+                <label class="error" ng-show="testform.date1.$error.required && testform.date1.$touched">Date is required</label>
             </div>
             <div class="col-md-6 col-xs-12"> 
                 <label>Date Value</label>
@@ -1395,11 +1528,9 @@ angular.module('stache')
         
         <div class="row">
             <div class="col-md6 col-xs-12">
-                <button class="btn btn-primary" type="button" ng-click="locals.openModal()">Open Datepicker Modal</button>
+                <button class="btn btn-primary" style="margin-top: 5px; margin-bottom: 5px;" type="button" ng-click="locals.openModal()">Open Datepicker Modal</button>
             </div>
         </div>
-        
-        
     </form>
 </div>
 
@@ -1412,8 +1543,9 @@ angular.module('stache')
                     <div class="row">
                         <div class="col-md-6 col-xs-12"> 
                             <label>Date Field</label>
-                                <bb-datepicker name="date2" ng-model="locals.date" ng-required="{{true}}" bb-date-format="'dd/MM/yyyy'" datepicker-append-to-body="true"></bb-datepicker>
-                                <label class="error">{{testform.date2.invalidFormatMessage}}</label>
+                                <bb-datepicker bb-datepicker-name="date2" ng-model="locals.date" ng-required="true" bb-date-format="'dd/MM/yyyy'" datepicker-append-to-body="true"></bb-datepicker>
+                                <label class="error" ng-show="datepickerModal.date2.$error.dateFormat">{{testform.date2.invalidFormatMessage}}</label>
+                                <label class="error" ng-show="datepickerModal.date2.$error.required && testform.date2.$touched">Date is required</label>
                         </div>
                         <div class="col-md-6 col-xs-12"> 
                             <label>Date Value</label>
@@ -1443,17 +1575,22 @@ angular.module('stache')
 <h2>Datepicker settings</h2>
 
 <ul>
-<li><code>ng-model</code> An object to bind the date value in and out of the datepicker. This will be set to a Javascript Date object when set or parsed from the bootstrap datepicker.</li>
-<li><code>ng-required</code> Boolean value that indicates whether the field is required.</li>
-<li><code>bb-date-options</code> Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap <code>datepicker-options</code> object. You can set application defaults for the <code>showWeeks</code> and <code>startingDay</code> properties of the angular ui bootstrap datepicker in the <code>bbDatepickerConfig</code> constant defined in <code>sky.datepicker</code>. In sky the default for <code>showWeeks</code> is false and <code>startingDay</code> is 0 unless overridden in <code>bbDatepickerConfig</code>. </li>
 <li><code>bb-custom-validation</code> an object containing the following:
 <ul><li><code>formatValue</code> A function that will be called when text is entered directly into the textbox. The only parameter to the function will be the raw value of the textbox. The function should return an object or a promise of an object with properties of <code>formattedValue</code> and optionally <code>formattingErrorMessage</code> if there was a problem when trying to format the input value.</li></ul></li>
 <li><code>bb-date-format</code> The format string that the date should display as in the input text box. This will override the default set in the <code>bbDatepickerConfig</code> <code>currentCultureDateFormatString</code> property. The default format in sky is set as <code>MM/dd/yyyy</code>. The format string should be set up like the <a href="https://docs.angularjs.org/api/ng/filter/date">angular</a> date filter format strings.</li>
+<li><code>bb-date-options</code> Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap <code>datepicker-options</code> object. You can set application defaults for the <code>showWeeks</code> and <code>startingDay</code> properties of the angular ui bootstrap datepicker in the <code>bbDatepickerConfig</code> constant defined in <code>sky.datepicker</code>. In sky the default for <code>showWeeks</code> is false and <code>startingDay</code> is 0 unless overridden in <code>bbDatepickerConfig</code>.</li>
+<li><code>bb-datepicker-name</code> This value gets bound to the <code>name</code> attribute of the datepicker input for use in validation and form submission.</li>
 <li><code>close-on-date-selection</code> <em>(Default: true):</em>  Whether to close calendar when a date is chosen.</li>
 <li><code>datepicker-append-to-body</code> <em>(Default: false):</em>  Append the datepicker popup element to <code>body</code>, rather than inserting after the datepicker input.</li>
+<li><code>ng-model</code> An object to bind the date value in and out of the datepicker. This will be set to a Javascript Date object when set or parsed from the bootstrap datepicker.</li>
 <li><code>placeholder</code> overrides the default placeholder text of the <code>bb-datepicker</code> input</li>
+<li><code>required</code> Attribute present if the <code>bb-datepicker</code> value is required.</li>
 <li><code>show-button-bar</code> <em>(Default: false):</em>  Whether to display a button bar underneath the datepicker. (see angular ui bootstrap datepicker)</li>
 </ul>
+
+<h2>Validation</h2>
+
+<p><code>bb-datepicker</code> sets validation on the datepicker input using <code>bb-datepicker-name</code> for the input name, and the validity of the date entered in the input is in the <code>dateFormat</code> validator. So if you want to see if the date value is valid, you can access this through <code>$scope.myFormName.inputName.$error.dateFormat</code>. The error message for an invalid date will be in <code>$scope.myFormName.inputName.invalidFormatMessage</code>.</p>
               </div>
             </div>
                 
@@ -1469,8 +1606,9 @@ angular.module('stache')
         &lt;div class=&quot;row&quot;&gt;
             &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
                 &lt;label&gt;Date Field&lt;/label&gt;
-                &lt;bb-datepicker name=&quot;date2&quot; ng-model=&quot;locals.date2&quot; ng-required=&quot;{{true}}&quot; placeholder=&quot;locals.placeholder&quot;&gt;&lt;/bb-datepicker&gt;
-                &lt;label class=&quot;error&quot;&gt;{{testform.date2.invalidFormatMessage}}&lt;/label&gt;
+                &lt;bb-datepicker bb-datepicker-name=&quot;date2&quot; ng-model=&quot;locals.date2&quot; ng-required=&quot;false&quot; placeholder=&quot;locals.placeholder&quot;&gt;&lt;/bb-datepicker&gt;
+                &lt;label class=&quot;error&quot; ng-show=&quot;testform.date2.$error.dateFormat&quot;&gt;{{testform.date2.invalidFormatMessage}}&lt;/label&gt;
+                &lt;label class=&quot;error&quot; ng-show=&quot;testform.date2.$error.required &amp;&amp; testform.date2.$touched&quot;&gt;Date is required&lt;/label&gt;
             &lt;/div&gt;
             &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
                 &lt;label&gt;Date Value&lt;/label&gt;
@@ -1479,15 +1617,16 @@ angular.module('stache')
         &lt;/div&gt;
         &lt;div class=&quot;row&quot;&gt;
             &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt;
-                &lt;button class=&quot;btn btn-primary&quot; type=&quot;button&quot; ng-click=&quot;locals.setDate()&quot;&gt;Set date&lt;/button&gt;
+                &lt;button class=&quot;btn btn-primary&quot;  style=&quot;margin-top: 5px; margin-bottom: 5px;&quot; type=&quot;button&quot; ng-click=&quot;locals.setDate()&quot;&gt;Set date&lt;/button&gt;
             &lt;/div&gt;
         &lt;/div&gt;
         
         &lt;div class=&quot;row&quot;&gt;
             &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
                 &lt;label&gt;Date Field - Custom Formatting&lt;/label&gt;
-                &lt;bb-datepicker name=&quot;date1&quot; ng-model=&quot;locals.date1&quot; bb-custom-validation=&quot;locals.customFormat&quot;&gt;&lt;/bb-datepicker&gt;
-                &lt;label class=&quot;error&quot;&gt;{{testform.date1.invalidFormatMessage}}&lt;/label&gt;
+                &lt;bb-datepicker bb-datepicker-name=&quot;date1&quot; ng-model=&quot;locals.date1&quot; ng-required=&quot;true&quot; bb-custom-validation=&quot;locals.customFormat&quot;&gt;&lt;/bb-datepicker&gt;
+                &lt;label class=&quot;error&quot; ng-show=&quot;testform.date1.$error.dateFormat&quot;&gt;{{testform.date1.invalidFormatMessage}}&lt;/label&gt;
+                &lt;label class=&quot;error&quot; ng-show=&quot;testform.date1.$error.required &amp;&amp; testform.date1.$touched&quot;&gt;Date is required&lt;/label&gt;
             &lt;/div&gt;
             &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
                 &lt;label&gt;Date Value&lt;/label&gt;
@@ -1497,11 +1636,9 @@ angular.module('stache')
         
         &lt;div class=&quot;row&quot;&gt;
             &lt;div class=&quot;col-md6 col-xs-12&quot;&gt;
-                &lt;button class=&quot;btn btn-primary&quot; type=&quot;button&quot; ng-click=&quot;locals.openModal()&quot;&gt;Open Datepicker Modal&lt;/button&gt;
+                &lt;button class=&quot;btn btn-primary&quot; style=&quot;margin-top: 5px; margin-bottom: 5px;&quot; type=&quot;button&quot; ng-click=&quot;locals.openModal()&quot;&gt;Open Datepicker Modal&lt;/button&gt;
             &lt;/div&gt;
         &lt;/div&gt;
-        
-        
     &lt;/form&gt;
 &lt;/div&gt;
 
@@ -1514,8 +1651,9 @@ angular.module('stache')
                     &lt;div class=&quot;row&quot;&gt;
                         &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
                             &lt;label&gt;Date Field&lt;/label&gt;
-                                &lt;bb-datepicker name=&quot;date2&quot; ng-model=&quot;locals.date&quot; ng-required=&quot;{{true}}&quot; bb-date-format=&quot;&#x27;dd/MM/yyyy&#x27;&quot; datepicker-append-to-body=&quot;true&quot;&gt;&lt;/bb-datepicker&gt;
-                                &lt;label class=&quot;error&quot;&gt;{{testform.date2.invalidFormatMessage}}&lt;/label&gt;
+                                &lt;bb-datepicker bb-datepicker-name=&quot;date2&quot; ng-model=&quot;locals.date&quot; ng-required=&quot;true&quot; bb-date-format=&quot;&#x27;dd/MM/yyyy&#x27;&quot; datepicker-append-to-body=&quot;true&quot;&gt;&lt;/bb-datepicker&gt;
+                                &lt;label class=&quot;error&quot; ng-show=&quot;datepickerModal.date2.$error.dateFormat&quot;&gt;{{testform.date2.invalidFormatMessage}}&lt;/label&gt;
+                                &lt;label class=&quot;error&quot; ng-show=&quot;datepickerModal.date2.$error.required &amp;&amp; testform.date2.$touched&quot;&gt;Date is required&lt;/label&gt;
                         &lt;/div&gt;
                         &lt;div class=&quot;col-md-6 col-xs-12&quot;&gt; 
                             &lt;label&gt;Date Value&lt;/label&gt;
@@ -1542,7 +1680,7 @@ angular.module('stache')
     angular.module(&#x27;stache&#x27;)
         .controller(&#x27;DatepickerModalController&#x27;, [&#x27;$scope&#x27;, function ($scope) {
             $scope.locals = {
-                date: &#x27;18/5/2014&#x27;
+                date: &#x27;&#x27;
             };
         
         }])
@@ -1599,7 +1737,7 @@ angular.module('stache')
     angular.module('stache')
         .controller('DatepickerModalController', ['$scope', function ($scope) {
             $scope.locals = {
-                date: '18/5/2014'
+                date: ''
             };
         
         }])
@@ -2776,7 +2914,8 @@ angular.module(&#x27;stache&#x27;)
                 excludedColumns: [&#x27;bio&#x27;]
             },
             selectedColumnIds: [1, 2, 3, 5],
-            columnPickerHelpKey: &#x27;bb-security-users.html&#x27;
+            columnPickerHelpKey: &#x27;bb-security-users.html&#x27;,
+            columnPickerMode: &#x27;list&#x27;
         },
         gridOptions2: {
             columns: [
@@ -3228,7 +3367,8 @@ angular.module('stache')
                 excludedColumns: ['bio']
             },
             selectedColumnIds: [1, 2, 3, 5],
-            columnPickerHelpKey: 'bb-security-users.html'
+            columnPickerHelpKey: 'bb-security-users.html',
+            columnPickerMode: 'list'
         },
         gridOptions2: {
             columns: [

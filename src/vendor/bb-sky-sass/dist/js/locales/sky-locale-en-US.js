@@ -30,6 +30,7 @@ bbResourcesOverrides = {
     "grid_filters_summary_header": "Filter:", // Header text for filter summary on top of grid
     "grid_load_more": "Load more", // The text for the button to load additional rows into the grid if more rows are available.
     "grid_search_placeholder": "Find in this list", // Placeholder text in grid search box
+    "grid_column_picker_search_no_columns": "No columns found", // Displays when no columns are found for the specified search text.
     "modal_footer_cancel_button": "Cancel", // Default lable text for modal cancel button
     "modal_footer_primary_button": "Save", // Default lable text for modal primary button
     "month_short_april": "Apr",

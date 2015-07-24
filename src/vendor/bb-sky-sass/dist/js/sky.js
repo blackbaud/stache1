@@ -951,9 +951,14 @@ The bbCheck directive allows you to change an input element of type checkbox or 
  - `bb-checklist-selected-items` An array representing the selected items in the list.
  - `bb-checklist-include-search` A boolean to optionally include a search textbox for filtering the items.  The search text will be highlighted in the columns of the list.  A callback function can be used to filter the items based on the search text.
  - `bb-checklist-search-placeholder` Placeholder text for the search textbox.
- - `bb-checklist-filter-callback` A function to be called when the search text is modified.  Used by the consumer to update the `bb-checklist-items` array as desired based on the search text.  The function will be passed a single object as a parameter containing a `searchText` property.
+ - `bb-checklist-filter-callback` A function to be called when the search text is modified.  Used by the consumer to update the `bb-checklist-items` array as desired based on the search text.  The function will be passed a single object as a parameter containing `searchText` and `category` properties.  Useful when loading items remotely or using custom logic other than simple case-insensitive string matching to filter items.
+ - `bb-checklist-filter-local` When specified, items are filtered by the `bbChecklist` directive by examining the properties of each item to match the specified category or search text.
  - `bb-checklist-search-debounce` Number of milliseconds to debounce changes to the search text.  Useful if making a web request in the `bb-checklist-filter-callback` to avoid making the request after every character typed.
  - `bb-checklist-no-items-message` *(Default: `'No items found'`)* Message to display when no items are in the list.
+ - `bb-checklist-mode` *(Optional. Default: 'grid')* one of two possible values:
+  - `grid` Displays items in a grid with any number of columns.  Columns are specified using the `bbChecklistColumn` directive.
+  - `list` Displays items in a list with a title and description.  Items are expected to have `title`, `description` and `category` properties.
+ - `bb-checklist-categories` An array of category names used to build category filter buttons at the top of the list.
 
 ### Checklist Column Settings ###
 
@@ -966,238 +971,351 @@ The bbCheck directive allows you to change an input element of type checkbox or 
 (function () {
     'use strict';
     
-    function contains(arr, item) {
-        var i;
-        
-        if (angular.isArray(arr)) {
-            for (i = 0; i < arr.length; i += 1) {
-                if (angular.equals(arr[i], item)) {
-                    return true;
+    var PROP_CATEGORY = 'category';
+    
+    function bbChecklist(bbChecklistUtility) {
+        return {
+            replace: true,
+            restrict: 'E',
+            transclude: true,
+            templateUrl: 'sky/templates/checklist/checklist.html',
+            scope: {
+                bbChecklistItems: '=',
+                bbChecklistSelectedItems: '=',
+                bbChecklistFilterCallback: '=',
+                bbChecklistIncludeSearch: '@',
+                bbChecklistSearchDebounce: '=',
+                bbChecklistSearchPlaceholder: '@',
+                bbChecklistNoItemsMessage: '@',
+                bbChecklistAutomationField: '=',
+                bbChecklistCategories: '=',
+                bbChecklistMode: '@'
+            },
+            controller: ['$scope', function ($scope) {
+                var locals = $scope.locals = {};
+
+                this.setColumns = function (columns) {
+                    locals.columns = columns;
+                };
+            }],
+            link: function ($scope, el, attrs) {
+                var filterLocal = angular.isDefined(attrs.bbChecklistFilterLocal),
+                    locals = $scope.locals;
+
+                function itemMatchesCategory(item, category) {
+                    return !category || item.category === category;
                 }
-            }
-        }
-        return false;
-    }
-
-    // add
-    function add(arr, item) {
-        var i;
-
-        arr = angular.isArray(arr) ? arr : [];
-        for (i = 0; i < arr.length; i += 1) {
-            if (angular.equals(arr[i], item)) {
-                return arr;
-            }
-        }
-        arr.push(item);
-        return arr;
-    }
-
-    // remove
-    function remove(arr, item) {
-        var i;
-
-        if (angular.isArray(arr)) {
-            for (i = 0; i < arr.length; i += 1) {
-                if (angular.equals(arr[i], item)) {
-                    arr.splice(i, 1);
-                    break;
-                }
-            }
-        }
-        return arr;
-    }
-
-    angular.module('sky.checklist', ['sky.resources'])
-        .directive('checklistModel', ['$parse', '$compile', function ($parse, $compile) {
-            // http://stackoverflow.com/a/19228302/1458162
-            function postLinkFn(scope, elem, attrs) {
-                var getter,
-                    setter,
-                    value;
                 
-                // compile with `ng-model` pointing to `checked`
-                $compile(elem)(scope);
-
-                // getter / setter for original model
-                getter = $parse(attrs.checklistModel);
-                setter = getter.assign;
-
-                // value added to list
-                value = $parse(attrs.checklistValue)(scope.$parent);
-
-                // watch UI checked change
-                scope.$watch('checked', function (newValue, oldValue) {
-                    var current;
+                function itemMatchesFilter(item, category, searchTextUpper) {
+                    var p,
+                        val;
                     
-                    if (newValue === oldValue) {
-                        return;
+                    if (itemMatchesCategory(item, category)) {
+                        if (!searchTextUpper) {
+                            return true;
+                        }
+                        
+                        for (p in item) {
+                            if (item.hasOwnProperty(p) && p !== PROP_CATEGORY) {
+                                val = item[p];
+                                
+                                if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
+                                    return true;
+                                }
+                            }
+                        }
                     }
                     
-                    current = getter(scope.$parent);
+                    return false;
+                }
+                
+                function invokeFilterLocal() {
+                    var filteredItems = [],
+                        i,
+                        item,
+                        items = $scope.bbChecklistItems,
+                        n,
+                        searchTextUpper = (locals.searchText || '').toUpperCase(),
+                        selectedCategory = locals.selectedCategory;
                     
-                    if (newValue === true) {
-                        setter(scope.$parent, add(current, value));
+                    if (!searchTextUpper && !selectedCategory) {
+                        locals.filteredItems = items.slice(0);
                     } else {
-                        setter(scope.$parent, remove(current, value));
+                        for (i = 0, n = items.length; i < n; i++) {
+                            item = items[i];
+
+                            if (itemMatchesFilter(item, selectedCategory, searchTextUpper)) {
+                                filteredItems.push(item);
+                            }
+                        }
+
+                        locals.filteredItems = filteredItems;
                     }
+                }
+
+                function invokeFilter() {
+                    if (filterLocal) {
+                        invokeFilterLocal();
+                    } else if ($scope.bbChecklistFilterCallback) {
+                        $scope.bbChecklistFilterCallback({
+                            searchText: locals.searchText,
+                            category: locals.selectedCategory
+                        });
+                    }
+                }
+
+                $scope.bbChecklistSelectedItems = $scope.bbChecklistSelectedItems || [];
+
+                locals.selectAll = function () {
+                    var i,
+                        item,
+                        items = $scope.bbChecklistItems,
+                        selected = $scope.bbChecklistSelectedItems;
+
+                    for (i = 0; i < items.length; i += 1) {
+                        item = items[i];
+                        if (!bbChecklistUtility.contains(selected, item)) {
+                            bbChecklistUtility.add(selected, item);
+                        }
+                    }
+                };
+
+                locals.clear = function () {
+                    var i,
+                        item,
+                        items = $scope.bbChecklistItems,
+                        selected = $scope.bbChecklistSelectedItems;
+
+                    for (i = 0; i < items.length; i += 1) {
+                        item = items[i];
+                        bbChecklistUtility.remove(selected, item);
+                    }
+                };
+
+                locals.rowClicked = function (item) {
+                    var selected = $scope.bbChecklistSelectedItems;
+
+                    if (!bbChecklistUtility.contains(selected, item)) {
+                        bbChecklistUtility.add(selected, item);
+                    } else {
+                        bbChecklistUtility.remove(selected, item);
+                    }
+                };
+
+                locals.filterByCategory = function (selectedCategory) {
+                    locals.selectedCategory = selectedCategory;
+                    invokeFilter();
+                };
+
+                $scope.$watch('bbChecklistItems', function () {
+                    locals.filteredItems = $scope.bbChecklistItems;
+                    locals.highlightRefresh = new Date().getTime();
                 });
 
-                // watch original model change
-                scope.$parent.$watch(attrs.checklistModel, function (newArr) {
-                    scope.checked = contains(newArr, value);
-                }, true);
+                $scope.$watch('locals.searchText', function (newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        invokeFilter();
+                    }
+                });
             }
+        };
+    }
+    
+    bbChecklist.$inject = ['bbChecklistUtility'];
 
-            return {
-                restrict: 'A',
-                priority: 1000,
-                terminal: true,
-                scope: true,
-                compile: function (tElement, tAttrs) {
-                    if (tElement[0].tagName !== 'INPUT' || !tElement.attr('type', 'checkbox')) {
-                        throw 'checklist-model should be applied to `input[type="checkbox"]`.';
-                    }
+    angular.module('sky.checklist', ['sky.check', 'sky.checklist.column', 'sky.checklist.columns', 'sky.checklist.model', 'sky.checklist.utility', 'sky.resources'])
+        .directive('bbChecklist', bbChecklist);
+}());
+/*global angular */
 
-                    if (!tAttrs.checklistValue) {
-                        throw 'You should provide `checklist-value`.';
-                    }
+(function () {
+    'use strict';
 
-                    // exclude recursion
-                    tElement.removeAttr('checklist-model');
+    function bbChecklistColumn() {
+        return {
+            require: '^bbChecklistColumns',
+            restrict: 'E',
+            scope: {
+                bbChecklistColumnCaption: "=",
+                bbChecklistColumnField: "=",
+                bbChecklistColumnClass: "=",
+                bbChecklistColumnWidth: "=",
+                bbChecklistColumnAutomationId: "="
+            },
+            link: function ($scope, element, attrs, bbChecklistColumns) {
+                /*jslint unparam: true */
+                var column = {
+                    caption: $scope.bbChecklistColumnCaption,
+                    field: $scope.bbChecklistColumnField,
+                    'class': $scope.bbChecklistColumnClass,
+                    width: $scope.bbChecklistColumnWidth,
+                    automationId: $scope.bbChecklistColumnAutomationId
+                };
 
-                    // local scope var storing individual checkbox model
-                    tElement.attr('ng-model', 'checked');
+                bbChecklistColumns.addColumn(column);
+            }
+        };
+    }
+    
+    angular.module('sky.checklist.column', ['sky.checklist.columns'])
+        .directive('bbChecklistColumn', bbChecklistColumn);
+}());
+/*global angular */
 
-                    return postLinkFn;
+(function () {
+    'use strict';
+    
+    function bbChecklistColumns() {
+        return {
+            require: '^bbChecklist',
+            restrict: 'E',
+            scope: {
+            },
+            controller: ['$scope', function ($scope) {
+                $scope.columns = [];
+
+                this.addColumn = function (column) {
+                    $scope.columns.push(column);
+                };
+            }],
+            link: function ($scope, element, attrs, bbChecklist) {
+                /*jslint unparam: true */
+                bbChecklist.setColumns($scope.columns);
+            }
+        };
+    }
+    
+    angular.module('sky.checklist.columns', [])
+        .directive('bbChecklistColumns', bbChecklistColumns);
+}());
+/*global angular */
+
+(function () {
+    'use strict';
+    
+    function checklistModel($compile, $parse, bbChecklistUtility) {
+        // http://stackoverflow.com/a/19228302/1458162
+        function postLinkFn(scope, elem, attrs) {
+            var getter,
+                setter,
+                value;
+
+            // compile with `ng-model` pointing to `checked`
+            $compile(elem)(scope);
+
+            // getter / setter for original model
+            getter = $parse(attrs.checklistModel);
+            setter = getter.assign;
+
+            // value added to list
+            value = $parse(attrs.checklistValue)(scope.$parent);
+
+            // watch UI checked change
+            scope.$watch('checked', function (newValue, oldValue) {
+                var current;
+
+                if (newValue === oldValue) {
+                    return;
                 }
-            };
-        }])
-        .directive('bbChecklist', ['bbResources', function (bbResources) {
+
+                current = getter(scope.$parent);
+
+                if (newValue === true) {
+                    setter(scope.$parent, bbChecklistUtility.add(current, value));
+                } else {
+                    setter(scope.$parent, bbChecklistUtility.remove(current, value));
+                }
+            });
+
+            // watch original model change
+            scope.$parent.$watch(attrs.checklistModel, function (newArr) {
+                scope.checked = bbChecklistUtility.contains(newArr, value);
+            }, true);
+        }
+
+        return {
+            restrict: 'A',
+            priority: 1000,
+            terminal: true,
+            scope: true,
+            compile: function (tElement, tAttrs) {
+                if (tElement[0].tagName !== 'INPUT' || !tElement.attr('type', 'checkbox')) {
+                    throw 'checklist-model should be applied to `input[type="checkbox"]`.';
+                }
+
+                if (!tAttrs.checklistValue) {
+                    throw 'You should provide `checklist-value`.';
+                }
+
+                // exclude recursion
+                tElement.removeAttr('checklist-model');
+
+                // local scope var storing individual checkbox model
+                tElement.attr('ng-model', 'checked');
+
+                return postLinkFn;
+            }
+        };
+    }
+    
+    checklistModel.$inject = ['$compile', '$parse', 'bbChecklistUtility'];
+    
+    angular.module('sky.checklist.model', ['sky.checklist.utility'])
+        .directive('checklistModel', checklistModel);
+}());
+/*global angular */
+
+(function () {
+    'use strict';
+    
+    angular.module('sky.checklist.utility', [])
+        .factory('bbChecklistUtility', function () {
             return {
-                replace: true,
-                restrict: 'E',
-                transclude: true,
-                templateUrl: 'sky/templates/checklist/checklist.html',
-                scope: {
-                    bbChecklistItems: "=",
-                    bbChecklistSelectedItems: "=",
-                    bbChecklistFilterCallback: "=",
-                    bbChecklistIncludeSearch: "=",
-                    bbChecklistSearchDebounce: "=",
-                    bbChecklistSearchPlaceholder: "=",
-                    bbChecklistNoItemsMessage: "=",
-                    bbChecklistAutomationField: "="
-                },
-                controller: ['$scope', function ($scope) {
-                    var locals = {
-                        selectAllText: bbResources.checklist_select_all,
-                        clearAllText: bbResources.checklist_clear_all,
-                        defaultNoItemsText: bbResources.checklist_no_items,
-                        noItemsText: $scope.bbChecklistNoItemsMessage
-                    };
+                
+                contains: function (arr, item) {
+                    var i;
 
-                    locals.selectAll = function () {
-                        var i,
-                            item,
-                            items = $scope.bbChecklistItems,
-                            selected = $scope.bbChecklistSelectedItems;
-
-                        for (i = 0; i < items.length; i += 1) {
-                            item = items[i];
-                            if (!contains(selected, item)) {
-                                add(selected, item);
+                    if (angular.isArray(arr)) {
+                        for (i = 0; i < arr.length; i += 1) {
+                            if (angular.equals(arr[i], item)) {
+                                return true;
                             }
                         }
-                    };
+                    }
+                    return false;
+                },
 
-                    locals.clear = function () {
-                        var i,
-                            item,
-                            items = $scope.bbChecklistItems,
-                            selected = $scope.bbChecklistSelectedItems;
+                // add
+                add: function (arr, item) {
+                    var i;
 
-                        for (i = 0; i < items.length; i += 1) {
-                            item = items[i];
-                            remove(selected, item);
+                    arr = angular.isArray(arr) ? arr : [];
+                    for (i = 0; i < arr.length; i += 1) {
+                        if (angular.equals(arr[i], item)) {
+                            return arr;
                         }
-                    };
+                    }
+                    arr.push(item);
+                    return arr;
+                },
 
-                    locals.rowClicked = function (item) {
-                        var selected = $scope.bbChecklistSelectedItems;
+                // remove
+                remove: function (arr, item) {
+                    var i;
 
-                        if (!contains(selected, item)) {
-                            add(selected, item);
-                        } else {
-                            remove(selected, item);
-                        }
-                    };
-
-                    $scope.locals = locals;
-
-                    $scope.$watch('bbChecklistItems', function () {
-                        locals.highlightRefresh = new Date().getTime();
-                    });
-
-                    $scope.$watch('locals.searchText', function (newValue, oldValue) {
-
-                        if (newValue !== oldValue) {
-                            if ($scope.bbChecklistFilterCallback) {
-                                $scope.bbChecklistFilterCallback({ searchText: locals.searchText });
+                    if (angular.isArray(arr)) {
+                        for (i = 0; i < arr.length; i += 1) {
+                            if (angular.equals(arr[i], item)) {
+                                arr.splice(i, 1);
+                                break;
                             }
                         }
-                    });
-                    
-                    this.setColumns = function (columns) {
-                        locals.columns = columns;
-                    };
-                }]
-            };
-        }])
-        .directive('bbChecklistColumns', [function () {
-            return {
-                require: '^bbChecklist',
-                restrict: 'E',
-                scope: {
-                },
-                controller: ['$scope', function ($scope) {
-                    $scope.columns = [];
-
-                    this.addColumn = function (column) {
-                        $scope.columns.push(column);
-                    };
-                }],
-                link: function ($scope, element, attrs, bbChecklist) {
-                    /*jslint unparam: true */
-                    bbChecklist.setColumns($scope.columns);
+                    }
+                    return arr;
                 }
-            };
-        }])
-        .directive('bbChecklistColumn', [function () {
-            return {
-                require: '^bbChecklistColumns',
-                restrict: 'E',
-                scope: {
-                    bbChecklistColumnCaption: "=",
-                    bbChecklistColumnField: "=",
-                    bbChecklistColumnClass: "=",
-                    bbChecklistColumnWidth: "=",
-                    bbChecklistColumnAutomationId: "="
-                },
-                link: function ($scope, element, attrs, bbChecklistColumns) {
-                    /*jslint unparam: true */
-                    var column = {
-                        caption: $scope.bbChecklistColumnCaption,
-                        field: $scope.bbChecklistColumnField,
-                        'class': $scope.bbChecklistColumnClass,
-                        width: $scope.bbChecklistColumnWidth,
-                        automationId: $scope.bbChecklistColumnAutomationId
-                    };
 
-                    bbChecklistColumns.addColumn(column);
-                }
             };
-        }]);
+        });
 }());
 /*jslint plusplus: true */
 /*global angular, jQuery, require */
@@ -1979,16 +2097,20 @@ The DateField directive allows you to use a common textbox with calendar picker 
 @description The `bb-datepicker` directive wraps the ui.bootstrap.datepicker directive from [angular ui bootstrap](https://angular-ui.github.io/bootstrap/). It creates a input text box and a calendar picker for choosing the date.
 
 ## Datepicker settings
-  - `ng-model` An object to bind the date value in and out of the datepicker. This will be set to a Javascript Date object when set or parsed from the bootstrap datepicker.
-  - `ng-required` Boolean value that indicates whether the field is required.
-  - `bb-date-options` Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the angular ui bootstrap datepicker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. In sky the default for `showWeeks` is false and `startingDay` is 0 unless overridden in `bbDatepickerConfig`. 
   - `bb-custom-validation` an object containing the following:
     - `formatValue` A function that will be called when text is entered directly into the textbox. The only parameter to the function will be the raw value of the textbox. The function should return an object or a promise of an object with properties of `formattedValue` and optionally `formattingErrorMessage` if there was a problem when trying to format the input value.
   - `bb-date-format` The format string that the date should display as in the input text box. This will override the default set in the `bbDatepickerConfig` `currentCultureDateFormatString` property. The default format in sky is set as `MM/dd/yyyy`. The format string should be set up like the [angular](https://docs.angularjs.org/api/ng/filter/date) date filter format strings.
+  - `bb-date-options` Options object for customizing the datepicker. The options included are all of those valid for the angular ui bootstrap `datepicker-options` object. You can set application defaults for the `showWeeks` and `startingDay` properties of the angular ui bootstrap datepicker in the `bbDatepickerConfig` constant defined in `sky.datepicker`. In sky the default for `showWeeks` is false and `startingDay` is 0 unless overridden in `bbDatepickerConfig`.
+  - `bb-datepicker-name` This value gets bound to the `name` attribute of the datepicker input for use in validation and form submission.
   - `close-on-date-selection` *(Default: true):*  Whether to close calendar when a date is chosen.
   - `datepicker-append-to-body` *(Default: false):*  Append the datepicker popup element to `body`, rather than inserting after the datepicker input.
+  - `ng-model` An object to bind the date value in and out of the datepicker. This will be set to a Javascript Date object when set or parsed from the bootstrap datepicker.
   - `placeholder` overrides the default placeholder text of the `bb-datepicker` input
+  - `required` Attribute present if the `bb-datepicker` value is required.
   - `show-button-bar` *(Default: false):*  Whether to display a button bar underneath the datepicker. (see angular ui bootstrap datepicker)
+  
+## Validation
+`bb-datepicker` sets validation on the datepicker input using `bb-datepicker-name` for the input name, and the validity of the date entered in the input is in the `dateFormat` validator. So if you want to see if the date value is valid, you can access this through `$scope.myFormName.inputName.$error.dateFormat`. The error message for an invalid date will be in `$scope.myFormName.inputName.invalidFormatMessage`.
 
 */
 
@@ -2013,10 +2135,21 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     placeholderText: '=?placeholder'
                 },
                 templateUrl: 'sky/templates/datepicker/datepicker.html',
+                controller: ['$scope', function ($scope) {
+                    var self = this;
+                    
+                    
+                    $scope.getInputNgModel = function () {
+                        if (angular.isFunction(self.getInputNgModel)) {
+                            return self.getInputNgModel();
+                        } else {
+                            return null;
+                        }
+                    };
+                }],
                 link: function ($scope, el, attr, ngModel) {
                     var parsedDate,
                         firstOpen = true,
-                        form,
                         inputEl,
                         skipValidation = false,
                         dateChangeInternal = false;
@@ -2064,19 +2197,6 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         $scope.locals.opened = !$scope.locals.opened;
                     }
                     
-                    function getForm() {
-                        var form,
-                            formEl,
-                            formName;
-                        
-                        formEl = el.parents('form');
-                        if (formEl.length > 0) {
-                            formName = formEl.attr('name');
-                            form = $scope.$parent[formName];
-                        }
-                        return form;
-                    }
-                    
                     function setDate() {
                         if (angular.isDate($scope.date)) {
                             $scope.locals.date = $filter('date')($scope.date, $scope.format);
@@ -2105,7 +2225,8 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             showWeeks: bbDatepickerConfig.showWeeks,
                             startingDay: bbDatepickerConfig.startingDay
                         },
-                        hasCustomValidation: false
+                        hasCustomValidation: false,
+                        inputName: attr.bbDatepickerName
                     };
                     
                     $scope.resources = bbResources;
@@ -2136,12 +2257,13 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             $scope.locals.hasCustomValidation = true; 
                         }
                     }
+
+                    $scope.locals.required = angular.isDefined(attr.required);
+  
                     
                     if ($scope.placeholderText === null || angular.isUndefined($scope.placeholderText)) {
                         $scope.placeholderText = $scope.format.toLowerCase();
                     }
-                    
-                    form = getForm();
                      
                     setDate();
                     
@@ -2154,6 +2276,8 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     });
                     
                     $scope.$watch('locals.date', function () {
+                        var inputNgModel;
+                        
                         if ($scope.date !== $scope.locals.date) {
                             if (angular.isDate($scope.locals.date)) {
                                 dateChangeInternal = true;
@@ -2161,29 +2285,61 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             }
                             ngModel.$setDirty();
                         }
-                        if ($scope.locals.hasCustomValidation && form) {
-                            $timeout(function () {                            
-                                if (form.$error && form.$error.date) {
-                                    form.$error.date[0].$setValidity('date', true); 
-                                }
-                            });
+                        if ($scope.locals.hasCustomValidation) {
+                            
+                            inputNgModel = $scope.getInputNgModel();
+                            
+                            /*istanbul ignore else: sanity check */
+                            if (inputNgModel !== null) {
+                                $timeout(function () {                            
+                                    if (inputNgModel.$error && inputNgModel.$error.date) {
+                                        inputNgModel.$setValidity('date', true); 
+                                    }
+                                });
+                            }
+                           
                         }
                         
                     });
                     
+                    function hasRequiredError() {
+                        var inputNgModel = $scope.getInputNgModel();
+
+                        return inputNgModel && inputNgModel.$error && inputNgModel.$error.required;
+                    }
+                    
+                    
                     ngModel.$asyncValidators.dateFormat = function () {
                         var customFormattingResult,
-                            deferred;
+                            deferred,
+                            inputNgModel;
                         
                         function resolveValidation() {
-                            deferred[ngModel.invalidFormatMessage ? 'reject' : 'resolve']();
+                            var inputNgModel = $scope.getInputNgModel();
+
+                            if (inputNgModel !== null) {
+                                deferred[inputNgModel.invalidFormatMessage ? 'reject' : 'resolve']();
+                                inputNgModel.$setValidity('dateFormat', !inputNgModel.invalidFormatMessage || inputNgModel.invalidFormatMessage === '');
+                            } else {
+                                deferred.resolve();
+                            }
                         }
+                        
+                        function setInvalidFormatMessage(errorMessage) {
+                            var inputNgModel = $scope.getInputNgModel();
+                        
+                            if (inputNgModel !== null) {
+                                inputNgModel.invalidFormatMessage = errorMessage;
+                            }
+                        }
+                        
                         
                         function handleCustomFormattingValidation(result) {
                             result = result || {};
                             
-                            ngModel.invalidFormatMessage = result.formattingErrorMessage;
+                            setInvalidFormatMessage(result.formattingErrorMessage);
                             resolveValidation();
+                            
                             if (result.formattedValue !== $scope.date) {
                                 skipValidation = true;
                                 dateChangeInternal = true;
@@ -2193,10 +2349,12 @@ The DateField directive allows you to use a common textbox with calendar picker 
                            
                         }
                         
+                       
+                        
                         deferred = $q.defer();
                         
-                        if (skipValidation || angular.isDate($scope.locals.date) || ngModel.$pristine || $scope.locals.date === '') {
-                            ngModel.invalidFormatMessage = null;
+                        if (skipValidation || angular.isDate($scope.locals.date) || ngModel.$pristine || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError())) {
+                            setInvalidFormatMessage(null);
                             resolveValidation();
                         } else if ($scope.locals.hasCustomValidation && angular.isString($scope.locals.date)) {
                             customFormattingResult = $scope.customValidation.formatValue($scope.locals.date);
@@ -2207,8 +2365,10 @@ The DateField directive allows you to use a common textbox with calendar picker 
                                 return deferred.promise;
                             }
                         } else {
-                            if (form && form.$error && form.$error.date) {
-                                ngModel.invalidFormatMessage = bbResources.date_field_invalid_date_message;
+                            inputNgModel = $scope.getInputNgModel();
+
+                            if (inputNgModel !== null && inputNgModel.$error && inputNgModel.$error.date) {
+                                setInvalidFormatMessage(bbResources.date_field_invalid_date_message);
                             }
                             resolveValidation();
                         }
@@ -2224,10 +2384,23 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         inputEl = el.find('input');
                         inputEl.on('change blur', function () {
                             $timeout(function () {
-                                if ($scope.date !== $scope.locals.date) {
+                                var inputNgModel;
+                                
+                                //allows validation to kick off for invalid dates
+                                if (angular.isUndefined($scope.locals.date) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
+                                    dateChangeInternal = true;
+                                    $scope.date = inputEl.val();
+                                    
+                                } else if ($scope.locals.required && hasRequiredError()) {
+                                    dateChangeInternal = true;
+                                    $scope.date = '';
+                                    inputNgModel = $scope.getInputNgModel();
+                                    inputNgModel.invalidFormatMessage = null;
+                                    inputNgModel.$setValidity('dateFormat', true);
+                                } else if ($scope.date !== $scope.locals.date) {
                                     dateChangeInternal = true;
                                     $scope.date = $scope.locals.date;
-                                }
+                                } 
                                 
                             });
                         });
@@ -2239,11 +2412,11 @@ The DateField directive allows you to use a common textbox with calendar picker 
         .directive('bbDatepickerCustomValidate', ['$filter', 'bbDatepickerParser', function ($filter, bbDatepickerParser) {
             return {
                 restrict: 'A',
-                require: 'ngModel',
-                link: function ($scope, el, attr, ngModel) {
-                    var format = attr.datepickerPopup;
+                require: ['ngModel', '^bbDatepicker'],
+                link: function ($scope, el, attr, controllers) {
+                    var ngModel = controllers[0], 
+                        format = attr.datepickerPopup;
                     
-                     
                     if (attr.bbDatepickerCustomValidate && attr.bbDatepickerCustomValidate === 'true') {
                         ngModel.$parsers = [];
                     } else {
@@ -2265,8 +2438,10 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             return date ? date : viewValue;
                         });
                     }
-                    
-                    
+
+                    controllers[1].getInputNgModel = function () {
+                        return ngModel;
+                    };
                 }
             };
         }])
@@ -3066,7 +3241,7 @@ to the function.
 (function () {
     'use strict';
 
-    function buildCategoryList(columns, all_categories_caption) {
+    function buildCategoryList(columns) {
         var categories = [],
             column,
             index,
@@ -3084,17 +3259,13 @@ to the function.
             }
         }
 
-        if (categories.length > 0) {
-            categories.unshift(all_categories_caption);
-        }
-
         return categories;
     }
 
 
     function columnCompare(a, b) {
-        a = a.caption.toLocaleLowerCase();
-        b = b.caption.toLocaleLowerCase();
+        a = a.title.toLocaleLowerCase();
+        b = b.title.toLocaleLowerCase();
 
         if (a < b) {
             return -1;
@@ -3106,37 +3277,51 @@ to the function.
 
         return 0;
     }
+    
+    function getInitialSelectedColumns(columns, selectedIds) {
+        var selectedColumns = [];
+        
+        angular.forEach(columns, function (column) {
+            if (selectedIds.indexOf(column.id) >= 0) {
+                selectedColumns.push(column);
+            }
+        });
+        
+        return selectedColumns;
+    }
 
-    function controller($scope, bbResources, availableColumns, initialSelectedColumnIds, columnPickerHelpKey) {
-        var all_categories = bbResources.grid_column_picker_all_categories,
-            columns = [];
+    function BBGridColumnPickerController($scope, availableColumns, initialSelectedColumnIds, columnPickerHelpKey, listMode) {
+        var columns = [],
+            initialSelectedColumns;
 
         angular.forEach(availableColumns, function (column) {
             columns.push({
                 id: column.id,
                 name: column.name,
-                caption: column.caption,
+                title: column.caption,
                 category: column.category,
-                description: column.description,
-                selected: (initialSelectedColumnIds.indexOf(column.id) >= 0)
+                description: column.description
             });
         });
+        
+        initialSelectedColumns = getInitialSelectedColumns(columns, initialSelectedColumnIds);
 
         columns.sort(columnCompare);
 
-        $scope.resources = bbResources;
         $scope.columns = columns;
-        $scope.categories = buildCategoryList(columns, all_categories);
+        $scope.categories = buildCategoryList(columns);
         $scope.locals = {};
-        $scope.locals.selectedCategory = all_categories;
+        $scope.locals.selectedColumns = initialSelectedColumns.slice(0);
         $scope.columnPickerHelpKey = columnPickerHelpKey;
-
+        $scope.listMode = listMode;
+        
         $scope.applyChanges = function () {
             var column,
                 scopeColumns = $scope.columns,
+                selectedColumns = $scope.locals.selectedColumns,
                 columnIds = [],
                 i;
-
+            
             //Loop through previously selected columns.  If they are still selected, add
             //them to the resulting list in their original order.
             angular.forEach(initialSelectedColumnIds, function (columnId) {
@@ -3144,7 +3329,7 @@ to the function.
                     column = scopeColumns[i];
 
                     if (column.id === columnId) {
-                        if (column.selected) {
+                        if (selectedColumns.indexOf(column) >= 0) {
                             columnIds.push(column.id);
                         }
                         break;
@@ -3154,69 +3339,22 @@ to the function.
 
             //Loop through all columns.  If they are selected and not already in the list
             //then add them to the end.
-            angular.forEach(scopeColumns, function (column) {
-                var id;
-                if (column.selected) {
-                    id = column.id;
-
-                    for (i = 0; i < columnIds.length; i++) {
-                        if (columnIds[i] === id) {
-                            return;
-                        }
-                    }
-
+            angular.forEach(selectedColumns, function (column) {
+                var id = column.id;
+                
+                if (columnIds.indexOf(id) < 0) {
                     columnIds.push(id);
                 }
             });
 
             $scope.$close(columnIds);
         };
-
-        function searchTextMatchesColumn(searchText, column) {
-            if (searchText) {
-                searchText = searchText.toLocaleLowerCase();
-                if ((column.caption && column.caption.toLocaleLowerCase().indexOf(searchText) > -1) || (column.description && column.description.toLocaleLowerCase().indexOf(searchText) > -1)) {
-                    return true;
-                }
-                return false;
-            }
-            return true;
-        }
-
-        $scope.applyFilters = function () {
-            var category = $scope.locals.selectedCategory,
-                column,
-                index,
-                len,
-                searchText = $scope.locals.searchText,
-                showAllCategories;
-
-            showAllCategories = (category === all_categories ? true : false);
-            len = $scope.columns.length;
-
-            for (index = 0; index < len; index++) {
-                column = $scope.columns[index];
-
-                if (showAllCategories || column.category === category) {
-                    if (searchTextMatchesColumn(searchText, column)) {
-                        column.hidden = false;
-                    } else {
-                        column.hidden = true;
-                    }
-                } else {
-                    column.hidden = true;
-                }
-            }
-        };
-
-        $scope.filterByCategory = function (category) {
-            $scope.locals.selectedCategory = category;
-            $scope.applyFilters();
-        };
     }
+    
+    BBGridColumnPickerController.$inject = ['$scope', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', 'listMode'];
 
-    angular.module('sky.grids.columnpicker', [])
-        .controller('BBGridColumnPickerController', ['$scope', 'bbResources', 'columns', 'selectedColumnIds', 'columnPickerHelpKey', controller]);
+    angular.module('sky.grids.columnpicker', ['sky.checklist', 'sky.resources'])
+        .controller('BBGridColumnPickerController', BBGridColumnPickerController);
 }());
 /*global angular */
 
@@ -4044,7 +4182,7 @@ reloading the grid with the current data after the event has fired.
 
                         function getLastIndex() {
                             var lastIndex = $scope.options.selectedColumnIds.length - 1;
-
+                            
                             if (locals.multiselect) {
                                 lastIndex = lastIndex + 1;
                             }
@@ -4177,6 +4315,9 @@ reloading the grid with the current data after the event has fired.
                                     },
                                     columnPickerHelpKey: function () {
                                         return $scope.options.columnPickerHelpKey;
+                                    },
+                                    listMode: function () {
+                                        return $scope.options.columnPickerMode;
                                     }
                                 }
                             }).result.then(function (selectedColumnIds) {
@@ -4812,19 +4953,6 @@ reloading the grid with the current data after the event has fired.
                                     handleTableWrapperResize();
                                     /*istanbul ignore next: sanity check */
                                     updateGridLoadedTimestampAndRowCount(rows ? rows.length : 0);
-
-                                    if (locals.multiselect) {
-                                        //This prevents annoying highlighting on IE when trying to shift click
-                                        element.find('td').on('mousedown.gridmousedown', function () {
-
-                                            this.onselectstart = function () {
-                                                return false;
-                                            };
-
-                                        });
-                                    }
-
-
 
                                     setUpFancyCheckCell();
 
@@ -8840,7 +8968,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
                                     top: verticalOffset + 'px'
                                 });
                             } else if (scrollingDown) {
-                                if (element.offset().top + element.height() > scrollPos + $window.innerHeight) {
+                                if (element.offset().top + element.height() >= scrollPos + $window.innerHeight) {
                                     /*istanbul ignore else: sanity check */
                                     if (!tempTop) {
                                         tempTop = element.offset().top - elementStart;
@@ -9558,6 +9686,7 @@ bbResourcesOverrides = {
     "grid_filters_summary_header": "Filter:", // Header text for filter summary on top of grid
     "grid_load_more": "Load more", // The text for the button to load additional rows into the grid if more rows are available.
     "grid_search_placeholder": "Find in this list", // Placeholder text in grid search box
+    "grid_column_picker_search_no_columns": "No columns found", // Displays when no columns are found for the specified search text.
     "modal_footer_cancel_button": "Cancel", // Default lable text for modal cancel button
     "modal_footer_primary_button": "Save", // Default lable text for modal primary button
     "month_short_april": "Apr",
@@ -9680,31 +9809,65 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>');
     $templateCache.put('sky/templates/checklist/checklist.html',
         '<div>\n' +
-        '  <div ng-if="bbChecklistIncludeSearch" class="bb-checklist-filter-bar">\n' +
-        '    <input type="text" maxlength="255" placeholder="{{bbChecklistSearchPlaceholder}}" ng-model="locals.searchText" ng-model-options="{debounce: bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">\n' +
-        '  </div>\n' +
-        '  <div class="bb-checklist-filter-bar">\n' +
-        '    <a class="bb-checklist-link" data-bbauto-field="ChecklistSelectAll" href="#" ng-click="locals.selectAll()">{{locals.selectAllText}}</a>\n' +
-        '    <a class="bb-checklist-link" data-bbauto-field="ChecklistClear" href="#" ng-click="locals.clear()">{{locals.clearAllText}}</a>\n' +
-        '  </div>\n' +
-        '  <div class="bb-checklist-wrapper">\n' +
-        '    <table class="table bb-checklist-table">\n' +
-        '      <thead>\n' +
-        '        <tr>\n' +
-        '          <th class="bb-checklist-checkbox-column"></th>\n' +
-        '          <th ng-repeat="column in locals.columns" class="{{column.class}}" ng-style="{\'width\': column.width}">{{column.caption}}</th>\n' +
-        '        </tr>\n' +
-        '      </thead>\n' +
-        '      <tbody bb-highlight="locals.searchText" bb-highlight-beacon="locals.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{bbChecklistItems.length}}">\n' +
-        '        <tr ng-repeat="item in bbChecklistItems" ng-click="locals.rowClicked(item);" class="bb-checklist-row">\n' +
-        '          <td><input bb-check type="checkbox" checklist-model="bbChecklistSelectedItems" checklist-value="item" ng-click="$event.stopPropagation();" data-bbauto-field="{{item[bbChecklistAutomationField]}}" /></td>\n' +
-        '          <td ng-repeat="column in locals.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>\n' +
-        '        </tr>\n' +
-        '      </tbody>\n' +
-        '    </table>\n' +
-        '    <div class="bb-checklist-no-items" ng-if="!bbChecklistItems.length">{{locals.noItemsText || locals.defaultNoItemsText}}</div>\n' +
-        '  </div>\n' +
-        '  <div ng-transclude></div>\n' +
+        '    <div>\n' +
+        '        <div ng-if="bbChecklistIncludeSearch" class="bb-checklist-filter-bar">\n' +
+        '            <div class="bb-checklist-search">\n' +
+        '                <input type="text" class="bb-checklist-search-box" maxlength="255" placeholder="{{bbChecklistSearchPlaceholder}}" ng-model="locals.searchText" ng-model-options="{debounce: bbChecklistSearchDebounce}" data-bbauto-field="ChecklistSearch">\n' +
+        '                <div class="bb-checklist-search-icon">\n' +
+        '                    <i class="fa fa-search"></i>\n' +
+        '                </div>\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '        <div ng-if="bbChecklistCategories" class="bb-checklist-filter-bar bb-checklist-category-bar">\n' +
+        '            <button type="button" class="btn btn-sm" ng-click="locals.filterByCategory()" ng-class="locals.selectedCategory ? \'btn-default\' : \'btn-primary\'">{{\'grid_column_picker_all_categories\' | bbResources}}</button>\n' +
+        '            <button ng-repeat="category in bbChecklistCategories" type="button" class="btn btn-sm" ng-click="locals.filterByCategory(category)" ng-class="locals.selectedCategory === category ? \'btn-primary\' : \'btn-default\'">{{category}}</button>\n' +
+        '        </div>\n' +
+        '        <div class="bb-checklist-filter-bar bb-checklist-select-all-bar">\n' +
+        '            <button type="button" class="btn btn-link" data-bbauto-field="ChecklistSelectAll" ng-click="locals.selectAll()">{{\'checklist_select_all\' | bbResources}}</button>\n' +
+        '            <button type="button" class="btn btn-link" data-bbauto-field="ChecklistClear" ng-click="locals.clear()">{{\'checklist_clear_all\' | bbResources}}</button>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '    <div class="bb-checklist-wrapper" ng-switch="bbChecklistMode">\n' +
+        '        <div ng-switch-when="list" bb-highlight="locals.searchText" bb-highlight-beacon="locals.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{locals.filteredItems.length}}">\n' +
+        '            <label class="bb-checklist-list-row" ng-repeat="item in locals.filteredItems">\n' +
+        '                <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">\n' +
+        '                    <input \n' +
+        '                           bb-check\n' +
+        '                           type="checkbox"\n' +
+        '                           checklist-model="bbChecklistSelectedItems"\n' +
+        '                           checklist-value="item"\n' +
+        '                           data-bbauto-field="{{item.name}}"\n' +
+        '                           />\n' +
+        '                </div>\n' +
+        '                <div class="bb-checklist-list-col">\n' +
+        '                    <div class="bb-checklist-list-title">\n' +
+        '                        {{item.title}}\n' +
+        '                    </div>\n' +
+        '                    <div class="bb-checklist-list-description">\n' +
+        '                        {{item.description}}\n' +
+        '                    </div>\n' +
+        '                </div>\n' +
+        '            </label>\n' +
+        '        </div>\n' +
+        '        <table class="table bb-checklist-table" ng-switch-default>\n' +
+        '            <thead>\n' +
+        '                <tr>\n' +
+        '                    <th class="bb-checklist-checkbox-column"></th>\n' +
+        '                    <th ng-repeat="column in locals.columns" class="{{column.class}}" ng-style="{\'width\': column.width}">{{column.caption}}</th>\n' +
+        '                </tr>\n' +
+        '            </thead>\n' +
+        '            <tbody bb-highlight="locals.searchText" bb-highlight-beacon="locals.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{locals.filteredItems.length}}">\n' +
+        '                <tr ng-repeat="item in locals.filteredItems" ng-click="locals.rowClicked(item);" class="bb-checklist-row">\n' +
+        '                    <td>\n' +
+        '                        <input bb-check type="checkbox" checklist-model="bbChecklistSelectedItems" checklist-value="item" ng-click="$event.stopPropagation();" data-bbauto-field="{{item[bbChecklistAutomationField]}}" />\n' +
+        '                    </td>\n' +
+        '                    <td ng-repeat="column in locals.columns" class="{{column.class}}" data-bbauto-field="{{column.automationId}}" data-bbauto-index="{{$parent.$index}}">{{item[column.field]}}</td>\n' +
+        '                </tr>\n' +
+        '            </tbody>\n' +
+        '        </table>\n' +
+        '        <div class="bb-checklist-no-items" ng-if="!locals.filteredItems.length">{{bbChecklistNoItemsMessage || (\'checklist_no_items\' | bbResources)}}</div>\n' +
+        '    </div>\n' +
+        '    <div ng-transclude></div>\n' +
         '</div>');
     $templateCache.put('sky/templates/datefield/datefield.html',
         '<span class="add-on input-group-btn">\n' +
@@ -9715,7 +9878,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
     $templateCache.put('sky/templates/datepicker/datepicker.html',
         '<div>\n' +
         '    <div ng-if="locals.loaded" class="input-group bb-datefield">\n' +
-        '        <input type="text" class="form-control" ng-model="locals.date" is-open="locals.opened" datepicker-options="locals.dateOptions" datepicker-popup="{{format}}" show-button-bar="locals.showButtonBar" current-text="{{resources.datepicker_today}}" clear-text="{{resources.datepicker_clear}}" close-text="{{resources.datepicker_close}}" datepicker-append-to-body="{{locals.appendToBody}}" close-on-date-selection="{{locals.closeOnSelection}}" bb-datepicker-custom-validate="{{locals.hasCustomValidation}}" placeholder="{{placeholderText}}"/>\n' +
+        '        <input name="{{locals.inputName}}" type="text" class="form-control" ng-model="locals.date" is-open="locals.opened" datepicker-options="locals.dateOptions" datepicker-popup="{{format}}" show-button-bar="locals.showButtonBar" current-text="{{resources.datepicker_today}}" clear-text="{{resources.datepicker_clear}}" close-text="{{resources.datepicker_close}}" datepicker-append-to-body="{{locals.appendToBody}}" close-on-date-selection="{{locals.closeOnSelection}}" bb-datepicker-custom-validate="{{locals.hasCustomValidation}}" placeholder="{{placeholderText}}" ng-required="locals.required"/>\n' +
         '        <span class="bb-datepicker-button-container add-on input-group-btn" ng-class="{\'bb-datefield-open\': locals.opened}">\n' +
         '            <button type="button" class="btn btn-default bb-date-field-calendar-button" ng-click="locals.open($event)">\n' +
         '                <i class="fa fa-calendar"></i>\n' +
@@ -9838,35 +10001,22 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '</div>');
     $templateCache.put('sky/templates/grids/columnpicker.html',
         '<bb-modal data-bbauto-view="ColumnPicker">\n' +
-        '  <bb-modal-header bb-modal-help-key="$parent.columnPickerHelpKey">{{resources.grid_column_picker_header}}</bb-modal-header>\n' +
+        '  <bb-modal-header bb-modal-help-key="$parent.columnPickerHelpKey">{{\'grid_column_picker_header\' | bbResources}}</bb-modal-header>\n' +
         '  <div bb-modal-body>\n' +
-        '    <div class="bb-checklist-filter-bar">\n' +
-        '      <input type="text" placeholder="{{resources.grid_column_picker_search_placeholder}}" ng-model="locals.searchText" ng-change="applyFilters()" data-bbauto-field="ColumnPickerSearchBox">\n' +
-        '    </div>\n' +
-        '    <div class="bb-checklist-filter-bar">\n' +
-        '      <button ng-repeat="category in categories" type="button" class="btn btn-sm" ng-click="filterByCategory(category)" ng-class="locals.selectedCategory === category ? \'btn-primary\' : \'btn-default\'" data-bbauto-field="{{category}}">{{category}}</button>\n' +
-        '    </div>\n' +
-        '    <div class="bb-checklist-wrapper bb-grid-column-picker-wrapper">\n' +
-        '      <table data-bbauto-field="ColumnPickerTable" class="table bb-grid-column-picker-table">\n' +
-        '        <thead>\n' +
-        '          <tr>\n' +
-        '            <th class="bb-checklist-checkbox-column"></th>\n' +
-        '            <th class="bb-checklist-name-column" data-bbauto-field="ColumnNameHeader">{{resources.grid_column_picker_name_header}}</th>\n' +
-        '            <th class="bb-checklist-description-column" data-bbauto-field="ColumnDescriptionHeader">{{resources.grid_column_picker_description_header}}</th>\n' +
-        '          </tr>\n' +
-        '        </thead>\n' +
-        '        <tbody bb-highlight="locals.searchText" data-bbauto-repeater="ColumnChooserFields" data-bbauto-repeater-count="{{columns.length}}">\n' +
-        '          <tr ng-repeat="column in columns" ng-click="column.selected = !column.selected" ng-show="!column.hidden">\n' +
-        '            <td><input data-bbauto-field="{{column.name}}" data-bbauto-index="{{$index}}" type="checkbox" ng-model="column.selected" ng-click="$event.stopPropagation();" /></td>\n' +
-        '            <td data-bbauto-field="ColumnCaption" data-bbauto-index="{{$index}}">{{column.caption}}</td>\n' +
-        '            <td data-bbauto-field="ColumnDescription" data-bbauto-index="{{$index}}">{{column.description}}</td>\n' +
-        '          </tr>\n' +
-        '        </tbody>\n' +
-        '      </table>\n' +
-        '    </div>\n' +
+        '    <bb-checklist\n' +
+        '                  bb-checklist-items="columns" \n' +
+        '                  bb-checklist-selected-items="locals.selectedColumns" \n' +
+        '                  bb-checklist-include-search="\'true\'" \n' +
+        '                  bb-checklist-search-placeholder="{{\'grid_column_picker_search_placeholder\' | bbResources}}" \n' +
+        '                  bb-checklist-no-items-message="{{\'grid_column_picker_search_no_columns\' | bbResources}}"\n' +
+        '                  bb-checklist-categories="categories" \n' +
+        '                  bb-checklist-mode="list" \n' +
+        '                  bb-checklist-filter-local\n' +
+        '                  >\n' +
+        '    </bb-checklist>\n' +
         '  </div>\n' +
         '  <bb-modal-footer>\n' +
-        '    <bb-modal-footer-button-primary data-bbauto-field="ColumnPickerSubmit" ng-click="applyChanges()">{{resources.grid_column_picker_submit}}</bb-modal-footer-button-primary>\n' +
+        '    <bb-modal-footer-button-primary data-bbauto-field="ColumnPickerSubmit" ng-click="applyChanges()">{{\'grid_column_picker_submit\' | bbResources}}</bb-modal-footer-button-primary>\n' +
         '    <bb-modal-footer-button-cancel data-bbauto-field="ColumnPickerCancel"></bb-modal-footer-button-cancel>\n' +
         '  </bb-modal-footer>\n' +
         '</bb-modal>');
@@ -9918,15 +10068,15 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                <span class="bb-toolbar-btn-label" ng-show="options.onAddClickLabel">{{options.onAddClickLabel}}</span>\n' +
         '            </div>\n' +
         '            <div class="bb-search-container search-container">\n' +
-        '                <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && locals.applySearchText();" data-bbauto-field="SearchBox">\n' +
-        '                <div class="bb-search-icon" data-bbauto-field="SearchButton" ng-click="locals.applySearchText();"></div>\n' +
+        '                <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && locals.applySearchText();" data-bbauto-field="SearchBox" />\n' +
+        '                <div class="bb-search-icon fa fa-search" data-bbauto-field="SearchButton" ng-click="locals.applySearchText();"></div>\n' +
         '            </div>\n' +
         '            <div class="bb-toolbar-btn bb-column-picker-btn" data-bbauto-field="ColumnPickerButton" ng-show="locals.hasColPicker" ng-click="locals.openColumnPicker()">\n' +
-        '                <span class="bb-toolbar-btn-icon bb-column-picker-btn-icon"></span>\n' +
+        '                <span class="fa fa-columns"></span>\n' +
         '                <span class="bb-toolbar-btn-label">{{resources.grid_columns_button}}</span>\n' +
         '            </div>\n' +
         '            <div class="bb-toolbar-btn bb-filter-btn" data-bbauto-field="FilterButton" ng-show="locals.hasFilters" ng-click="locals.toggleFilterMenu();">\n' +
-        '                <span class="bb-toolbar-btn-icon bb-filter-btn-icon"></span>\n' +
+        '                <span class="fa fa-filter"></span>\n' +
         '                <span class="bb-toolbar-btn-label">{{resources.grid_filters_button}}</span>\n' +
         '            </div>\n' +
         '        </div>\n' +
@@ -10006,7 +10156,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            </div>\n' +
         '            <div class="bb-page-noaccess-description">{{resources.page_noaccess_description}}</div>\n' +
         '            <div class="m-lg">\n' +
-        '                <button class="btn btn-lg btn-primary" ng-click="locals.navigateAway()" data-bbauto-field="NavigateAwayButton">\n' +
+        '                <button type="button" class="btn btn-lg btn-primary" ng-click="locals.navigateAway()" data-bbauto-field="NavigateAwayButton">\n' +
         '                    {{resources.page_noaccess_button}}\n' +
         '                </button>\n' +
         '            </div>\n' +

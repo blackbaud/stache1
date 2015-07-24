@@ -140,15 +140,20 @@
                 border: 1px solid $gray-lighter;
                 border-left: none;
                 cursor: default;
-                background-color: white;
-
-                &:before {
-                    content: $bbsky-char-search;
-                    font-family: BBSKY;
-                    color: $gray;
-                    font-size: $font-size-xl;
-                    background-color: white;
-                }
+                background-color: #fff;
+                padding-top: 4px;
+            }
+            
+            input:focus {
+                box-shadow: 3px 0 8px 0 rgba(28, 132, 198, 0.6);
+                border: 1px solid #1f90d8;
+                border-right: none;
+            }
+            
+            input:focus + .bb-search-icon {
+                box-shadow: 4px 0 6px -1px rgba(28, 132, 198, 0.6);
+                border: 1px solid #1f90d8;
+                border-left: none;
             }
         }
 
@@ -179,10 +184,6 @@
 
             &.bb-column-picker-btn-icon:before {
                 content: $bbsky-char-columns;
-            }
-
-            &.bb-filter-btn-icon:before {
-                content: $bbsky-char-filter;
             }
         }
 
