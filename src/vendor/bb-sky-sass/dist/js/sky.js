@@ -38,11 +38,83 @@
                     scope: {
                         title: '=?bbActionBarItemGroupTitle'
                     },
-                    controller: ['$scope', function ($scope) {
+                    controller: ['$scope', '$element', function ($scope, $element) {
                         $scope.items = [];
 
-                        this.addItem = function (itemCallback, itemContent) {
-                            $scope.items.push({callback: itemCallback, content: itemContent});
+                        
+                        function addDropdownElement(item) {
+                            var listEl = $element.find('ul');
+                            
+                            listEl.append(item.transcludeEl);
+                        }
+                        
+                        function getActionItemIndexById(itemId) {
+                            var i;
+                            
+                            for (i = 0; i < $scope.items.length; i++) {
+                                if ($scope.items[i].id === itemId) {
+                                    return i;
+                                }
+                            }
+                            /*istanbul ignore next: sanity check */
+                            return -1;
+                        }
+                        
+                        function removeItem(item) {
+                            item.transcludeEl.detach();
+                        }
+                        
+                        function orderDropdownActions() {
+                            var actionButtonEl = $element.find('button.bb-action-bar-item-button'),
+                                actionButtonScope,
+                                i,
+                                itemIndex,
+                                itemId;
+                            
+                            for (i = 0; i < $scope.items.length; i++) {
+                                removeItem($scope.items[i]);
+                            }
+                            
+                            for (i = 0; i < actionButtonEl.length; i++) {
+                                actionButtonScope = actionButtonEl.eq(i).isolateScope();
+                                if (angular.isDefined(actionButtonScope)) {
+                                    itemId = actionButtonScope.itemId;
+                                    itemIndex = getActionItemIndexById(itemId);
+                                    /*istanbul ignore else: sanity check */
+                                    if (itemIndex !== -1) {
+                                        addDropdownElement($scope.items[itemIndex]);
+                                    }
+                                } 
+                            }   
+                        }
+                        
+                        this.addItem = function (itemCallback, transcludeFn, itemId) {
+                            var transcludeEl = angular.element('<li id="' + itemId + '" role="presentation"><a role="menuitem" href="javascript:void(0)"></a></li>');
+                            
+                            transcludeFn(function (transEl, transScope) {
+                                var anchorEl = transcludeEl.find('a');
+                                anchorEl.append(transEl); 
+                                anchorEl.on('click', itemCallback);
+                                
+                                $scope.items.push({id: itemId, transScope: transScope, transcludeEl: transcludeEl});
+                                orderDropdownActions();
+                            });
+
+                        };
+                        
+                        this.destroyItem = function (itemId) {
+                            var itemIndex;
+                            
+                            itemIndex = getActionItemIndexById(itemId);
+                            /*istanbul ignore else: sanity check */
+                            if (itemIndex !== -1 && $scope.items[itemIndex]) {
+                                /*istanbul ignore else: sanity check */
+                                if ($scope.items[itemIndex].transcludeEl) {
+                                    $scope.items[itemIndex].transcludeEl.remove();
+                                }
+                            }
+                            
+                            $scope.items.splice(itemIndex, 1);
                         };
                     }],
                     link: function ($scope) {
@@ -62,17 +134,22 @@
                     restrict: 'E',
                     require: '?^^bbActionBarItemGroup',
                     scope: {
-                        actionCallback: '&ngClick'
+                        actionCallback: '&ngClick'  
                     },
-                    link: function ($scope, elem, attrs, itemGroupCtrl) {
-                        if (itemGroupCtrl !== null && !angular.isUndefined(itemGroupCtrl) && angular.isFunction(itemGroupCtrl.addItem)) {
-                            itemGroupCtrl.addItem($scope.actionCallback, elem.text());
+                    link: function ($scope, el, attrs, itemGroupCtrl, $transclude) {
+                        $scope.itemId = 'bb-action-bar-item-' + $scope.$id;
+                        if (itemGroupCtrl !== null && angular.isDefined(itemGroupCtrl)) {
+                            
+                            itemGroupCtrl.addItem($scope.actionCallback, $transclude, $scope.itemId);
+                            
+                            $scope.$on('$destroy', function () {
+                                itemGroupCtrl.destroyItem($scope.itemId);
+                            });
                         }
                     },
-                    template: '<button class="btn btn-white" type="button"><ng-transclude/></button>'
+                    template: '<button class="btn btn-white bb-action-bar-item-button" type="button"><ng-transclude/></button>'
                 };
-            }
-        ]);
+            }]);
 }());
 
 /*jshint browser: true */
@@ -983,7 +1060,7 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                 bbChecklistItems: '=',
                 bbChecklistSelectedItems: '=',
                 bbChecklistFilterCallback: '=',
-                bbChecklistIncludeSearch: '@',
+                bbChecklistIncludeSearch: '=',
                 bbChecklistSearchDebounce: '=',
                 bbChecklistSearchPlaceholder: '@',
                 bbChecklistNoItemsMessage: '@',
@@ -1030,7 +1107,7 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                 }
                 
                 function invokeFilterLocal() {
-                    var filteredItems = [],
+                    var filteredItems,
                         i,
                         item,
                         items = $scope.bbChecklistItems,
@@ -1039,8 +1116,10 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                         selectedCategory = locals.selectedCategory;
                     
                     if (!searchTextUpper && !selectedCategory) {
-                        locals.filteredItems = items.slice(0);
+                        filteredItems = items.slice(0);
                     } else {
+                        filteredItems = [];
+                        
                         for (i = 0, n = items.length; i < n; i++) {
                             item = items[i];
 
@@ -1048,9 +1127,9 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                                 filteredItems.push(item);
                             }
                         }
-
-                        locals.filteredItems = filteredItems;
                     }
+                    
+                    locals.filteredItems = filteredItems;
                 }
 
                 function invokeFilter() {
@@ -1069,7 +1148,7 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                 locals.selectAll = function () {
                     var i,
                         item,
-                        items = $scope.bbChecklistItems,
+                        items = locals.filteredItems,
                         selected = $scope.bbChecklistSelectedItems;
 
                     for (i = 0; i < items.length; i += 1) {
@@ -1083,7 +1162,7 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                 locals.clear = function () {
                     var i,
                         item,
-                        items = $scope.bbChecklistItems,
+                        items = locals.filteredItems,
                         selected = $scope.bbChecklistSelectedItems;
 
                     for (i = 0; i < items.length; i += 1) {
@@ -9778,16 +9857,16 @@ angular.module('sky.resources')
 angular.module('sky.templates', []).run(['$templateCache', function($templateCache) {
     $templateCache.put('sky/templates/actionbar/actionbaritemgroup.html',
         '<div class="bb-action-bar-group">\n' +
-        '    <div class="hidden-xs">\n' +
-        '        <ng-transclude/>\n' +
+        '    <div class="bb-action-bar-buttons hidden-xs">\n' +
+        '        <ng-transclude />\n' +
         '    </div>\n' +
         '    <div class="hidden-sm hidden-md hidden-lg">\n' +
+        '        \n' +
         '        <div class="dropdown">\n' +
         '             <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown" href="javascript:void(0)">\n' +
         '            {{title}}<span class="caret"/>\n' +
         '            </button>\n' +
         '            <ul class="dropdown-menu" role="menu">\n' +
-        '                <li ng-repeat="item in items" role="presentation"><a role="menuitem" ng-click="item.callback()" href="javascript:void(0)">{{item.content}}</a></li>\n' +
         '            </ul>\n' +
         '        </div>\n' +
         '    </div>\n' +
@@ -9818,7 +9897,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                </div>\n' +
         '            </div>\n' +
         '        </div>\n' +
-        '        <div ng-if="bbChecklistCategories" class="bb-checklist-filter-bar bb-checklist-category-bar">\n' +
+        '        <div ng-if="bbChecklistCategories && bbChecklistCategories.length > 0" class="bb-checklist-filter-bar bb-checklist-category-bar">\n' +
         '            <button type="button" class="btn btn-sm" ng-click="locals.filterByCategory()" ng-class="locals.selectedCategory ? \'btn-default\' : \'btn-primary\'">{{\'grid_column_picker_all_categories\' | bbResources}}</button>\n' +
         '            <button ng-repeat="category in bbChecklistCategories" type="button" class="btn btn-sm" ng-click="locals.filterByCategory(category)" ng-class="locals.selectedCategory === category ? \'btn-primary\' : \'btn-default\'">{{category}}</button>\n' +
         '        </div>\n' +
@@ -10188,8 +10267,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                </div>\n' +
         '                <div class="col-xs-4 bb-tile-header-column-tools">\n' +
         '                    <div class="ibox-tools">\n' +
-        '                        <i ng-class="\'glyphicon-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="glyphicon bb-tile-chevron"></i>\n' +
-        '                        <i ng-if="hasSettings" class="bb-tile-settings glyphicon glyphicon-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
+        '                        <i ng-class="\'fa-chevron-\' + (isCollapsed ? \'down\' : \'up\')" class="fa bb-tile-chevron"></i>\n' +
+        '                        <i ng-if="hasSettings" class="bb-tile-settings fa fa-wrench" ng-click="$event.stopPropagation();bbTileSettingsClick();"></i>\n' +
         '                        <i class="bb-tile-grab-handle glyphicon glyphicon-th" ng-click="$event.stopPropagation()"></i>\n' +
         '                    </div>\n' +
         '                </div>\n' +
