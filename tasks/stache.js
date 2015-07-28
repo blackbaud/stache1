@@ -36,7 +36,7 @@ module.exports = function (grunt) {
 
       // Used to determine file locations, build or serve
       // This means when a user calls build or serve, the assembled files
-      // will go into app-build or app-serve.
+      // will go into build or serve folder.
       status: '',
 
       // Configuration file paths
@@ -46,6 +46,9 @@ module.exports = function (grunt) {
       pathBower: '.bowerrc',
       package: '',
       config: '',
+
+      // Imports to automatically generate pages from
+      pages: []
     },
 
     // Displays our title all fancy-like
@@ -371,6 +374,38 @@ module.exports = function (grunt) {
     grunt.log.header = toggle == 'true' ? header : function() {};
   });
 
+  // Creates pages from jsdoc and sandcastle
+  grunt.registerTask('createAutoPages', function () {
+      var pages = {},
+        found = false;
+      grunt.config.get('stache.pages').forEach(function (page) {
+          if (grunt.file.exists(page.url)) {
+              found = true;
+              var json = grunt.file.readJSON(page.url);
+              for (var i = 0, j = json.length; i < j; i++) {
+                  json[i].layout = 'layout-' + page.type;
+                  pages[page.dest + json[i].key + '/index.md'] = {
+                      data: json[i]
+                  };
+              }
+          }
+      });
+
+      // Assemble requires even dummy files to run this task
+      if (found) {
+          grunt.config.set('assemble.custom', {
+                options: {
+                    pages: pages
+                },
+                files: [{
+                  dest: '<%= stache.config.build %>',
+                  src: 'noop'
+                }]
+            }
+        );
+      }
+  });
+
   // Creates nav to mirror directory structure
   grunt.registerTask('createAutoNav', function() {
 
@@ -407,6 +442,23 @@ module.exports = function (grunt) {
         });
       }
     });
+
+    // Add any dynamically created pages here
+    var pages = grunt.config.get('assemble.custom.options.pages');
+    if (pages) {
+        var content = grunt.config.get('stache.config.content');
+        for (var page in pages) {
+            sorted.push({
+                abspath: page,
+                rootdir: page.substr(0, page.indexOf('/')),
+                subdir: page.substr(0, page.lastIndexOf('/')),
+                filename: page.substr(page.lastIndexOf('/') + 1),
+                frontmatter: pages[page].data
+            });
+        }
+    }
+
+    console.log(sorted);
 
     // Sort alphabetically ensures that parents are created first.
     // This is crucial to this process.  We can sort by order below.
@@ -547,6 +599,7 @@ module.exports = function (grunt) {
     [
       'status:build',
       'clean',
+      'createAutoPages',
       'createAutoNav',
       'assemble:stache',
       'assemble:custom',
@@ -585,6 +638,7 @@ module.exports = function (grunt) {
       'status:serve',
       'clean',
       'copy:build',
+      'createAutoPages',
       'createAutoNav',
       'assemble:stache',
       'assemble:custom',
