@@ -35,6 +35,7 @@ partial_footer_navigation: <%= stache.config.partials %>partial-footer-navigatio
 partial_footer_internal: <%= stache.config.partials %>partial-footer-internal.hbs
 partial_footer_social: <%= stache.config.partials %>partial-footer-social.hbs
 partial_jsdoc_header: <%= stache.config.partials %>partial-jsdoc-header.hbs
+partial_jsdoc_body: <%= stache.config.partials %>partial-jsdoc-body.hbs
 partial_jsdoc_footer: <%= stache.config.partials %>partial-jsdoc-footer.hbs
 
 # =============================================
