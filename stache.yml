@@ -14,6 +14,14 @@ sass: <%= stache.config.src %>sass/
 css: <%= stache.config.src %>css/
 helpers: <%= stache.config.src %>helpers/
 partials: <%= stache.config.src %>partials/
+layouts: <%= stache.config.src %>layouts/
+error:
+  404: <%= stache.config.build %>404/index.html
+
+# =============================================
+# STACHE - SERVING
+# =============================================
+
 partial_omnibar: <%= stache.config.partials %>partial-omnibar.hbs
 partial_header_nav: <%= stache.config.partials %>partial-header-nav.hbs
 partial_header_search:
@@ -26,9 +34,8 @@ partial_footer_logo: <%= stache.config.partials %>partial-footer-logo.hbs
 partial_footer_navigation: <%= stache.config.partials %>partial-footer-navigation.hbs
 partial_footer_internal: <%= stache.config.partials %>partial-footer-internal.hbs
 partial_footer_social: <%= stache.config.partials %>partial-footer-social.hbs
-layouts: <%= stache.config.src %>layouts/
-error:
-  404: <%= stache.config.build %>404/index.html
+partial_jsdoc_header: <%= stache.config.partials %>partial-jsdoc-header.hbs
+partial_jsdoc_footer: <%= stache.config.partials %>partial-jsdoc-footer.hbs
 
 # =============================================
 # STACHE - SERVING
