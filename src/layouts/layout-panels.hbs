@@ -31,9 +31,13 @@ layout: layout-container
               <i class="showcase-icon fa fa-2x fa-{{ icon }}"></i>
               <div class="showcase-desc">
             {{/ if }}
-            {{# if description }}
-              <p>{{ description }}</p>
-            {{/ if }}
+            {{# if summary }}
+              <p>{{ summary }}</p>
+            {{ else }}
+              {{# if description }}
+                <p>{{ description }}</p>
+              {{/ if }}
+            {{/ if}}
             {{# if icon }}
               </div>
             {{/ if }}
