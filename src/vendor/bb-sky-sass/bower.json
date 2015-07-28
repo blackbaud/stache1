@@ -1,6 +1,6 @@
 {
   "name": "bb-sky",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "private": true,
   "dependencies": {
     "jquery": "~2.1.3",

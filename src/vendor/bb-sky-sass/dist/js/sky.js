@@ -2277,6 +2277,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     }
                     
                     function setDate() {
+                        
                         if (angular.isDate($scope.date)) {
                             $scope.locals.date = $filter('date')($scope.date, $scope.format);
                         } else if (!$scope.locals.hasCustomValidation) {
@@ -2362,7 +2363,6 @@ The DateField directive allows you to use a common textbox with calendar picker 
                                 dateChangeInternal = true;
                                 $scope.date = $scope.locals.date;
                             }
-                            ngModel.$setDirty();
                         }
                         if ($scope.locals.hasCustomValidation) {
                             
@@ -2388,7 +2388,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     }
                     
                     
-                    ngModel.$asyncValidators.dateFormat = function () {
+                    function dateFormatValidator() {
                         var customFormattingResult,
                             deferred,
                             inputNgModel;
@@ -2428,11 +2428,19 @@ The DateField directive allows you to use a common textbox with calendar picker 
                            
                         }
                         
-                       
+                        function datepickerIsPristine() {
+                            var inputNgModel = $scope.getInputNgModel();
+                            
+                            if (inputNgModel !== null) {
+                                return inputNgModel.$pristine;
+                            } else {
+                                return true;
+                            }
+                        }
                         
                         deferred = $q.defer();
                         
-                        if (skipValidation || angular.isDate($scope.locals.date) || ngModel.$pristine || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError())) {
+                        if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || datepickerIsPristine()) {
                             setInvalidFormatMessage(null);
                             resolveValidation();
                         } else if ($scope.locals.hasCustomValidation && angular.isString($scope.locals.date)) {
@@ -2454,7 +2462,9 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         
                         skipValidation = false;
                         return deferred.promise;
-                    };
+                    }
+                    
+                    ngModel.$asyncValidators.dateFormat = dateFormatValidator;
                     
                     $scope.locals.loaded = true;
                     
@@ -2470,6 +2480,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                                     dateChangeInternal = true;
                                     $scope.date = inputEl.val();
                                     
+                                    
                                 } else if ($scope.locals.required && hasRequiredError()) {
                                     dateChangeInternal = true;
                                     $scope.date = '';
@@ -2477,8 +2488,10 @@ The DateField directive allows you to use a common textbox with calendar picker 
                                     inputNgModel.invalidFormatMessage = null;
                                     inputNgModel.$setValidity('dateFormat', true);
                                 } else if ($scope.date !== $scope.locals.date) {
+                                    
                                     dateChangeInternal = true;
                                     $scope.date = $scope.locals.date;
+                                    
                                 } 
                                 
                             });
