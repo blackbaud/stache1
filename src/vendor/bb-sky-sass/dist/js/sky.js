@@ -9921,14 +9921,13 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    </div>\n' +
         '    <div class="bb-checklist-wrapper" ng-switch="bbChecklistMode">\n' +
         '        <div ng-switch-when="list" bb-highlight="locals.searchText" bb-highlight-beacon="locals.highlightRefresh" data-bbauto-repeater="ChecklistItems" data-bbauto-repeater-count="{{locals.filteredItems.length}}">\n' +
-        '            <label class="bb-checklist-list-row" ng-repeat="item in locals.filteredItems">\n' +
+        '            <label class="bb-checklist-list-row" ng-repeat="item in locals.filteredItems" data-bbauto-field="{{item.name}}">\n' +
         '                <div class="bb-checklist-list-col bb-checklist-list-col-checkbox">\n' +
         '                    <input \n' +
         '                           bb-check\n' +
         '                           type="checkbox"\n' +
         '                           checklist-model="bbChecklistSelectedItems"\n' +
         '                           checklist-value="item"\n' +
-        '                           data-bbauto-field="{{item.name}}"\n' +
         '                           />\n' +
         '                </div>\n' +
         '                <div class="bb-checklist-list-col">\n' +

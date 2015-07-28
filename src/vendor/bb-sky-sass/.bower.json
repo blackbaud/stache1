@@ -1,6 +1,6 @@
 {
   "name": "bb-sky",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "private": true,
   "dependencies": {
     "jquery": "~2.1.3",
@@ -43,11 +43,11 @@
     "*.sh"
   ],
   "homepage": "https://github.com/blackbaud/sky",
-  "_release": "1.1.10",
+  "_release": "1.1.11",
   "_resolution": {
     "type": "version",
-    "tag": "v1.1.10",
-    "commit": "469ad44168ede397d3f0580137459039d3f0eafa"
+    "tag": "v1.1.11",
+    "commit": "2cc3380fe4fb9136742b160ce8957100daef77c5"
   },
   "_source": "git@github.com:blackbaud/sky.git",
   "_target": "*",
