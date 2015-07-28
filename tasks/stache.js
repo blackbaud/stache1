@@ -458,8 +458,6 @@ module.exports = function (grunt) {
         }
     }
 
-    console.log(sorted);
-
     // Sort alphabetically ensures that parents are created first.
     // This is crucial to this process.  We can sort by order below.
     sort(sorted, true, 'subdir', '');
