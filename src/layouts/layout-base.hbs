@@ -147,6 +147,12 @@
       <script src="{{ this }}"></script>
     {{/ each }}
 
+    {{# if example-js }}
+      <script>
+        {{{ example-js }}}
+      </script>
+    {{/ if }}
+
     {{# inherit stache.config.showAdminToolbar showAdminToolbar }}
       <script>
       {{{ include stache.config.partial_admin_script }}}
