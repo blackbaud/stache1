@@ -1,0 +1,129 @@
+---
+layout: layout-container
+sections:
+  - key: constructors
+    header: Constructors
+
+  - key: methods
+    header: Methods
+
+  - key: properties
+    header: Properties
+---
+
+## {{ title }}
+
+{{ summary }}
+
+{{# if syntax }}
+
+  ## Syntax
+
+  <ul class="nav nav-tabs">
+    {{# each syntax }}
+      <li class="{{# is @index 0 }}active{{/ is }}">
+        <a href="#syntax-{{ @index }}" data-toggle="tab">
+          {{ type }}
+        </a>
+      </li>
+    {{/ each }}
+  </ul>
+
+  <div class="tab-content">
+    {{# each syntax }}
+      <div class="tab-pane {{# is @index 0}}active{{/ is }}" id="syntax-{{ @index }}">
+        <pre><code class="language-{{ getPrismType type }}">{{{ code }}}</code></pre>
+      </div>
+    {{/ each }}
+  </div>
+
+{{/ if }}
+
+{{# if param }}
+
+  ## Parameters
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{! this can be an object for a single parameter or an array of parameters }}
+      {{# isArray param }}
+        {{# each param }}
+          <tr>
+            <td>{{ name }}</td>
+            <td></td>
+            <td>{{ _ }}</td>
+          </tr>
+        {{/ each }}
+      {{ else }}
+        <tr>
+          <td>{{ param.name }}</td>
+          <td></td>
+          <td>{{ param._ }}</td>
+        </tr>
+      {{/ isArray }}
+    </tbody>
+  </table>
+
+{{/ if }}
+
+{{# each sections }}
+  {{# withItem ../this key=key }}
+
+    ## {{ ../header }}
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{# each this }}
+          <tr>
+            <td class="td-icons">
+              {{# if icons }}
+                <ul class="list-inline">
+                  {{# each icons }}
+                    <li>
+                      <img src="{{ this }}" />
+                    </li>
+                  {{/ each }}
+                </ul>
+              {{/ if }}
+            </td>
+            <td>
+              {{# contains link "://"}}
+                <a href="{{ link }}" target="_blank">
+              {{ else }}
+                <a href="../{{ removeExt link }}">
+              {{/ contains }}
+                {{ name }}
+              </a>
+            </td>
+            <td>
+              {{ description }}
+            </td>
+          </tr>
+        {{/ each }}
+      </tbody>
+    </table>
+
+  {{/ withItem }}
+{{/ each }}
+
+{{# if returns }}
+
+  ## Return Value
+
+  {{ returns }}
+
+{{/ if }}

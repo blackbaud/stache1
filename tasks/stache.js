@@ -382,11 +382,26 @@ module.exports = function (grunt) {
           if (grunt.file.exists(page.url)) {
               found = true;
               var json = grunt.file.readJSON(page.url);
-              for (var i = 0, j = json.length; i < j; i++) {
-                  json[i].layout = 'layout-' + page.type;
-                  pages[page.dest + json[i].key + '/index.md'] = {
-                      data: json[i]
-                  };
+              switch (page.type) {
+                  case 'jsdoc':
+                      for (var i = 0, j = json.length; i < j; i++) {
+                          json[i].layout = 'layout-' + page.type;
+                          pages[page.dest + json[i].key + '/index.md'] = {
+                              data: json[i]
+                          };
+                      }
+                  break;
+                  case 'sandcastle':
+                      json.HelpTOC.HelpTOCNode.forEach(function (v) {
+                          v.layout = 'layout-' + page.type;
+                          pages[v.Url.replace('.htm', '/index.md').replace('html/', page.dest)] = {
+                              data: [v]
+                          };
+                      });
+                  break;
+                  default:
+                    console.log('Unknown custom page datatype.');
+                  break;
               }
           }
       });
