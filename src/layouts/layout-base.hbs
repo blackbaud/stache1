@@ -8,14 +8,13 @@
     <link rel="icon" href="{{ assets }}img/favicon.ico" type="image/ico">
 
     <!-- build:css {{ assets }}css/app.min.css -->
+    {{# if stache.config.sky }}
+      {{{ include stache.config.partial_sky_css }}}
+    {{/ if }}
     <link rel="stylesheet" href="{{ assets }}css/app.css">
-      {{# if stache.config.sky }}
-      <link rel="stylesheet" href="{{ assets }}vendor/angular-toastr/dist/angular-toastr.css">
-      <link rel="stylesheet" href="{{ assets }}vendor/angular-ui-select/dist/select.css">
-      {{/ if }}
-      {{# if stache.config.prism }}
-        <link rel="stylesheet" href="{{ assets }}css/prism.css">
-      {{/ if }}
+    {{# if stache.config.prism }}
+      <link rel="stylesheet" href="{{ assets }}css/prism.css">
+    {{/ if }}
     <!-- endbuild -->
 
     {{# each stache.config.files.css }}
@@ -114,8 +113,7 @@
 
     <!-- build:js {{ assets }}js/stache.min.js -->
     {{# if stache.config.sky }}
-      <script src="{{ assets }}vendor/bb-sky-sass/dist/js/libs.js"></script>
-      <script src="{{ assets }}vendor/bb-sky-sass/dist/js/sky.js"></script>
+      {{{ include stache.config.partial_sky_js }}}
     {{ else  }}
       <script src="{{ assets }}vendor/jquery/dist/jquery.min.js"></script>
       <script src="{{ assets }}vendor/bootstrap/dist/js/bootstrap.min.js"></script>
