@@ -696,6 +696,7 @@ module.exports = function (grunt) {
     usemin: 'grunt-usemin',
     useminPrepare: 'grunt-usemin',
     availabletasks: 'grunt-available-tasks',
+    jsdoc2md: 'grunt-jsdoc-to-markdown',
     'sass-blackbaud': 'grunt-sass'
   })({
     pluginsRoot: defaults.stache.dir + 'node_modules/'
