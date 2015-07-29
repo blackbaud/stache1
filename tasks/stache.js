@@ -278,14 +278,6 @@ module.exports = function (grunt) {
           'assemble',
           'copy:build'
         ]
-      },
-      sass: {
-        files: [
-          '<%= stache.config.src %>sass/**/*.*'
-        ],
-        tasks: [
-          'sass-blackbaud'
-        ]
       }
     }
   };
