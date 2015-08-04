@@ -199,9 +199,6 @@ module.exports = function (grunt) {
 
     cssmin: {
       target: {
-        options: {
-            processImport: false
-        },
         files: [{
           expand: true,
           cwd: '<%= stache.config.build %>',
