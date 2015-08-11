@@ -85,16 +85,18 @@
   //Show-Hide
   $('.show-first').after('<a class="show-more"> Show more...</a>');
   $('.show-hide').on('click', 'a', function(event){
-    if(!$('.show-second').is(":visible")){
+    if(!$(this).siblings('.show-second').is(":visible")){
       event.preventDefault();
       $(this).siblings('.show-second').show();
       $(this).hide();
-      $('.show-second').after('<a class="show-less"> Show less...</a>');
+      $(this).siblings('.show-second').after('<a class="show-less"> Show less...</a>');
     } else {
       event.preventDefault();
+      if($(this).siblings('.show-second').is(":visible")){
       $(this).siblings('.show-second').hide();
       $(this).hide();
-      $('.show-first').after('<a class="show-more"> Show more...</a>');
+      $(this).siblings('.show-first').after('<a class="show-more"> Show more...</a>');
+      }
     }
   });
   
