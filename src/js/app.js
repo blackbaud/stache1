@@ -82,4 +82,20 @@
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
+  //Show-Hide
+  $('.show-first').after('<a class="show-more"> Show more...</a>');
+  $('.show-hide').on('click', 'a', function(event){
+    if(!$('.show-second').is(":visible")){
+      event.preventDefault();
+      $(this).siblings('.show-second').show();
+      $(this).hide();
+      $('.show-second').after('<a class="show-less"> Show less...</a>');
+    } else {
+      event.preventDefault();
+      $(this).siblings('.show-second').hide();
+      $(this).hide();
+      $('.show-first').after('<a class="show-more"> Show more...</a>');
+    }
+  });
+  
 }(jQuery, window, document));
