@@ -24,6 +24,8 @@ error:
 
 partial_omnibar: <%= stache.config.partials %>partial-omnibar.hbs
 partial_header_nav: <%= stache.config.partials %>partial-header-nav.hbs
+partial_header_nav_link: <%= stache.config.partials %>partial-header-nav-link.hbs
+partial_header_nav_dropdown: <%= stache.config.partials %>partial-header-nav-dropdown.hbs
 partial_header_search:
 partial_header_admin: <%= stache.config.partials %>partial-header-admin.hbs
 partial_admin_toolbar: <%= stache.config.partials %>partial-admin-toolbar.hbs
@@ -63,6 +65,7 @@ draft: true
 showHeader: true
 showFooter: true
 showOmnibar: true
+showNavDropdown: true
 showAdminToolbar: false
 showAdminTrigger: false
 editInGitHub: true

@@ -14,6 +14,7 @@
 
 module.exports.register = function (Handlebars, options, params) {
 
+  var bypassContext = params.assemble.options.getBypassContext();
   var stache = params.assemble.options.stache;
   var merge = require('merge');
   var cheerio = require('cheerio');
@@ -115,7 +116,7 @@ module.exports.register = function (Handlebars, options, params) {
   **/
   function toFixed ( number, precision ) {
     var multiplier  = Math.pow( 10, precision + 1 ),
-        wholeNumber = Math.round( number * multiplier ).toString(),
+        wholeNumber = Math.round( nuymber * multiplier ).toString(),
         length      = wholeNumber.length - 1;
     wholeNumber = wholeNumber.substr(0, length);
     return [
@@ -285,8 +286,8 @@ module.exports.register = function (Handlebars, options, params) {
 
       if (typeof options.hash.nav_links !== 'undefined') {
         nav_links = options.hash.nav_links;
-      } else if (typeof this.stache.config.nav_links !== 'undefined') {
-        nav_links = this.stache.config.nav_links;
+      } else if (typeof bypassContext.nav_links !== 'undefined') {
+        nav_links = bypassContext.nav_links;
       }
 
       var active = getActiveNav(dest, nav_links, false);
@@ -400,6 +401,11 @@ module.exports.register = function (Handlebars, options, params) {
       if (typeof options === 'undefined') {
         options = context;
         context = this;
+      }
+
+      // Increment sidebarCurrentDepth if it exists
+      if (options.hash.sidebarCurrentDepth) {
+          options.hash.sidebarCurrentDepth = parseInt(options.hash.sidebarCurrentDepth) + 1;
       }
 
       var r = '';
@@ -673,7 +679,11 @@ module.exports.register = function (Handlebars, options, params) {
         break;
       }
       return r;
-    }
+  },
+
+  withNavLinks: function (options) {
+      return Handlebars.helpers.each(options.hash.nav_links || bypassContext.nav_links, options);
+  }
 
   });
 };

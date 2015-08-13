@@ -31,7 +31,8 @@
         {{ include stache.config.header }}
       {{ else }}
 
-        <nav class="navbar navbar-default bb-navbar nav-wrap">
+      <div ng-controller="NavController">
+        <bb-navbar>
           <div class="container">
             <div class="row">
               <div class="col-sm-12">
@@ -41,7 +42,8 @@
               </div>
             </div>
           </div>
-        </nav>
+        </bb-navbar>
+      </div>
 
       {{/ if }}
     {{/ if }}

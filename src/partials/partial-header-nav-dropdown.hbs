@@ -1,0 +1,10 @@
+<li class="dropdown {{# isActiveNav }}bb-navbar-active{{/ isActiveNav }}">
+  <a href="{{ uri }}" class="dropdown-toggle">{{ name }} <span class="caret"></span></a>
+  <ul class="dropdown-menu" role="menu">
+    {{# withNavLinks nav_links=nav_links }}
+      <li>
+        <a href="{{ uri }}">{{ name }}</a>
+      </li>
+    {{/ withNavLinks }}
+  </ul>
+</li>

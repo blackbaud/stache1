@@ -1,9 +1,15 @@
 <ul class="nav navbar-nav navbar-left">
-  {{# each stache.config.nav_links }}
-    {{# if showInHeader }}
-      <li {{# isActiveNav dest=../../page.dest }}class="bb-navbar-active"{{/ isActiveNav }}>
-        <a href="{{ ../uri }}">{{ name }}</a>
-      </li>
-    {{/ if }}
-  {{/ each }}
+{{# withNavLinks }}
+  {{# if showInHeader }}
+    {{# inherit ../../stache.config.showNavDropdown ../showNavDropdown }}
+      {{# if nav_links }}
+        {{{ include ../../../../stache.config.partial_header_nav_dropdown dest=../../../../page.dest }}}
+      {{ else }}
+        {{{ include ../../../../stache.config.partial_header_nav_link dest=../../../../page.dest }}}
+      {{/ if }}
+    {{ else }}
+        {{{ include ../../../stache.config.partial_header_nav_link dest=../../../page.dest }}}
+    {{/ inherit }}
+  {{/ if }}
+{{/ withNavLinks }}
 </ul>

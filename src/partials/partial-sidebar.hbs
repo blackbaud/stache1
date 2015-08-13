@@ -1,4 +1,3 @@
-
 {{# if nav_links }}
   {{# eachWithMod nav_links limit=limit }}
 
@@ -13,7 +12,7 @@
         {{# if nav_links }}
 
           <ul class="nav">
-            {{ include 'partial-sidebar' this dest=../../../../dest showHeadings=../../../../showHeadings page=../../../../page limit=../../../../limit }}
+            {{ include 'partial-sidebar' this sidebarCurrentDepth=../../../../sidebarCurrentDepth sidebarParentDepth=../../../../sidebarParentDepth dest=../../../../dest showHeadings=../../../../showHeadings page=../../../../page limit=../../../../limit }}
           </ul>
 
         {{ else }}
@@ -28,14 +27,13 @@
 
     {{ else }}
 
-  {{# if showInNav }}
-
-      <li class="{{# if draft }}draft{{/ if }}">
-        <a href="{{ uri }}">
-          {{ name }}
-        </a>
-      </li>
-  {{/ if }}
+      {{# if showInNav }}
+          <li class="{{# if draft }}draft{{/ if }}">
+            <a href="{{ uri }}">
+              {{ name }}
+            </a>
+          </li>
+      {{/ if }}
 
     {{/ isActiveNav }}
 

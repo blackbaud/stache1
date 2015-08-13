@@ -1,9 +1,0 @@
-<ul class="nav-items">
-  {{# each stache.config.nav_links }}
-    {{# is showInHeader false }} {{ else }}
-      <li {{# isActiveNav dest=../../page.dest }}class="selected"{{/ isActiveNav }}>
-        <a href="{{ ../uri }}">{{ name }}</a>
-      </li>
-    {{/ is }}
-  {{/ each }}
-</ul>

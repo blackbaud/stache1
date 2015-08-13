@@ -6,7 +6,11 @@
 *
 **/
 var stache = angular.module('stache', [
+  'sky',
   'ui.router',
+  'ui.bootstrap',
+  'ui.select',
+  'ngAnimate',
   'ngSanitize'
 ]);
 
@@ -20,6 +24,11 @@ stache.config(function($stateProvider, $urlRouterProvider) {
     templateUrl: '/views/view-search.html'
   });
 });
+
+/**
+*
+**/
+stache.controller('NavController', angular.noop);
 
 /**
 *

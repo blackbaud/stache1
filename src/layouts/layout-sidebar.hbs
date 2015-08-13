@@ -11,7 +11,7 @@ showHeadings: true
         <h3>{{ sidebar_title }}</h3>
       {{/ if }}
 
-      {{# each stache.config.nav_links }}
+      {{# withNavLinks }}
         {{# isActiveNav dest=../page.dest }}
           <ul class="nav nav-stacked nav-sidebar">
 
@@ -23,7 +23,7 @@ showHeadings: true
                 </li>
             {{/ if}}
 
-            {{ include 'partial-sidebar' this dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
+            {{ include 'partial-sidebar' this sidebarCurrentDepth="0" sidebarParentDepth=../../sidebarParentDepth dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
 
             <li class="visible-on-affix">
               <a href="#top" class="smooth-scroll">
@@ -33,7 +33,7 @@ showHeadings: true
 
           </ul>
         {{/ isActiveNav }}
-      {{/ each }}
+      {{/ withNavLinks }}
 
     </div>
   </div>
