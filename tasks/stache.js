@@ -297,7 +297,7 @@ module.exports = function (grunt) {
                     'createAutoPages',
                     'createAutoNav',
                     'assembleHooks:pre',
-                    'newer:assemble',
+                    'assemble',
                     'assembleHooks:post',
                     'copy:build'
                 ]
