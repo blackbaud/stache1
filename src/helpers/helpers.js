@@ -422,7 +422,18 @@ module.exports.register = function (Handlebars, options, params) {
       } else {
 
         if (!fs.existsSync(fileWithPath)) {
-          fileWithPath = this.page.src.substr(0, this.page.src.lastIndexOf('/')) + '/' + file;
+
+          var src;
+          if (typeof this.page !== 'undefined' && this.page.src) {
+              src = this.page.src;
+          } else if (typeof context.page !== 'undefined' && context.page.src) {
+              src = context.page.src;
+          }
+
+          if (src) {
+            fileWithPath = src.substr(0, src.lastIndexOf('/')) + '/' + file;
+          }
+
           if (!fs.existsSync(fileWithPath)) {
             fileWithPath = stache.config.content + file;
             if (!fs.existsSync(fileWithPath)) {

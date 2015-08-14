@@ -54,7 +54,10 @@ module.exports = function (grunt) {
             config: '',
 
             // Imports to automatically generate pages from
-            pages: []
+            pages: [],
+
+            preAssembleHooks: '',
+            postAssembleHooks: ''
         },
 
         // Displays our title all fancy-like
@@ -291,8 +294,11 @@ module.exports = function (grunt) {
                 ],
                 tasks: [
                     'status:serve',
+                    'createAutoPages',
                     'createAutoNav',
-                    'assemble',
+                    'assembleHooks:pre',
+                    'newer:assemble',
+                    'assembleHooks:post',
                     'copy:build'
                 ]
             },
@@ -633,6 +639,14 @@ module.exports = function (grunt) {
         sortRecursive(root + navKey, true);
     });
 
+    // Looks for preAssembleHooks and postAssembleHooks in config
+    grunt.registerTask('assembleHooks', function (context) {
+        var hooks = grunt.config.get('stache.' + context + 'AssembleHooks');
+        if (hooks) {
+            grunt.task.run(hooks);
+        }
+    });
+
     // Prepare the JSON for our search implementation
     grunt.registerTask('prepareSearch', function () {
         var status = grunt.config.get('stache.status'),
@@ -683,8 +697,9 @@ module.exports = function (grunt) {
             'clean',
             'createAutoPages',
             'createAutoNav',
-            'assemble:default',
-            'assemble:custom',
+            'assembleHooks:pre',
+            'assemble',
+            'assembleHooks:post',
             'prepareSearch',
             'sass-blackbaud',
             'useminPrepare',
@@ -721,8 +736,9 @@ module.exports = function (grunt) {
             'copy:build',
             'createAutoPages',
             'createAutoNav',
-            'assemble:default',
-            'assemble:custom',
+            'assembleHooks:pre',
+            'assemble',
+            'assembleHooks:post',
             'prepareSearch',
             'sass-blackbaud',
             'connect',
