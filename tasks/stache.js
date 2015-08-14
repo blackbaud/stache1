@@ -473,7 +473,9 @@ module.exports = function (grunt) {
             sandcastlePath,
             sandcastleCounter;
 
+        // User has manually specific nav_links in stache.yml
         if (grunt.config('stache.config.nav_type') !== 'directory') {
+            grunt.config.set('bypassContext', grunt.config.get('stache.config.nav_links'));
             return;
         }
 
