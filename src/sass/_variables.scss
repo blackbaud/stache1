@@ -4,11 +4,8 @@
 * ==========================================================================
 */
 
-// Set Bootstrap + FontAwesome fonts
-// $icon-font-path: '../fonts/';
-// $fa-font-path: $icon-font-path;
-// $sky-icon-font-path: $icon-font-path;
-$octicons-font-path: $icon-font-path;
+// Making octicons match sky + fontawesome font paths
+$octicons-font-path: "fonts/";
 
 // Undo some Bootstrap variables
 $grid-gutter-width: 30px;

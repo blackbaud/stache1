@@ -758,8 +758,9 @@ module.exports = function (grunt) {
     );
 
     grunt.registerTask('stache', function (optionalTask) {
-        var task = optionalTask || 'help';
-        if (grunt.task._tasks[task]) {
+        var key = '_tasks',
+            task = optionalTask || 'help';
+        if (grunt.task[key][task]) {
             grunt.task.run(task);
         } else {
             grunt.fail.fatal('Unknown command requested: ' + task);
