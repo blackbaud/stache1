@@ -6,7 +6,11 @@
 
 // Undoing a few things defined in _bootstrap-variable-defaults.scss
 @import "_variables.scss";
-@import "bb-sky-sass/scss/_sky.scss";
+@import "bb-sky-sass/scss/_variables.scss";
+@import "bb-sky-sass/scss/_mixins.scss";
+
+// $nav-selected-border-width needs to be moved into variables in order for this to be removed
+@import "bb-sky-sass/scss/_navigation.scss";
 @import "bb-sky-sass/scss/_icons.scss";
 
 /*

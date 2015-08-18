@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="{{# isHome dest=page.dest }}full-height-width{{/ isHome }}" ng-app="stache">
+<html lang="en" class="{{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,19 +31,19 @@
         {{ include stache.config.header }}
       {{ else }}
 
-      <div ng-controller="NavController">
-        <bb-navbar>
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-12">
-                {{{ include stache.config.partial_header_nav }}}
-                {{{ include stache.config.partial_header_admin }}}
-                {{{ include stache.config.partial_header_search }}}
+        <div id="ng-stache" ng-controller="NavController">
+          <bb-navbar>
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12">
+                  {{{ include stache.config.partial_header_nav }}}
+                  {{{ include stache.config.partial_header_admin }}}
+                  {{{ include stache.config.partial_header_search }}}
+                </div>
               </div>
             </div>
-          </div>
-        </bb-navbar>
-      </div>
+          </bb-navbar>
+        </div>
 
       {{/ if }}
     {{/ if }}
@@ -52,11 +52,13 @@
       {{{ include stache.config.partial_admin_toolbar }}}
     {{/ inherit }}
 
-    {{# inherit stache.config.markdown markdown }}
-      {{# markdown }}{{ body }}{{/ markdown }}
-    {{ else }}
-      {{# withNewline }}{{ body }}{{/ withNewline }}
-    {{/ inherit }}
+    <div id="layout-base-content">
+      {{# inherit stache.config.markdown markdown }}
+        {{# markdown }}{{ body }}{{/ markdown }}
+      {{ else }}
+        {{# withNewline }}{{ body }}{{/ withNewline }}
+      {{/ inherit }}
+    </div>
 
     {{# if note }}
       {{# withHash isPageNote=true priority=priority note=note }}
@@ -127,8 +129,8 @@
     <!-- endbuild -->
 
     <!-- build:js {{ assets }}js/app.min.js -->
-    <script src="{{ assets }}js/search.js"></script>
-    <script src="{{ assets }}js/app.js"></script>
+    <script src="{{ assets }}js/stache-app.js"></script>
+    <script src="{{ assets }}js/stache-jquery.js"></script>
     <script src="{{ assets }}js/libs/jquery.mobile.custom.min.js"></script>
     <script src="{{ assets }}js/video.js"></script>
     {{# if stache.config.prism }}
@@ -148,6 +150,14 @@
       <script>
         {{{ newline example-js }}}
       </script>
+    {{/ if }}
+
+    {{# if stache.config.sky }}
+      {{# if stache.config.partial_sky_init }}
+        <script>
+          {{{ include stache.config.partial_sky_init }}}
+        </script>
+      {{/ if }}
     {{/ if }}
 
     {{# inherit stache.config.showAdminToolbar showAdminToolbar }}

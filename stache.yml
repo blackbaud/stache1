@@ -41,6 +41,7 @@ partial_jsdoc_body: <%= stache.config.partials %>partial-jsdoc-body.hbs
 partial_jsdoc_footer: <%= stache.config.partials %>partial-jsdoc-footer.hbs
 partial_sky_css: <%= stache.config.partials %>partial-sky-css.hbs
 partial_sky_js: <%= stache.config.partials %>partial-sky-js.hbs
+partial_sky_init: <%= stache.config.partials %>partial-sky-init.hbs
 partial_videos: <%= stache.config.partials %>partial-videos.hbs
 
 # =============================================
@@ -74,6 +75,8 @@ markdown: true
 comments: true
 comments_key: blackbaud
 blog_recent_limit: 10
+modules:
+  - stache
 
 # =============================================
 # STACHE - NAVIGATION

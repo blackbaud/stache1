@@ -1,0 +1,11 @@
+/*jslint browser: true, es5: true*/
+/*global jQuery */
+(function () {
+    'use strict';
+
+    // Create our app
+    angular.element(document).ready(function () {
+        angular.bootstrap(document, [{{# each stache.config.modules  }}'{{ this }}'{{# unless @last }},{{/ unless }}{{/ each }}]);
+    });
+
+}());
