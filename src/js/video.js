@@ -11,7 +11,7 @@ $(document).ready(function () {
             scrollTop: "+=336"
         }, 750);
     });
-  
+
     $(".vid-arrow-left").on("click", function (event) {
         event.preventDefault();
         $(".video-list").stop().animate({
@@ -30,18 +30,18 @@ $(document).ready(function () {
       var source = $(this).attr("href");
       source += "?autoplay=1&rel=0&showinfo=0&autohide=1";
       $("#video-iframe").attr("src", source);
+      $('#video-description').text($(this).data('description'));
     })
-    
+
     $('.video-list').swiperight(function() {
       $(this).stop().animate({
             scrollLeft: "-=320"
         }, 750);
     });
-    
+
     $('.video-list').swipeleft(function() {
       $(this).stop().animate({
             scrollLeft: "+=320"
         }, 750);
     });
 });
-

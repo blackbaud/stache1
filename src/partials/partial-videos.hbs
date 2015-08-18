@@ -4,12 +4,12 @@
       <div class="video-arrow vid-arrow-left toggle-small"><i class="fa fa-chevron-left fa-lg"></i></div>
       <div class="video-list">
       {{# each videos }}
-        <a class="video-item" href="{{ video_link }}">
+        <a class="video-item" href="{{ video_link }}" data-description="{{ video_description }}">
             <div class="video-thumb">
               <img src="{{ video_img }}"/>
             </div>
-            <div class="video-description">
-              {{ video_description }}
+            <div class="video-title">
+              {{ video_title }}
             </div>
         </a>
       {{/ each}}
@@ -26,4 +26,5 @@
         </iframe>
       {{/ withFirst }}
   </div>
+  <div id="video-description"></div>
 </section>
