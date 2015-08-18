@@ -25,6 +25,8 @@ module.exports = function (grunt) {
         header = grunt.log.header,
         localConfig = {},
         stacheConfig = {},
+        optionConfig = grunt.option('config') || '',
+        optionConfigArray,
         defaults;
 
     // Original reference to the header logging function.
@@ -773,9 +775,31 @@ module.exports = function (grunt) {
     **/
 
     // Read local files
-    if (grunt.file.exists(defaults.stache.pathConfig)) {
+    if (optionConfig !== '') {
+
+        // Multiple config files specified
+        if (optionConfig.indexOf(',') > -1) {
+            optionConfigArray = optionConfig.split(',');
+            optionConfigArray.forEach(function (file) {
+                if (grunt.file.exists(file)) {
+                    grunt.log.writeln('Importing config file ' + file);
+                    localConfig = merge(localConfig, grunt.file.readYAML(file));
+                } else {
+                    grunt.log.writeln('Error importing config file ' + file);
+                }
+            });
+        } else if (grunt.file.exists(optionConfig)) {
+            grunt.log.writeln('Importing config file ' + optionConfig);
+            localConfig = grunt.file.readYAML(optionConfig);
+        }
+
+    // Read default local file, if it exists
+    } else if (grunt.file.exists(defaults.stache.pathConfig)) {
+        grunt.log.writeln('Defaulting to config file ' + defaults.stache.pathConfig);
         localConfig = grunt.file.readYAML(defaults.stache.pathConfig);
     }
+
+    // Add package info to stache
     if (grunt.file.exists(defaults.stache.pathPackage)) {
         defaults.stache.package = grunt.file.readJSON(defaults.stache.pathPackage);
     }
