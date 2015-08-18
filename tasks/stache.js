@@ -178,13 +178,13 @@ module.exports = function (grunt) {
                             '*.woff',
                             '*.woff2'
                         ],
-                        dest: '<%= stache.config.build %>fonts/'
+                        dest: '<%= stache.config.build %>css/fonts/'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/dist/css/fonts/',
                         src: '*',
-                        dest: '<%= stache.config.build %>fonts/'
+                        dest: '<%= stache.config.build %>css/fonts/'
                     },
                     {
                         expand: true,
