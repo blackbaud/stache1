@@ -282,7 +282,8 @@ module.exports = function (grunt) {
         // When serving, watch for file changes
         watch: {
             options: {
-                livereload: grunt.option('livereload') || '<%= stache.config.livereload %>'
+                livereload: grunt.option('livereload') || '<%= stache.config.livereload %>',
+                spawn: false
             },
             stache: {
                 files: [
