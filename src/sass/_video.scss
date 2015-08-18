@@ -1,5 +1,15 @@
 /*  VIDEO PLAYER
 ############################### */
+
+/*Video Description Styles*/
+.video-description-container {
+  margin-bottom: 20px;
+}
+
+#video-description-header {
+  padding-top: 10px;
+}
+
 /*Large devices*/
 @media (min-width: 1200px) {
   .toggle-large {
@@ -34,7 +44,7 @@
   .video-thumb > img {
     width: 100%;
     height: 120px; }
-  .video-description {
+  .video-title {
     margin: 0 auto;
     text-align: center;}
   .vid-item-wrapper {
@@ -97,7 +107,7 @@
   .video-thumb > img {
     width: 100%;
     height: 120px; }
-  .video-description {
+  .video-title {
     margin: 0 auto;
     text-align: center;}
   .vid-item-wrapper {
@@ -163,7 +173,7 @@
   .video-thumb > img {
     width: 100%;
     height: 120px; }
-  .video-description {
+  .video-title {
     margin: 0 auto;
     text-align: center;
     white-space: normal;}
@@ -234,7 +244,7 @@
   .video-thumb > img {
     width: 100%;
     height: 120px; }
-  .video-description {
+  .video-title {
     margin: 0 auto;
     text-align: center;}
   .vid-item-wrapper {
