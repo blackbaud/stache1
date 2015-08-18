@@ -52,13 +52,11 @@
       {{{ include stache.config.partial_admin_toolbar }}}
     {{/ inherit }}
 
-    <div id="layout-base-content">
-      {{# inherit stache.config.markdown markdown }}
-        {{# markdown }}{{ body }}{{/ markdown }}
-      {{ else }}
-        {{# withNewline }}{{ body }}{{/ withNewline }}
-      {{/ inherit }}
-    </div>
+    {{# inherit stache.config.markdown markdown }}
+      {{# markdown }}{{ body }}{{/ markdown }}
+    {{ else }}
+      {{# withNewline }}{{ body }}{{/ withNewline }}
+    {{/ inherit }}
 
     {{# if note }}
       {{# withHash isPageNote=true priority=priority note=note }}
