@@ -55,6 +55,7 @@ omnibar_help: 'false'
 omnibar_search: 'false'
 omnibar_link: <%= stache.config.base %>
 omnibar_link_enabled: true
+video_description_top: false
 
 # =============================================
 # STACHE - LAYOUTS

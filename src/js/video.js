@@ -39,13 +39,13 @@ $(document).ready(function () {
 
     $('.video-list').swiperight(function() {
       $(this).stop().animate({
-            scrollLeft: "-=320"
+            scrollLeft: "-=160"
         }, 750);
     });
 
     $('.video-list').swipeleft(function() {
       $(this).stop().animate({
-            scrollLeft: "+=320"
+            scrollLeft: "+=160"
         }, 750);
     });
 });
