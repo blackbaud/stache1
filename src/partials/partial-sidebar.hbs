@@ -1,42 +1,40 @@
 {{# if nav_links }}
-  {{# eachWithMod nav_links limit=limit }}
 
+  {{# eachWithMod nav_links limit=limit }}
     {{# isActiveNav dest=../../dest }}
 
-      <li class="current {{# if draft }}draft{{/ if }} {{# isActiveNav dest=../../../dest parentCanBeActive=false }}active{{/ isActiveNav }}">
-
+      {{# withinParentDepth sidebarCurrentDepth=../../../sidebarCurrentDepth sidebarParentDepth=../../../sidebarParentDepth }}
+        <li class="current {{# if draft }}draft{{/ if }} {{# isActiveNav dest=../../../dest parentCanBeActive=false }}active{{/ isActiveNav }}">
         <a href="{{ uri }}">
           {{ name }}
         </a>
+      {{/ withinParentDepth }}
 
-        {{# if nav_links }}
-
-          <ul class="nav">
-            {{ include 'partial-sidebar' this sidebarCurrentDepth=../../../../sidebarCurrentDepth sidebarParentDepth=../../../../sidebarParentDepth dest=../../../../dest showHeadings=../../../../showHeadings page=../../../../page limit=../../../../limit }}
-          </ul>
-
-        {{ else }}
-
-          {{# if ../../../../showHeadings }}
-            {{ include 'partial-page-headings' this page=../../../../../page }}
-          {{/ if }}
-
+      {{# if nav_links }}
+        <ul class="nav">
+          {{ include 'partial-sidebar' this sidebarCurrentDepth=../../../../sidebarCurrentDepth sidebarParentDepth=../../../../sidebarParentDepth dest=../../../../dest showHeadings=../../../../showHeadings page=../../../../page limit=../../../../limit }}
+        </ul>
+      {{ else }}
+        {{# if ../../../../showHeadings }}
+          {{ include 'partial-page-headings' this page=../../../../../page }}
         {{/ if }}
+      {{/ if }}
 
-      </li>
+      {{# withinParentDepth sidebarCurrentDepth=../../../sidebarCurrentDepth sidebarParentDepth=../../../sidebarParentDepth }}
+        </li>
+      {{/ withinParentDepth }}
 
     {{ else }}
 
       {{# if showInNav }}
-          <li class="{{# if draft }}draft{{/ if }}">
-            <a href="{{ uri }}">
-              {{ name }}
-            </a>
-          </li>
+        <li class="{{# if draft }}draft{{/ if }}">
+          <a href="{{ uri }}">
+            {{ name }}
+          </a>
+        </li>
       {{/ if }}
 
     {{/ isActiveNav }}
-
   {{/ eachWithMod }}
 
 {{ else }}
