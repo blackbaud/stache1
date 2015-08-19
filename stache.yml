@@ -76,6 +76,7 @@ markdown: true
 comments: true
 comments_key: blackbaud
 blog_recent_limit: 10
+bootstrap_container: container
 modules:
   - stache
 

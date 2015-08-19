@@ -33,7 +33,7 @@
 
         <div id="ng-stache" ng-controller="NavController"  class="bb-navbar">
           <bb-navbar>
-            <div class="container">
+            <div class="{{ stache.config.bootstrap_container }}">
               <div class="row">
                 <div class="col-sm-12">
                   {{{ include stache.config.partial_header_nav }}}
@@ -70,7 +70,7 @@
       {{ else }}
 
         <div class="footer-site">
-          <div class="container">
+          <div class="{{ stache.config.bootstrap_container }}">
             <div class="row">
               <div class="col-xs-6 col-sm-4">
                 {{{ include stache.config.partial_footer_logo }}}
@@ -91,7 +91,7 @@
     {{/ if }}
 
     <div class="copyright">
-      <div class="container">
+      <div class="{{ stache.config.bootstrap_container }}">
         <div class="row">
 
           <div class="col-sm-6">
