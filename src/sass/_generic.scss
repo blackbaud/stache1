@@ -175,3 +175,8 @@ div.draft h3 {
 .show-second {
   display: none;
 }
+
+// Stop double 1px border
+.bb-navbar.ng-scope {
+  border-bottom: 0;
+}
