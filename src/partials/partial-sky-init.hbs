@@ -3,9 +3,69 @@
 (function () {
     'use strict';
 
-    // Create our app
+    function Run($rootScope, bbWait, bbOmnibarConfig) {
+
+        $rootScope.$on('bbBeginWait', function (e, opts) {
+          e.stopPropagation();
+          bbWait.beginPageWait(opts);
+        });
+
+        $rootScope.$on('bbEndWait', function (e, opts) {
+          e.stopPropagation();
+          bbWait.endPageWait(opts);
+        });
+
+        // Adding custom properties to the omnibar config
+        bbOmnibarConfig.selectorInput = '#omnibar_searchbox';
+        bbOmnibarConfig.selectorResults = '.stache-omnibar-search';
+
+        {{# if stache.config.omnibar_search }}
+          bbOmnibarConfig.enableSearch = {{ stache.config.omnibar_search }};
+        {{/ if }}
+
+        {{# if stache.config.omnibar_help }}
+          bbOmnibarConfig.enableHelp = {{ stache.config.omnibar_help }};
+        {{/ if }}
+
+        {{# if stache.config.omnibar_title }}
+          bbOmnibarConfig.serviceName = '{{ stache.config.omnibar_title }}';
+        {{/ if }}
+
+        {{# if stache.config.omnibar_signin }}
+          bbOmnibarConfig.signInRedirectUrl = '{{ stache.config.omnibar_signin }}';
+        {{/ if }}
+
+        {{# if stache.config.omnibar_signout }}
+          bbOmnibarConfig.enableSearch = '{{ stache.config.omnibar_signout }}';
+        {{/ if }}
+
+        bbOmnibarConfig.afterLoad = function () {
+          angular.element(document).ready(function () {
+
+            // Look into making this mirror the Angular Directive
+            $('.productmenucontainer').append($('.navbar-nav').clone().toggleClass('nav-items bb-omnibar-productmenu'));
+
+            {{# if stache.config.omnibar_link_enabled }}
+              $('.servicename').wrapInner('<a id="omnibar-link" href="{{ stache.config.omnibar_link }}"></a>');
+            {{/ if }}
+
+            // Let others tie into this method
+            $rootScope.$broadcast('stacheOmnibarLoaded');
+          });
+        };
+    }
+
+    Run.$inject = [
+      '$rootScope',
+      'bbWait',
+      'bbOmnibarConfig'
+    ];
+
+    angular.module('stache').run(Run);
     angular.element(document).ready(function () {
-        angular.bootstrap(document, [{{# each stache.config.modules  }}'{{ this }}'{{# unless @last }},{{/ unless }}{{/ each }}]);
+      angular.bootstrap(document, [{{# each stache.config.modules  }}
+        '{{ this }}'{{# unless @last }},{{/ unless }}{{/ each }}
+      ]);
     });
 
 }());

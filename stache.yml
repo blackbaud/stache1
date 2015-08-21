@@ -22,7 +22,6 @@ error:
 # STACHE - SERVING
 # =============================================
 
-partial_omnibar: <%= stache.config.partials %>partial-omnibar.hbs
 partial_header_nav: <%= stache.config.partials %>partial-header-nav.hbs
 partial_header_nav_link: <%= stache.config.partials %>partial-header-nav-link.hbs
 partial_header_nav_dropdown: <%= stache.config.partials %>partial-header-nav-dropdown.hbs
@@ -43,6 +42,7 @@ partial_sky_css: <%= stache.config.partials %>partial-sky-css.hbs
 partial_sky_js: <%= stache.config.partials %>partial-sky-js.hbs
 partial_sky_init: <%= stache.config.partials %>partial-sky-init.hbs
 partial_videos: <%= stache.config.partials %>partial-videos.hbs
+partial_contribute: <%= stache.config.partials %>partial-contribute.hbs
 
 # =============================================
 # STACHE - SERVING
@@ -73,6 +73,7 @@ showAdminTrigger: false
 editInGitHub: true
 editInProse: true
 markdown: true
+contribute: false
 comments: true
 comments_key: blackbaud
 blog_recent_limit: 10

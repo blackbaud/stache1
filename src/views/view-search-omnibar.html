@@ -1,0 +1,10 @@
+<div class="stache-omnibar-search" ng-show="omnibar.query">
+  <p ng-show="omnibar.error">{{ omnibar.error }}</p>
+  <p ng-hide="omnibar.results.length">Unable to locate any results.</p>
+  <ul class="list-unstyled" ng-show="omnibar.results.length">
+    <li ng-repeat="result in omnibar.results | orderBy:'-weight' | limitTo: '8'">
+      <a ng-href="{{ result.uri }}">{{ result.name }}</a>
+      <div ng-bind-html="result.match | limitTo: 60 | highlight:omnibar.query"></div>
+    </li>
+  </ul>
+</div>

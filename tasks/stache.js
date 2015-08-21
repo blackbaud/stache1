@@ -57,9 +57,13 @@ module.exports = function (grunt) {
 
             // Imports to automatically generate pages from
             pages: [],
-
             preAssembleHooks: '',
-            postAssembleHooks: ''
+            postAssembleHooks: '',
+            searchContentToRemove: [
+                '.bb-navbar',
+                '.nav-sidebar',
+                '.footer-site'
+            ]
         },
 
         // Displays our title all fancy-like
@@ -654,13 +658,15 @@ module.exports = function (grunt) {
     // Prepare the JSON for our search implementation
     grunt.registerTask('prepareSearch', function () {
         var status = grunt.config.get('stache.status'),
+            searchContentToRemove = grunt.config.get('stache.config.searchContentToRemove'),
             search = [],
             item,
             file,
             html,
             content,
             i,
-            j;
+            j,
+            $$;
 
         for (i = 0, j = navSearchFiles.length; i < j; i++) {
             if (navSearchFiles[i].showInNav) {
@@ -672,14 +678,26 @@ module.exports = function (grunt) {
                     file += 'index.html';
                 }
 
-                html = grunt.file.read(file, 'utf8');
-                content = cheerio('.content', html);
+                $$ = cheerio.load(grunt.file.read(file, 'utf8'));
 
-                if (content.length === 0) {
-                    content = cheerio('body', html);
+                // Nav links just clutter everything up
+                if (grunt.util.kindOf(searchContentToRemove) === 'array') {
+                    searchContentToRemove.forEach(function (selector) {
+                        $$(selector).remove();
+                    });
                 }
 
+                // Try specifically reading the content div
+                // Default to body if a content div doesn't exist
+                content = $$('.content');
+                if (content.length === 0) {
+                    content = $$('body');
+                }
+
+                // Trim the text
                 item.text = content.text().replace(/\s{2,}/g, ' ');
+
+                // Save the result
                 search.push(item);
             }
         }

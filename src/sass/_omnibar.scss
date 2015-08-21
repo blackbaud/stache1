@@ -1,13 +1,54 @@
-/* 
+/*
 * ==========================================================================
 * I know we're not supposed to do this, but I absolutely hated seeing the page jump down when the omnibar finally loads.
 * I'm risking setting that height here.  Worst case is you would see the page jump slightly if they ever change the height of the omnibar.
-* ========================================================================== 
+* ==========================================================================
 */
+
+// Necessary since we want this menu regardless of being logged in.
+// Also has to be more specific in order to override async omnibar css.
+.bb-omnibar .mobile .bar .menuheader {
+  display: block;
+}
+
 .bb-omnibar-height-padding {
   padding-top: $omnibar-height;
 }
 
 #omnibar-link {
   color: #888;
+}
+
+.stache-omnibar-search {
+  background: #FFF;
+  left: 10px;
+  width: 380px;
+  position: absolute;
+  top: $omnibar-height - 8px;
+  z-index: 2000;
+  @include shadow(0, 3px, 10px, -1px, #666);
+}
+
+.stache-omnibar-search ul {
+  margin: 0;
+  padding: 0;
+}
+
+.stache-omnibar-search li {
+  border-bottom: solid 1px #ccc;
+  padding: 5px;
+}
+
+.stache-omnibar-search li:last-of-type {
+  border-bottom: 0;
+}
+
+.stache-omnibar-search p {
+  margin: 0;
+  padding: 5px;
+}
+
+.stache-omnibar-search .highlighted {
+  background: yellow;
+  font-weight: normal;
 }

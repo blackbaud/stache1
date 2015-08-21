@@ -58,6 +58,10 @@
       {{# withNewline }}{{ body }}{{/ withNewline }}
     {{/ inherit }}
 
+    {{# inherit stache.config.contribute contribute }}
+      {{{ include stache.config.partial_contribute }}}
+    {{/ inherit }}
+
     {{# if note }}
       {{# withHash isPageNote=true priority=priority note=note }}
         {{> partial-note }}
@@ -105,8 +109,12 @@
       </div>  <!-- .container -->
     </div>  <!-- .copyright -->
 
-    <!-- Omnibar Placeholder -->
-    <div id="omnibar"></div>
+    {{# if stache.config.showOmnibar }}
+      <div ng-controller="OmnibarController as omnibar">
+        <bb-omnibar></bb-omnibar>
+        <div ng-include="'/views/view-search-omnibar.html'"></div>
+      </div>
+    {{/ if }}
 
     {{# if stache.config.sky }}
       {{{ include stache.config.partial_sky_js }}}
@@ -163,17 +171,6 @@
       {{{ include stache.config.partial_admin_script }}}
       </script>
     {{/ inherit }}
-
-    {{# if stache.config.showOmnibar }}
-      <script src="https://signin.blackbaud.com/omnibar.min.js"></script>
-      {{# if stache.config.omnibar }}
-        {{ include stache.config.omnibar }}
-      {{ else }}
-        <script>
-        {{{ include stache.config.partial_omnibar }}}
-        </script>
-      {{/ if }}
-    {{/ if }}
 
   </body>
 </html>

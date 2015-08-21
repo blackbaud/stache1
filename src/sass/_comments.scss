@@ -1,8 +1,36 @@
-/* 
+/*
 * ==========================================================================
 * COMMENTS
-* ========================================================================== 
+* ==========================================================================
 */
+
+  .contribute {
+    background: $brand-alternate;
+    color: #FFF;
+    padding: $section-padding;
+  }
+
+  .contribute a {
+    color: $brand-alternate-lighter;
+  }
+
+  .contribute a:hover,
+  .contribute a:focus {
+    color: $brand-alternate-light;
+  }
+
+  .contribute p.lead a {
+    color: lighten($yellow, 25%);
+  }
+
+  .contribute p.lead a:hover,
+  .contribute p.lead a:focus {
+    color: $brand-primary-hover;
+  }
+
+  .contribute p.lead {
+    margin-bottom: 5px;
+  }
 
   .comments {
     padding: $section-padding;
