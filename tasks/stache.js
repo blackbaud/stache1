@@ -554,6 +554,7 @@ module.exports = function (grunt) {
             item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
             item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
             item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
+            item.showInSearch = typeof item.showInSearch !== 'undefined' ? item.showInSearch : true;
             item.breadcrumbs = item.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
             item.name = grunt.config.process(item.name || (subdir ? createTitle(subdir, separator, false) : home));
             item.abspath = el.abspath;
@@ -669,7 +670,9 @@ module.exports = function (grunt) {
             $$;
 
         for (i = 0, j = navSearchFiles.length; i < j; i++) {
-            if (navSearchFiles[i].showInNav) {
+            if (!navSearchFiles[i].showInSearch) {
+                grunt.log.writeln('Ignoring from search: ' + navSearchFiles[i].uri);
+            } else {
 
                 item = navSearchFiles[i];
                 file = status + item.uri;
