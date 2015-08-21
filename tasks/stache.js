@@ -555,7 +555,7 @@ module.exports = function (grunt) {
             item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
             item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
             item.breadcrumbs = item.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
-            item.name = item.name || (subdir ? createTitle(subdir, separator, false) : home);
+            item.name = grunt.config.process(item.name || (subdir ? createTitle(subdir, separator, false) : home));
             item.abspath = el.abspath;
 
             // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
