@@ -2,12 +2,12 @@
   "name": "holderjs",
   "main": "holder.js",
   "homepage": "https://github.com/imsky/holder",
-  "version": "2.8.0",
-  "_release": "2.8.0",
+  "version": "2.8.1",
+  "_release": "2.8.1",
   "_resolution": {
     "type": "version",
-    "tag": "v2.8.0",
-    "commit": "fe3013d9a9aef36e1d31d64fa06ee65ff0cfc67e"
+    "tag": "v2.8.1",
+    "commit": "c5f0ca6ae58d5e4e5b016ba9c91059ce6f5a93a3"
   },
   "_source": "git://github.com/imsky/holder.git",
   "_target": "~2.8.0",

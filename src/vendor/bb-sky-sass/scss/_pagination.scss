@@ -17,35 +17,35 @@
     .previous, 
     .next, 
     .last,
-    [ng-if='directionLinks'] {
+    [ng-if='::directionLinks'] {
         a {
-            @extend .glyphicon;
+            @extend .fa;
             padding-left: 8.5px;
             padding-right: 8.5px;
             line-height: $line-height-base;
             top: 0;
+            transform: none;
         }
     }
 
     .first a {
-        @extend .glyphicon-backward;
+        @extend .fa-backward;
     }
 
     .previous a,
-    [ng-if='directionLinks']:first-child a {
-        @extend .glyphicon-play;
-        @extend .icon-flipped;
+    [ng-if='::directionLinks']:first-child a {
+        @extend .fa-caret-left;
         border-radius: 0;
     }
 
     .next a,
-    [ng-if='directionLinks']:last-child a {
-        @extend .glyphicon-play;
+    [ng-if='::directionLinks']:last-child a {
+        @extend .fa-caret-right;
         border-radius: 0;
     }
 
     .last a {
-        @extend .glyphicon-forward;
+        @extend .fa-forward;
     }
 
     li > a {

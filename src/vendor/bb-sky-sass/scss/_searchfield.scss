@@ -124,6 +124,7 @@
                 top: 50%;
                 right: 18px;
                 margin-top: -6px;
+                width: 0;
             }
         }
     }
@@ -145,7 +146,7 @@ body > .ui-select-bootstrap.open {
 }
 
 .ui-select-search.ng-hide:not(.ng-hide-animate) {
-    display: block !important;
+      display: none !important;
       overflow: hidden;
       height: 0;
       opacity: 0;

@@ -412,8 +412,13 @@ function prepareDOMElement(prepSettings) {
     var engineSettings = extend(_engineSettings, null);
 
     if (flags.font) {
+        /*
+        If external fonts are used in a <img> placeholder rendered with SVG, Holder falls back to canvas.
+
+        This is done because Firefox and Chrome disallow embedded SVGs from referencing external assets.
+        The workaround is either to change the placeholder tag from <img> to <object> or to use the canvas renderer.
+        */
         theme.font = flags.font;
-        //Only run the <canvas> webfont fallback if noFontFallback is false, if the node is not an image, and if canvas is supported
         if (!engineSettings.noFontFallback && el.nodeName.toLowerCase() === 'img' && App.setup.supportsCanvas && engineSettings.renderer === 'svg') {
             engineSettings = extend(engineSettings, {
                 renderer: 'canvas'
@@ -583,7 +588,7 @@ function render(renderSettings) {
             });
         }
         if (engineSettings.reRender) {
-            global.setTimeout(function() {
+            global.setTimeout(function () {
                 var image = getRenderedImage();
                 if (image == null) {
                     throw 'Holder: couldn\'t render placeholder';
@@ -628,7 +633,7 @@ function buildSceneGraph(scene) {
 
     scene.font = {
         family: scene.theme.font ? scene.theme.font : 'Arial, Helvetica, Open Sans, sans-serif',
-        size: textSize(scene.width, scene.height, fontSize),
+        size: textSize(scene.width, scene.height, fontSize, App.defaults.scale),
         units: scene.theme.units ? scene.theme.units : App.defaults.units,
         weight: scene.theme.fontweight ? scene.theme.fontweight : 'bold'
     };
@@ -664,11 +669,8 @@ function buildSceneGraph(scene) {
     sceneGraph.root.add(holderBg);
 
     if (scene.flags.outline) {
-        //todo: generalize darken/lighten to more than RRGGBB hex values
         var outlineColor = new Color(holderBg.properties.fill);
-
         outlineColor = outlineColor.lighten(outlineColor.lighterThan('7f7f7f') ? -0.1 : 0.1);
-
         holderBg.properties.outline = {
             fill: outlineColor.toHex(true),
             width: 2
@@ -804,15 +806,16 @@ function buildSceneGraph(scene) {
  * @param width Parent width
  * @param height Parent height
  * @param fontSize Requested text size
+ * @param scale Proportional scale of text
  */
-function textSize(width, height, fontSize) {
+function textSize(width, height, fontSize, scale) {
     var stageWidth = parseInt(width, 10);
     var stageHeight = parseInt(height, 10);
 
     var bigSide = Math.max(stageWidth, stageHeight);
     var smallSide = Math.min(stageWidth, stageHeight);
 
-    var newHeight = 0.8 * Math.min(smallSide, bigSide * App.defaults.scale);
+    var newHeight = 0.8 * Math.min(smallSide, bigSide * scale);
     return Math.round(Math.max(fontSize, newHeight));
 }
 

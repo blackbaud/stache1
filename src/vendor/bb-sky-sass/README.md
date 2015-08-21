@@ -1,4 +1,4 @@
-[![Build Status](https://magnum.travis-ci.com/blackbaud/sky.svg?token=sJ8gpzdFTibjNFQuHgFg&branch=master)](https://magnum.travis-ci.com/blackbaud/sky)
+[![Build Status](https://magnum.travis-ci.com/blackbaud/sky.svg?token=sJ8gpzdFTibjNFQuHgFg&branch=master)](https://magnum.travis-ci.com/blackbaud/sky) [![Coverage Status](https://coveralls.io/repos/blackbaud/sky/badge.svg?branch=master&service=github&t=xWV70k)](https://coveralls.io/github/blackbaud/sky?branch=master)
 # Sky
 
 The Sky library contains CSS and Angular components for building web applications at Blackbaud that adhere to the Sky UX patterns.
@@ -52,16 +52,16 @@ We highly encourage contributions from all users of Sky.  We just ask that you f
 If you have Visual Studio with the [Task Runner Explorer](https://visualstudiogallery.msdn.microsoft.com/8e1b4368-4afb-467a-bc13-9650572db708) extension, you should open the repo folder as a web site via File > Open > Web Site.  The `grunt watchandtest` task will then run automatically.
 2. Write your code, documentation and unit tests.  All new code must have 100% unit test coverage and include documentation for how to use the feature or the pull request will not be accepted.  
 
-  - You should include documentation for each sky module you create within your source code. We use JsDoc style comments at the top JavaScript files to generate markdown documentation. You can generate the markdown documentation by either saving the demo.js or demo.html files in your feature's docs folder, or you can use the command `grunt generatedocs` from the command line. The standard format for the inline documentation is as follows: 
+  - You should include documentation for each sky module you create within your source code. We use JsDoc style comments at the top JavaScript files to generate markdown documentation. You can generate the markdown documentation by either saving the demo.js or demo.html files in your feature's docs folder, or you can use the command `grunt generatedocs` from the command line. The standard format for the inline documentation is as follows:
 
 
     /** @module Mymodulename  
         @description ### Header with markdown ###  
- 
+
         - relevant properties  
     */
 
-  
+
   - Your documentation should also include demo HTML, and demo JS in a folder called `docs` under your feature's folder in `src/js`.  As you update these files, the `grunt watchandtest` task will generate documentation which you can find under `bin/demo/directives`.  The documentation page will need to be hosted by a web server; you can use a Node package like [http-server](https://github.com/indexzero/http-server) to start a web server in any folder on your drive.
  - Your unit tests should be located in a folder called `test` under your feature's folder in `src/js` and should consist of one or more JavaScript files named `<featurename>.spec.js`.  As you write unit tests or change code, the `grunt watchandtest` task will run your unit tests and generate code coverage.  Code coverage reports can be located under `coverage/<browser version>/index.html` and can be launched straight from disk.
 
@@ -69,6 +69,10 @@ If you have Visual Studio with the [Task Runner Explorer](https://visualstudioga
 
 1. Commit and push your changes to your repo
 2. Submit a pull request
+
+## Dependencies
+
+Most of the sky libraries are dependent on [UI Bootstrap](https://angular-ui.github.io/bootstrap/). Make sure that you include the `ui.bootstrap` angular module as a dependency to your application if you wish to use our components. Note that you should also include the `ngAnimate` module if you wish to have the UI Bootstrap transition animations in your application. Other dependencies are noted in the [sky documentation](http://sky.developer.blackbaud.com/) for specific components.
 
 ## Filing Issues
 

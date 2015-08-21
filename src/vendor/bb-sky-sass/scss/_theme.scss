@@ -93,14 +93,12 @@ input:-moz-placeholder { /* Firefox 18- */
     font-weight: normal;
 }
 
-input, textarea, select {
-    &:focus, &.form-control:focus {
-        box-shadow: 0 0 8px rgba(28, 132, 198, 0.6);
-        border: 1px solid #1f90d8;
-    }
+.form-control:focus {
+    box-shadow: 0 0 8px rgba(28, 132, 198, 0.6);
+    border: 1px solid #1f90d8;
 }
 
-input:focus.ng-invalid {
+.form-control:focus.ng-invalid {
     box-shadow: 0 0 8px rgba(237, 85, 101, 0.6);
     border: 1px solid #ed5565;
 }
@@ -207,6 +205,38 @@ label.error {
     border-bottom-color: $gray-lighter;
     border-width: 0 10px 5px 10px;
 }
+
+/*overriding default tooltip styling for angular ui bootstrap */
+.tooltip-inner {
+    white-space: nowrap;
+    max-width: none;
+    background-color: $white;
+    padding: 0;
+    
+    text-align: left;
+    color: $gray-dark;
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+    padding: 10px;
+    @include shadow($color:$gray-light);
+    .bb-tooltip-title {
+        font-weight: bold;
+    }
+    
+    hr {
+        padding-bottom: 5px;
+    }
+}
+
+.tooltip.in {
+    opacity: 1;
+}
+
+.tooltip.bottom .tooltip-arrow {
+    border-bottom-color: $gray-lighter;
+    border-width: 0 10px 5px 10px;
+}
+
 /* Tooltip End*/
 
 /* Inspinia overrides */

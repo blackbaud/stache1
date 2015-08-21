@@ -1,7 +1,8 @@
 /*global angular */
 
 /** @module Action Bar
-
+@icon bolt
+@summary Combines a group of buttons into a dropdown at the XS breakpoint.
 @description The action bar is used to create a sky themed container for buttons. It has the option to collapse a group of buttons into a dropdown view when the screen is in xtra small mode.
 
 ### Additional dependencies ###
@@ -118,7 +119,7 @@
                         };
                     }],
                     link: function ($scope) {
-                        if ($scope.title === null || angular.isUndefined($scope.title)) { 
+                        if ($scope.title === null || angular.isUndefined($scope.title)) {
                             $scope.title = bbResources.action_bar_actions;
                         }
                     },
@@ -157,13 +158,15 @@
 /*global angular */
 
 /** @module Autofocus
- @description The bb-autofocus directive is used to set focus on a form item when rendered. Use this when the HTML autofocus property behaves finicky with things like angular dynamically loaded templates and such. 
+@icon camera
+@summary  The Autofocus directive is used to set focus on a form item when rendered.
+ @description The bb-autofocus directive is used to set focus on a form item when rendered. Use this when the HTML autofocus property behaves finicky with things like angular dynamically loaded templates and such.
 Here focus is set in an in-page form as well as in a modal launched with bbmodal.
  */
 
 (function () {
     'use strict';
-    
+
     angular.module('sky.autofocus', [])
         .directive('bbAutofocus', ['$timeout', function ($timeout) {
             return {
@@ -177,10 +180,13 @@ Here focus is set in an in-page form as well as in a modal launched with bbmodal
             };
         }]);
 }());
+
 /*jslint browser: true, plusplus: true */
 /*global angular, jQuery */
 
 /** @module Autonumeric
+@icon calculator
+@summary The Autonumeric directive wraps up the autoNumeric jQuery plugin. It allows for formatting any kind of number, including currency.
  @description ### Additional Dependencies ###
 
  - **[autoNumeric](http://www.decorplanit.com/plugin/) (1.9.27 or higher)** Used to format money values
@@ -193,19 +199,19 @@ The Autonumeric directive wraps up the autoNumeric jQuery plugin.  It allows for
 
  - `bb-autonumeric` This  can optionally be assigned the name of a property from the `bbAutonumericConfig` object.  If none is specified, it defaults to `number`.
  - `bb-autonumeric-settings` This can be assigned a value that represents a settings object that can be passed to autoNumeric.  These options will override any default options specified in the `bb-autonumeric` attribute.  A complete list of options is available [here](http://www.decorplanit.com/plugin/).
- 
+
 ### Autonumeric Filter ###
 
 In addition to the directive, there is also a filter that can be used to format numbers.  The filter has the added feature of optionally abbreviating a number according to Sky patterns.  For instance,
 numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,000,000 as 1b.  The filter takes three arguments:
- 
+
  - `input` The value to format.
  - `configType` The name of the configuration (`number` or `money`) to apply to the value.
  - `abbreviate` A Boolean value indicating whether to abbreviate large numbers.
  */
 (function ($) {
     'use strict';
-         
+
     function getBaseSettings(bbAutoNumericConfig, configType) {
         var baseSettings,
             configSettings;
@@ -246,11 +252,11 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                 restrict: 'A',
                 link: function ($scope, el, attrs, ngModel) {
                     var customSettings = {};
-                    
+
                     function applySettings() {
                         el.autoNumeric('update', angular.extend({}, getBaseSettings(bbAutoNumericConfig, attrs.bbAutonumeric), customSettings));
                     }
-                    
+
                     function applyCssSettings(el) {
                         if (attrs.bbAutonumeric) {
                             el.addClass('bb-autonumeric-' + attrs.bbAutonumeric);
@@ -263,7 +269,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                             applySettings();
                         }, true);
                     }
-                    
+
                     el.autoNumeric(getBaseSettings(bbAutoNumericConfig, attrs.bbAutonumeric));
                     applyCssSettings(el);
 
@@ -279,11 +285,11 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     el.change(function () {
                         return $scope.$apply(function () {
                             var value = parseFloat(el.autoNumeric('get'));
-                            
+
                             if (isNaN(value)) {
                                 value = null;
                             }
-                            
+
                             return ngModel.$setViewValue(value);
                         });
                     });
@@ -291,7 +297,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     // When focusing in textbox, select all.  This is to workaround not having placeholder text for autonumeric.
                     /*
                         istanbul ignore next: the test for this code isn't passing on IE 10 on BrowserStack in automated mode.
-                        This isn't mission-critical so I'm just ignoring it for now. 
+                        This isn't mission-critical so I'm just ignoring it for now.
                     */
                     el.on('focusin.bbAutonumeric', function () {
                         $timeout(function () {
@@ -310,15 +316,15 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                     settings,
                     suffix,
                     tempEl;
-                
+
                 if (input === null || angular.isUndefined(input)) {
                     return '';
                 }
-                
+
                 tempEl = $('<span></span>');
-                
+
                 settings = getBaseSettings(bbAutonumericConfig, configType);
-                
+
                 if (abbreviate) {
                     if (settings.pSign === 's') {
                         // The suffix needs to go between the number and the currency symbol, so the currency
@@ -326,9 +332,9 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                         aSign = settings.aSign;
                         settings.aSign = '';
                     }
-                    
+
                     input = Math.round(input);
-                    
+
                     if (input >= 1000000000) {
                         dividend = 100000000;
                         suffix = bbResources.autonumeric_abbr_billions;
@@ -339,7 +345,7 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
                         dividend = 100;
                         suffix = bbResources.autonumeric_abbr_thousands;
                     }
-                    
+
                     if (suffix) {
                         input = Math.floor(input / dividend) / 10;
                         mDec = Math.floor(input) === input ? 0 : 1;
@@ -349,20 +355,20 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 
                     settings.mDec = mDec;
                 }
-                
+
                 tempEl.autoNumeric(settings);
                 tempEl.autoNumeric('set', input);
-                
+
                 formatted = tempEl.text();
-                
+
                 if (suffix) {
                     formatted += suffix;
                 }
-                
+
                 if (abbreviate && settings.pSign === 's' && aSign) {
                     formatted += aSign;
                 }
-                
+
                 return formatted;
             };
         }]);
@@ -971,9 +977,11 @@ numbers over 10,000 will be displayed as 10k, over 1,000,000 as 1m, and 1,000,00
 /*global angular, jQuery */
 
 /** @module Check
+@icon check-square
+@summary The bbCheck directive allows you to change an input element of type checkbox or radio into a commonly styled selector.
  @description ### Additional Dependencies ###
 
- - **[icheck.js](http://fronteed.com/iCheck/) (1.0.2 or higher)** 
+ - **[icheck.js](http://fronteed.com/iCheck/) (1.0.2 or higher)**
 
 ---
 
@@ -1016,10 +1024,13 @@ The bbCheck directive allows you to change an input element of type checkbox or 
             };
         }]);
 }(jQuery));
+
 /*jslint browser: true */
 /*global angular */
 
 /** @module Checklist
+@icon list-ul
+@summary The Checklist directive allows you to easily build a filterable checkbox list.
  @description The Checklist directive allows you to easily build a filterable checkbox list.  Multiple columns of data can be provided for the checkbox rows using the `bb-checklist-column` tag.
 
 ### Checklist Settings ###
@@ -1047,9 +1058,9 @@ The bbCheck directive allows you to change an input element of type checkbox or 
 
 (function () {
     'use strict';
-    
+
     var PROP_CATEGORY = 'category';
-    
+
     function bbChecklist(bbChecklistUtility) {
         return {
             replace: true,
@@ -1082,30 +1093,30 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                 function itemMatchesCategory(item, category) {
                     return !category || item.category === category;
                 }
-                
+
                 function itemMatchesFilter(item, category, searchTextUpper) {
                     var p,
                         val;
-                    
+
                     if (itemMatchesCategory(item, category)) {
                         if (!searchTextUpper) {
                             return true;
                         }
-                        
+
                         for (p in item) {
                             if (item.hasOwnProperty(p) && p !== PROP_CATEGORY) {
                                 val = item[p];
-                                
+
                                 if (angular.isString(val) && val.toUpperCase().indexOf(searchTextUpper) >= 0) {
                                     return true;
                                 }
                             }
                         }
                     }
-                    
+
                     return false;
                 }
-                
+
                 function invokeFilterLocal() {
                     var filteredItems,
                         i,
@@ -1114,12 +1125,12 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                         n,
                         searchTextUpper = (locals.searchText || '').toUpperCase(),
                         selectedCategory = locals.selectedCategory;
-                    
+
                     if (!searchTextUpper && !selectedCategory) {
                         filteredItems = items.slice(0);
                     } else {
                         filteredItems = [];
-                        
+
                         for (i = 0, n = items.length; i < n; i++) {
                             item = items[i];
 
@@ -1128,7 +1139,7 @@ The bbCheck directive allows you to change an input element of type checkbox or 
                             }
                         }
                     }
-                    
+
                     locals.filteredItems = filteredItems;
                 }
 
@@ -1199,12 +1210,13 @@ The bbCheck directive allows you to change an input element of type checkbox or 
             }
         };
     }
-    
+
     bbChecklist.$inject = ['bbChecklistUtility'];
 
     angular.module('sky.checklist', ['sky.check', 'sky.checklist.column', 'sky.checklist.columns', 'sky.checklist.model', 'sky.checklist.utility', 'sky.resources'])
         .directive('bbChecklist', bbChecklist);
 }());
+
 /*global angular */
 
 (function () {
@@ -1396,8 +1408,78 @@ The bbCheck directive allows you to change an input element of type checkbox or 
             };
         });
 }());
+/* global angular */
+
+/** @module Context Menu
+
+@icon ellipsis-h
+@summary The context menu directives allow you to easily create dropdowns styled with the sky context menu.
+@description The context menu directives allow you to easily create [dropdowns](https://angular-ui.github.io/bootstrap/#/dropdown) styled with the sky context menu. There are 3 directives in the context menu module: 
+  - `bb-context-menu` creates a dropdown with the context menu button.
+  - `bb-context-menu-item` creates dropdown menu items within a dropdown that execute `bb-context-menu-action` on click.
+  - `bb-context-menu-button` creates a button with the sky context menu styles.
+*/
+
+(function () {
+    'use strict';
+    
+    function bbContextMenu() {
+        return {
+            replace: true,
+            restrict: 'E',
+            transclude: true,
+            templateUrl: 'sky/templates/contextmenu/contextmenu.html'
+        };
+    }
+    
+    function bbContextMenuItem() {
+        return {
+            restrict: 'E',
+            transclude: true,
+            replace: true,
+            scope: {
+                clickItem: '&bbContextMenuAction'
+            },
+            template: '<li role="presentation"><a role="menuitem" href="javascript:void(0)" ng-click="clickItem()"><ng-transclude/></a></li>' 
+        };
+    }
+    
+    function bbContextMenuButton() {
+        return {
+            restrict: 'E',
+            replace: true,
+            template: '<button type="button" class="btn btn-white bb-context-menu-btn"><i class="fa fa-ellipsis-h"></i></button>'
+        };
+    }
+    
+    angular.module('sky.contextmenu', ['ui.bootstrap.dropdown'])
+        .directive('bbContextMenu', bbContextMenu)
+        .directive('bbContextMenuItem', bbContextMenuItem)
+        .directive('bbContextMenuButton', bbContextMenuButton);
+}());
 /*jslint plusplus: true */
 /*global angular, jQuery, require */
+
+/** @module Data
+
+@summary The bbData service gives you access to convenience functions for manipulating data.
+@icon database
+@description The bbData service gives you access to convenience functions for manipulating data.
+
+### bbData functions ###
+
+  - `load(loadObj)` Takes an object with a data, resources, and text property and returns a promise that contains the result of a HTTP GET request using the urls stored within. The argument object has the following properties: 
+    - `data` Either a url or an object with multiple urls to send a HTTP request to, the promise results will be contained in `result.data`. e.g. `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`
+    - `resources` Either a url or an object with multiple urls to send a HTTP request to, the promise results will be contained in `result.resources`. 
+    - `text` Either a url or an object with multiple urls to send a HTTP request to, the promise results will be contained in `result.text`.
+    - `loadManager` an object with a `name` and `scope` property which creates a wait while it and its child load managers retreive data. 
+  - `query(url, queryParams)` Creates a query string based on an the queryParam's properties. e.g. `bbData.query('/foo/search', {x: 'y', z: 123});` 
+  - `post(url, data)` For use within bbData.load, creates a post request from a url and data object. e.g. `bbData.load({data: bbData.post('/foo/post', postData)});` 
+  - `save(saveObj)` A function that issues an HTTP request. Takes an argument with the following properties:
+    - `url` The url to send the request to
+    - `data` The data object to send along with the request
+    - `type` The HTTP verb that the request should be sent as
+*/
 
 (function (window, $) {
     'use strict';
@@ -1790,10 +1872,13 @@ The bbCheck directive allows you to change an input element of type checkbox or 
 /*global angular */
 
 /** @module Datefield
+@deprecated
+@icon bell-o
+@summary  The DateField directive allows you to use a common textbox with calendar picker for choosing a date.
  @description ### *Deprecated* ###
- 
+
  This directive is no longer being maintained. For showing a date popup and input, see the [Datepicker](../datepicker) directive.
- 
+
  <s>
  ### Additional Dependencies ###
 
@@ -1863,7 +1948,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                 }
                 return !/Invalid|NaN/.test(bbMoment(value, bbDateFieldConfig.currentCultureDateFormatString.toUpperCase())) && dateHasSeparator(value);
             }
-            
+
             function beautifyDate(value, format) {
                 var datePart,
                     dateArray,
@@ -1884,7 +1969,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     separator = matchSeparator(value); // look for common separators
                     parts = value.split(separator); // split value based on found separator
                     lowerFormat = format.toLowerCase(); // system expects lowercase format
-                    
+
                     if (value.length === 8 && !isNaN(value)) {
                         yearBegin = lowerFormat.indexOf('y');
                         monthBegin = lowerFormat.indexOf('m');
@@ -1895,7 +1980,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             parts[0] = value.substring(0, 2);
                             parts[1] = value.substring(2, 4);
                             parts[2] = value.substring(4, 8);
-                        } else if ((yearBegin < monthBegin) && (monthBegin < dayBegin)) { //YYYYMMDD 
+                        } else if ((yearBegin < monthBegin) && (monthBegin < dayBegin)) { //YYYYMMDD
                             parts[0] = value.substring(0, 4);
                             parts[1] = value.substring(4, 6);
                             parts[2] = value.substring(6, 8);
@@ -1905,7 +1990,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         formatSeparator = matchSeparator(lowerFormat);
                         return parts.join(formatSeparator);
                     }
-                    
+
                     year = Number(parts[yearPart]);
                     if (year < 100) {
                         parts[yearPart] = year <= bbDateFieldConfig.twoDigitYearRolloverMax ? year + 2000 : year + 1900;
@@ -1920,14 +2005,14 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         date = new Date(dateArray[0], (dateArray[1] - 1), dateArray[2]);
                         return stripLocaleCharacterFromDateString(bbMoment(date).format(upperFormat));
                     }
-                    
+
                     //If there aren't enough parts to the date or any part is zero, let the validator handle it
                     if (parts.length !== 3 || parts.some(function (e) {
                             return Number(e) === 0;
                         })) {
                         return value;
                     }
-                    
+
                     //If all else fails and momentjs can't parse the date, log an error and let the validator handle it
                     try {
                         return stripLocaleCharacterFromDateString(bbMoment(value, upperFormat).format(upperFormat));
@@ -1950,7 +2035,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                 if (!isNaN(value)) {
                     return value;
                 }
-                
+
                 //If the date array doesn't have enough parts or any part is zero, return it as is and let the validator handle it, otherwise create a date
                 separator = value.match(/[.\/\-\s].*?/);
                 dateArray = value.split(separator);
@@ -2003,7 +2088,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         }
                         setDateValue(input.val(), 'change');
                     });
-                    
+
                     ////set model value as well as datepicker control value when manually entering a date.
                     ngModel.$asyncValidators.dateFormat = function () {
                         var deferred,
@@ -2085,9 +2170,9 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     };
 
                     ngModel.$render = function () {
-                        
+
                         ngModel.$viewValue = beautifyDate(ngModel.$viewValue, bbDateFieldConfig.currentCultureDateFormatString);
-                        
+
                         setInputDate(ngModel.$viewValue);
                     };
 
@@ -2130,7 +2215,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             left: offset.left - 118
                         });
                     };
-                    
+
                     //I have to do this because for some reason we're using bootstrap-datepicker-eyecon and not the regular bootstrap datepicker.
                     el.datepicker.Constructor.prototype.remove = function () {
                         this.hide();
@@ -2169,10 +2254,13 @@ The DateField directive allows you to use a common textbox with calendar picker 
         }]);
 
 }());
+
 /*jshint browser: true */
 /*global angular, jQuery */
 
 /** @module Datepicker
+@icon calendar-o
+@summary The bb-datepicker directive wraps the ui.bootstrap.datepicker directive from angular ui bootstrap.
 @description The `bb-datepicker` directive wraps the ui.bootstrap.datepicker directive from [angular ui bootstrap](https://angular-ui.github.io/bootstrap/). It creates a input text box and a calendar picker for choosing the date.
 
 ## Datepicker settings
@@ -2187,12 +2275,11 @@ The DateField directive allows you to use a common textbox with calendar picker 
   - `placeholder` overrides the default placeholder text of the `bb-datepicker` input
   - `required` Attribute present if the `bb-datepicker` value is required.
   - `show-button-bar` *(Default: false):*  Whether to display a button bar underneath the datepicker. (see angular ui bootstrap datepicker)
-  
+
 ## Validation
 `bb-datepicker` sets validation on the datepicker input using `bb-datepicker-name` for the input name, and the validity of the date entered in the input is in the `dateFormat` validator. So if you want to see if the date value is valid, you can access this through `$scope.myFormName.inputName.$error.dateFormat`. The error message for an invalid date will be in `$scope.myFormName.inputName.invalidFormatMessage`.
 
 */
-
 (function ($) {
     'use strict';
     angular.module('sky.datepicker', ['sky.resources', 'sky.moment'])
@@ -2216,8 +2303,8 @@ The DateField directive allows you to use a common textbox with calendar picker 
                 templateUrl: 'sky/templates/datepicker/datepicker.html',
                 controller: ['$scope', function ($scope) {
                     var self = this;
-                    
-                    
+
+
                     $scope.getInputNgModel = function () {
                         if (angular.isFunction(self.getInputNgModel)) {
                             return self.getInputNgModel();
@@ -2232,11 +2319,11 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         inputEl,
                         skipValidation = false,
                         dateChangeInternal = false;
-                     
+
                     function getBodyDatepicker() {
                         return $('body > ul[datepicker-popup-wrap]');
                     }
-                    
+
                     function positionAbsoluteDatepicker() {
                         var calendarButtonEl = el.find('span.bb-datepicker-button-container'),
                             inputEl = el.find('input'),
@@ -2245,39 +2332,40 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             inputWidth,
                             buttonWidth,
                             datepickerWidth;
-                        
+
                         inputWidth = inputEl.innerWidth();
                         buttonWidth = calendarButtonEl.innerWidth();
                         datepickerWidth = datepickerEl.innerWidth();
-                        
+
                         if (datepickerWidth < (inputWidth + buttonWidth)) {
                             datepickerScope.position.left = datepickerScope.position.left + inputWidth + buttonWidth - datepickerWidth;
                         }
                     }
-                    
+
                     function open($event) {
                         $event.preventDefault();
                         $event.stopPropagation();
-                        
+
                         //add syle class when datepicker appended to body because bb-datefield will no longer be wrapping it.
                         if (firstOpen && $scope.locals.appendToBody) {
-                            getBodyDatepicker().addClass('bb-datefield');
-                        
-                            firstOpen = false;
+                            $timeout(function () {
+                                getBodyDatepicker().addClass('bb-datefield');
+                                firstOpen = false;
+                            });
+                            
                         }
-                        
+
                         if ($scope.locals.appendToBody) {
                             $timeout(function () {
                                 positionAbsoluteDatepicker();
                             });
                         }
-                        
-                        
+
                         $scope.locals.opened = !$scope.locals.opened;
                     }
-                    
+
                     function setDate() {
-                        
+
                         if (angular.isDate($scope.date)) {
                             $scope.locals.date = $filter('date')($scope.date, $scope.format);
                         } else if (!$scope.locals.hasCustomValidation) {
@@ -2292,7 +2380,7 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             $scope.locals.date = $scope.date;
                         }
                     }
-                    
+
                     $scope.locals = {
                         showButtonBar: false,
                         appendToBody: false,
@@ -2308,45 +2396,45 @@ The DateField directive allows you to use a common textbox with calendar picker 
                         hasCustomValidation: false,
                         inputName: attr.bbDatepickerName
                     };
-                    
+
                     $scope.resources = bbResources;
-            
+
                     if (angular.isDefined(attr.showButtonBar)) {
                         $scope.locals.showButtonBar = attr.showButtonBar;
                     }
-            
+
                     if (angular.isDefined(attr.closeOnDateSelection)) {
                         $scope.locals.closeOnSelection = attr.closeOnDateSelection;
                     }
-                    
+
                     if (angular.isDefined(attr.datepickerAppendToBody)) {
                         $scope.locals.appendToBody = (attr.datepickerAppendToBody === 'true');
                     }
-                    
+
                     if (angular.isUndefined($scope.format)) {
                         $scope.format = bbDatepickerConfig.currentCultureDateFormatString;
                     }
-                    
+
                     if (angular.isDefined($scope.dateOptions)) {
                         angular.extend($scope.locals.dateOptions, $scope.dateOptions);
 
                     }
-                    
+
                     if (angular.isDefined($scope.customValidation)) {
                         if (angular.isFunction($scope.customValidation.formatValue)) {
-                            $scope.locals.hasCustomValidation = true; 
+                            $scope.locals.hasCustomValidation = true;
                         }
                     }
 
                     $scope.locals.required = angular.isDefined(attr.required);
-  
-                    
+
+
                     if ($scope.placeholderText === null || angular.isUndefined($scope.placeholderText)) {
                         $scope.placeholderText = $scope.format.toLowerCase();
                     }
-                     
+
                     setDate();
-                    
+
                     $scope.$watch('date', function (newValue, oldValue) {
                         if (newValue !== oldValue && !dateChangeInternal) {
                             setDate();
@@ -2354,45 +2442,30 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             dateChangeInternal = false;
                         }
                     });
-                    
+
                     $scope.$watch('locals.date', function () {
-                        var inputNgModel;
-                        
+
                         if ($scope.date !== $scope.locals.date) {
                             if (angular.isDate($scope.locals.date)) {
                                 dateChangeInternal = true;
                                 $scope.date = $scope.locals.date;
                             }
                         }
-                        if ($scope.locals.hasCustomValidation) {
-                            
-                            inputNgModel = $scope.getInputNgModel();
-                            
-                            /*istanbul ignore else: sanity check */
-                            if (inputNgModel !== null) {
-                                $timeout(function () {                            
-                                    if (inputNgModel.$error && inputNgModel.$error.date) {
-                                        inputNgModel.$setValidity('date', true); 
-                                    }
-                                });
-                            }
-                           
-                        }
-                        
+
                     });
-                    
+
                     function hasRequiredError() {
                         var inputNgModel = $scope.getInputNgModel();
 
                         return inputNgModel && inputNgModel.$error && inputNgModel.$error.required;
                     }
-                    
-                    
+
+
                     function dateFormatValidator() {
                         var customFormattingResult,
                             deferred,
                             inputNgModel;
-                        
+
                         function resolveValidation() {
                             var inputNgModel = $scope.getInputNgModel();
 
@@ -2403,43 +2476,42 @@ The DateField directive allows you to use a common textbox with calendar picker 
                                 deferred.resolve();
                             }
                         }
-                        
+
                         function setInvalidFormatMessage(errorMessage) {
                             var inputNgModel = $scope.getInputNgModel();
-                        
+
                             if (inputNgModel !== null) {
                                 inputNgModel.invalidFormatMessage = errorMessage;
                             }
                         }
-                        
-                        
+
                         function handleCustomFormattingValidation(result) {
                             result = result || {};
                             
                             setInvalidFormatMessage(result.formattingErrorMessage);
                             resolveValidation();
-                            
+
                             if (result.formattedValue !== $scope.date) {
                                 skipValidation = true;
                                 dateChangeInternal = true;
                                 $scope.date = result.formattedValue;
                                 $scope.locals.date = result.formattedValue;
                             }
-                           
+
                         }
-                        
+
                         function datepickerIsPristine() {
                             var inputNgModel = $scope.getInputNgModel();
-                            
+
                             if (inputNgModel !== null) {
                                 return inputNgModel.$pristine;
                             } else {
                                 return true;
                             }
                         }
-                        
+
                         deferred = $q.defer();
-                        
+
                         if (skipValidation || angular.isDate($scope.locals.date) || $scope.locals.date === '' || ($scope.locals.required && hasRequiredError()) || datepickerIsPristine()) {
                             setInvalidFormatMessage(null);
                             resolveValidation();
@@ -2459,28 +2531,28 @@ The DateField directive allows you to use a common textbox with calendar picker 
                             }
                             resolveValidation();
                         }
-                        
+
                         skipValidation = false;
                         return deferred.promise;
                     }
-                    
+
                     ngModel.$asyncValidators.dateFormat = dateFormatValidator;
-                    
+
                     $scope.locals.loaded = true;
-                    
+
                     //Timeout allows the locals.loaded to be applied to dom and ng-if=true to go into effect.
                     $timeout(function () {
                         inputEl = el.find('input');
                         inputEl.on('change blur', function () {
                             $timeout(function () {
                                 var inputNgModel;
-                                
+
                                 //allows validation to kick off for invalid dates
                                 if (angular.isUndefined($scope.locals.date) && angular.isDefined(inputEl.val()) && inputEl.val() !== '') {
                                     dateChangeInternal = true;
                                     $scope.date = inputEl.val();
-                                    
-                                    
+
+
                                 } else if ($scope.locals.required && hasRequiredError()) {
                                     dateChangeInternal = true;
                                     $scope.date = '';
@@ -2488,16 +2560,16 @@ The DateField directive allows you to use a common textbox with calendar picker 
                                     inputNgModel.invalidFormatMessage = null;
                                     inputNgModel.$setValidity('dateFormat', true);
                                 } else if ($scope.date !== $scope.locals.date) {
-                                    
+
                                     dateChangeInternal = true;
                                     $scope.date = $scope.locals.date;
-                                    
-                                } 
-                                
+
+                                }
+
                             });
                         });
                     });
-            
+
                 }
             };
         }])
@@ -2506,27 +2578,29 @@ The DateField directive allows you to use a common textbox with calendar picker 
                 restrict: 'A',
                 require: ['ngModel', '^bbDatepicker'],
                 link: function ($scope, el, attr, controllers) {
-                    var ngModel = controllers[0], 
+                    var ngModel = controllers[0],
                         format = attr.datepickerPopup;
-                    
+
                     if (attr.bbDatepickerCustomValidate && attr.bbDatepickerCustomValidate === 'true') {
                         ngModel.$parsers = [];
+                        ngModel.$validators.date = function () {
+                            return true;
+                        };
                     } else {
                         ngModel.$parsers.unshift(function (viewValue) {
                             var newDate = ngModel.$viewValue,
                                 date = null;
-                        
                             //date was changed from datepicker or is empty so just return
                             if (typeof newDate === 'object' || newDate === '') {
                                 return newDate;
                             }
-                        
+
                             date = bbDatepickerParser.runParsers(newDate, format);
-                        
+
                             if (angular.isDate(date)) {
                                 el.val($filter('date')(date, format));
                             }
-                        
+
                             return date ? date : viewValue;
                         });
                     }
@@ -2538,21 +2612,21 @@ The DateField directive allows you to use a common textbox with calendar picker 
             };
         }])
     .factory('bbDatepickerParser', ['bbMoment', function (bbMoment) {
-        
+
         function parseUTCString(value) {
             var date = null,
                 dateArray,
                 datePart;
-                
+
             if (angular.isString(value) && value.indexOf('T00:00:00') !== -1) {
                 datePart = value.split('T')[0];
-                        
+
                 dateArray = datePart.split('-');
                 date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
             }
             return date;
         }
-        
+
         function parseNoSeparatorDateString(value, format) {
             var date = null,
                 yearBegin = format.indexOf('y'),
@@ -2578,16 +2652,16 @@ The DateField directive allows you to use a common textbox with calendar picker 
                 } else {
                     return null;
                 }
-                        
-                date = new Date(value.substr(yearIndex, 4), (value.substr(monthIndex, 2) - 1), value.substr(dayIndex, 2)); 
-            }                  
+
+                date = new Date(value.substr(yearIndex, 4), (value.substr(monthIndex, 2) - 1), value.substr(dayIndex, 2));
+            }
             return date;
         }
-        
+
         function matchSeparator(value) {
             return value.match(/[.\/\-\s].*?/);
         }
-        
+
         function dateHasSeparator(value) {
             /*
             * Validation criteria:
@@ -2609,16 +2683,16 @@ The DateField directive allows you to use a common textbox with calendar picker 
 
             return (separator && !separatorAtEnd && !separatorAtBeginning && hasTwoSeparators && !anyPartIsZero);
         }
-        
+
         function isMomentParsable(value, format) {
             var yearParts,
                 yearIndex,
                 monthIndex,
                 dayIndex,
                 separator;
-            
+
             if (angular.isString(value) && dateHasSeparator(value)) {
-                
+
                 if (value.length === 10) {
                     return true;
                 } else if (value.length === 9 || value.length === 8) {
@@ -2631,71 +2705,74 @@ The DateField directive allows you to use a common textbox with calendar picker 
                     if (yearIndex > monthIndex && yearIndex > dayIndex) {
                         return yearParts[2].length === 4;
                     }
-                    
+
                     if (yearIndex < monthIndex && yearIndex < dayIndex) {
                         return yearParts[0].length === 4;
                     }
-                    
+
                 }
 
             }
-            
+
             return false;
         }
-                        
-        
-                    
+
+
+
         function parseMoment(value, format) {
             var date = null,
                 momentDate;
-            
+
             if (isMomentParsable(value, format)) {
                 momentDate = bbMoment(value, format.toUpperCase());
                 if (momentDate.isValid()) {
                     date = momentDate.toDate();
                 }
             }
-            
+
             return date;
         }
-        
+
         return {
             parseUTCString: parseUTCString,
             parseNoSeparatorDateString: parseNoSeparatorDateString,
             parseMoment: parseMoment,
             runParsers: function (value, format) {
                 var date = null;
-                
+
                 if (!value || angular.isDate(value) || value === '') {
                     return value;
                 }
-                
+
                 date = parseUTCString(value);
-                
+
                 if (angular.isDate(date)) {
                     return date;
                 }
-                
+
                 date = parseNoSeparatorDateString(value, format);
-                
+
                 if (angular.isDate(date)) {
                     return date;
                 }
-                 
+
                 date = parseMoment(value, format);
 
                 return date;
-                
+
             }
         };
     }]);
 
-        
+
 }(jQuery));
+
 /*jshint browser: true */
 /*global angular */
 
 /** @module Daterangepicker
+@icon calendar
+@summary The DateRangePicker directive allows you to easily choose a date range from a well-known set of options.
  @description The DateRangePicker directive allows you to easily choose a date range from a well-known set of options.  A DateRangePicker service also exists to work hand-in-hand with the directive to provide more service-oriented functionality.
 
 ### Date Range Picker Settings ###
@@ -2975,10 +3052,13 @@ This service provides additional functionality that works closely with the direc
         }]);
 
 }());
+
 /*jshint browser: true */
 /*global angular */
 
 /** @module File attachments
+@icon cloud-upload
+@summary The file attachments module contains two directives to make it easier to add multiple files to a form.
 @description The file attachments module contains two directives to make it easier to add multiple files to a form.
 The `bb-file-drop` directive provides an element that can both be clicked to select a file from the user's
 local drive or serve as a drop zone where files can be dragged from the user's local drive.  The directive can
@@ -3018,16 +3098,17 @@ to the function.
  */
 (function () {
     'use strict';
-    
+
     angular.module(
-        'sky.fileattachments', 
+        'sky.fileattachments',
         [
-            'sky.fileattachments.filedrop', 
-            'sky.fileattachments.fileitem', 
+            'sky.fileattachments.filedrop',
+            'sky.fileattachments.fileitem',
             'sky.fileattachments.filesize'
         ]
     );
 }());
+
 /*global angular, jQuery */
 
 (function ($) {
@@ -3250,12 +3331,13 @@ to the function.
 /*global angular */
 
 /** @module Filter
-
+@icon filter
+@summary The filters module provides two methods for encoding URI components and formatting arguments.
 @description The sky filters module gives you the following filters:
 
   - `encodeURIComponent` Uses the $window.encodeURIComponent function on your string
   - `format` Formats the args with a given format string
-  
+
 */
 
 (function () {
@@ -3273,10 +3355,12 @@ to the function.
             };
         }]);
 }());
+
 /*global angular */
 
 /** @module Format
-
+@icon paragraph
+@summary The formatting service provides methods for formatting text and escaping html.
 @description The format service gives you the following functions:
 
   - `formatText(formatString, args)` Formats the args with a given format string
@@ -3327,6 +3411,7 @@ to the function.
             };
         });
 }());
+
 /*jslint browser: false, plusplus: true */
 /*global angular */
 
@@ -3716,7 +3801,8 @@ to the function.
 /*global angular, jQuery */
 
 /** @module Grids
-
+@icon table
+@summary The Grid directive allows you to build a full-featured grid with a search box, column picker and filter form.
  @description ### Additional dependencies ###
 
 - **[jqGrid](http://www.trirand.com/blog/) (4.6.0 or higher)**
@@ -3765,6 +3851,7 @@ The Grid directive allows you to build a full-featured grid with a search box, c
   - `hideFilters` If true, hides the filters button in the toolbar.
   - `multiselect` If true, adds a multiselect checkbox column to the listbuilder.
   - `onAddClick` If a function is specified, then an add button will appear in the grid toolbar that will call the `onAddClick` function when clicked.
+  - `onAddClickLabel` Label for the add button.
   - `searchText` The text entered in the grid search box, set by bbGrid.
   - `selectedColumnIds` An array of unique identifiers indicating the visible columns in the order in which they should be displayed.
   - `sortOptions` Options around column sorting:
@@ -3812,8 +3899,29 @@ reloading the grid with the current data after the event has fired.
         DROPDOWN_TOGGLE_COLUMN_SIZE = 40,
         DROPDOWN_TOGGLE_COLUMN_NAME = 'dropdownToggle',
         MULTISELECT_COLUMN_NAME = 'cb';
+    
+    
+    angular.module('sky.grids', ['sky.contextmenu', 'sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters', 'sky.grids.actionbar', 'sky.window'])
+        .controller('bbGridContextMenuController', ['$scope', function ($scope) {
+            function toggleDropdown($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                $scope.locals.is_open = !$scope.locals.is_open;
+            }
+            
+            $scope.locals = {
+                is_open: false,
+                items: [],
+                toggleDropdown: toggleDropdown
+            };
 
-    angular.module('sky.grids', ['sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters', 'sky.grids.actionbar', 'sky.window'])
+            /*istanbul ignore else: sanity check */
+            if (angular.isFunction($scope.getContextMenuItems)) {
+                $scope.locals.items = $scope.getContextMenuItems($scope.rowData.id, $scope.rowData);
+            }
+        }])
+    
+    
         .directive('bbGrid', ['bbModal', '$window', '$compile', '$templateCache', 'bbMediaBreakpoints', 'bbViewKeeperBuilder', 'bbHighlight', 'bbResources', 'bbData', '$controller', '$timeout', 'bbWindow',
 
             function (bbModal, $window, $compile, $templateCache, bbMediaBreakpoints, bbViewKeeperBuilder, bbHighlight, bbResources, bbData, $controller, $timeout, bbWindow) {
@@ -3836,7 +3944,7 @@ reloading the grid with the current data after the event has fired.
                             $scope.options.filters = filters;
 
                             $scope.locals.applySearchText();
-                            
+
                         };
 
                         self.syncViewKeepers = function () {
@@ -3920,7 +4028,6 @@ reloading the grid with the current data after the event has fired.
                             columnCount = 0,
                             columnModel,
                             compiledTemplates = [],
-                            contextMenuItems = {},
                             currentExtendedColumnWidth,
                             extendedColumnIndex,
                             extendedColumnName,
@@ -3934,6 +4041,7 @@ reloading the grid with the current data after the event has fired.
                             needsExtendedColumnResize,
                             originalExtendedColumnWidth,
                             seemore_template = 'sky/templates/grids/seemore.html',
+                            dropdown_template = 'sky/templates/grids/dropdown.html',
                             reorderingColumns,
                             tableBody,
                             tableEl = element.find('table'),
@@ -3955,8 +4063,8 @@ reloading the grid with the current data after the event has fired.
                             hasPristineColumns = true,
                             scrollbarWidth;
 
-                        
-                        
+
+
                         function updateGridLoadedTimestampAndRowCount(count) {
                             $scope.locals.timestamp = new Date().getTime();
                             $scope.locals.rowcount = count;
@@ -3994,51 +4102,6 @@ reloading the grid with the current data after the event has fired.
                             return "data-grid-field='" + column.name + "'" + "data-bbauto-field='" + column.name + "'" + "data-bbauto-index='" + (tableEl.getInd(rowId) - 1) + "'";
                         }
 
-                        function buildMenuId(rowid) {
-                            return id + '-dropdownMenu-' + rowid;
-                        }
-
-                        function buildActionId(menuid, action) {
-                            return menuid + "-" + action.id;
-                        }
-
-                        function toggleButtonFormatter(cellvalue, options, rowObject) {
-                            /*jslint unparam: true */
-                            var menuid,
-                                i,
-                                item,
-                                items,
-                                rowId,
-                                prefixedRowId,
-                                template;
-                            
-                            /*istanbul ignore else: sanity check */
-                            if (angular.isFunction(getContextMenuItems)) {
-                                rowId = options.rowId;
-                                prefixedRowId = getIdPrefix() + rowId;
-                                menuid = buildMenuId(prefixedRowId);
-                                items = getContextMenuItems(rowId, rowObject);
-                                //cache for later
-                                contextMenuItems[prefixedRowId] = items;
-
-                                if (items && items.length) {
-                                    template =
-                                        '<div data-bbauto-field="ContextMenuActions" class="dropdown" id="' + menuid + '">' +
-                                        '  <a data-bbauto-field="ContextMenuAnchor" role="button" class="dropdown-toggle sky-icon sky-icon-2x sky-icon-multi-action" data-toggle="dropdown" href="javascript:void(0)"></a>' +
-                                        '  <ul class="dropdown-menu" role="menu" aria-labelledby="' + menuid + '">';
-
-                                    for (i = 0; i < items.length; i++) {
-                                        item = items[i];
-                                        template += '<li role="presentation"><a id="' + buildActionId(menuid, item) + '" role="menuitem" href="javascript:void(0)">' + item.title + '</a></li>';
-                                    }
-
-                                    template += '</ul></div>';
-
-                                    return template;
-                                }
-                            }
-                            return '';
-                        }
 
                         function getColumnById(columns, id) {
                             var column,
@@ -4090,6 +4153,8 @@ reloading the grid with the current data after the event has fired.
                                 index,
                                 gridColumn;
 
+                            hasTemplatedColumns = false;
+                            
                             if (getContextMenuItems) {
                                 colModel.push({
                                     classes: 'bb-grid-dropdown-cell',
@@ -4102,13 +4167,24 @@ reloading the grid with the current data after the event has fired.
                                     hidedlg: true,
                                     resizable: false,
                                     search: false,
-                                    formatter: toggleButtonFormatter
+                                    template_url: dropdown_template,
+                                    controller: 'bbGridContextMenuController',
+                                    cellattr: buildCellAttribute,
+                                    formatter: getEmptyString,
+                                    is_context_menu: true 
                                 });
+
+                                /*istanbul ignore else: sanity check */
+                                if (!compiledTemplates[dropdown_template]) {
+                                    compiledTemplates[dropdown_template] = $compile($templateCache.get(dropdown_template));
+                                }
+                                
+                                hasTemplatedColumns = true;
 
                                 totalColumnWidth = totalColumnWidth + DROPDOWN_TOGGLE_COLUMN_SIZE;
                             }
 
-                            hasTemplatedColumns = false;
+                           
                             resetExtendedColumn();
 
                             for (index = 0; index < selectedColumnIds.length; index++) {
@@ -4204,7 +4280,7 @@ reloading the grid with the current data after the event has fired.
                         }
 
                         function setScrollbarHeight() {
-                            
+
                             if (totalColumnWidth > (topScrollbar.width()) && !breakpoints.xs) {
                                 topScrollbar.height(scrollbarWidth);
                                 topScrollbarDiv.height(scrollbarWidth);
@@ -4261,11 +4337,11 @@ reloading the grid with the current data after the event has fired.
                                 if (totalColumnWidth === oldWidth) {
                                     totalColumnWidth = newWidth;
                                 }
-                                
+
                                 width = getDesiredGridWidth();
 
                                 /*istanbul ignore else: sanity check */
-                                if (width > 0) {     
+                                if (width > 0) {
                                     tableEl.setGridWidth(width);
                                     resetTopScrollbar();
                                 }
@@ -4274,7 +4350,7 @@ reloading the grid with the current data after the event has fired.
 
                         function getLastIndex() {
                             var lastIndex = $scope.options.selectedColumnIds.length - 1;
-                            
+
                             if (locals.multiselect) {
                                 lastIndex = lastIndex + 1;
                             }
@@ -4291,7 +4367,7 @@ reloading the grid with the current data after the event has fired.
                                 thEls;
 
                             hasPristineColumns = false;
-                            
+
                             jqGridEl = element.find('.ui-jqgrid');
 
                             //if resizing last element and tableEl smaller than table wrapper
@@ -4434,20 +4510,16 @@ reloading the grid with the current data after the event has fired.
 
                         function afterInsertRow(rowid, rowdata, rowelem) {
                             /*jshint validthis: true */
-                            var actionEl,
-                                cell,
+                            var cell,
                                 column,
                                 columnData,
                                 i,
-                                invoke,
-                                item,
-                                items,
                                 itemScope,
-                                menuid,
                                 row,
                                 rowIndex;
 
                             if (hasTemplatedColumns) {
+                                
                                 if (!tableBody) {
                                     tableBody = $(this);
                                 }
@@ -4458,6 +4530,7 @@ reloading the grid with the current data after the event has fired.
                                     column = columnModel[i];
 
                                     if (column.template_url) {
+                                        
                                         cell = row.find('[data-grid-field="' + column.name + '"]');
                                         columnData = rowdata[column.name];
 
@@ -4469,6 +4542,10 @@ reloading the grid with the current data after the event has fired.
 
                                         if (column.allow_see_more) {
                                             itemScope.skyResources = $scope.resources;
+                                        }
+                                        
+                                        if (column.is_context_menu) {
+                                            itemScope.getContextMenuItems = getContextMenuItems;
                                         }
 
                                         //make the resources from the caller available to the column templates
@@ -4488,32 +4565,12 @@ reloading the grid with the current data after the event has fired.
                                     }
                                 }
                             }
-        
+
                             rowIndex = tableEl.getInd(rowid);
 
-                            invoke = function (cmd, actionEl) {
-                                return function () {
-                                    cmd(rowid);
-                                    $(actionEl).dropdown('toggle');
-                                    return false;
-                                };
-                            };
-
-                            if (contextMenuItems && contextMenuItems[rowid]) {
-                                menuid = buildMenuId(rowid);
-                                items = contextMenuItems[rowid];
-
-                                for (i = 0; i < items.length; ++i) {
-                                    item = items[i];
-                                    actionEl = $('#' + buildActionId(menuid, item));
-                                    $(actionEl).on('click', invoke(item.cmd, actionEl));
-                                }
-                            }
-
-                            
                             //check if row should be multiselected
                             if ($scope.selectedRows && $scope.selectedRows.length > 0) {
-                                
+
                                 row = $scope.options.data[(rowIndex - 1)];
                                 if (row && arrayObjectIndexOf($scope.selectedRows, row) > -1) {
                                     tableEl.setSelection(rowid, false);
@@ -4542,11 +4599,6 @@ reloading the grid with the current data after the event has fired.
                         }
 
                         function gridComplete() {
-                            //Add padding to the bottom of the grid for any dropdowns in the last row. This needs to be handled better in the future probably just using css classes or something.
-                            if (getContextMenuItems) {
-                                element.find('.ui-jqgrid-bdiv').css('padding-bottom', '100px');
-                            }
-
                             setColumnHeaderAlignment();
                         }
 
@@ -4564,7 +4616,7 @@ reloading the grid with the current data after the event has fired.
                             if (angular.isFunction(getContextMenuItems)) {
                                 offset += 1;
                             }
-                            
+
                             if (locals.multiselect) {
                                 offset += 1;
                             }
@@ -4645,7 +4697,7 @@ reloading the grid with the current data after the event has fired.
                             var checkboxEl;
 
                             checkboxEl = header.find('th .cbox');
-                            
+
                             /*istanbul ignore else: sanity check */
                             if (checkboxEl.length > 0) {
                                 checkboxEl[0].checked = status;
@@ -4662,7 +4714,7 @@ reloading the grid with the current data after the event has fired.
                             if (visibleSelectedRows.length > 0) {
                                 updateFancyCheckboxHeader(false);
                             }
-                            
+
                             rowIds = tableEl.getDataIDs();
 
                             for (i = 0; i < visibleSelectedRows.length; i++) {
@@ -4670,7 +4722,7 @@ reloading the grid with the current data after the event has fired.
                                 tableEl.setSelection(rowIds[index], true);
                             }
                         }
-                        
+
 
                         function onSelectRow(rowId, status) {
                             $timeout(function () {
@@ -4725,7 +4777,7 @@ reloading the grid with the current data after the event has fired.
                                 endIndex = parseInt(lastSelectedRow);
 
                                 rowIds = tableEl.getDataIDs();
-                                
+
                                 //set shift click selection first so last selected row is set properly
                                 if (endIndex < startIndex) {
                                     for (i = startIndex; i >  endIndex - 1; i = i - 1) {
@@ -4809,7 +4861,7 @@ reloading the grid with the current data after the event has fired.
                         function getIdPrefix() {
                             return 'bb-grid-row-' + $scope.$id + '-';
                         }
-                        
+
                         function initGrid() {
                             var columns,
                                 jqGridOptions,
@@ -4820,7 +4872,7 @@ reloading the grid with the current data after the event has fired.
                             totalColumnWidth = 0;
 
                             hasPristineColumns = true;
-                            
+
                             tableWrapperWidth = tableWrapper.width();
 
                             locals.multiselect = false;
@@ -4947,7 +4999,7 @@ reloading the grid with the current data after the event has fired.
                                         }
                                     });
                                 }
-                                
+
                                 setSortStyles();
 
                                 setUpFancyCheckHeader();
@@ -5065,7 +5117,7 @@ reloading the grid with the current data after the event has fired.
                             if ($scope.options) {
                                 verticalOffSetElId = $scope.options.viewKeeperOffsetElId;
                             }
-                            
+
                             if (!$scope.options || !$scope.options.fixedToolbar) {
                                 vkToolbars = new bbViewKeeperBuilder.create({
                                     el: toolbarContainer[0],
@@ -5079,7 +5131,7 @@ reloading the grid with the current data after the event has fired.
                                     }
                                 });
                             }
-                            
+
 
                             vkActionBarAndBackToTop = new bbViewKeeperBuilder.create({
                                 el: element.find('.bb-grid-action-bar-and-back-to-top')[0],
@@ -5092,13 +5144,13 @@ reloading the grid with the current data after the event has fired.
 
                         function applySearchText() {
                             var searchEl;
-                            
+
                             searchEl = element.find('.bb-search-container input');
                             /*istanbul ignore else: sanity check */
                             if (angular.isFunction(searchEl.select) && searchEl.length > 0 && $scope.searchText) {
                                 searchEl.eq(0).select();
                             }
-                            
+
                             $scope.options.searchText = $scope.searchText;
                         }
 
@@ -5113,7 +5165,7 @@ reloading the grid with the current data after the event has fired.
                         if (angular.isUndefined($scope.selectedRows) || !angular.isArray($scope.selectedRows)) {
                             $scope.selectedRows = [];
                         }
-                        
+
                         scrollbarWidth = bbWindow.getScrollbarWidth();
 
                         id = $scope.$id;
@@ -5170,7 +5222,7 @@ reloading the grid with the current data after the event has fired.
                                 setAllFancyCheck(false);
 
                                 rowIds = tableEl.getDataIDs();
-                                
+
                                 for (i = 0; i < newSelections.length; i++) {
 
                                     index = arrayObjectIndexOf($scope.options.data, newSelections[i]);
@@ -5280,6 +5332,8 @@ reloading the grid with the current data after the event has fired.
 /*global angular, jQuery */
 
 /** @module Help
+@icon question
+@summary The Help service allows other Angular components to open or close the help panel programmatically.
  @description ### Additional Dependencies ###
 
  - **[easyXDM](http://easyxdm.net/wp/) (2.4.19 or higher)** Used to make cross-domain requests to the help server
@@ -5309,11 +5363,11 @@ The Help service allows other Angular components to open or close the help panel
         .factory('bbHelp', ['$state', '$window', 'bbHelpConfig', function ($state, $window, bbHelpConfig) {
             function open() {
                 var args = arguments;
-                
+
                 function openInner() {
                     $window.BBHELP.HelpWidget.open.apply($window.BBHELP.HelpWidget, args);
                 }
-                
+
                 if ($window.BBHELP && $window.BBHELP.HelpWidget) {
                     openInner();
                 } else {
@@ -5335,7 +5389,7 @@ The Help service allows other Angular components to open or close the help panel
                                     return $state.current.helpKeyOverride;
                                 }
 
-                                
+
                                 if ($state.current.pageData) {
                                     return $state.current.pageData.helpKey;
                                 }
@@ -5344,18 +5398,18 @@ The Help service allows other Angular components to open or close the help panel
                         }
 
                         $window.BBHELP.HelpWidget.load(config);
-                        
+
                         openInner();
                     });
                 }
             }
-            
+
             function close() {
                 if ($window.BBHELP && $window.BBHELP.HelpWidget) {
                     $window.BBHELP.HelpWidget.close.apply($window.BBHELP.HelpWidget, arguments);
                 }
             }
-            
+
             return {
                 open: open,
                 close: close
@@ -5368,13 +5422,15 @@ The Help service allows other Angular components to open or close the help panel
 /*global angular */
 
 /** @module Helpbutton
+@icon question-circle
+@summary The Helpbutton directive creates a help icon which can be clicked to launch a specific help key that is different than the default page help context.
  @description The Helpbutton directive creates a help icon which can be clicked to launch a specific help key that is different than the default page help context.  Optionally, it can override the page help context throughout the duration that the helpbutton exists on the page.
 
 ### Help Button Settings ###
 
  - `bb-help-key` Specifies the help key that will be opened when the help button is clicked.
  - `bb-set-help-key-override` *(Default: `false`)* If `true`, then this button will override the current page help context, so clicking on the help ear will open to this help key while this button exists.
- 
+
  */
 
 (function () {
@@ -5420,6 +5476,9 @@ The Help service allows other Angular components to open or close the help panel
 /*global angular, jQuery */
 
 /** @module Helpwidget
+@deprecated
+@icon archive
+@summary This directive is no longer being maintained. For showing the help panel from a controller, see the Help service.
  @description ### *Deprecated* ###
 
 This directive is no longer being maintained.  For showing the help panel from a controller, see the [Help](../help) service.
@@ -5496,6 +5555,8 @@ The Helpwidget directive includes the help widget on the page.  When the widget 
 /*global angular */
 
 /** @module Highlight
+@icon paint-brush
+@summary The Highlight directive allows you to highlight portions of text inside DOM elements.
  @description The Highlight directive allows you to highlight portions of text inside DOM elements.  Set the `bb-highlight` attribute to the text you want to highlight and all matching text within the element will be highlighted.
 
 Optionally use the `bb-highlight-beacon` attribute to reprocess the matching text content when content is changed.
@@ -5509,7 +5570,7 @@ Optionally use the `bb-highlight-beacon` attribute to reprocess the matching tex
         .factory('bbHighlight', function () {
             var DATA_CLASS_NAME = 'bb-hightlight-class',
                 DEFAULT_CLASS_NAME = 'highlight';
-        
+
             // Copied and modified from here so we don't have yet another jQuery plugin dependency.
             // http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html
             function highlight(el, pat, classn) {
@@ -5520,11 +5581,11 @@ Optionally use the `bb-highlight-beacon` attribute to reprocess the matching tex
                         middlebit,
                         i,
                         middleclone;
-                    
+
                     classn = classn || DEFAULT_CLASS_NAME;
 
                     el.data(DATA_CLASS_NAME, classn);
-                    
+
                     if (node.nodeType === 3) {
                         pos = node.data.toUpperCase().indexOf(pat);
                         if (pos >= 0) {
@@ -5598,6 +5659,8 @@ Optionally use the `bb-highlight-beacon` attribute to reprocess the matching tex
 /*global angular, define, enquire, require */
 
 /** @module Mediabreakpoints
+@icon mobile
+@summary The Media Breakpoints service can call one or more callback functions whenever a Bootstrap grid system breakpoint is hit.
  @description ### Additional Dependencies ##
 
  - **[enquire.js](http://wicky.nillia.ms/enquire.js/) (2.1.2 or later)**
@@ -5640,13 +5703,13 @@ manipulating the UI programmatically in cases where CSS media queries are not su
 
         for (i = 0; i < handlers.length; i += 1) {
             handler = handlers[i];
-            
+
             /*istanbul ignore else */
             if (handler) {
                 handler(bp);
             }
         }
-        
+
         // Trigger a digest cycle if it's available
         if (timeout) {
             timeout(angular.noop, 0);
@@ -5665,13 +5728,13 @@ manipulating the UI programmatically in cases where CSS media queries are not su
     }(function (enquire) {
         var mediaQueries = mediaBreakpointsConfig.mediaQueries,
             p;
-        
+
         function registerQuery(name) {
             enquire.register(mediaQueries[name], function () {
                 updateStatus(name);
             });
         }
-        
+
         for (p in mediaQueries) {
             /*istanbul ignore else */
             if (mediaQueries.hasOwnProperty(p)) {
@@ -5711,10 +5774,13 @@ manipulating the UI programmatically in cases where CSS media queries are not su
             return mediaBreakpoints;
         }]);
 }(this));
+
 /*jshint browser: true */
 /*global angular, jQuery */
 
 /** @module Modal
+@icon list-alt
+@summary The Modal directive and service can be used to launch modals in a consistent way in a Sky application.
  @description The Modal directive and service can be used to launch modals in a consistent way in a Sky application.  Rather than using the ui-bootstrap `$modal.open`, use `bbModal.open` instead.  This will take the same options object but allows for some custom default behaviors in Sky.
 
 In addition to the `bbModal` service for lauching modals, a `bb-modal` directive should be used to have common look-and-feel for modal content.  Within `bb-modal`, use `bb-modal-header` to include a common modal header, `bb-modal-footer` to include a common modal footer and buttons, and `bb-modal-body` to wrap the modal's body content.
@@ -5735,9 +5801,9 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 
 (function ($) {
     'use strict';
-    
+
     var openModalCount = 0;
-    
+
     angular.module('sky.modal', ['sky.helpbutton', 'sky.resources', 'ui.bootstrap'])
         .factory('bbModal', ['$modal', '$window', function ($modal, $window) {
             return {
@@ -5746,7 +5812,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                         isIOS,
                         modalInstance,
                         scrollTop;
-                    
+
                     function modalClosed() {
                         openModalCount--;
                         if (isIOS) {
@@ -5754,19 +5820,19 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                                 .removeClass('bb-modal-open-mobile')
                                 .scrollTop(scrollTop);
                         }
-                        
+
                         bodyEl = null;
                     }
-                    
+
                     isIOS = /iPad|iPod|iPhone/i.test($window.navigator.userAgent);
                     bodyEl = $(document.body);
-                    
+
                     // Change default values for modal options
                     opts = angular.extend({
                         backdrop: 'static',
                         windowClass: 'bb-modal'
                     }, opts);
-                    
+
                     // Mobile browsers exhibit weird behavior when focusing on an input element
                     // inside a position: fixed element (in this case the modal), and it also
                     // doesn't propery prohibit scrolling on the window.  Adding this CSS class
@@ -5774,7 +5840,7 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                     // to work around this behavior.
                     if (isIOS) {
                         // Setting the body position to be fixed causes it to be scrolled to the
-                        // top.  Cache the current scrollTop and set it back when the modal is 
+                        // top.  Cache the current scrollTop and set it back when the modal is
                         // closed.
                         scrollTop = bodyEl.scrollTop();
                         bodyEl.addClass('bb-modal-open-mobile');
@@ -5782,9 +5848,9 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 
                     modalInstance = $modal.open(opts);
                     openModalCount++;
-                    
+
                     modalInstance.result.then(modalClosed, modalClosed);
-                    
+
                     return modalInstance;
                 }
             };
@@ -5792,22 +5858,22 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
         .directive('bbModal', ['$timeout', function ($timeout) {
             function getPixelValue(val) {
                 val = val || '0';
-                
+
                 return parseFloat(val.replace('px', ''));
             }
-            
+
             function getModalBodyWrapperMargin(el) {
                 var margin = 0;
-                
-                while (el.not('.modal-dialog') && el.length > 0) { 
+
+                while (el.not('.modal-dialog') && el.length > 0) {
                     margin += el.outerHeight() - el.height();
-                        
+
                     el = el.parent();
                 }
-                
+
                 return margin;
             }
-            
+
             return {
                 controller: ['$scope', function ($scope) {
                     this.setBodyEl = function (bodyEl) {
@@ -5822,19 +5888,19 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                     var bodyEl,
                         resizeTimeout,
                         windowEl = $(window);
-                    
+
                     function fitToWindow() {
                         var margin,
                             modalParentEl,
                             newMaxHeight,
                             reservedHeight;
-                        
+
                         if (bodyEl && bodyEl.length > 0) {
                             modalParentEl = el.parents('.modal-dialog');
-                            
+
                             if (modalParentEl.length > 0) {
                                 margin = getPixelValue(modalParentEl.css('margin-bottom')) + getPixelValue(modalParentEl.css('margin-top'));
-                             
+
                                 reservedHeight = margin + el.find('.modal-header').outerHeight() + el.find('.modal-footer').outerHeight();
 
                                 // Account for the border, padding, etc. of the elements that wrap the modal body.
@@ -5846,24 +5912,24 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
                             }
                         }
                     }
-                             
+
                     $scope.$watch('bodyEl', function (newValue) {
                         bodyEl = newValue;
                         fitToWindow();
                     });
-                    
+
                     $timeout(function () {
                         fitToWindow();
                     }, 0);
 
                     windowEl.on('resize.bbModal' + $scope.$id, function () {
                         $timeout.cancel(resizeTimeout);
-                        
+
                         resizeTimeout = $timeout(function () {
                             fitToWindow();
                         }, 250);
                     });
-                    
+
                     el.on('$destroy', function () {
                         windowEl.off('.bbModal' + $scope.$id);
                     });
@@ -5968,6 +6034,9 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
 /*global angular */
 
 /** @module Money
+@deprecated
+@icon archive
+@summary This directive is no longer being maintained. For formatting currency in a textbox, see the Autonumeric directive.
  @description ### *Deprecated* ###
 
 This directive is no longer being maintained.  For formatting currency in a textbox, see the [Autonumeric](../autonumeric) directive.
@@ -6070,6 +6139,8 @@ The Money Input directive formats currency values as the user types in the input
 /*global angular, jQuery */
 
 /** @module Navbar
+@icon compass
+@summary The navbar directive creates a Bootstrap nav element with the appropriate Sky classes applied to it and its children.
  @description The navbar directive creates a Bootstrap `nav` element with the appropriate Sky classes applied to it and its children, and also adds behavior such as showing sub-navigation items when the user hovers over the dropdown.
  */
 
@@ -6100,6 +6171,7 @@ The Money Input directive formats currency values as the user types in the input
             };
         });
 }(jQuery));
+
 /*global angular, jQuery */
 
 (function ($) {
@@ -6172,6 +6244,11 @@ The Money Input directive formats currency values as the user types in the input
                         });
 
                         scope.$apply();
+                        
+                        if (angular.isFunction(bbOmnibarConfig.afterLoad)) {
+                            /* jshint validthis: true */
+                            bbOmnibarConfig.afterLoad.apply(this, arguments);
+                        }
                     }
 
                     function userLoaded(userData) {
@@ -6216,6 +6293,11 @@ The Money Input directive formats currency values as the user types in the input
                             // Log out and redirect to auth service.
                             $window.location.href = bbOmnibarConfig.signOutUrl;
                         }
+                        
+                        if (angular.isFunction(bbOmnibarConfig.userLoaded)) {
+                            /* jshint validthis: true */
+                            bbOmnibarConfig.userLoaded.apply(this, arguments);
+                        }
                     }
 
                     $.ajax({
@@ -6223,7 +6305,7 @@ The Money Input directive formats currency values as the user types in the input
                         dataType: 'script',
                         url: bbOmnibarConfig.url
                     }).done(function () {
-                        var loadOptions = angular.extend(bbOmnibarConfig, {
+                        var loadOptions = angular.extend({}, bbOmnibarConfig, {
                             afterLoad: afterLoad,
                             userLoaded: userLoaded,
                             menuEl: omnibarMenuEl
@@ -6248,6 +6330,8 @@ The Money Input directive formats currency values as the user types in the input
 /*global angular */
 
 /** @module Page
+@icon file-o
+@summary The Page directive provides functionality around loading pages.
  @description The Page directive provides functionality around loading pages.
 
 ### Page Settings ###
@@ -6296,7 +6380,7 @@ The Money Input directive formats currency values as the user types in the input
                     function noPageStatusSpecified() {
                         return element.attr('bb-page-status') === undefined;
                     }
-                    
+
                     function onShowing() {
                         if (scope.bbPageUsesLoadManager) {
                             loadManager = locals.loadManager = bbData.loadManager({
@@ -6354,9 +6438,12 @@ The Money Input directive formats currency values as the user types in the input
                 };
             }]);
 }());
+
 /*global angular */
 
 /** @module Pagination
+@icon files-o
+@summary The Pagination directive allows list data to be displayed across multiple pages. When the number of items in the list exceeds the page size, a pagination control is displayed.
  @description The Pagination directive allows list data to be displayed across multiple pages.  When the number of items in the list exceeds the page size, a pagination control is displayed.
 
 The `bb-pagination-content` directive and the `bbPaging` service are used in conjunction with this directive.  The `bb-pagination-content` is used to wrap the paged content so that the height of the wrapper can be kept as a constant height across pages regardless of contents.  When the list data is bound, the height of the largest page will be used for the wrapper so that the height of the list will not fluctuate as the user pages through it.
@@ -6370,7 +6457,7 @@ The `bbPaging` service is used to create the paged data and responds to changes 
 ### Pagination Content Settings ##
 
  - `bb-pagination-content` The paged data initialized by the `bbPaging` service.
-  
+
 ### Paging Settings ##
 These are optional properties of the object passed to `bbPaging.init()`
 
@@ -6563,9 +6650,12 @@ These are optional properties of the object passed to `bbPaging.init()`
             };
         }]);
 }());
+
 /*global angular, jQuery */
 
 /** @module Popover
+@icon newspaper-o
+@summary The bb-popover-template directive enables an HTML-formatted popover to be displayed via a trigger element.
  @description The `bb-popover-template` directive enables an HTML-formatted popover to be displayed via a trigger element. This directive is an alternative to the `popover` directive from Angular UI Bootstrap, making it easier
 to define markup in a template rather than directly in the view's controller.
 
@@ -6653,6 +6743,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
             return $tooltip('bbPopoverTemplate', 'popover', 'click');
         }]);
 }(jQuery));
+
 /*global angular */
 
 (function () {
@@ -6678,6 +6769,8 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
 /*global angular */
 
 /** @module Scroll into view
+@icon eye
+@summary The bb-scroll-into-view directive causes an element to scroll into the viewport whenever its bound value changes.
  @description The `bb-scroll-into-view` directive causes an element to scroll into the viewport whenever its bound value changes.
 
 ### Settings ###
@@ -6701,13 +6794,13 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
         .factory('bbScrollIntoView', ['$window', 'bbScrollIntoViewConfig', function ($window, bbScrollIntoViewConfig) {
             function highlightEl(el, options) {
                 if (options.highlight) {
-                    
+
                     // The automatic CSS class removal should be factored out once we have some more instances
                     // where we use animations.
                     el
                         .addClass(CLS_HIGHLIGHTING)
                         .one(
-                            'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', 
+                            'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
                             /*istanbul ignore next */
                             function () {
                                 el.removeClass(CLS_HIGHLIGHTING);
@@ -6715,18 +6808,18 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
                         );
                 }
             }
-            
+
             function getScrollableParentEl(el) {
                 var overflowY,
                     parentEl = el.parent();
-                
+
                 while (parentEl.length > 0) {
                     if (parentEl.is('body')) {
                         return parentEl;
                     }
-                    
+
                     overflowY = parentEl.css('overflow-y');
-                    
+
                     /*istanbul ignore else: sanity check (the computed overflow property will likely never return a non-string value) */
                     if (angular.isString(overflowY)) {
                         switch (overflowY.toUpperCase()) {
@@ -6736,15 +6829,15 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
                             return parentEl;
                         }
                     }
-                    
+
                     parentEl = parentEl.parent();
                 }
             }
-            
+
             function getHtmlOrBodyScrollTop() {
                 return angular.element('html').scrollTop() || angular.element('body').scrollTop();
             }
-            
+
             function scrollIntoView(el, options) {
                 var currentScrollTop,
                     elBottom,
@@ -6764,48 +6857,48 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
 
                 parentEl = getScrollableParentEl(el);
                 parentElIsBody = parentEl.is('body');
-                
+
                 options = options || {};
-                
+
                 reservedBottom = options.reservedBottom;
                 reservedTop = options.reservedTop;
-                
+
                 if (!angular.isDefined(reservedBottom)) {
                     reservedBottom = 0;
-                    
+
                     if (parentElIsBody) {
                         reservedBottom = bbScrollIntoViewConfig.reservedBottom || 0;
                     }
                 }
-                
+
                 if (!angular.isDefined(reservedTop)) {
                     reservedTop = 0;
-                    
+
                     if (parentElIsBody) {
                         reservedTop = bbScrollIntoViewConfig.reservedTop || 0;
                     }
                 }
-                
+
                 if (options.highlight) {
                     reservedBottom += 50;
                     reservedTop += 50;
                 }
-                
+
                 if (parentElIsBody) {
                     currentScrollTop = getHtmlOrBodyScrollTop();
                 } else {
                     currentScrollTop = parentEl.scrollTop();
                 }
-                
+
                 elOffset = el.offset();
                 elHeight = el.outerHeight();
 
                 elTop = elOffset.top;
-                
+
                 if (!parentElIsBody) {
                     elTop = (elTop - parentEl.offset().top) + currentScrollTop;
                 }
-                
+
                 elBottom = elTop + elHeight;
 
                 parentHeight = parentElIsBody ? angular.element(window).height() : parentEl.height();
@@ -6825,7 +6918,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
                     if (!isScrolledOffBottom || elHeight > viewportHeight) {
                         newScrollTop = elTop - reservedTop;
                     }
-                    
+
                     elToScroll = parentElIsBody ? angular.element('html, body') : parentEl;
 
                     elToScroll.animate(
@@ -6861,7 +6954,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
                     if (firstTry) {
                         retryCount = 0;
                     }
-                    
+
                     /*istanbul ignore else: hard to reach in a unit test */
                     if (el.is(':visible') && el.children('.collapsing').length === 0) {
                         options = angular.extend({}, bbScrollIntoViewConfig);
@@ -6869,7 +6962,7 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
                         if (attrs.bbScrollIntoViewHighlight) {
                             options.highlight = scope.$eval(attrs.bbScrollIntoViewHighlight);
                         }
-                        
+
                         bbScrollIntoView(el, options);
                     } else if (retryCount < RETRY_MAX) {
                         // Keep trying to scroll until the element is visible or we run out of retry attempts.
@@ -6894,10 +6987,13 @@ The directive is built as a thin wrapper of the [Angular UI Bootstrap Popver](ht
             };
         }]);
 }());
+
 /*jslint browser: true */
 /*global angular, jQuery */
 
 /** @module Searchfield
+@icon search
+@summary The Searchfield directive allows you to easily build single- and multi-search fields that can be filtered as the user types.
  @description ### Additional Dependencies ###
 
  - **[ui-select](https://github.com/angular-ui/ui-select) (0.11.0 or higher - .js and .css files needed)**
@@ -6914,7 +7010,7 @@ The search field can be used for a local search (i.e. dropdown box where you hav
    - `repeat` Required. An expression that defines the array of choices.  If a `filter` is included, then the choices will be filtered by what the user types, otherwise it will behave just a like a normal dropdown box.  See the `ui-select` documentation for more information.
 
 ### Remote Search Settings ###
- 
+
  - `ui-select-choices`
    - `repeat` Required. An expression that defines the array of choices that will be populated from a remote server.  See the `ui-select` documentation for more information.
    - `refresh` Required. A function call to load the results from a remote server. The function should at least take `$select.search` as a parameter, and it should guard against calling the remote server with an empty search value.
@@ -6991,15 +7087,15 @@ The search field can be used for a local search (i.e. dropdown box where you hav
 
                         //Resize any tags on load
                         sizeMatchItems();
-                
+
                         $(window).on('resize.searchField' + scope.$id, function () {
                             $timeout.cancel(windowResizeTimeout);
-                            
+
                             windowResizeTimeout = $timeout(function () {
                                 sizeMatchItems();
                             }, 250);
                         });
-                        
+
                         scope.$on('$destroy', function () {
                             $(window).off('resize.searchField' + scope.$id);
                         });
@@ -7083,10 +7179,14 @@ The search field can be used for a local search (i.e. dropdown box where you hav
             };
         }]);
 }(jQuery));
+
 /*jslint browser: true, plusplus: true */
 /*global angular */
 
 /** @module Tabs
+@deprecated
+@icon archive
+@summary This directive is no longer being maintained. For creating tabs, see the Angular UI Bootstrap tabs directive and use it in conjunction with the Tabscroll and Tabsref components if needed.
  @description ### *Deprecated* ###
 
 This directive is no longer being maintained.  For creating tabs, see the [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/) tabs directive and use it in conjunction with the [Tabscroll](../tabscroll) and [Tabsref](../tabsref) components if needed.
@@ -7477,6 +7577,8 @@ The Tabs directive allows for content to be organized into a set of tabs.  The t
 /*global angular, jQuery */
 
 /** @module Tabscroll
+@icon arrows-h
+@summary The bb-tab-scroll directive causes the row of tabs to be horizontally scrollable when the width of the tabs exceeds the width of its container.
  @description ### Additional Dependencies ###
 
 The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollable when the width of the tabs exceeds the width of its container.  The tabs are also animated to indicate to the user that they can be scrolled.
@@ -7488,9 +7590,9 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
 
 (function ($) {
     'use strict';
-    
+
     var tabScrollId = 0;
-    
+
     angular.module('sky.tabscroll', ['ui.bootstrap.tabs'])
         .directive('bbTabScroll', ['$timeout', '$window', function ($timeout, $window) {
             return {
@@ -7498,11 +7600,11 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
                 link: function (scope, el, attrs) {
                     var lastWindowResizeTimeout,
                         lastWindowWidth;
-                    
+
                     function getNavTabsEl() {
                         return el.children('.nav-tabs');
                     }
-                    
+
                     function getScrollLeftForEl(navTabsEl, selector) {
                         var elWidth,
                             scrollLeft,
@@ -7510,44 +7612,44 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
                             tabLeft,
                             tabPosition,
                             tabRight;
-                        
+
                         if (angular.isString(selector)) {
                             tabEl = navTabsEl.children(selector);
                         } else {
                             tabEl = selector;
                         }
-                        
+
                         tabPosition = tabEl.position();
-                        
+
                         if (tabPosition) {
                             tabLeft = tabPosition.left;
-                            
+
                             if (tabLeft < 0) {
                                 scrollLeft = tabLeft + navTabsEl[0].scrollLeft;
                             } else {
                                 elWidth = el.width();
                                 tabRight = tabLeft + tabEl.width();
-                                
+
                                 if (tabRight > elWidth) {
                                     scrollLeft = navTabsEl[0].scrollLeft + (tabRight - elWidth);
                                 }
                             }
                         }
-                        
+
                         return scrollLeft;
                     }
-                    
+
                     function getScrollLeft(navTabsEl) {
                         return getScrollLeftForEl(navTabsEl, '.active') || 0;
                     }
-                    
+
                     function stopAnimateTabScroll(navTabsEl) {
                         navTabsEl.stop(true, true);
                     }
-                    
+
                     function animateTabScroll(navTabsEl, scrollLeft, duration) {
                         stopAnimateTabScroll(navTabsEl);
-                        
+
                         navTabsEl
                             .animate(
                                 {
@@ -7558,7 +7660,7 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
                                 }
                             );
                     }
-                    
+
                     function showTabsCanScroll(force) {
                         var hasOverflow,
                             navTabsEl = getNavTabsEl(),
@@ -7569,11 +7671,11 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
                         if (navTabsEl.length > 0) {
                             hasOverflow = angular.isDefined(getScrollLeftForEl(navTabsEl, 'li:first')) ||
                                 angular.isDefined(getScrollLeftForEl(navTabsEl, 'li:last'));
-                            
+
                             force = force || angular.isDefined(getScrollLeftForEl(navTabsEl, '.active'));
-                            
+
                             overflowOccurred = !showTabsCanScroll.previousHadOverflow && hasOverflow;
-                            
+
                             if (force || overflowOccurred) {
                                 scrollLeft = getScrollLeft(navTabsEl);
 
@@ -7586,14 +7688,14 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
                                 animateTabScroll(navTabsEl, scrollLeft);
                             }
                         }
-                        
+
                         showTabsCanScroll.previousHadOverflow = hasOverflow;
                     }
-                    
+
                     tabScrollId++;
-                    
+
                     el.addClass('bb-tab-scroll');
-                    
+
                     if (attrs.bbTabScrollReady) {
                         scope.$watch(attrs.bbTabScrollReady, function (newValue, oldValue) {
                             if (newValue && newValue !== oldValue) {
@@ -7601,38 +7703,38 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
                             }
                         });
                     }
-                    
+
                     lastWindowWidth = $($window).width();
-                    
+
                     // Show initial scroll animation whenever the window width changes.
                     $($window).on('resize.tabscroll' + tabScrollId, function () {
                         var windowWidth = $($window).width();
-                        
+
                         if (lastWindowWidth !== windowWidth) {
                             $timeout.cancel(lastWindowResizeTimeout);
-                            
+
                             lastWindowResizeTimeout = $timeout(function () {
                                 showTabsCanScroll();
                             }, 250);
                         }
-                        
+
                         lastWindowWidth = windowWidth;
                     });
-                    
+
                     // Ensure that when a tab is clicked the tab is fully visible and not partially
                     // scrolled off either side.
                     el.on('click', '> .nav-tabs > li', function () {
                         var navTabsEl,
                             scrollLeft;
-                        
+
                         navTabsEl = getNavTabsEl();
                         scrollLeft = getScrollLeftForEl(navTabsEl, $(this));
-                                
+
                         if (angular.isDefined(scrollLeft)) {
                             animateTabScroll(navTabsEl, scrollLeft, 250);
                         }
                     });
-                    
+
                     el.on('$destroy', function () {
                         $($window).off('.tabscroll' + tabScrollId);
                     });
@@ -7640,9 +7742,12 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
             };
         }]);
 }(jQuery));
+
 /*global angular */
 
 /** @module Tabsref
+@icon link
+@summary The Tab Sref directive adds the ability to change the page's URL when the user clicks a tab.
  @description ### Additional Dependencies ###
 
  - **[Angular UI Router](https://github.com/angular-ui/ui-router) (0.2.13 or higher)**
@@ -7658,7 +7763,7 @@ The Tab Sref directive adds the ability to change the page's URL when the user c
 
 (function () {
     'use strict';
-    
+
     angular.module('sky.tabsref', ['ui.bootstrap.tabs'])
         .directive('bbTabSref', ['$rootScope', '$state', '$timeout', function ($rootScope, $state, $timeout) {
             return {
@@ -7668,17 +7773,18 @@ The Tab Sref directive adds the ability to change the page's URL when the user c
                         sref = attrs.bbTabSref,
                         stateChangeDeregistration,
                         tabsetCtrl = controllers[0];
-
+                    
+                    
                     function checkCurrentState() {
                         if ($state.is(sref)) {
                             tabsetCtrl.select(el.isolateScope());
                         }
                     }
-                    
+
                     /*istanbul ignore else sanity check */
                     if (active && sref) {
                         checkCurrentState();
-                        
+
                         stateChangeDeregistration = $rootScope.$on('$stateChangeSuccess', function () {
                             checkCurrentState();
                         });
@@ -7691,7 +7797,7 @@ The Tab Sref directive adds the ability to change the page's URL when the user c
                                 // and then this code tries to switch you over to the state of the first tab.
                                 $timeout(function () {
                                     $state.go(sref);
-                                }, 0);
+                                });
                             }
                         });
                         
@@ -7708,6 +7814,8 @@ The Tab Sref directive adds the ability to change the page's URL when the user c
 /*global angular */
 
 /** @module Templating
+@icon building-o
+@summary The Templating directives allow you to place formatted text inside a tokenized string template.
  @description The Templating directives allow you to place formatted text inside a tokenized string template.  This avoids the need to build HTML manually on the server or in a custom directive where HTML injection bugs are common.
 The string template is specified with the `bb-template` attribute, and child elements with the `bb-template-item` attribute are the elements that contain the formatted text.
 
@@ -7796,11 +7904,14 @@ The string template is specified with the `bb-template` attribute, and child ele
             };
         });
 }());
+
 /*jslint plusplus: true */
 
 /*global angular */
 
-/** @module Textexpand 
+/** @module Textexpand
+@icon text-height
+@summary The Text Expand directive truncates long text with an ellipsis and a "Read more" link that allows the user to fully expand the text.
  @description The Text Expand directive truncates long text with an ellipsis and a "Read more" link that allows the user to fully expand the text.  If the text length falls below the specified threshold then no action is taken.
 
 Note that collapsed text will have newlines removed.  Also, if one or more newlines are detected, the text is automatically collapsed regardless of the total length of the text.
@@ -7860,7 +7971,7 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
                                     } else {
                                         seeMoreEl.text(seeMoreText);
                                     }
-                                    
+
                                     seeMoreEl.toggleClass('bb-text-expand-see-more');
                                 })
                             );
@@ -8006,10 +8117,13 @@ The Text Expand Repeater directive truncates a list of repeater items and will i
             };
         }]);
 }());
+
 /*jslint browser: true, plusplus: true */
 /*global angular */
 
 /** @module Tiles
+@icon th-large
+@summary The bb-tile directive creates a collapsible container and is the bulding block for pages and forms in a Sky application.
  @description The `bb-tile` directive creates a collapsible container and is the bulding block for pages and forms in a Sky application.  The `bb-tile-section` directive is used to create padded sections inside a `bb-tile` element. Additionally, the `bb-tile-header-content` directive may be placed inside the `bb-tile` directive to add summary information to the tile.  If you simply need to show a check mark indicating the tile has data, you can add a `bb-tile-header-check` element to the `bb-tile-header-content` element.
 
 When used on forms, it automatically adjusts the background color on the form and shrinks the tile header.
@@ -8075,16 +8189,16 @@ When used on forms, it automatically adjusts the background color on the form an
                         tiles = tiles || /*istanbul ignore next: default value */ [];
 
                         oldCollapsed = scope.isCollapsed;
-                        
+
                         collapsed = tileIsCollapsed(scope.tileId, tiles);
-                        
+
                         if (oldCollapsed === collapsed) {
                             displayModeChanging = false;
                         }
                         scope.isCollapsed = collapsed;
 
                         if (collapsed && !tileInitialized) {
-                            //in some cases the tile-content div is left in a partially collapsed state. 
+                            //in some cases the tile-content div is left in a partially collapsed state.
                             //   this will ensure that the tile is styled corretly and the tile is completely collapsed
                             $timeout(function () {
                                 var contentEl;
@@ -8093,22 +8207,22 @@ When used on forms, it automatically adjusts the background color on the form an
                             }, 1);
                         }
                     }
-                    
+
                     function updateHeaderContent() {
                         var wrapperEl;
-                        
+
                         scope.hasHeaderContent = !!scope.headerContentEl;
-                        
+
                         if (scope.headerContentEl) {
                             wrapperEl = el.find('.bb-tile-header-with-content:first');
-                            
+
                             wrapperEl.append(scope.headerContentEl);
                         }
                     }
-                    
+
                     function initializeTile(data) {
                         var tiles = data.tiles || /*istanbul ignore next: default value */ [];
-                        
+
                         if (!tileInitialized) {
                             //retrieve the tile id from the parent container
                             scope.tileId = el.parent().attr('data-tile-id') || /*istanbul ignore next: default value */ '';
@@ -8119,7 +8233,7 @@ When used on forms, it automatically adjusts the background color on the form an
 
                         tileInitialized = true;
                     }
-                    
+
                     scope.isCollapsed = scope.bbTileCollapsed || false;
                     scope.smallTileDisplayMode = false;
                     scope.tileId = '';
@@ -8139,7 +8253,7 @@ When used on forms, it automatically adjusts the background color on the form an
                     scope.$on('tileDisplayModeChanged', function (event, data) {
                         /*jslint unparam: true */
                         scope.smallTileDisplayMode = data.smallTileDisplayMode || false;
-                        
+
                         if (tileInitialized) {
                             displayModeChanging = true;
                             updateTileState(data.tiles);
@@ -8170,7 +8284,7 @@ When used on forms, it automatically adjusts the background color on the form an
                                 scope.$broadcast('tileRepaint');
                             });
                         }
-                        
+
                         scope.bbTileCollapsed = scope.isCollapsed;
                     });
 
@@ -8179,11 +8293,11 @@ When used on forms, it automatically adjusts the background color on the form an
                             scope.isCollapsed = newValue;
                         });
                     }
-                    
+
                     scope.hasSettings = !!attrs.bbTileSettingsClick;
-                    
+
                     updateHeaderContent();
-                    
+
                     if (dashboardCtrl !== null) {
                         dashboardState = dashboardCtrl.getDashboardState();
                         initializeTile(dashboardState);
@@ -8250,7 +8364,7 @@ When used on forms, it automatically adjusts the background color on the form an
                         sortableOptions;
 
                     scope.smallTileDisplayMode = false;
-                    
+
                     //Inspects the tiles in each column and updates model accordingly.
                     function parseColumnTiles() {
                         scope.$apply(function () {
@@ -8278,7 +8392,7 @@ When used on forms, it automatically adjusts the background color on the form an
                             }
                         }
                     }
-                    
+
                     function fireDisplayModeChanged() {
                         scope.$broadcast('tileDisplayModeChanged', {
                             smallTileDisplayMode: scope.smallTileDisplayMode,
@@ -8299,7 +8413,7 @@ When used on forms, it automatically adjusts the background color on the form an
                         }
 
                         scope.smallTileDisplayMode = breakPoints.xs;
-                        
+
                         fireDisplayModeChanged();
                     }
 
@@ -8333,12 +8447,12 @@ When used on forms, it automatically adjusts the background color on the form an
                             });
                         });
                     });
-                    
+
                     scope.$watch('allCollapsed', function (newValue) {
                         var i,
                             n,
                             tiles = scope.tiles;
-                        
+
                         // Check for an explicit true/false here since null/undefined is the
                         // indeterminate state.
                         if (newValue === true || newValue === false) {
@@ -8349,11 +8463,11 @@ When used on forms, it automatically adjusts the background color on the form an
                                     tiles[i].collapsed = newValue;
                                 }
                             }
-                        
+
                             fireDisplayModeChanged();
                         }
                     });
-                    
+
                     scope.$on('tileStateChanged', function (event, data) {
                         /*jslint unparam: true */
                         scope.$apply(function () {
@@ -8368,21 +8482,21 @@ When used on forms, it automatically adjusts the background color on the form an
 
                             collapsed = data.collapsed || false;
                             collapsedProp = scope.smallTileDisplayMode ? 'collapsed_small' : 'collapsed';
-                            
+
                             for (i = 0, n = tiles.length; i < n; i++) {
                                 tile = tiles[i];
-                                
+
                                 if (tile.id === tileId) {
                                     tile[collapsedProp] = collapsed;
                                 }
-                                
+
                                 if (i > 0 && tile[collapsedProp] !== allCollapsed) {
                                     allCollapsed = null;
                                 } else {
                                     allCollapsed = tile[collapsedProp];
                                 }
                             }
-                            
+
                             if (attrs.bbTileDashboardAllCollapsed) {
                                 scope.allCollapsed = allCollapsed;
                             }
@@ -8398,10 +8512,13 @@ When used on forms, it automatically adjusts the background color on the form an
             };
         }]);
 }());
+
 /*jslint browser: true, plusplus: true */
 /*global angular */
 
 /** @module Toast
+@icon envelop-o
+@summary The Toast service can be used to launch toats in a consistent way in a Sky application.
  @description ### Additional Dependencies ###
 
  - **[angular-toastr](https://github.com/Foxandxss/angular-toastr) (1.0.0-beta.2 or higher)**
@@ -8483,7 +8600,7 @@ The Toast service can be used to launch toats in a consistent way in a Sky appli
 
                 function insertTemplateInToast() {
                     var templateEl = toast.el.find('#' + elId);
-                    
+
                     templateEl.html(templateHtml);
 
                     if (controller) {
@@ -8491,7 +8608,7 @@ The Toast service can be used to launch toats in a consistent way in a Sky appli
                         $compile(templateEl)(controllerLocals.$scope);
                     }
                 }
-                
+
                 opts.resolve = opts.resolve || {};
 
                 resolvesPromise = $q.all(getResolvePromises(opts.resolve));
@@ -8508,7 +8625,7 @@ The Toast service can be used to launch toats in a consistent way in a Sky appli
                     templateHtml = $templateCache.get(opts.templateUrl);
 
                     elId = nextId();
-                    
+
                     toast = open("<div id='" + elId + "'></div>", { allowHtml: true });
                     toastScope = toast.scope;
 
@@ -8542,6 +8659,8 @@ The Toast service can be used to launch toats in a consistent way in a Sky appli
 /*global angular */
 
 /** @module Tooltip
+@icon info
+@summary The Tooltip directive enables an HTML-formatted tooltip to be displayed via a trigger element.
  @description The Tooltip directive enables an HTML-formatted tooltip to be displayed via a trigger element.  This directive wraps up the Angular UI Bootstrap Tooltip directive while making it easier
 to define markup in a template rather than directly in the view's controller.
 
@@ -8556,7 +8675,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
 
 (function () {
     'use strict';
-    
+
 
     function bbTooltip($compile, $timeout, bbData) {
         // Based on Adomas.NET's answer to this StackOverflow question:
@@ -8614,9 +8733,12 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
         .directive('bbTooltip', bbTooltip);
 
 }());
+
 /*global angular */
 
 /** @module Validation
+@icon check
+@summary The email validation directive allows you to validate email strings in input fields.
  @description The email validation directive allows you to validate email strings in input fields.
 
 ### Email Validation Settings ###
@@ -8644,6 +8766,7 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
             };
         }]);
 }());
+
 /*jslint browser: true, plusplus: true */
 /*global angular */
 
@@ -9125,6 +9248,8 @@ In addition to all the properties from the [Angular UI Bootstrap Tooltip](http:/
 /*global angular, jQuery */
 
 /** @module Wait
+@icon spinner
+@summary The Wait directive allows you to disable and visually indicate that an element is in a waiting state.
  @description ### Additional Dependencies ###
 
  - **[jquery.blockUI.js](http://malsup.com/jquery/block/) (2.66.0-2013.10.09 or higher)**
@@ -9436,10 +9561,12 @@ This service supports the following functions
         }]);
 
 }(jQuery));
+
 /*global angular*/
 
 /** @module Window
-
+@icon desktop
+@summary The windows services provides two helper methods, used for obtaining scrollbar width and setting the page title.
 @description An angular service with the following functions:
 
   - `setWindowTitle(title)` Changes the browser window's title. If a product name is specified in `bbWindowConfig`, then the product name will be appended to the passed title.
@@ -9456,17 +9583,17 @@ This service supports the following functions
         })
         .factory('bbWindow', ['$window', 'bbWindowConfig', '$timeout', '$document', function ($window, bbWindowConfig, $timeout, $document) {
             var scrollbarWidth;
-            
+
             function calculateScrollbarWidth() {
-                var inner, 
-                    outer, 
+                var inner,
+                    outer,
                     w1,
                     w2;
-                      
+
                 inner = angular.element('<p></p>');
                 inner.css('width', '100%');
                 inner.css('height', '200px');
-                            
+
                 outer = angular.element('<div></div>');
                 outer.css('position', 'absolute');
                 outer.css('top', '0px');
@@ -9475,16 +9602,16 @@ This service supports the following functions
                 outer.css('width', '200px');
                 outer.css('height', '150px');
                 outer.css('overflow', 'hidden');
-                            
+
                 outer.append(inner);
-                            
+
                 $document.find('body').append(outer);
 
                 w1 = inner[0].offsetWidth;
 
                 outer.css('overflow', 'scroll');
                 w2 = inner[0].offsetWidth;
-               
+
                 /*istanbul ignore else: sanity check */
                 if (w1 === w2) {
                     w2 = outer[0].clientWidth;
@@ -9492,7 +9619,7 @@ This service supports the following functions
                 outer.remove();
                 return (w1 - w2);
             }
-            
+
             return {
                 setWindowTitle: function (title) {
                     var textToAppend = bbWindowConfig.productName;
@@ -9513,21 +9640,24 @@ This service supports the following functions
                     $timeout(function () {
                         $window.document.title = title;
                     });
-                }, 
+                },
                 getScrollbarWidth: function () {
                     if (!scrollbarWidth && scrollbarWidth !== 0) {
                         scrollbarWidth = calculateScrollbarWidth();
                     }
-                    
+
                     return scrollbarWidth;
                 }
             };
         }]);
 }());
+
 /*jslint browser: true, plusplus: true */
 /*global angular */
 
 /** @module Wizard
+@icon magic
+@summary Wizards are used on a modal form when the user needs to perform a set of pre-defined steps in a particular order.
  @description Wizards are used on a modal form when the user needs to perform a set of pre-defined steps in a particular order.  The Sky Wizard works in conjunction with the [Angular UI Bootstrap](http://angular-ui.github.io/bootstrap/) tabs component.  Placing the `bb-wizard` directive on a UI Bootstrap `tabset` element will cause the tabs to look and behave like a Sky wizard.
 
 Sky Wizards also have the concept of a completed step which is denoted by the `bb-wizard-step-complete` directive.  When present on a `tab` and bound to a truthy value, the step's tab will be displayed as completed.
@@ -9678,6 +9808,7 @@ The `bbWizardNavigator` also exposes the following methods:
             };
         }]);
 }());
+
 /*jslint browser: true */
 /*global angular */
 
@@ -9691,6 +9822,7 @@ The `bbWizardNavigator` also exposes the following methods:
         'sky.charts',
         'sky.check',
         'sky.checklist',
+        'sky.contextmenu',
         'sky.data',
         'sky.datefield',
         'sky.datepicker',
@@ -9883,8 +10015,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            </ul>\n' +
         '        </div>\n' +
         '    </div>\n' +
-        '</span>\n' +
-        '');
+        '</span>');
     $templateCache.put('sky/templates/charts/scatterplot.html',
         '<div class="bb-chart-container">\n' +
         '    <div ng-style="moveBackStyle()" ng-show="moveBackVisible">\n' +
@@ -9959,6 +10090,13 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div class="bb-checklist-no-items" ng-if="!locals.filteredItems.length">{{bbChecklistNoItemsMessage || (\'checklist_no_items\' | bbResources)}}</div>\n' +
         '    </div>\n' +
         '    <div ng-transclude></div>\n' +
+        '</div>');
+    $templateCache.put('sky/templates/contextmenu/contextmenu.html',
+        '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" dropdown>\n' +
+        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" dropdown-toggle></bb-context-menu-button>\n' +
+        '    <ul class="dropdown-menu" role="menu">\n' +
+        '        <ng-transclude/>\n' +
+        '    </ul>\n' +
         '</div>');
     $templateCache.put('sky/templates/datefield/datefield.html',
         '<span class="add-on input-group-btn">\n' +
@@ -10067,25 +10205,24 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<div ng-show="locals.showActionBar" data-bbauto-view="GridActionBar">\n' +
         '    <div ng-if="!locals.showMobileActions" class="bb-grid-action-bar">\n' +
         '        <div ng-if="!locals.mobileButtons" class="bb-grid-action-bar-buttons" ng-repeat="action in locals.actions">\n' +
-        '            <button class="btn" ng-class="{\'btn-primary\': action.isPrimary, \'btn-white\': !action.isPrimary}" data-bbauto-field="{{action.automationId}}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
+        '            <button type="button" class="btn" ng-class="{\'btn-primary\': action.isPrimary, \'btn-white\': !action.isPrimary}" data-bbauto-field="{{action.automationId}}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
         '        </div>\n' +
         '        <div ng-if="locals.mobileButtons" class="bb-grid-action-bar-buttons">\n' +
-        '            <button class="btn btn-primary" ng-click="locals.chooseAction()">\n' +
-        '                <span class="sky-icon sky-icon-multi-action"></span>\n' +
+        '            <button type="button" class="btn btn-primary" ng-click="locals.chooseAction()">\n' +
         '                <span>{{resources.grid_action_bar_choose_action}}</span>\n' +
         '            </button>\n' +
         '        </div>\n' +
-        '        <button class="btn bb-grid-action-bar-clear-selection" ng-click="locals.clearSelection()">\n' +
+        '        <button type="button" class="btn bb-grid-action-bar-clear-selection" ng-click="locals.clearSelection()">\n' +
         '            {{resources.grid_action_bar_clear_selection}}\n' +
         '        </button>\n' +
         '    </div>\n' +
         '    <div ng-if="locals.showMobileActions" class="bb-grid-action-bar-mobile-buttons">\n' +
         '        <div class="bb-grid-action-bar-btn-container">\n' +
         '            <div ng-repeat="action in locals.actions">\n' +
-        '                <button class="bb-grid-action-bar-mobile-btn btn btn-block btn-lg" ng-class="{\'btn-primary\': action.isPrimary, \'btn-white\': !action.isPrimary}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
+        '                <button type="button" class="bb-grid-action-bar-mobile-btn btn btn-block btn-lg" ng-class="{\'btn-primary\': action.isPrimary, \'btn-white\': !action.isPrimary}" ng-click="action.actionCallback()" ng-disabled="action.selections.length < 1">{{action.title}} ({{action.selections.length}})</button>\n' +
         '            </div>\n' +
         '        </div>\n' +
-        '        <button class="btn bb-grid-action-bar-mobile-cancel bb-grid-action-bar-clear-selection" ng-click="locals.cancelChooseAction()">\n' +
+        '        <button type="button" class="btn bb-grid-action-bar-mobile-cancel bb-grid-action-bar-clear-selection" ng-click="locals.cancelChooseAction()">\n' +
         '            {{resources.grid_action_bar_cancel_mobile_actions}}\n' +
         '        </button>\n' +
         '    </div>\n' +
@@ -10111,6 +10248,14 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <bb-modal-footer-button-cancel data-bbauto-field="ColumnPickerCancel"></bb-modal-footer-button-cancel>\n' +
         '  </bb-modal-footer>\n' +
         '</bb-modal>');
+    $templateCache.put('sky/templates/grids/dropdown.html',
+        '<div class="bb-context-menu" data-bbauto-field="ContextMenuActions" dropdown dropdown-append-to-body ng-if="locals.items.length > 0" is-open="locals.is_open">\n' +
+        '    <bb-context-menu-button data-bbauto-field="ContextMenuAnchor" ng-click="locals.toggleDropdown($event)">   \n' +
+        '    </bb-context-menu-button>\n' +
+        '    <ul class="dropdown-menu" role="menu">\n' +
+        '        <bb-context-menu-item ng-repeat="item in locals.items" bb-context-menu-action="item.cmd()">{{item.title}}</bb-context-menu-item>\n' +
+        '    </ul>\n' +
+        '</div>');
     $templateCache.put('sky/templates/grids/filters.html',
         '<div style="display:none;">\n' +
         '    <div bb-scrolling-view-keeper="viewKeeperOptions" class="bb-grid-filters grid-filters">\n' +
@@ -10154,10 +10299,10 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '    <div ng-transclude></div>\n' +
         '    <div class="bb-grid-toolbar-container" style="display:none;">\n' +
         '        <div class="toolbar bb-table-toolbar">\n' +
-        '            <div data-bbauto-field="AddButton" class="bb-grid-toolbar-btn-add btn-success btn btn-sm" ng-show="locals.hasAdd" ng-click="locals.onAddClick()">\n' +
-        '                <span class="bb-toolbar-btn-icon sky-icon sky-icon-add-fill"></span>\n' +
+        '            <button type="button" data-bbauto-field="AddButton" class="bb-grid-toolbar-btn-add btn-success btn" ng-show="locals.hasAdd" ng-click="locals.onAddClick()">\n' +
+        '                <i class="fa fa-plus-circle"></i>\n' +
         '                <span class="bb-toolbar-btn-label" ng-show="options.onAddClickLabel">{{options.onAddClickLabel}}</span>\n' +
-        '            </div>\n' +
+        '            </button>\n' +
         '            <div class="bb-search-container search-container">\n' +
         '                <input type="text" placeholder="{{resources.grid_search_placeholder}}" ng-model="searchText" ng-keyup="$event.keyCode == 13 && locals.applySearchText();" data-bbauto-field="SearchBox" />\n' +
         '                <div class="bb-search-icon fa fa-search" data-bbauto-field="SearchButton" ng-click="locals.applySearchText();"></div>\n' +
@@ -10177,7 +10322,6 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '            <div></div>\n' +
         '        </div>    \n' +
         '    </div>\n' +
-        '    \n' +
         '    <div class="clearfix"></div>\n' +
         '    \n' +
         '    <div class="table-responsive">\n' +

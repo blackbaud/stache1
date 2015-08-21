@@ -1,0 +1,38 @@
+<div class="container">
+    <div ng-controller="TileTestController">
+        <div id="screenshot-tile-minimal">
+            <bb-tile bb-tile-header="'Tile (minimal)'">
+                <div bb-tile-section>
+                    Test.
+                </div>
+            </bb-tile>
+        </div>
+        <div id="screenshot-tile-with-settings">
+            <bb-tile bb-tile-header="'Tile with settings'" bb-tile-settings-click="locals.openSettings()">
+                <div bb-tile-section>
+                    Test.
+                </div>
+            </bb-tile>
+        </div>
+        <div id="screenshot-tile-with-header-content">
+            <bb-tile bb-tile-header="'Tile with header content'">
+                <bb-tile-header-content>
+                    {{123456789 | bbAutonumeric:'money':true}}
+                </bb-tile-header-content>
+                <div bb-tile-section>
+                    Test.
+                </div>
+            </bb-tile>
+        </div>
+        <div id="screenshot-tile-with-header-check">
+            <bb-tile bb-tile-header="'Tile with header check'">
+                <bb-tile-header-content>
+                    <bb-tile-header-check></bb-tile-header-check>
+                </bb-tile-header-content>
+                <div bb-tile-section>
+                    Test.
+                </div>
+            </bb-tile>
+        </div>
+    </div>
+</div>

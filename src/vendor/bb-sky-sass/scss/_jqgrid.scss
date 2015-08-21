@@ -68,31 +68,29 @@
         border-right: 1px solid $gray-lighter;
     }
 
-    thead .sorting-desc > div:after {
-        content: "";
-        border-left: 4px solid transparent;
-        border-right: 4px solid transparent;
-        border-top: 6px solid #666666;
-        line-height: 1px;
+    /* the important is necessary here because jqgrid puts a display: none;
+       style on the span element */
+    thead .sorting-desc > div > span, thead .sorting-asc > div > span {
+        display: inline-block !important;
+        font-size: 14px;
         margin-left: 3px;
-        display: inline-block;
-        position: relative;
-        top: -1px;
-        vertical-align: middle;
+        @extend .fa;
     }
-
-    thead .sorting-asc > div:after {
-        content: "";
-        border-left: 4px solid transparent;
-        border-right: 4px solid transparent;
-        border-bottom: 6px solid #666666;
-        line-height: 1px;
-        margin-left: 3px;
-        display: inline-block;
-        position: relative;
-        top: -1px;
-        vertical-align: middle;
+    
+    thead .sorting-desc > div > span {
+        @extend .fa-caret-down;
     }
+   
+    thead .sorting-asc > div > span {
+        @extend .fa-caret-up;
+    }
+    
+    thead .sorting-desc, thead .sorting-asc {
+        > div:after {
+            display: none;
+        }
+    }
+    
     //////////////////////////////////////////////////////////////
     ///End: Apply styles to make jqGrid look like our normal tables
     //////////////////////////////////////////////////////////////
