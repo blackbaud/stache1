@@ -366,22 +366,9 @@ module.exports = function (grunt) {
     }
 
     function sortRecursive(key, sortAscending) {
-        var nav_links = grunt.config.get(key),
-            blog = grunt.config.get('stache.config.blog');
-
+        var nav_links = grunt.config.get(key);
         sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100, 'name');
         grunt.config.set(key, nav_links);
-
-        nav_links.forEach(function (el, idx) {
-            var sortAscendingTemp;
-            if (el.nav_links) {
-                sortAscendingTemp = sortAscending;
-                if (el.abspath && el.abspath.indexOf(blog) > -1) {
-                    sortAscendingTemp = false;
-                }
-                sortRecursive(key + '.' + idx + '.nav_links', sortAscendingTemp);
-            }
-        });
     }
 
     /**

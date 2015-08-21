@@ -9,7 +9,7 @@ showHeadings: true
 
       <h3>Recent Posts</h3>
 
-      {{# each stache.config.nav_links limit=child_limit }}
+      {{# withNavLinks limit=child_limit }}
         {{# isActiveNav dest=../page.dest }}
           <ul class="nav nav-stacked nav-sidebar">
 
@@ -21,7 +21,7 @@ showHeadings: true
                 </li>
             {{/ if}}
 
-            {{ include 'partial-sidebar' this dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page limit=../../../limit }}
+            {{ include 'partial-sidebar' this dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page limit=../../../limit  sortKey="uri" sortDesc=true }}
 
             <li class="visible-on-affix">
               <a href="#top" class="smooth-scroll">
@@ -31,7 +31,7 @@ showHeadings: true
 
           </ul>
         {{/ isActiveNav }}
-      {{/ each }}
+      {{/ withNavLinks }}
 
     </div>
   </div>

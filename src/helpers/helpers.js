@@ -289,6 +289,7 @@ module.exports.register = function (Handlebars, options, params) {
             if (active && active.nav_links) {
                 active = active.nav_links;
             }
+
             return Handlebars.helpers.eachWithMod(active, options);
         },
 
@@ -301,10 +302,25 @@ module.exports.register = function (Handlebars, options, params) {
                 mod = options.hash.mod || 0,
                 limit = options.hash.limit || -1,
                 layout = options.hash.layout || 'horizontal',
+                sortKey = options.hash.sortKey || '',
+                sortDesc = typeof options.hash.sortDesc !== 'undefined' ? options.hash.sortDesc : false,
+                sortA = 1,
+                sortB = -1,
                 j,
                 show;
 
             if (context && context.length) {
+
+                // Sort differently if Needed
+                if (sortKey !== '') {
+                    if (sortDesc) {
+                        sortA = -1;
+                        sortB = 1;
+                    }
+                    context = context.sort(function (a, b) {
+                        return a[sortKey] > b[sortKey] ? sortA : (a[sortKey] < b[sortKey] ? sortB : 0);
+                    });
+                }
 
                 j = context.length;
                 for (i; i < j; i++) {
@@ -716,7 +732,8 @@ module.exports.register = function (Handlebars, options, params) {
         * Used instead of us having to pass the nav_links object around in the context.
         **/
         withNavLinks: function (options) {
-            return Handlebars.helpers.each(options.hash.nav_links || bypassContext.nav_links, options);
+            //return Handlebars.helpers.each(options.hash.nav_links || bypassContext.nav_links, options);
+            return Handlebars.helpers.eachWithMod(options.hash.nav_links || bypassContext.nav_links, options);
         },
 
         /**

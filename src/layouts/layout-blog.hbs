@@ -5,7 +5,7 @@ limit: <%= stache.config.blog_recent_limit %>
 
 {{ body }}
 
-{{# eachChildLink }}
+{{# eachChildLink sortKey='uri' sortDesc=true }}
   {{# if sticky }}
     {{ include 'partial-blog-header' }}
     {{ include abspath }}
@@ -13,7 +13,7 @@ limit: <%= stache.config.blog_recent_limit %>
   {{/ if }}
 {{/ eachChildLink }}
 
-{{# eachChildLink }}
+{{# eachChildLink sortKey='uri' sortDesc=true }}
   {{# unless sticky }}
     {{ include 'partial-blog-header' }}
     {{ include abspath }}
