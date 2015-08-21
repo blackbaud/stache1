@@ -87,7 +87,6 @@
                 .search(vm.sent.query)
                 .then(
                     function (results) {
-                        console.log(results);
                         vm.sent.results = results;
                     },
                     function () {
