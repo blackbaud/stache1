@@ -395,18 +395,51 @@ module.exports = function (grunt) {
     grunt.registerTask('createAutoPages', function () {
         var pages = {},
             found = false,
-            processStacheCastleNode = function (page, node) {
-                if (node && node.length > 0) {
-                    node.forEach(function (v) {
-                        v.layout = 'layout-' + page.type;
-                        pages[v.Url.replace('.htm', '/index.md').replace('html/', page.dest)] = {
-                            type: page.type,
-                            data: v
-                        };
-                        if (v.HelpTOCNode) {
-                            processStacheCastleNode(page, v.HelpTOCNode);
-                        }
+            processStacheCastleSingleNode = function (page, node, parents, siblings) {
+                var parentsToSend,
+                    siblingsToSend;
+
+                // Create the page for assemble to make
+                node.layout = 'layout-' + page.type;
+                node.parents = parents;
+
+                // Only add siblings if there are no more children (mirros Sandcastle output)
+                if (!node.HelpTOCNode && siblings) {
+                    siblingsToSend = [];
+                    siblings.forEach(function (sibling) {
+                        siblingsToSend.push({
+                            Title: sibling.Title,
+                            Url: sibling.Url
+                        });
                     });
+                    node.siblings = siblingsToSend;
+                }
+
+                // Assemble expects the index to the where the page would exist
+                pages[node.Url.replace('.htm', '/index.md').replace('html/', page.dest)] = {
+                    type: page.type,
+                    data: node
+                };
+
+                // Recursively keep looking for pages
+                if (node.HelpTOCNode) {
+                    parentsToSend = parents.slice(0);
+                    parentsToSend.push({
+                        Title: node.Title,
+                        Url: node.Url
+                    });
+                    processStacheCastleMultipleNodes(page, node.HelpTOCNode, parentsToSend);
+                }
+            },
+            processStacheCastleMultipleNodes = function (page, node, parents) {
+                if (node) {
+                    if (node.length > 0) {
+                        node.forEach(function (v, idx) {
+                            processStacheCastleSingleNode(page, v, parents, node);
+                        });
+                    } else {
+                        processStacheCastleSingleNode(page, node, parents);
+                    }
                 }
             };
 
@@ -428,7 +461,7 @@ module.exports = function (grunt) {
                         }
                     break;
                     case 'sandcastle':
-                        processStacheCastleNode(page, json.HelpTOC.HelpTOCNode);
+                        processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
                     break;
                     default:
                         grunt.log.writeln('Unknown custom page datatype.');
@@ -656,6 +689,10 @@ module.exports = function (grunt) {
             j,
             $$;
 
+        function remove(selector) {
+            $$(selector).remove();
+        }
+
         for (i = 0, j = navSearchFiles.length; i < j; i++) {
             if (!navSearchFiles[i].showInSearch) {
                 grunt.log.writeln('Ignoring from search: ' + navSearchFiles[i].uri);
@@ -672,9 +709,7 @@ module.exports = function (grunt) {
 
                 // Nav links just clutter everything up
                 if (grunt.util.kindOf(searchContentToRemove) === 'array') {
-                    searchContentToRemove.forEach(function (selector) {
-                        $$(selector).remove();
-                    });
+                    searchContentToRemove.forEach(remove);
                 }
 
                 // Try specifically reading the content div
