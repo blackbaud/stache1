@@ -22,11 +22,16 @@
 .stache-omnibar-search {
   background: #FFF;
   left: 10px;
-  width: 380px;
-  position: absolute;
+  overflow: hidden;
+  position: fixed;
   top: $omnibar-height - 8px;
+  width: 380px;
   z-index: 2000;
   @include shadow(0, 3px, 10px, -1px, #666);
+}
+
+.bb-omnibar-collapsed .stache-omnibar-search {
+  display: none;
 }
 
 .stache-omnibar-search ul {
@@ -41,6 +46,10 @@
 
 .stache-omnibar-search li:last-of-type {
   border-bottom: 0;
+}
+
+.stache-omnibar-search li a {
+  @include word-wrap();
 }
 
 .stache-omnibar-search p {
