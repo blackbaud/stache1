@@ -100,7 +100,7 @@
       </div>
     {{/ if }}
 
-    {{# if param }}
+    {{# if params }}
 
       <h2>Parameters</h2>
 
@@ -113,22 +113,13 @@
           </tr>
         </thead>
         <tbody>
-          {{! this can be an object for a single parameter or an array of parameters }}
-          {{# isArray param }}
-            {{# each param }}
-              <tr>
-                <td>{{ name }}</td>
-                <td></td>
-                <td>{{ _ }}</td>
-              </tr>
-            {{/ each }}
-          {{ else }}
+          {{# each params }}
             <tr>
-              <td>{{ param.name }}</td>
-              <td></td>
-              <td>{{ param._ }}</td>
+              <td>{{ name }}</td>
+              <td><a href="{{ type.href }}">{{ type.name }}</a></td>
+              <td>{{ description }}</td>
             </tr>
-          {{/ isArray }}
+          {{/ each }}
         </tbody>
       </table>
     {{/ if }}
