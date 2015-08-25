@@ -43,6 +43,7 @@ partial_sky_js: <%= stache.config.partials %>partial-sky-js.hbs
 partial_sky_init: <%= stache.config.partials %>partial-sky-init.hbs
 partial_videos: <%= stache.config.partials %>partial-videos.hbs
 partial_contribute: <%= stache.config.partials %>partial-contribute.hbs
+partial_layout_sandcastle: <%= stache.config.partials %>partial-layout-sandcastle.hbs
 
 # =============================================
 # STACHE - SERVING
