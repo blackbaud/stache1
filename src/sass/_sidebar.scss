@@ -49,11 +49,13 @@
     border-left: transparent solid 5px;
     margin: 10px 5px;
     padding: 0 5px;
+    @include word-wrap();
   }
 
   .nav-sidebar.nav li a:hover,
   .nav-sidebar.nav li a:focus {
     background: none;
+    color: $nav-bg;
   }
 
   .nav-sidebar.nav > li.active,
@@ -73,4 +75,13 @@
 
   .nav-sidebar.nav li ul {
     margin-left: 15px;
+  }
+
+  .nav-sidebar.nav li.parent a {
+    border-left: 0;
+    margin-left: 0;
+  }
+
+  .nav-sidebar.nav li.parent-current {
+    border-top: solid 1px #EFEFEF;
   }
