@@ -1,0 +1,194 @@
+<div class="row">
+  <div class="col-sm-4">
+    <div class="sidebar">
+
+      <ul class="nav nav-stacked nav-sidebar">
+        {{# if HelpTOCNode }}
+
+          {{# eachWithMod parents }}
+            <li class="parent">
+              <a href="{{ normalizeSandcastleUrl Url }}">
+                <i class="fa fa-long-arrow-up"></i>
+                {{ Title }}
+              </a>
+            </li>
+          {{/ eachWithMod }}
+
+          <li class="parent-current current active">
+            <a href="{{ normalizeSandcastleUrl Url }}">{{ Title }}</a>
+              <ul class="nav">
+                {{# isArray HelpTOCNode }}
+                  {{# eachWithMod HelpTOCNode }}
+                    <li>
+                      <a href="{{ normalizeSandcastleUrl Url }}">{{ Title }}</a>
+                    </li>
+                  {{/ eachWithMod }}
+                {{ else }}
+                  <li>
+                    <a href="{{ normalizeSandcastleUrl HelpTOCNode.Url }}">{{ HelpTOCNode.Title }}</a>
+                  </li>
+                {{/ isArray }}
+              </ul>
+          </li>
+
+        {{ else }}
+
+          {{# eachWithMod parents }}
+            <li class="{{# if last }}parent-current current active{{ else }}parent{{/ if }}">
+
+              <a href="{{ normalizeSandcastleUrl Url }}">
+                {{#unless last }}<i class="fa fa-long-arrow-up"></i>{{/ unless }}
+                {{ Title }}
+              </a>
+
+              {{# if last }}
+                <ul class="nav">
+                  {{# eachWithMod ../../siblings }}
+                    <li class="{{# is Url ../../../../Url }}active{{/ is }}">
+                        <a href="{{ normalizeSandcastleUrl Url }}">{{ Title }}</a>
+                    </li>
+                  {{/ eachWithMod }}
+                </ul>
+              {{/ if }}
+
+            </li>
+          {{/ eachWithMod }}
+
+        {{/ if }}
+      </ul>
+
+    </div>
+  </div>
+  <div class="col-sm-8">
+
+    <h1 class="word-wrap">{{ title }}</h1>
+    <p>{{ summary }}</p>
+
+    <ul class="list-unstyled">
+      {{# if namespace }}
+        <li>
+          <strong>Namespace:</strong>
+          <a href="{{ normalizeSandcastleUrl namespace.Url }}">
+            {{ namespace.Title }}
+          </a>
+        </li>
+      {{/ if }}
+      {{# if assembly }}
+        <li><strong>Assembly:</strong> {{ assembly }}
+      {{/ if }}
+    </ul>
+
+    {{# if syntax }}
+      <h2>Syntax</h2>
+
+      <ul class="nav nav-tabs">
+        {{# each syntax }}
+          <li class="{{# is @index 0 }}active{{/ is }}">
+            <a href="#syntax-{{ @index }}" data-toggle="tab">
+              {{ type }}
+            </a>
+          </li>
+        {{/ each }}
+      </ul>
+
+      <div class="tab-content">
+        {{# each syntax }}
+          <div class="tab-pane {{# is @index 0}}active{{/ is }}" id="syntax-{{ @index }}">
+            <pre><code class="language-{{ getPrismType type }}">{{{ code }}}</code></pre>
+          </div>
+        {{/ each }}
+      </div>
+    {{/ if }}
+
+    {{# if param }}
+
+      <h2>Parameters</h2>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{! this can be an object for a single parameter or an array of parameters }}
+          {{# isArray param }}
+            {{# each param }}
+              <tr>
+                <td>{{ name }}</td>
+                <td></td>
+                <td>{{ _ }}</td>
+              </tr>
+            {{/ each }}
+          {{ else }}
+            <tr>
+              <td>{{ param.name }}</td>
+              <td></td>
+              <td>{{ param._ }}</td>
+            </tr>
+          {{/ isArray }}
+        </tbody>
+      </table>
+    {{/ if }}
+
+    {{# each sections }}
+      {{# withItem ../this key=key }}
+
+        <h2>{{ ../header }}</h2>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{# each this }}
+              <tr>
+                <td class="td-icons">
+                  {{# if icons }}
+                    <ul class="list-inline">
+                      {{# each icons }}
+                        <li>
+                          <img src="{{ this }}" />
+                        </li>
+                      {{/ each }}
+                    </ul>
+                  {{/ if }}
+                </td>
+                <td>
+                  {{# contains link "://"}}
+                    <a href="{{ link }}" target="_blank">
+                  {{ else }}
+                    <a href="../{{ removeExt link }}">
+                  {{/ contains }}
+                    {{ name }}
+                  </a>
+                </td>
+                <td>
+                  {{ description }}
+                </td>
+              </tr>
+            {{/ each }}
+          </tbody>
+        </table>
+
+      {{/ withItem }}
+    {{/ each }}
+
+    {{# if type }}
+      <h4>Field Value</h4>
+      <p>Type: <a href="{{ normalizeSandcastleUrl type.href }}">{{ type.name }}</a></p>
+    {{/ if }}
+
+    {{# if returns }}
+      <h2>Return Value</h2>
+      <p>{{ returns }}</p>
+    {{/ if }}
+
+  </div>
+</div>
