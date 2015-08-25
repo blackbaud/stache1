@@ -749,6 +749,17 @@ module.exports.register = function (Handlebars, options, params) {
             } else {
                 return options.fn(this);
             }
+        },
+
+        /**
+        * Normalizes Sandcastle URL
+        **/
+        normalizeSandcastleUrl: function (url) {
+            var u = url || '';
+
+            return u.indexOf('://') > -1 ? u : ('../' + u
+                .replace('.htm', '/')
+                .replace('html/', ''));
         }
 
     });
