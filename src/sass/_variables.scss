@@ -17,3 +17,10 @@ $section-padding: 50px 0;
 
 // Needed for azure footer parent
 $footer-bg: #f3f3f4;
+
+@mixin word-wrap() {
+  word-break:     break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens:    auto;
+  hyphens:         auto;
+}
