@@ -599,36 +599,25 @@ module.exports = function (grunt) {
                 path = sandcastlePath + '.' + (sandcastleCounter++);
             } else {
 
-                console.log('A');
-
                 // Nested directories
                 if (subdir) {
-
-                    console.log('B');
 
                     // Split the subdir into its different directories
                     subdirParts = subdir.split('/');
                     for (i = 0, j = subdirParts.length; i < j; i++) {
-                        console.log('C');
                         index = 0;
                         path += navKey;
 
                         // Is the current path already an array?
                         pathCurrent = grunt.config.get(path);
 
-                        console.log('C2', path);
-
                         // It is an array, let's try to find the index for our current subDirPart
                         if (grunt.util.kindOf(pathCurrent) === 'array') {
-
-                            console.log('D');
                             found = false;
 
                             for (m = 0, n = pathCurrent.length; m < n; m++) {
-                                console.log('E');
                                 pathCurrentItem = grunt.config.get(path + '.' + m);
                                 if (pathCurrentItem.uri && pathCurrentItem.uri.indexOf('/' + subdirParts[i] + '/') > -1) {
-                                    console.log('F');
                                     found = true;
                                     index = m;
                                     break;
@@ -637,7 +626,6 @@ module.exports = function (grunt) {
 
                             // Our array has previous items but no match was found, let's add a new item
                             if (pathCurrent.length > 0 && !found) {
-                                console.log('G');
                                 index = pathCurrent.length;
                             }
 
@@ -645,7 +633,6 @@ module.exports = function (grunt) {
 
                         // It's not an array, which means we need to create the links property
                         } else {
-                            console.log('H');
                             grunt.config.set(path, []);
 
                             // Catch the path for the first sandcastle file we hit
