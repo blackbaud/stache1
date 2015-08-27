@@ -26,6 +26,22 @@ module.exports.register = function (Handlebars, options, params) {
 
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
+    // https://github.com/chjj/marked/blob/master/lib/marked.js#L890
+    renderer.image = function (href, title, text) {
+        var out;
+
+        if (href.indexOf('/static/') > -1) {
+            href = href.replace('/static/', '/');
+        }
+
+        out = '<img src="' + href + '" alt="' + text + '"';
+        if (title) {
+            out += ' title="' + title + '"';
+        }
+        out += renderer.options.xhtml ? '/>' : '>';
+        return out;
+    };
+
     /**
     * Utility function to get the basename
     **/

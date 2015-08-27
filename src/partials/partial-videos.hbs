@@ -5,7 +5,7 @@
     <div id="video-description"></div>
   </div>
   {{/ if }}
-  <div class="video-list-wrapper col-md-3">
+  <div class="video-list-wrapper col-md-2">
       <div class="video-arrow vid-arrow-up toggle-large"><i class="fa fa-chevron-up fa-lg"></i></div>
       <div class="video-arrow vid-arrow-left toggle-small"><i class="fa fa-chevron-left fa-lg"></i></div>
       <div class="video-list">
@@ -23,7 +23,8 @@
     <div class="video-arrow vid-arrow-down toggle-large"><i class="fa fa-chevron-down fa-lg"></i></div>
     <div class="video-arrow vid-arrow-right toggle-small"><i class="fa fa-chevron-right fa-lg"></i></div>
   </div>
-  <div class="video-display embed-responsive embed-responsive-16by9 col-md-8 col-md-offset-1">
+<div class="video-content-wrapper col-md-9">  
+  <div class="video-display embed-responsive embed-responsive-16by9 col-md-offset-1">
     {{# withFirst videos }}
         <iframe
           id="video-iframe"
@@ -33,9 +34,10 @@
       {{/ withFirst }}
   </div>
   {{# unless video_description_top }}
-  <div class="video-description-container col-md-8 col-md-offset-1">
+  <div class="video-description-container col-md-offset-1">
     <h2 id="video-description-header"></h2>
     <div id="video-description"></div>
   </div>
   {{/ unless }}
+</div>
 </section>
