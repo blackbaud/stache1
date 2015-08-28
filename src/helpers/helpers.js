@@ -370,6 +370,7 @@ module.exports.register = function (Handlebars, options, params) {
                     slim[i].last = i === j - 1;
                     slim[i].mod0 = m === 0;
                     slim[i].mod1 = m === mod - 1;
+                    slim[i].index = i;
                     slim[i].colWidth = mod === 0 ? 0 : (12 / mod);
                     slim[i].firstOrMod0 = slim[i].first || slim[i].mod0;
                     slim[i].lastOrMod1 = slim[i].last || slim[i].mod1;
