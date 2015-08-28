@@ -3,9 +3,11 @@
     <ul class="nav">
       {{# eachHeading page=../page }}
         <li class="heading {{# if draft }}draft{{/ if }}">
-          <a href="#{{ id }}" class="smooth-scroll">
-            {{ name }}
-          </a>
+          {{# if id }}
+            <a href="#{{ id }}" class="smooth-scroll">{{ name }}</a>
+          {{ else }}
+            <a href="#{{ slugify name }}" class="smooth-scroll">{{ name }}</a>
+          {{/ if }}
         </li>
       {{/ eachHeading }}
     </ul>
