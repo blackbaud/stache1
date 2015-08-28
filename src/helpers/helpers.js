@@ -26,22 +26,6 @@ module.exports.register = function (Handlebars, options, params) {
 
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
-    // https://github.com/chjj/marked/blob/master/lib/marked.js#L890
-    renderer.image = function (href, title, text) {
-        var out;
-
-        if (href.indexOf('/static/') > -1) {
-            href = href.replace('/static/', '/');
-        }
-
-        out = '<img src="' + href + '" alt="' + text + '"';
-        if (title) {
-            out += ' title="' + title + '"';
-        }
-        out += renderer.options.xhtml ? '/>' : '>';
-        return out;
-    };
-
     /**
     * Utility function to get the basename
     **/
@@ -368,10 +352,13 @@ module.exports.register = function (Handlebars, options, params) {
                     m = i % mod;
                     slim[i].first = i === 0;
                     slim[i].last = i === j - 1;
+                    slim[i].mod = m;
+                    slim[i].cols = mod;
                     slim[i].mod0 = m === 0;
                     slim[i].mod1 = m === mod - 1;
                     slim[i].index = i;
                     slim[i].colWidth = mod === 0 ? 0 : (12 / mod);
+                    slim[i].colOffset = slim[i].colWidth * m;
                     slim[i].firstOrMod0 = slim[i].first || slim[i].mod0;
                     slim[i].lastOrMod1 = slim[i].last || slim[i].mod1;
                     r += options.fn(slim[i]);
@@ -766,43 +753,6 @@ module.exports.register = function (Handlebars, options, params) {
             } else {
                 return options.fn(this);
             }
-        },
-
-        /**
-        * Normalizes Sandcastle URL
-        **/
-        normalizeSandcastleUrl: function (url) {
-            var u = url || '';
-
-            return u.indexOf('://') > -1 ? u : ('../' + u
-                .replace('.htm', '/')
-                .replace('html/', ''));
-        },
-
-        /**
-        * Creates a url "slug" based on a string
-        * This sucks, but needs to be the same implementation in stache.js
-        **/
-        slugify: function (title) {
-            return title
-                .toLowerCase()
-                .replace(/ /g, '-')
-                .replace(/[^\w-]+/g, '');
-        },
-
-        /**
-        * Last chance for us to modify the page's content at build-time.
-        **/
-        stachePostProcess: function (options) {
-            var html = options.fn(this);
-
-            if (stache.postStacheHooks && stache.postStacheHooks.length > 0) {
-                stache.postStacheHooks.forEach(function (hook) {
-                    html = hook(html);
-                });
-            }
-
-            return html;
         }
 
     });
