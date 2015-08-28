@@ -26,6 +26,22 @@ module.exports.register = function (Handlebars, options, params) {
 
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
+    // https://github.com/chjj/marked/blob/master/lib/marked.js#L890
+    renderer.image = function (href, title, text) {
+        var out;
+
+        if (href.indexOf('/static/') > -1) {
+            href = href.replace('/static/', '/');
+        }
+
+        out = '<img src="' + href + '" alt="' + text + '"';
+        if (title) {
+            out += ' title="' + title + '"';
+        }
+        out += renderer.options.xhtml ? '/>' : '>';
+        return out;
+    };
+
     /**
     * Utility function to get the basename
     **/
@@ -753,6 +769,43 @@ module.exports.register = function (Handlebars, options, params) {
             } else {
                 return options.fn(this);
             }
+        },
+
+        /**
+        * Normalizes Sandcastle URL
+        **/
+        normalizeSandcastleUrl: function (url) {
+            var u = url || '';
+
+            return u.indexOf('://') > -1 ? u : ('../' + u
+                .replace('.htm', '/')
+                .replace('html/', ''));
+        },
+
+        /**
+        * Creates a url "slug" based on a string
+        * This sucks, but needs to be the same implementation in stache.js
+        **/
+        slugify: function (title) {
+            return title
+                .toLowerCase()
+                .replace(/ /g, '-')
+                .replace(/[^\w-]+/g, '');
+        },
+
+        /**
+        * Last chance for us to modify the page's content at build-time.
+        **/
+        stachePostProcess: function (options) {
+            var html = options.fn(this);
+
+            if (stache.postStacheHooks && stache.postStacheHooks.length > 0) {
+                stache.postStacheHooks.forEach(function (hook) {
+                    html = hook(html);
+                });
+            }
+
+            return html;
         }
 
     });
