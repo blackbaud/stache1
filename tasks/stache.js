@@ -59,6 +59,9 @@ module.exports = function (grunt) {
             pages: [],
             preAssembleHooks: '',
             postAssembleHooks: '',
+            postStacheHooks: [
+                postStacheHook
+            ],
             searchContentToRemove: [
                 '.bb-navbar',
                 '.nav-sidebar',
@@ -324,6 +327,29 @@ module.exports = function (grunt) {
     * PRIVATE METHODS
     ****************************************************************
     **/
+
+    function postStacheHook(html) {
+        var $html = cheerio(html);
+
+        // Require all heading tags to have id attribute
+        cheerio('h1, h2, h3, h4, h5, h6', $html).each(function () {
+            var el = cheerio(this),
+                id = el.attr('id'),
+                after;
+            if (typeof id === 'undefined' || id === '') {
+                el.attr('id', slugify(el.text()));
+            }
+        });
+
+        return cheerio.html($html);
+    }
+
+    function slugify(title) {
+        return title
+            .toLowerCase()
+            .replace(/ /g, '-')
+            .replace(/[^\w-]+/g, '');
+    }
 
     function createTitle(name, separator, isBreadcrumbs) {
         var output = '',
@@ -637,7 +663,6 @@ module.exports = function (grunt) {
 
                             // Catch the path for the first sandcastle file we hit
                             if (el.type === 'sandcastle' && sandcastlePath === '') {
-                                console.log('I');
                                 sandcastlePath = path;
                             }
 

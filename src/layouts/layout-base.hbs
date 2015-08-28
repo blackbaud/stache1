@@ -52,11 +52,13 @@
       {{{ include stache.config.partial_admin_toolbar }}}
     {{/ inherit }}
 
-    {{# inherit stache.config.markdown markdown }}
-      {{# markdown }}{{ body }}{{/ markdown }}
-    {{ else }}
-      {{# withNewline }}{{ body }}{{/ withNewline }}
-    {{/ inherit }}
+    {{# stachePostProcess }}
+      {{# inherit stache.config.markdown markdown }}
+        {{# markdown }}{{ body }}{{/ markdown }}
+      {{ else }}
+        {{# withNewline }}{{ body }}{{/ withNewline }}
+      {{/ inherit }}
+    {{/ stachePostProcess }}
 
     {{# inherit stache.config.contribute contribute }}
       {{{ include stache.config.partial_contribute }}}
