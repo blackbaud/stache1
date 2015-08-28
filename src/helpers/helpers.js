@@ -776,6 +776,32 @@ module.exports.register = function (Handlebars, options, params) {
             return u.indexOf('://') > -1 ? u : ('../' + u
                 .replace('.htm', '/')
                 .replace('html/', ''));
+        },
+
+        /**
+        * Creates a url "slug" based on a string
+        * This sucks, but needs to be the same implementation in stache.js
+        **/
+        slugify: function (title) {
+            return title
+                .toLowerCase()
+                .replace(/ /g, '-')
+                .replace(/[^\w-]+/g, '');
+        },
+
+        /**
+        * Last chance for us to modify the page's content at build-time.
+        **/
+        stachePostProcess: function (options) {
+            var html = options.fn(this);
+
+            if (stache.postStacheHooks && stache.postStacheHooks.length > 0) {
+                stache.postStacheHooks.forEach(function (hook) {
+                    html = hook(html);
+                });
+            }
+
+            return html;
         }
 
     });
