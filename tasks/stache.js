@@ -395,6 +395,12 @@ module.exports = function (grunt) {
         var nav_links = grunt.config.get(key);
         sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100, 'name');
         grunt.config.set(key, nav_links);
+
+        nav_links.forEach(function (el, idx) {
+            if (el.nav_links) {
+                sortRecursive(key + '.' + idx + '.nav_links', sortAscending);
+            }
+        });
     }
 
     /**
