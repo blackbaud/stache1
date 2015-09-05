@@ -49,6 +49,10 @@
               $('.servicename').wrapInner('<a id="omnibar-link" href="{{ stache.config.omnibar_link }}"></a>');
             {{/ if }}
 
+            {{# if stache.config.omnibar_delegation }}
+              $('a.signin').attr('href', '{{ stache.config.omnibar_delegation }}');
+            {{/ if }}
+
             // Let others tie into this method
             $rootScope.$broadcast('stacheOmnibarLoaded');
           });
