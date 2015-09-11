@@ -57,11 +57,10 @@ module.exports = function (grunt) {
 
             // Imports to automatically generate pages from
             pages: [],
+            preStacheHooks: '',
+            postStacheHooks: '',
             preAssembleHooks: '',
             postAssembleHooks: '',
-            postStacheHooks: [
-                postStacheHook
-            ],
             searchContentToRemove: [
                 '.bb-navbar',
                 '.nav-sidebar',
@@ -702,6 +701,14 @@ module.exports = function (grunt) {
         sortRecursive(root + navKey, true);
     });
 
+    // Looks for preStacheHooks and postStacheHooks in config
+    grunt.registerTask('stacheHooks', function (context) {
+        var hooks = grunt.config.get('stache.' + context + 'StacheHooks');
+        if (hooks) {
+            grunt.task.run(hooks);
+        }
+    });
+
     // Looks for preAssembleHooks and postAssembleHooks in config
     grunt.registerTask('assembleHooks', function (context) {
         var hooks = grunt.config.get('stache.' + context + 'AssembleHooks');
@@ -774,6 +781,7 @@ module.exports = function (grunt) {
         'build',
         'Build the documentation',
         [
+            'stacheHooks:pre',
             'status:build',
             'clean',
             'createAutoPages',
@@ -787,7 +795,8 @@ module.exports = function (grunt) {
             'concat:generated',
             'cssmin:generated',
             'usemin',
-            'copy:build'
+            'copy:build',
+            'stacheHooks:post'
         ]
     );
 
@@ -812,6 +821,7 @@ module.exports = function (grunt) {
         'serve',
         'Serve the documentation',
         [
+            'stacheHooks:pre',
             'status:serve',
             'clean',
             'copy:build',
@@ -823,7 +833,8 @@ module.exports = function (grunt) {
             'prepareSearch',
             'sass-blackbaud',
             'connect',
-            'watch'
+            'watch',
+            'stacheHooks:post'
         ]
     );
 
