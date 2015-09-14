@@ -60,56 +60,58 @@
       {{/ inherit }}
     {{/ stachePostProcess }}
 
-    {{# inherit stache.config.contribute contribute }}
-      {{{ include stache.config.partial_contribute }}}
-    {{/ inherit }}
-
     {{# if note }}
       {{# withHash isPageNote=true priority=priority note=note }}
         {{> partial-note }}
       {{/ withHash }}
     {{/ if }}
 
-    {{# if stache.config.showFooter }}
-      {{# if stache.config.footer }}
-        {{ include stache.config.footer }}
-      {{ else }}
+    <div class="affix-stop">
+      {{# inherit stache.config.contribute contribute }}
+        {{{ include stache.config.partial_contribute }}}
+      {{/ inherit }}
 
-        <div class="footer-site">
-          <div class="{{ stache.config.bootstrap_container }}">
-            <div class="row">
-              <div class="col-xs-6 col-sm-4">
-                {{{ include stache.config.partial_footer_logo }}}
-                {{{ include stache.config.partial_footer_navigation }}}
+      {{# if stache.config.showFooter }}
+        {{# if stache.config.footer }}
+          {{ include stache.config.footer }}
+        {{ else }}
+
+          <div class="footer-site">
+            <div class="{{ stache.config.bootstrap_container }}">
+              <div class="row">
+                <div class="col-xs-6 col-sm-4">
+                  {{{ include stache.config.partial_footer_logo }}}
+                  {{{ include stache.config.partial_footer_navigation }}}
+                </div>
+                <div class="col-xs-6 col-sm-4">
+                  {{{ include stache.config.partial_footer_internal }}}
+                </div>
+                <div class="col-sm-4">
+                  {{{ include stache.config.partial_footer_social }}}
+                </div>
               </div>
-              <div class="col-xs-6 col-sm-4">
-                {{{ include stache.config.partial_footer_internal }}}
-              </div>
-              <div class="col-sm-4">
-                {{{ include stache.config.partial_footer_social }}}
-              </div>
+
             </div>
-
           </div>
-        </div>
 
+        {{/ if }}
       {{/ if }}
-    {{/ if }}
 
-    <div class="copyright">
-      <div class="{{ stache.config.bootstrap_container }}">
-        <div class="row">
+      <div class="copyright">
+        <div class="{{ stache.config.bootstrap_container }}">
+          <div class="row">
 
-          <div class="col-sm-6">
-            <p>&copy; Blackbaud, Inc.  All rights reserved.</p>
-          </div>  <!-- .col-sm-6 -->
+            <div class="col-sm-6">
+              <p>&copy; Blackbaud, Inc.  All rights reserved.</p>
+            </div>  <!-- .col-sm-6 -->
 
-          <div class="col-sm-6">
-          </div>  <!-- .col-sm-6 -->
+            <div class="col-sm-6">
+            </div>  <!-- .col-sm-6 -->
 
-        </div>  <!-- .row -->
-      </div>  <!-- .container -->
-    </div>  <!-- .copyright -->
+          </div>  <!-- .row -->
+        </div>  <!-- .container -->
+      </div>  <!-- .copyright -->
+    </div>
 
     {{# if stache.config.showOmnibar }}
       <div ng-controller="OmnibarController as omnibar">

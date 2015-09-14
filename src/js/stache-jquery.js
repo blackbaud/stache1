@@ -17,7 +17,7 @@
     sidebarNav.affix({
       offset: {
         top: body.css('padding-top').replace('px', ''),
-        bottom: $('.footer-site').outerHeight()
+        bottom: $('.affix-stop').outerHeight()
       }
     });
 
@@ -99,5 +99,5 @@
       }
     }
   });
-  
+
 }(jQuery, window, document));
