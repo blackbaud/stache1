@@ -10367,12 +10367,12 @@ dd.project-people {
   .ui-jqgrid tr.jqgrow:nth-child(even) {
     background-color: #f8f8f9; }
   .ui-jqgrid tr.ui-state-hover {
-    background-color: #ddd1f3 !important; }
+    background-color: #e4e5f8 !important; }
     .ui-jqgrid tr.ui-state-hover .bb-check-checkbox, .ui-jqgrid tr.ui-state-hover .bb-check-radio {
       border-color: #fff; }
   .ui-jqgrid .grid-multiselect tr.ui-state-highlight {
-    background-color: #ece5f8;
-    border: 1px solid #ddd1f3; }
+    background-color: #eeeffb;
+    border: 1px solid #dadbf6; }
   .ui-jqgrid tr.jqgrow {
     vertical-align: top; }
     .ui-jqgrid tr.jqgrow td {
@@ -10558,6 +10558,9 @@ dd.project-people {
       margin: 0 5px 0 0;
       min-width: 0;
       outline: none; }
+  .bb-checklist-filter-bar .btn-primary {
+    font-size: 12px;
+    font-weight: normal; }
   .bb-checklist-filter-bar input {
     background-color: #fff;
     height: 26px;
@@ -10913,6 +10916,22 @@ ul.bb-datefield.dropdown-menu {
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
 /* Font Awesome defaults */
+.bb-filters-inline {
+  background-color: #e9f4fc;
+  padding: 10px; }
+
+.toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active {
+  color: #1ab394;
+  border: 2px solid #1ab394;
+  border-radius: 3px; }
+
+.toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active:hover {
+  color: #676a6c; }
+
+/* begin _bootstrap-variable-defaults */
+/* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
+/* end _bootstrap-variable-defaults */
+/* Font Awesome defaults */
 .bb-grid-container {
   position: relative; }
 
@@ -11113,13 +11132,22 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
 .bb-grid-action-bar-mobile-cancel {
   padding-left: 15px; }
 
-.bb-grid-toolbar-container .toolbar .bb-grid-toolbar-btn-add {
+.bb-grid-toolbar-container .toolbar .bb-grid-toolbar-btn {
   float: left;
-  margin: 0 10px 0 0;
-  padding: 3px 10px; }
+  font-size: 12px;
+  margin: 0 5px 0 0;
+  padding: 3px 6px; }
+
+.bb-grid-toolbar-container .toolbar .bb-column-picker-btn, .bb-grid-toolbar-container .toolbar .bb-filter-btn {
+  margin-right: 0;
+  margin-left: 5px; }
 
 .bb-grid-multiselect .ui-jqgrid-labels th:first-child {
   text-align: center; }
+
+.bb-grid-toolbar-container .toolbar.bb-table-toolbar {
+  height: auto;
+  min-height: 39px; }
 
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
@@ -18928,6 +18956,55 @@ body:not(.bb-viewkeeper-ignore-fixed) {
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
 /* Font Awesome defaults */
+.bb-palette-multi-1 {
+  background-color: #1f91da; }
+
+.bb-palette-multi-2 {
+  background-color: #1dc8a6; }
+
+.bb-palette-multi-3 {
+  background-color: #28d7d9; }
+
+.bb-palette-multi-4 {
+  background-color: #f9b66d; }
+
+.bb-palette-multi-5 {
+  background-color: #ef6977; }
+
+.bb-palette-multi-6 {
+  background-color: #9176c6; }
+
+.bb-palette-multi-7 {
+  background-color: #919191; }
+
+.bb-palette-multi-8 {
+  background-color: #7ec2ed; }
+
+.bb-palette-multi-9 {
+  background-color: #75ebd3; }
+
+.bb-palette-multi-10 {
+  background-color: #85e8ea; }
+
+.bb-palette-multi-11 {
+  background-color: #fbcf9f; }
+
+.bb-palette-multi-12 {
+  background-color: #f59ca6; }
+
+.bb-palette-multi-13 {
+  background-color: #beaedd; }
+
+.bb-palette-multi-14 {
+  background-color: #afafaf; }
+
+.bb-palette-mono-1 {
+  background-color: #156395, #1c84c6, #44a6e5, #83c4ed, #c1e1f6; }
+
+/* begin _bootstrap-variable-defaults */
+/* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
+/* end _bootstrap-variable-defaults */
+/* Font Awesome defaults */
 .bb-omnibar .search {
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
   .bb-omnibar .search > .searchContainer > input.searchbox:focus {
@@ -19393,6 +19470,18 @@ body > .ui-select-bootstrap.open {
   text-align: center;
   width: 100%; }
 
+.bb-repeater {
+  padding: 15px; }
+
+.bb-tile-content-section > .bb-repeater {
+  padding: 0; }
+
+.bb-repeater-item {
+  padding: 10px;
+  border-bottom: dotted 1px #ccc; }
+  .bb-repeater-item:first-child {
+    padding-top: 0; }
+
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -19511,7 +19600,7 @@ input:-moz-placeholder {
     padding-right: 0; } }
 
 .highlight {
-  background-color: yellow; }
+  background-color: #ffe96d; }
 
 .grid-no-search .highlight {
   background-color: initial; }
