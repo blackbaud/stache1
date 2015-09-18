@@ -167,7 +167,7 @@ $padding-double: ceil(($base-padding * 2));
 $padding-triple: ceil(($base-padding * 3));
 // end margin & padding
 
-// begin toolbar 
+// begin toolbar
 $toolbar-button-color: #2B7DBA;
 $toolbar-button-fontsize: $font-size-lg;
 $toolbar-background-color: #fff;
@@ -203,5 +203,32 @@ $tile-form-background: #F2F2F2;
 $omnibar-height: 50px !default;
 $omnibar-height-small: 30px !default;
 //end omnibar/help widget
+
+// begin color palette
+$bb-palette-multi: (
+  scale-color($blue, $lightness: 8%),
+  scale-color($navy, $lightness: 8%),
+  scale-color($lazur, $lightness: 8%),
+  scale-color($yellow, $lightness: 12%),
+  scale-color($red, $lightness: 12%),
+  scale-color($purple, $lightness: 26%, $saturation: -30%),
+  scale-color($gray, $lightness: 28%),
+  scale-color($blue, $lightness: 48%),
+  scale-color($navy, $lightness: 48%),
+  scale-color($lazur, $lightness: 48%),
+  scale-color($yellow, $lightness: 42%),
+  scale-color($red, $lightness: 42%),
+  scale-color($purple, $lightness: 56%, $saturation: -30%),
+  scale-color($gray, $lightness: 48%)
+);
+
+$bb-palette-mono: (
+  scale-color($blue, $lightness: -25%),
+  $blue,
+  scale-color($blue, $lightness: 25%),
+  scale-color($blue, $lightness: 50%),
+  scale-color($blue, $lightness: 75%)
+)
+// end color palette
 
 // end _variables

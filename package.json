@@ -27,12 +27,14 @@
     "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-http": "^1.5.0",
-    "grunt-sass-blackbaud": "git+https://github.com/blackbaud-community/grunt-sass.git",
     "grunt-usemin": "^3.0.0",
     "helper-moment": "^0.1.0",
     "jit-grunt": "^0.9.1",
     "marked-blackbaud": "git+https://github.com/blackbaud-community/marked.git",
     "merge": "^1.2.0"
+  },
+  "devDependencies": {
+    "grunt-sass": "^1.1.0-beta"
   },
   "scripts": {}
 }

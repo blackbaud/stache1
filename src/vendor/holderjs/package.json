@@ -1,7 +1,7 @@
 {
   "name": "holderjs",
   "officialName": "Holder",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "summary": "client side image placeholders",
   "description": "Holder uses SVG to render image placeholders entirely in browser.",
   "author": {
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "component-type": "^1.1.0",
-    "gulp": "~3",
+    "gulp": "^3.9.0",
     "gulp-concat": "^2.2.0",
     "gulp-header": "^1.0.2",
     "gulp-jsbeautifier": "0.0.5",
@@ -47,5 +47,8 @@
   },
   "scripts": {
     "test": "node test/index"
+  },
+  "dependencies": {
+    "shaven": "^0.7.3"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "autoNumeric",
-  "version": "1.9.30",
+  "version": "1.9.39",
   "main": "./autoNumeric.js",
   "keywords": [
     "currency",
@@ -34,11 +34,11 @@
     "test",
     "tests"
   ],
-  "_release": "1.9.30",
+  "_release": "1.9.39",
   "_resolution": {
     "type": "version",
-    "tag": "1.9.30",
-    "commit": "ffc78b8b1171a61298e64d35cb7c893b935de8ad"
+    "tag": "v1.9.39",
+    "commit": "e660044b8b8bb7d4af6934e5e3e77decb10ad223"
   },
   "_source": "git://github.com/BobKnothe/autoNumeric.git",
   "_target": "~1.9.30",

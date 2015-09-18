@@ -242,24 +242,6 @@ module.exports = function (grunt) {
             }
         },
 
-        // Renamed sass since its config is shared between grunt-contrib-sass and grunt-contrib-sass
-        'sass-blackbaud': {
-            options: {
-                includePaths: [
-                    '<%= stache.dir %><%= stache.bower %>'
-                ]
-            },
-            build: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= stache.config.sass %>',
-                    src: ['*.scss'],
-                    dest: '<%= stache.config.css %>',
-                    ext: '.css'
-                }]
-            }
-        },
-
         // Needed to allow angular apps
         uglify: {
             options: {
@@ -790,7 +772,6 @@ module.exports = function (grunt) {
             'assemble',
             'assembleHooks:post',
             'prepareSearch',
-            'sass-blackbaud',
             'useminPrepare',
             'concat:generated',
             'cssmin:generated',
@@ -831,7 +812,6 @@ module.exports = function (grunt) {
             'assemble',
             'assembleHooks:post',
             'prepareSearch',
-            'sass-blackbaud',
             'connect',
             'watch',
             'stacheHooks:post'

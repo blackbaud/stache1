@@ -8,9 +8,9 @@ exports.newEl = function(tag, namespace) {
     if (!global.document) return;
 
     if (namespace == null) {
-        return document.createElement(tag);
+        return global.document.createElement(tag);
     } else {
-        return document.createElementNS(namespace, tag);
+        return global.document.createElementNS(namespace, tag);
     }
 };
 
@@ -55,5 +55,8 @@ exports.getNodeArray = function(val) {
     } else if (val === null) {
         retval = [];
     }
+
+    retval = Array.prototype.slice.call(retval);
+
     return retval;
 };

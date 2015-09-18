@@ -38,6 +38,18 @@
 	</div>
 </div>
 <div class="thumb">
+	<img data-src="holder.js/300x200?bg=rgb(85,98,112)&fg=rgb(78,205,196)">
+	<div class="caption">
+		Placeholder with rgb color values
+	</div>
+</div>
+<div class="thumb">
+	<img data-src="holder.js/300x200?bg=rgba(41, 128, 185,0.5)&fg=rgba(236, 240, 241,0.9)">
+	<div class="caption">
+		Placeholder with rgba color values
+	</div>
+</div>
+<div class="thumb">
 	<img data-src="holder.js/300x200?text=заполнитель">
 	<div class="caption">
 		 Placeholder with text
@@ -274,17 +286,9 @@
 
 Holder.run({'renderer':'html'});
 
-$(function () {
-	$("#invisible").show();
+Holder.addImage("holder.js/300x200?theme=sky", "#thumb1");
 
-	var resize = true;
-	$("#toggleResize").on("click", function () {
-		resize = !resize;
-		Holder.setResizeUpdate($(this).get(0), resize);
-	});
-});
-
-Holder.addImage("holder.js/300x200?theme=sky", "#thumb1").run();
+Holder.run();
 
 Holder.addTheme("custom", {foreground: "#fff", background: "#000", size: 15}).run({
 	domain: "custom.holder",
@@ -305,6 +309,16 @@ Holder.addImage("holder.js/300x200?theme=social&text=Added using addImage with a
 Holder.run({
 	domain: "holder.canvas",
 	renderer: "canvas"
+});
+
+$(function () {
+	$("#invisible").show();
+
+	var resize = true;
+	$("#toggleResize").on("click", function () {
+		resize = !resize;
+		Holder.setResizeUpdate($(this).get(0), resize);
+	});
 });
 </script>
 </body>

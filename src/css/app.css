@@ -61,8 +61,7 @@
         .bb-navbar .nav.navbar-nav li .dropdown-menu a:hover {
           background-color: #293846;
           color: #fff; }
-      .bb-navbar .nav.navbar-nav li:hover a,
-      .bb-navbar .nav.navbar-nav li.bb-navbar-active a {
+      .bb-navbar .nav.navbar-nav li:hover a, .bb-navbar .nav.navbar-nav li.bb-navbar-active a {
         background-color: #293846;
         border-bottom: solid 4px #1c84c6;
         color: #fff;
@@ -297,11 +296,15 @@
 .stache-omnibar-search {
   background: #FFF;
   left: 10px;
-  width: 380px;
-  position: absolute;
+  overflow: hidden;
+  position: fixed;
   top: 42px;
+  width: 380px;
   z-index: 2000;
   box-shadow: 0 3px 10px -1px #666; }
+
+.bb-omnibar-collapsed .stache-omnibar-search {
+  display: none; }
 
 .stache-omnibar-search ul {
   margin: 0;
@@ -313,6 +316,12 @@
 
 .stache-omnibar-search li:last-of-type {
   border-bottom: 0; }
+
+.stache-omnibar-search li a {
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto; }
 
 .stache-omnibar-search p {
   margin: 0;
@@ -387,8 +396,7 @@ hr.small {
 .content-min-height {
   min-height: 400px; }
 
-.header-with-button:before,
-.header-with-button:after {
+.header-with-button:before, .header-with-button:after {
   content: " ";
   display: table; }
 
@@ -567,11 +575,16 @@ div.draft h3 {
   color: #8c8f90;
   border-left: transparent solid 5px;
   margin: 10px 5px;
-  padding: 0 5px; }
+  padding: 0 5px;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto; }
 
 .nav-sidebar.nav li a:hover,
 .nav-sidebar.nav li a:focus {
-  background: none; }
+  background: none;
+  color: #2f4050; }
 
 .nav-sidebar.nav > li.active,
 .nav-sidebar .nav > li.active {
@@ -587,6 +600,13 @@ div.draft h3 {
 
 .nav-sidebar.nav li ul {
   margin-left: 15px; }
+
+.nav-sidebar.nav li.parent a {
+  border-left: 0;
+  margin-left: 0; }
+
+.nav-sidebar.nav li.parent-current {
+  border-top: solid 1px #EFEFEF; }
 
 /*
 * ==========================================================================
@@ -713,6 +733,25 @@ div.draft h3 {
 
 .showcase .show-on-hover .btn-white {
   margin-top: 10px; }
+
+/*
+* ==========================================================================
+* PAGE - STACHE CASTLE
+* ==========================================================================
+*/
+.td-icons {
+  white-space: nowrap; }
+
+.td-icons ul {
+  margin: 0;
+  padding: 0 20px 0 0; }
+
+.td-icons li {
+  margin: 0;
+  padding: 0; }
+
+.td-icons img {
+  max-width: none; }
 
 /*
 * ==========================================================================
@@ -924,7 +963,7 @@ p.note {
     width: 100%;
     margin: 0 auto; }
   .video-list-wrapper {
-    width: 200px;
+    width: 174px;
     height: 560px;
     display: inline-block;
     vertical-align: top;
@@ -957,8 +996,6 @@ p.note {
     margin: 0 auto;
     padding: 5px 0;
     height: 168px; }
-  .video-display {
-    width: 62%; }
   .video-display > iframe {
     position: absolute;
     width: 100%;

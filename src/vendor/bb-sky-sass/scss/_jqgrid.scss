@@ -13,7 +13,7 @@
         white-space: nowrap;
         background-color: $white;
     }
-    
+
     .ui-jqgrid-view {
         font-size: $font-size-base;
     }
@@ -32,7 +32,7 @@
     }
 
     tr.ui-state-hover {
-        background-color: lighten($purple, 40%) !important;
+        background-color: #e4e5f8 !important;
         .bb-check-checkbox, .bb-check-radio {
             border-color: #fff;
         }
@@ -40,11 +40,10 @@
 
     .grid-multiselect {
         tr.ui-state-highlight {
-            background-color: lighten($purple, 45%);
-            border: 1px solid lighten($purple, 40%);
+            background-color: #eeeffb;
+            border: 1px solid #dadbf6;
         }
     }
-
 
     tr.jqgrow {
         vertical-align: top;
@@ -76,21 +75,21 @@
         margin-left: 3px;
         @extend .fa;
     }
-    
+
     thead .sorting-desc > div > span {
         @extend .fa-caret-down;
     }
-   
+
     thead .sorting-asc > div > span {
         @extend .fa-caret-up;
     }
-    
+
     thead .sorting-desc, thead .sorting-asc {
         > div:after {
             display: none;
         }
     }
-    
+
     //////////////////////////////////////////////////////////////
     ///End: Apply styles to make jqGrid look like our normal tables
     //////////////////////////////////////////////////////////////
@@ -151,11 +150,11 @@
             vertical-align: middle;
             white-space: pre-wrap;
         }
-        
+
         .bb-check-checkbox {
             height: 22px;
         }
-        
+
         .bb-check-checkbox:before {
             padding-left: 0;
         }
@@ -178,12 +177,12 @@
     .loading {
         display: none !important;
     }
-    
+
     .dropdown-toggle {
         color: $gray-light;
         text-decoration: none!important;
     }
-    
+
     tr.jqgrow td.bb-grid-dropdown-cell {
         overflow: visible;
     }
