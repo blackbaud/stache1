@@ -43,7 +43,7 @@
           angular.element(document).ready(function () {
 
             // Look into making this mirror the Angular Directive
-            $('.productmenucontainer').append($('.navbar-nav').clone().toggleClass('nav-items bb-omnibar-productmenu'));
+            $('.productmenucontainer').append($('.navbar .navbar-nav').clone().toggleClass('nav-items bb-omnibar-productmenu'));
 
             {{# if stache.config.omnibar_link_enabled }}
               $('.servicename').wrapInner('<a id="omnibar-link" href="{{ stache.config.omnibar_link }}"></a>');
