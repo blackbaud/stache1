@@ -34,8 +34,12 @@ layout: layout-container
             {{# if summary }}
               <p>{{ summary }}</p>
             {{ else }}
-              {{# if description }}
-                <p>{{ description }}</p>
+              {{# if synopsis }}
+                <p>{{ synopsis }}</p>
+              {{ else }}
+                {{# if description }}
+                  <p>{{ description }}</p>
+                {{/ if }}
               {{/ if }}
             {{/ if}}
             {{# if icon }}

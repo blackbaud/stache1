@@ -477,6 +477,15 @@ module.exports = function (grunt) {
                         case 'sandcastle':
                             processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
                         break;
+                        case 'powershell':
+                            json = json.cmdlet;
+                            for (i = 0, j = json.length; i < j; i++) {
+                                json[i].layout = 'layout-' + page.type;
+                                pages[page.dest + json[i].name + '/index.md'] = {
+                                    data: json[i]
+                                };
+                            }
+                        break;
                         default:
                             grunt.log.writeln('Unknown custom page datatype.');
                         break;
