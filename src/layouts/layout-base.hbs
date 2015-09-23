@@ -21,8 +21,16 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    {{# inherit stache.config.google_analytics_id google_analytics_id }}
+      {{{ include stache.config.partial_google_analytics }}}
+    {{/ inherit }}
+
   </head>
   <body class="{{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+
+    {{# inherit stache.config.google_tagmanager_id google_tagmanager_id }}
+      {{{ include stache.config.partial_google_tagmanager }}}
+    {{/ inherit }}
 
     <div id="top"></div>
 
