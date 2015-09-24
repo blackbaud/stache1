@@ -46,6 +46,7 @@ partial_contribute: <%= stache.config.partials %>partial-contribute.hbs
 partial_layout_sandcastle: <%= stache.config.partials %>partial-layout-sandcastle.hbs
 partial_google_analytics: <%= stache.config.partials %>partial-google-analytics.hbs
 partial_google_tagmanager: <%= stache.config.partials %>partial-google-tagmanager.hbs
+partial_powershell: <%= stache.config.partials %>partial-layout-powershell.hbs
 
 # =============================================
 # STACHE - SERVING

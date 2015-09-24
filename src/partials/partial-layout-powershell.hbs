@@ -1,0 +1,95 @@
+<section class="powershell-partial">
+<header>
+  <h1>{{name}}</h1>
+  <h2>{{synopsis}}</h2>
+</header>
+
+<h2>Syntax</h2>
+<pre><code class="language-powershell">{{syntax}}</code></pre>
+  
+<h2>Description</h2>
+<p>{{description}}</p>
+
+<h2>Parameters</h2>
+{{#each parameter}}
+  <h3>{{name}}</h3>
+  <table class="table table-striped">
+    <tbody>
+      <tr>
+        <td class="col-md-2">Description</td>
+        <td class="col-md-4">{{description}}</td>
+      </tr>
+      <tr>
+        <td class="col-md-2">Required?</td>
+        <td class="col-md-2">{{required}}</td>
+      </tr>
+      <tr>
+        <td class="col-md-2">Position</td>
+        <td class="col-md-2">{{position}}</td>
+      </tr>
+      <tr>
+        <td class="col-md-2">Default Value</td>
+        <td class="col-md-2">{{defaultValue}}</td>
+      </tr>
+      <tr>
+        <td class="col-md-2">Accept Pipeline?</td>
+        <td class="col-md-2">{{acceptPipeline}}</td>
+      </tr>
+      <tr>
+        <td class="col-md-2">Accept Wildcard?</td>
+        <td class="col-md-2">{{acceptWildcard}}</td>
+      </tr>
+    </tbody>
+  </table>
+{{/each}}
+
+{{#if examples }}
+  <h2>Examples</h2>
+  {{#each examples}}
+    <h3>{{name}}</h3>
+    <pre><code class="language-powershell">{{example}}</code></pre>
+  {{/each}}
+{{/if}}
+  
+{{#if inputs}}
+  <h2>Inputs</h2>
+  <p>{{inputs}}</p>
+{{/if}}
+  
+{{#if outputs}}
+  <h2>Outputs</h2>
+  <p>{{outputs}}</p>
+{{/if}}
+  
+{{#if notes}}
+  <h2>Notes</h2>
+  <p>{{notes}}</p>
+{{/if}}
+  
+{{#if component}}
+  <h2>Component</h2>
+  <p>{{component}}</p>
+{{/if}}
+  
+{{#if role}}
+  <h2>Role</h2>
+  <p>{{role}}</p>
+{{/if}}
+  
+{{#if functionality}}
+  <h2>Functionality</h2>
+  <p>{{functionality}}</p>
+{{/if}}
+  
+{{#if links}}
+  <h2>Related Links</h2>
+  {{#each links}}
+  <p><a href="../{{link}}">{{link}}</a></p>
+  {{/each}}
+{{/if}}
+  
+</section>
+
+
+
+
