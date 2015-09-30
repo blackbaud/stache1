@@ -10,7 +10,10 @@ $yellow: #f8ac59;
 $red: #ed5565;
 
 // Various colors
-$text-color: #676a6c;
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+// $text-color: #676a6c;
 $gray: #f3f3f4;
 $light-gray: #d1dade;
 $label-badget-color: #5e5e5e;

@@ -199,6 +199,10 @@ $tile-header-tool-padding: 15px;
 $tile-form-background: #F2F2F2;
 //end tile
 
+// begin text color
+$text-color: #292a2b !default;
+// end text color
+
 // begin omnibar/help widget
 $omnibar-height: 50px !default;
 $omnibar-height-small: 30px !default;
@@ -228,7 +232,7 @@ $bb-palette-mono: (
   scale-color($blue, $lightness: 25%),
   scale-color($blue, $lightness: 50%),
   scale-color($blue, $lightness: 75%)
-)
+);
 // end color palette
 
 // end _variables

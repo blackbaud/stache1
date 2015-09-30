@@ -1,5 +1,11 @@
 @charset "UTF-8";
 /*Imports all of Sky including Bootstrap*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -1064,7 +1070,7 @@ body {
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 1.428571429;
-  color: #676a6c;
+  color: #292a2b;
   background-color: #fff; }
 
 input,
@@ -2694,7 +2700,7 @@ select[multiple].input-lg,
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
-  color: #a7aaab; }
+  color: #676a6c; }
 
 @media (min-width: 768px) {
   .form-inline .form-group {
@@ -4236,7 +4242,7 @@ a.badge:hover, a.bb-show-more:hover, a.badge:focus, a.bb-show-more:focus {
     margin-right: auto; }
   .thumbnail .caption {
     padding: 9px;
-    color: #676a6c; }
+    color: #292a2b; }
 
 a.thumbnail:hover,
 a.thumbnail:focus,
@@ -5665,7 +5671,7 @@ button.close {
 .pagination .previous a,
 .pagination .next a,
 .pagination .last a,
-.pagination [ng-if='::directionLinks'] a {
+.pagination [ng-if='::directionLinks'] a, .nav-tabs > li > a .bb-tab-close-icon, .nav-tabs.nav-justified > li > a .bb-tab-close-icon {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -5727,14 +5733,14 @@ button.close {
 .pagination .previous a.pull-left,
 .pagination .next a.pull-left,
 .pagination .last a.pull-left,
-.pagination [ng-if='::directionLinks'] a.pull-left {
+.pagination [ng-if='::directionLinks'] a.pull-left, .nav-tabs > li > a .pull-left.bb-tab-close-icon {
   margin-right: .3em; }
 
 .fa.pull-right, .ui-jqgrid thead .sorting-desc > div > span.pull-right, .ui-jqgrid thead .sorting-asc > div > span.pull-right, .pull-right.caret, .pagination .first a.pull-right,
 .pagination .previous a.pull-right,
 .pagination .next a.pull-right,
 .pagination .last a.pull-right,
-.pagination [ng-if='::directionLinks'] a.pull-right {
+.pagination [ng-if='::directionLinks'] a.pull-right, .nav-tabs > li > a .pull-right.bb-tab-close-icon {
   margin-left: .3em; }
 
 .fa-spin {
@@ -5864,7 +5870,9 @@ button.close {
 
 .fa-remove:before,
 .fa-close:before,
-.fa-times:before {
+.fa-times:before,
+.nav-tabs > li > a .bb-tab-close-icon:before,
+.nav-tabs.nav-justified > li > a .bb-tab-close-icon:before {
   content: ""; }
 
 .fa-search-plus:before {
@@ -7456,6 +7464,9 @@ button.close {
 .fa-medium:before {
   content: ""; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 h1, h2, h3, h4, h5, h6 {
   font-weight: 100; }
 
@@ -7654,14 +7665,14 @@ h3, h4, h5 {
 .pagination .previous a.arrow:before,
 .pagination .next a.arrow:before,
 .pagination .last a.arrow:before,
-.pagination [ng-if='::directionLinks'] a.arrow:before {
+.pagination [ng-if='::directionLinks'] a.arrow:before, .nav-tabs > li > a .arrow.bb-tab-close-icon:before {
   content: "\f104"; }
 
 .active > a > .fa.arrow:before, .active > a > .arrow.caret:before, .pagination .first .active > a > a.arrow:before,
 .pagination .previous .active > a > a.arrow:before,
 .pagination .next .active > a > a.arrow:before,
 .pagination .last .active > a > a.arrow:before,
-.pagination [ng-if='::directionLinks'] .active > a > a.arrow:before {
+.pagination [ng-if='::directionLinks'] .active > a > a.arrow:before, .nav-tabs > li.active > a > .arrow.bb-tab-close-icon:before {
   content: "\f107"; }
 
 .nav-second-level li,
@@ -8927,7 +8938,7 @@ body {
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #2f4050;
   font-size: 13px;
-  color: #676a6c;
+  color: #292a2b;
   overflow-x: hidden; }
 
 body.boxed-layout {
@@ -9151,7 +9162,7 @@ body.body-small .footer.fixed {
 
 .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
   background-color: #e6e6e6;
-  color: #676a6c; }
+  color: #292a2b; }
 
 .ui-tab .tab-content {
   padding: 20px 0px; }
@@ -9219,7 +9230,7 @@ img.circle-border {
 .icons-box .infont a i {
   font-size: 25px;
   display: block;
-  color: #676a6c; }
+  color: #292a2b; }
 
 .icons-box .infont a {
   color: #a6a8a9; }
@@ -10076,7 +10087,7 @@ ul.notes li div {
   border-top: 1px solid #e7eaec; }
 
 .file-name small {
-  color: #676a6c; }
+  color: #292a2b; }
 
 .corner {
   position: absolute;
@@ -10208,7 +10219,7 @@ dd.project-people {
 
 .project-title a {
   font-size: 14px;
-  color: #676a6c;
+  color: #292a2b;
   font-weight: 600; }
 
 .project-list table tr td {
@@ -10230,7 +10241,7 @@ dd.project-people {
 
 .project-files li a {
   font-size: 11px;
-  color: #676a6c;
+  color: #292a2b;
   margin-left: 10px;
   line-height: 22px; }
 
@@ -10334,6 +10345,12 @@ dd.project-people {
   .nav.navbar-top-links li.dropdown {
     display: none; } }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -10460,6 +10477,12 @@ dd.project-people {
   .ui-jqgrid tr.jqgrow td.bb-grid-dropdown-cell {
     overflow: visible; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -10481,8 +10504,14 @@ dd.project-people {
 .bb-show-more {
   border: 0;
   background-color: #eeeeee;
-  color: #676A6C; }
+  color: #292a2b; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -10525,6 +10554,12 @@ dd.project-people {
   background-color: #d1dade;
   cursor: default; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -10619,6 +10654,12 @@ dd.project-people {
 .bb-checklist-list-title {
   font-weight: 700; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -10808,13 +10849,13 @@ ul.bb-datefield.dropdown-menu {
   z-index: 5000; }
 
 .bb-datefield.input-group .btn-default, ul.bb-datefield.dropdown-menu .btn-default {
-  color: #676a7c;
+  color: #292a2b;
   background-color: #fff;
   border-color: #fff;
   border-radius: 3px; }
 
 .bb-datefield.input-group .btn-default:hover, .bb-datefield.input-group .btn-default:focus, .bb-datefield.input-group .btn-default:active, .bb-datefield.input-group btn-default.active, ul.bb-datefield.dropdown-menu .btn-default:hover, ul.bb-datefield.dropdown-menu .btn-default:focus, ul.bb-datefield.dropdown-menu .btn-default:active, ul.bb-datefield.dropdown-menu btn-default.active {
-  color: #676a7c;
+  color: #292a2b;
   background-color: #ebebeb;
   border-color: #adadad; }
 
@@ -10912,6 +10953,18 @@ ul.bb-datefield.dropdown-menu {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   cursor: not-allowed; }
 
+body.dropdown {
+  position: static; }
+
+body.dropup {
+  position: static; }
+
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -10926,8 +10979,14 @@ ul.bb-datefield.dropdown-menu {
   border-radius: 3px; }
 
 .toolbar.bb-table-toolbar .bb-filter-btn.bb-filters-inline-active:hover {
-  color: #676a6c; }
+  color: #292a2b; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -11149,6 +11208,12 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
   height: auto;
   min-height: 39px; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -11345,6 +11410,12 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
   100% {
     transform: rotate(359deg); } }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -11440,6 +11511,12 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
 .bb-page-tabs > .nav-tabs {
   padding-left: 15px; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -11481,6 +11558,12 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
     cursor: default; }
 
 /* PAGINATION END */
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -18348,7 +18431,9 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
     font-size: 22px;
     font-weight: 100;
     margin: 0;
-    padding: 9px 15px; }
+    padding: 9px 15px;
+    text-overflow: ellispsis;
+    display: inline-block; }
 
 .bb-tile .bb-tile-header-with-content {
   float: left;
@@ -18478,6 +18563,12 @@ tiles behave within a column of tiles.*/
   .bb-page-content-tile-column-sortable .bb-tile-grab-handle {
     display: inline-block; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -18503,6 +18594,12 @@ tiles behave within a column of tiles.*/
   color: #2B7DBA; }
 
 /* TOOLBARS END */
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -18678,6 +18775,12 @@ select.ng-invalid.submitted,
   height: 32px; }
 
 /* FORMS END */
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -18693,7 +18796,10 @@ select.ng-invalid.submitted,
     width: 80%;
     float: left;
     line-height: 1.4;
-    /* Keeps font descenders from being cut off */ }
+    /* Keeps font descenders from being cut off */
+    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 14px; }
   .modal-header .bb-helpbutton {
     float: right;
     margin-right: 20px;
@@ -18708,7 +18814,8 @@ select.ng-invalid.submitted,
     border: 1px solid #ccc;
     -webkit-appearance: none; }
 
-.modal-body-tiled {
+.modal-body-tiled,
+.bb-modal-body-tiled {
   background-color: #F2F2F2; }
 
 .modal {
@@ -18779,10 +18886,19 @@ select.ng-invalid.submitted,
     color: #CA2A2A;
     padding-left: 5px; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
 /* Font Awesome defaults */
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 body:not(.bb-viewkeeper-ignore-fixed) {
   /*Special handling for jqGrid since it already specifies the position attribute with a more specific selector */ }
   body:not(.bb-viewkeeper-ignore-fixed) .bb-viewkeeper-fixed {
@@ -18922,6 +19038,12 @@ body:not(.bb-viewkeeper-ignore-fixed) {
   opacity: 0.5; }
 
 /* end _responsivetabs.scss*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -18952,6 +19074,12 @@ body:not(.bb-viewkeeper-ignore-fixed) {
   cursor: -webkit-grab;
   cursor: -moz-grab; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -18999,8 +19127,26 @@ body:not(.bb-viewkeeper-ignore-fixed) {
   background-color: #afafaf; }
 
 .bb-palette-mono-1 {
-  background-color: #156395, #1c84c6, #44a6e5, #83c4ed, #c1e1f6; }
+  background-color: #156395; }
 
+.bb-palette-mono-2 {
+  background-color: #1c84c6; }
+
+.bb-palette-mono-3 {
+  background-color: #44a6e5; }
+
+.bb-palette-mono-4 {
+  background-color: #83c4ed; }
+
+.bb-palette-mono-5 {
+  background-color: #c1e1f6; }
+
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -19023,6 +19169,12 @@ body:not(.bb-viewkeeper-ignore-fixed) {
 .bb-helpbutton {
   float: inherit; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -19032,6 +19184,12 @@ body:not(.bb-viewkeeper-ignore-fixed) {
   padding: 10px;
   background-color: rgba(39, 58, 75, 0.8); }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -19131,6 +19289,12 @@ body:not(.bb-viewkeeper-ignore-fixed) {
   100% {
     box-shadow: 0 0 100px 20px transparent; } }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -19240,35 +19404,73 @@ body > .ui-select-bootstrap.open {
   height: 0;
   opacity: 0; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
 /* Font Awesome defaults */
-.nav-tabs {
+.nav-tabs, .nav-tabs.nav-justified {
   border-bottom: 2px solid #1c84c6; }
-  .nav-tabs > li > a {
+  .nav-tabs > li.bb-tab-close > a, .nav-tabs.nav-justified > li.bb-tab-close > a {
+    padding-right: 5px; }
+  .nav-tabs > li.bb-tab-button .bb-tab-button-wrap, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap {
+    background-color: transparent;
+    border: none;
+    padding: 0px 0px;
+    width: 44px; }
+    .nav-tabs > li.bb-tab-button .bb-tab-button-wrap .btn-white, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap .btn-white {
+      color: #1c84c6;
+      padding-top: 5px;
+      padding-bottom: 5px; }
+  .nav-tabs > li.bb-tab-button .bb-tab-button-wrap:active, .nav-tabs > li.bb-tab-button .bb-tab-button-wrap:hover, .nav-tabs > li.bb-tab-button .bb-tab-button-wrap:focus, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap:active, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap:hover, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap:focus {
+    box-shadow: none;
+    outline: none; }
+  .nav-tabs > li.bb-tab-button .bb-tab-button-add .btn-white, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-add .btn-white {
+    padding-left: 7px;
+    padding-right: 7px; }
+  .nav-tabs > li.bb-tab-button .bb-tab-button-open .btn-white, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-open .btn-white {
+    padding-left: 5px;
+    padding-right: 5px; }
+  .nav-tabs > li > a, .nav-tabs.nav-justified > li > a {
     color: #999999;
-    font-size: 14px; }
-  .nav-tabs > li > a:hover {
+    font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis; }
+    .nav-tabs > li > a .bb-tab-close-icon, .nav-tabs.nav-justified > li > a .bb-tab-close-icon {
+      padding-left: 10px;
+      cursor: pointer;
+      -webkit-appearance: none;
+      background-color: transparent;
+      border: none;
+      outline: none; }
+    .nav-tabs > li > a .bb-tab-close-icon:active, .nav-tabs > li > a .bb-tab-close-icon:hover, .nav-tabs > li > a .bb-tab-close-icon:focus, .nav-tabs.nav-justified > li > a .bb-tab-close-icon:active, .nav-tabs.nav-justified > li > a .bb-tab-close-icon:hover, .nav-tabs.nav-justified > li > a .bb-tab-close-icon:focus {
+      box-shadow: none;
+      outline: none; }
+  .nav-tabs > li > a:hover, .nav-tabs.nav-justified > li > a:hover {
     background-color: #eeeeee;
     border-color: transparent; }
-  .nav-tabs > li .bb-tab-header-title {
+  .nav-tabs > li .bb-tab-header-title, .nav-tabs.nav-justified > li .bb-tab-header-title {
     margin-top: 0; }
-  .nav-tabs > li .bb-tab-header-count {
+  .nav-tabs > li .bb-tab-header-count, .nav-tabs.nav-justified > li .bb-tab-header-count {
     font-weight: normal; }
   .nav-tabs > li.active > a,
   .nav-tabs > li.active > a:hover,
-  .nav-tabs > li.active > a:focus {
+  .nav-tabs > li.active > a:focus, .nav-tabs.nav-justified > li.active > a, .nav-tabs.nav-justified > li.active > a:hover, .nav-tabs.nav-justified > li.active > a:focus {
     background-color: #1c84c6;
     border-color: transparent;
     color: #fff; }
   .nav-tabs > li.active .bb-tab-header-title,
-  .nav-tabs > li.active .bb-tab-header-count {
+  .nav-tabs > li.active .bb-tab-header-count, .nav-tabs.nav-justified > li.active .bb-tab-header-title, .nav-tabs.nav-justified > li.active .bb-tab-header-count {
     color: #fff; }
 
 .bb-tab-header-count {
   color: #1c84c6;
-  font-size: 18px;
+  font-size: 13px;
   font-family: "Oswald", sans-serif;
   margin-left: 5px; }
 
@@ -19292,6 +19494,12 @@ body > .ui-select-bootstrap.open {
     display: inline-block;
     float: none; }
 
+@media (min-width: 768px) {
+  .nav-justified > li, .nav-tabs.nav-justified > li, .nav-tabs.nav-justified > li {
+    width: auto; }
+    .nav-justified > li > a, .nav-tabs.nav-justified > li > a, .nav-tabs.nav-justified > li > a {
+      border: none; } }
+
 .bb-text-expand-ellipsis {
   letter-spacing: 2px;
   white-space: nowrap;
@@ -19303,6 +19511,12 @@ body > .ui-select-bootstrap.open {
 .bb-text-expand-see-more {
   white-space: nowrap; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -19482,6 +19696,12 @@ body > .ui-select-bootstrap.open {
   .bb-repeater-item:first-child {
     padding-top: 0; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -19496,6 +19716,7 @@ body {
         Inspinia sets overflow-x to hidden, but this causes problems with the drag/drop tile functionality where the tile will suddenly jump up
         relative to the space that the user has scrolled down on the page.  Set it back to visible to avoid that problem.
     */
+  color: #292a2b;
   overflow-x: visible; }
 
 .wrapper-content {
@@ -19512,7 +19733,7 @@ h1, h2, h3,
 
 h1, .h1 {
   font-family: "Oswald", sans-serif;
-  font-size: 42px;
+  font-size: 32px;
   font-weight: 100; }
 
 h4, h5, h6,
@@ -19716,7 +19937,7 @@ label.error {
     background-color: #fff; }
 
 .btn-white {
-  color: #676a6c;
+  color: #292a2b;
   font-family: 'Open Sans';
   font-size: 14px; }
 
@@ -19750,10 +19971,25 @@ dt {
 * VARIABLE DECLARATION
 * ==========================================================================
 */
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
 /* Font Awesome defaults */
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -20166,9 +20402,6 @@ hr.small {
 .section-padding h2 {
   padding: 20px 0; }
 
-.modal-footer {
-  text-align: right; }
-
 .tab-content {
   margin-top: 20px; }
 
@@ -20221,6 +20454,9 @@ div.draft h3 {
 .bb-navbar.ng-scope {
   border-bottom: 0; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /*
 * ==========================================================================
 * BBSKY CHAR
@@ -20562,7 +20798,7 @@ p.note {
 .pagination .last a,
 .pagination .last .btn-notes a, .btn-notes
 .pagination [ng-if='::directionLinks'] a,
-.pagination [ng-if='::directionLinks'] .btn-notes a {
+.pagination [ng-if='::directionLinks'] .btn-notes a, .btn-notes .nav-tabs > li > a .bb-tab-close-icon, .nav-tabs > li > a .btn-notes .bb-tab-close-icon {
   font-size: 16px; }
 
 .btn-notes-inline {
@@ -20576,7 +20812,7 @@ p.note {
 .pagination .last .btn-xs > a,
 .pagination .last .btn-group-xs > .btn > a,
 .pagination [ng-if='::directionLinks'] .btn-xs > a,
-.pagination [ng-if='::directionLinks'] .btn-group-xs > .btn > a {
+.pagination [ng-if='::directionLinks'] .btn-group-xs > .btn > a, .nav-tabs > li > a .btn-xs > .bb-tab-close-icon, .nav-tabs > li > a .btn-group-xs > .btn > .bb-tab-close-icon {
   font-size: 14px;
   top: 1px;
   position: relative; }

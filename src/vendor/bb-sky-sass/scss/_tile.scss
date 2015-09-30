@@ -12,6 +12,8 @@
             font-weight: 100;
             margin: 0;
             padding: 9px $tile-header-tool-padding;
+            text-overflow: ellispsis;
+            display: inline-block;
         }
     }
 
@@ -25,7 +27,7 @@
             padding-right: $tile-header-tool-padding * (2 / 3);
         }
     }
-    
+
     .ibox-tools {
         -ms-touch-action: none;
         touch-action: none;
@@ -69,7 +71,7 @@
         background-color: transparent;
     }
 }
-    
+
 .bb-tile-header-content {
     color: $navy;
     display: inline;

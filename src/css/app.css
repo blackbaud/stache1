@@ -9,10 +9,25 @@
 * VARIABLE DECLARATION
 * ==========================================================================
 */
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
 /* Font Awesome defaults */
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /* begin _bootstrap-variable-defaults */
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
@@ -425,9 +440,6 @@ hr.small {
 .section-padding h2 {
   padding: 20px 0; }
 
-.modal-footer {
-  text-align: right; }
-
 .tab-content {
   margin-top: 20px; }
 
@@ -480,6 +492,9 @@ div.draft h3 {
 .bb-navbar.ng-scope {
   border-bottom: 0; }
 
+/* Removing this from Inspinia because we are overriding it,
+   and there is no !default, and we're trying to rip out Inspinia anyways
+*/
 /*
 * ==========================================================================
 * BBSKY CHAR

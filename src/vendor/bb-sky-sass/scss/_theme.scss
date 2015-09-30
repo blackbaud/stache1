@@ -11,6 +11,7 @@ body {
         Inspinia sets overflow-x to hidden, but this causes problems with the drag/drop tile functionality where the tile will suddenly jump up
         relative to the space that the user has scrolled down on the page.  Set it back to visible to avoid that problem.
     */
+    color: $text-color;
     overflow-x: visible;
 }
 
@@ -31,7 +32,7 @@ h1, h2, h3,
 
 h1, .h1 {
     font-family: $font-family-narrow;
-    font-size: 42px;
+    font-size: 32px;
     font-weight: 100;
 }
 
@@ -132,13 +133,13 @@ input:-moz-placeholder { /* Firefox 18- */
         padding-left: 0;
         padding-right: 0;
     }
-    
+
     // Since we remove the gutters on the sides of tiles on small screens, we need to remove
     // the right margin and padding from the header so it doesn't create a horizontal scroll.
     .bb-tile .ibox-title > .row {
         margin-right: 0;
     }
-    
+
     .bb-tile-header-column-tools {
         padding-right: 0;
     }
@@ -212,7 +213,7 @@ label.error {
     max-width: none;
     background-color: $white;
     padding: 0;
-    
+
     text-align: left;
     color: $gray-dark;
     font-family: $font-family-base;
@@ -222,7 +223,7 @@ label.error {
     .bb-tooltip-title {
         font-weight: bold;
     }
-    
+
     hr {
         padding-bottom: 5px;
     }
@@ -273,7 +274,7 @@ label.error {
 }
 
 .btn-white {
-    color: #676a6c;
+    color: $text-color;
     font-family: 'Open Sans';
     font-size: 14px;
 }
@@ -283,7 +284,7 @@ label.error {
     font-family: 'Open Sans';
     font-size: 14px;
     padding: 0;
-    
+
     &:hover {
         color: $link-hover-color;
     }

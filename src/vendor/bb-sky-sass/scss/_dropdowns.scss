@@ -15,7 +15,7 @@
     padding: 0;
     height: 24px;
     width: 24px;
-    
+
     &:hover,
     &:focus,
     &:active,
@@ -43,11 +43,11 @@
         text-align: left;
         white-space: nowrap;
     }
-    
+
     li > a.font-bold {
         font-weight: 600;
     }
-    
+
     li > a {
         &:hover,
         &:focus {
@@ -56,7 +56,7 @@
             background-color: $dropdown-link-hover-bg;
         }
     }
-    
+
     .active > a {
         &,
         &:hover,
@@ -67,7 +67,7 @@
             background-color: $dropdown-link-active-bg;
         }
     }
-    
+
     .disabled > a {
         &,
         &:hover,
@@ -85,4 +85,12 @@
             cursor: $cursor-disabled;
         }
     }
+}
+
+body.dropdown {
+    position: static;
+}
+
+body.dropup {
+    position: static;
 }

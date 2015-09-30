@@ -1047,8 +1047,8 @@ The check directive allows you to change an input element of type checkbox or ra
  - `bb-checklist-search-debounce` Number of milliseconds to debounce changes to the search text.  Useful if making a web request in the `bb-checklist-filter-callback` to avoid making the request after every character typed.
  - `bb-checklist-no-items-message` *(Default: `'No items found'`)* Message to display when no items are in the list.
  - `bb-checklist-mode` *(Optional. Default: 'grid')* one of two possible values:
-  - `grid` Displays items in a grid with any number of columns.  Columns are specified using mulitple `bb-checklist-column` elements.
-  - `list` Displays items in a list with a title and description.  Items are expected to have `title`, `description` and `category` properties.
+  - `list` Displays items in a list with a title and description.  Items are expected to have `title`, `description` and `category` properties.  This is the preferred method of displaying a checklist.
+  - `grid` Displays items in a grid with any number of columns.  Columns are specified using mulitple `bb-checklist-column` elements.  For backwards compatibility reasons this is the default mode, but `list` is the preferred mode since it is mobile-responsive.
  - `bb-checklist-categories` An array of category names used to build category filter buttons at the top of the list.
 
 ### Checklist Column Settings ###
@@ -1416,16 +1416,16 @@ The check directive allows you to change an input element of type checkbox or ra
 /** @module Context Menu
 
 @icon ellipsis-h
-@summary The context menu directives allow you to easily create dropdowns styled with the sky context menu.
-@description The context menu directives allow you to easily create [dropdowns](https://angular-ui.github.io/bootstrap/#/dropdown) styled with the sky context menu. There are 3 directives in the context menu module: 
+@summary The context menu directive allow you to easily create Sky-styled dropdown menus.
+@description The context menu directives allow you to easily create Sky-styled  [dropdown](https://angular-ui.github.io/bootstrap/#/dropdown) menus. There are 3 directives in the context menu module:
   - `bb-context-menu` creates a dropdown with the context menu button.
   - `bb-context-menu-item` creates dropdown menu items within a dropdown that execute `bb-context-menu-action` on click.
-  - `bb-context-menu-button` creates a button with the sky context menu styles.
+  - `bb-context-menu-button` creates a button with the Sky context menu styles.
 */
 
 (function () {
     'use strict';
-    
+
     function bbContextMenu() {
         return {
             replace: true,
@@ -1434,7 +1434,7 @@ The check directive allows you to change an input element of type checkbox or ra
             templateUrl: 'sky/templates/contextmenu/contextmenu.html'
         };
     }
-    
+
     function bbContextMenuItem() {
         return {
             restrict: 'E',
@@ -1443,10 +1443,10 @@ The check directive allows you to change an input element of type checkbox or ra
             scope: {
                 clickItem: '&bbContextMenuAction'
             },
-            template: '<li role="presentation"><a role="menuitem" href="javascript:void(0)" ng-click="clickItem()"><ng-transclude/></a></li>' 
+            template: '<li role="presentation"><a role="menuitem" href="javascript:void(0)" ng-click="clickItem()"><ng-transclude/></a></li>'
         };
     }
-    
+
     function bbContextMenuButton() {
         return {
             restrict: 'E',
@@ -1454,34 +1454,34 @@ The check directive allows you to change an input element of type checkbox or ra
             template: '<button type="button" class="btn btn-white bb-context-menu-btn"><i class="fa fa-ellipsis-h"></i></button>'
         };
     }
-    
+
     angular.module('sky.contextmenu', ['ui.bootstrap.dropdown'])
         .directive('bbContextMenu', bbContextMenu)
         .directive('bbContextMenuItem', bbContextMenuItem)
         .directive('bbContextMenuButton', bbContextMenuButton);
 }());
-/*jslint plusplus: true */
+
 /*global angular, jQuery, require */
 
 /** @module Data
 
-@summary The bbData service gives you access to convenience functions for manipulating data.
+@summary The data service provides methods for loading data from and saving data to web service endpoints.
 @icon database
-@description The bbData service gives you access to convenience functions for manipulating data.
+@description The data service provides methods for loading data from and saving data to web service endpoints.
 
-### bbData functions ###
+### bbData Functions ###
 
-  - `load(loadObj)` Takes an object with a data, resources, and text property and returns a promise that contains the result of a HTTP GET request using the urls stored within. The argument object has the following properties: 
-    - `data` Either a url or an object with multiple urls to send a HTTP request to, the promise results will be contained in `result.data`. e.g. `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`
-    - `resources` Either a url or an object with multiple urls to send a HTTP request to, the promise results will be contained in `result.resources`. 
-    - `text` Either a url or an object with multiple urls to send a HTTP request to, the promise results will be contained in `result.text`.
-    - `loadManager` an object with a `name` and `scope` property which creates a wait while it and its child load managers retreive data. 
-  - `query(url, queryParams)` Creates a query string based on an the queryParam's properties. e.g. `bbData.query('/foo/search', {x: 'y', z: 123});` 
-  - `post(url, data)` For use within bbData.load, creates a post request from a url and data object. e.g. `bbData.load({data: bbData.post('/foo/post', postData)});` 
-  - `save(saveObj)` A function that issues an HTTP request. Takes an argument with the following properties:
-    - `url` The url to send the request to
-    - `data` The data object to send along with the request
-    - `type` The HTTP verb that the request should be sent as
+  - `load(loadObj)` Takes an object with `data`, `resources`, and `text` properties and returns a promise that contains the result of an HTTP GET request.
+    - `data` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.data`. e.g. `bbData.load({data: '/foo/data'})` or `bbData.load({data: {a: '/foo/data1', b: '/foo/data2'}})`.  The requests to the specified URLs will be made with credentials.
+    - `resources` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.resources`. The requests to the specified URLs will be made without credentials.
+    - `text` Either a URL or an object with multiple URLs to be requested. The promise results will be contained in `result.text`.  The requests to the specified URLs will be made without credentials and the result will be returned as a string rather than an object.
+    - `loadManager` An object with a `name` and `scope` property which creates a wait while it and its child load managers retreive data.
+  - `query(url, queryParams)` Creates a URL with a query string based on an the queryParam's properties. e.g. `bbData.query('/foo/search', {x: 'y', z: 123});` returns `/foo/search?x=y&z=123`.
+  - `post(url, data)` For use within `bbData.load`, creates a post request from a URL and data object. e.g. `bbData.load({data: bbData.post('/foo/post', postData)});`.
+  - `save(saveObj)` A function that issues an HTTP post for the purpose of storing data on the remote server. Takes an argument with the following properties:
+    - `url` The URL to which to send the request.
+    - `data` The object to be POSTed to the URL.
+    - `type` (*default: `POST`) The HTTP verb to use along with the request.
 */
 
 (function (window, $) {
@@ -1640,623 +1640,240 @@ The check directive allows you to change an input element of type checkbox or ra
         return result;
     }
 
-    angular.module('sky.data', [])
-        .constant('bbDataConfig', {})
-        .factory('bbData', ['$http', '$q', '$templateCache', 'bbDataConfig', function ($http, $q, $templateCache, bbDataConfig) {
-            function ajaxUrl(url, requestType) {
-                var filter,
-                    parts;
+    function bbData($http, $q, $templateCache, bbDataConfig) {
+        function ajaxUrl(url, requestType) {
+            var filter,
+                parts;
 
-                requestType = requestType || 0;
+            requestType = requestType || 0;
 
-                if (window.define && window.define.amd && window.require) {
-                    parts = url.split('?');
+            if (window.define && window.define.amd && window.require) {
+                parts = url.split('?');
 
-                    // Grab the portion before the query string and get the fully-qualified URL.
-                    url = parts.shift();
-                    url = require.toUrl(url);
+                // Grab the portion before the query string and get the fully-qualified URL.
+                url = parts.shift();
+                url = require.toUrl(url);
 
-                    // If there was anything after the first question mark, put it back.
-                    url += '?' + parts.join('');
-                }
-
-                switch (requestType) {
-                case REQUEST_TYPE_DATA:
-                    filter = bbDataConfig.dataUrlFilter;
-                    break;
-                case REQUEST_TYPE_RESOURCES:
-                    filter = bbDataConfig.resourceUrlFilter;
-                    break;
-                case REQUEST_TYPE_TEXT:
-                    filter = bbDataConfig.textUrlFilter;
-                    break;
-                }
-
-                if (angular.isFunction(filter)) {
-                    url = filter(url);
-                }
-
-                return url;
+                // If there was anything after the first question mark, put it back.
+                url += '?' + parts.join('');
             }
 
-            function createAjaxPromise(item, isPost, requestType) {
-                var data,
-                    httpOptions,
-                    isGet,
-                    textContent,
-                    type,
-                    url;
+            switch (requestType) {
+            case REQUEST_TYPE_DATA:
+                filter = bbDataConfig.dataUrlFilter;
+                break;
+            case REQUEST_TYPE_RESOURCES:
+                filter = bbDataConfig.resourceUrlFilter;
+                break;
+            case REQUEST_TYPE_TEXT:
+                filter = bbDataConfig.textUrlFilter;
+                break;
+            }
 
-                requestType = requestType || 0;
+            if (angular.isFunction(filter)) {
+                url = filter(url);
+            }
 
-                if (item.BB_DATA_POST || isPost) {
-                    data = item.data;
-                    type = item.type || 'post';
-                    url = item.url;
-                } else {
-                    type = 'get';
-                    url = item;
-                    isGet = true;
-                }
+            return url;
+        }
 
-                if (isGet && requestType === REQUEST_TYPE_TEXT) {
-                    // Check the Angular template cache using the raw URL first in case the text content is compiled into
-                    // the module bundle.
-                    textContent = $templateCache.get(url);
+        function createAjaxPromise(item, isPost, requestType) {
+            var data,
+                httpOptions,
+                isGet,
+                textContent,
+                type,
+                url;
 
-                    if (textContent) {
-                        return $q(function (resolve) {
-                            resolve({
-                                data: textContent
-                            });
+            requestType = requestType || 0;
+
+            if (item.BB_DATA_POST || isPost) {
+                data = item.data;
+                type = item.type || 'post';
+                url = item.url;
+            } else {
+                type = 'get';
+                url = item;
+                isGet = true;
+            }
+
+            if (isGet && requestType === REQUEST_TYPE_TEXT) {
+                // Check the Angular template cache using the raw URL first in case the text content is compiled into
+                // the module bundle.
+                textContent = $templateCache.get(url);
+
+                if (textContent) {
+                    return $q(function (resolve) {
+                        resolve({
+                            data: textContent
                         });
-                    }
-                }
-
-                url = ajaxUrl(url, requestType);
-
-                httpOptions = {
-                    method: type,
-                    url: url,
-                    cache: requestType !== 0,
-                    data: data ? JSON.stringify(data) : null,
-                    dataType: requestType !== 0 ? 'text' : 'json',
-                    withCredentials: requestType === 0
-                };
-                
-                if (data instanceof window.FormData) {
-                    // Angular sets the Content-Type to application/json by default, but when posting FormData
-                    // it should clear out the Content-Type and let the browser determine it.
-                    // https://uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs
-                    angular.extend(httpOptions, {
-                        transformRequest: angular.identity,
-                        headers: {
-                            'Content-Type': undefined
-                        }
                     });
                 }
-                
-                return $http(httpOptions);
             }
 
-            function addPromises(items, urls, requestType) {
-                var i,
-                    n,
-                    url;
+            url = ajaxUrl(url, requestType);
 
-                if (urls) {
-                    for (i = 0, n = urls.length; i < n; i++) {
-                        url = urls[i];
-                        items.push(createAjaxPromise(url, null, requestType));
+            httpOptions = {
+                method: type,
+                url: url,
+                cache: requestType !== 0,
+                data: data ? JSON.stringify(data) : null,
+                dataType: requestType !== 0 ? 'text' : 'json',
+                withCredentials: requestType === 0
+            };
+
+            if (data instanceof window.FormData) {
+                // Angular sets the Content-Type to application/json by default, but when posting FormData
+                // it should clear out the Content-Type and let the browser determine it.
+                // https://uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs
+                angular.extend(httpOptions, {
+                    transformRequest: angular.identity,
+                    headers: {
+                        'Content-Type': undefined
                     }
-                }
-            }
-
-            function loadData(options) {
-                return $q(function (resolve, reject) {
-                    var dataOption,
-                        dataProps,
-                        dataUrls,
-                        resourcesOption,
-                        resourcesProps,
-                        resourcesUrls,
-                        promises = [],
-                        textOption,
-                        textProps,
-                        textUrls;
-
-                    function success(args) {
-                        var argIndex = 0,
-                            result = {};
-
-                        function addResult(name, props) {
-                            var resultData,
-                                i,
-                                n,
-                                p,
-                                resultItem;
-
-                            if (props) {
-                                for (i = 0, n = props.length; i < n; i++) {
-                                    p = props[i];
-                                    resultData = args[argIndex].data;
-
-                                    if (p === DEFAULT_PROP) {
-                                        resultItem = resultData;
-                                    } else {
-                                        resultItem = resultItem || {};
-                                        resultItem[p] = resultData;
-                                    }
-
-                                    argIndex++;
-                                }
-                            }
-
-                            if (angular.isDefined(resultItem)) {
-                                result[name] = resultItem;
-                            }
-                        }
-
-                        addResult('data', dataProps, true);
-                        addResult('resources', resourcesProps);
-                        addResult('text', textProps);
-
-                        resolve(result);
-                    }
-
-                    function failure() {
-                        /*jshint validthis: true */
-                        reject.apply(this, arguments);
-                    }
-
-                    dataOption = options.data;
-                    resourcesOption = options.resources;
-                    textOption = options.text;
-
-                    if (dataOption) {
-                        dataProps = [];
-                        dataUrls = [];
-                        fillUrls(dataOption, dataProps, dataUrls);
-                    }
-
-                    if (resourcesOption) {
-                        resourcesProps = [];
-                        resourcesUrls = [];
-                        fillUrls(resourcesOption, resourcesProps, resourcesUrls);
-                    }
-
-                    if (textOption) {
-                        textProps = [];
-                        textUrls = [];
-                        fillUrls(textOption, textProps, textUrls);
-                    }
-
-                    addPromises(promises, dataUrls, REQUEST_TYPE_DATA);
-                    addPromises(promises, resourcesUrls, REQUEST_TYPE_RESOURCES);
-                    addPromises(promises, textUrls, REQUEST_TYPE_TEXT);
-
-                    $q.all(promises)
-                        .then(success)
-                        .catch(failure);
                 });
             }
 
-            return {
-                load: function (options) {
-                    if (options.loadManager) {
-                        options.loadManager.load = function () {
-                            return loadData(options);
-                        };
+            return $http(httpOptions);
+        }
 
-                        return loadManager(options.loadManager).loaded;
-                    }
+        function addPromises(items, urls, requestType) {
+            var i,
+                n,
+                url;
 
-                    return loadData(options);
-                },
-                loadManager: loadManager,
-                query: function (url, params) {
-                    return url + '?' + $.param(params);
-                },
-                post: function (url, data) {
-                    return {
-                        url: url,
-                        data: data,
-                        BB_DATA_POST: true
-                    };
-                },
-                save: function (options) {
-                    return createAjaxPromise(options, true);
+            if (urls) {
+                for (i = 0, n = urls.length; i < n; i++) {
+                    url = urls[i];
+                    items.push(createAjaxPromise(url, null, requestType));
                 }
-            };
-        }]);
-}(this, jQuery));
-
-/*jshint browser: true */
-/*global angular */
-
-/** @module Datefield
-@deprecated
-@icon bell-o
-@summary  The DateField directive allows you to use a common textbox with calendar picker for choosing a date.
- @description ### *Deprecated* ###
-
- This directive is no longer being maintained. For showing a date popup and input, see the [Datepicker](../datepicker) directive.
-
- <s>
- ### Additional Dependencies ###
-
- - **[bootstrap-datepicker.js](https://libraries.io/bower/bootstrap-datepicker-eyecon) (1.0.0 or higher)**
-
----
-
-The DateField directive allows you to use a common textbox with calendar picker for choosing a date.  Values entered into the textbox manually will be validated and cleaned up for date formatting.
-
-### Date Field Settings ###
-
- - `ng-model` An object to bind the date value in and out of the date field.
- - `bb-date-field-options` Optional.  An options object for customizing the date field.
-
-
-### Date Field Options ###
- - `formatValue` Optional.  A function that will be called when text is entered directly into the textbox.  The only paramter to the function will be the raw value of the textbox.  The function should return an object or a promise of an object with properties of `formattedValue` and optionally `formattingErrorMessage` if there was a problem when trying to format the input value.
- </s>
- */
-
-(function () {
-    'use strict';
-    angular.module('sky.datefield', ['sky.resources', 'sky.moment'])
-        .constant('bbDateFieldConfig', {
-            currentCultureDateFormatString: 'mm/dd/yyyy',
-            dateFormat: 'MM/dd/yyyy',
-            showWeeks: false,
-            startingDay: 0,
-            twoDigitYearRolloverMax: 29
-        })
-        .directive('bbDateField', ['$q', '$templateCache', 'bbMoment', 'bbDateFieldConfig', 'bbResources', function ($q, $templateCache, bbMoment, bbDateFieldConfig, bbResources) {
-
-            function matchSeparator(value) {
-                return value.match(/[.\/\-\s].*?/);
             }
+        }
 
-            //Remove locale specific characters
-            function stripLocaleCharacterFromDateString(dateString) {
-                return dateString.replace(/\u200E/g, '');
-            }
+        function loadData(options) {
+            return $q(function (resolve, reject) {
+                var dataOption,
+                    dataProps,
+                    dataUrls,
+                    resourcesOption,
+                    resourcesProps,
+                    resourcesUrls,
+                    promises = [],
+                    textOption,
+                    textProps,
+                    textUrls;
 
-            function dateHasSeparator(value) {
-                /*
-                * Validation criteria:
-                * A separator exists
-                * There is no separator at the beginning
-                * There is no separator at the end
-                * Two separators exist
-                * All parts of the date have a non-zero value
-                */
+                function success(args) {
+                    var argIndex = 0,
+                        result = {};
 
-                var separator = matchSeparator(value),
-                    valueArray = value.split(separator),
-                    separatorAtEnd = value.indexOf(separator, value.length - 1) !== -1,
-                    separatorAtBeginning = value.indexOf(separator) === 0,
-                    hasTwoSeparators = valueArray.length - 1 === 2,
-                    anyPartIsZero = valueArray.some(function (e) {
-                        return Number(e) === 0;
-                    });
+                    function addResult(name, props) {
+                        var resultData,
+                            i,
+                            n,
+                            p,
+                            resultItem;
 
-                return (separator && !separatorAtEnd && !separatorAtBeginning && hasTwoSeparators && !anyPartIsZero);
-            }
+                        if (props) {
+                            for (i = 0, n = props.length; i < n; i++) {
+                                p = props[i];
+                                resultData = args[argIndex].data;
 
-            function validateDate(value, required) {
-                if (!required && !value) {
-                    return true;
-                }
-                return !/Invalid|NaN/.test(bbMoment(value, bbDateFieldConfig.currentCultureDateFormatString.toUpperCase())) && dateHasSeparator(value);
-            }
-
-            function beautifyDate(value, format) {
-                var datePart,
-                    dateArray,
-                    date,
-                    separator,
-                    parts,
-                    yearBegin,
-                    monthBegin,
-                    dayBegin,
-                    formatSeparator,
-                    lowerFormat,
-                    upperFormat = format.toUpperCase(),
-                    year,
-                    yearPart = upperFormat.indexOf('Y') === 0 ? 0 : 2;
-
-                if (value) {
-
-                    separator = matchSeparator(value); // look for common separators
-                    parts = value.split(separator); // split value based on found separator
-                    lowerFormat = format.toLowerCase(); // system expects lowercase format
-
-                    if (value.length === 8 && !isNaN(value)) {
-                        yearBegin = lowerFormat.indexOf('y');
-                        monthBegin = lowerFormat.indexOf('m');
-                        dayBegin = lowerFormat.indexOf('d');
-
-                        //MMDDYYYY or DDMMYYYY
-                        if (((monthBegin < dayBegin) && (dayBegin < yearBegin)) || ((dayBegin < monthBegin) && (monthBegin < yearBegin))) {
-                            parts[0] = value.substring(0, 2);
-                            parts[1] = value.substring(2, 4);
-                            parts[2] = value.substring(4, 8);
-                        } else if ((yearBegin < monthBegin) && (monthBegin < dayBegin)) { //YYYYMMDD
-                            parts[0] = value.substring(0, 4);
-                            parts[1] = value.substring(4, 6);
-                            parts[2] = value.substring(6, 8);
-                        }
-
-                        //Get the expected separator and join the date parts with it
-                        formatSeparator = matchSeparator(lowerFormat);
-                        return parts.join(formatSeparator);
-                    }
-
-                    year = Number(parts[yearPart]);
-                    if (year < 100) {
-                        parts[yearPart] = year <= bbDateFieldConfig.twoDigitYearRolloverMax ? year + 2000 : year + 1900;
-                        value = parts.join(separator);
-                        return value;
-                    }
-
-                    //If date is passed in as SQL UTC string, we need to do some magic to make sure we don't lose a day due to time zone shifts
-                    if (typeof value === "string" && value.indexOf("T00:00:00") !== -1) {
-                        datePart = value.split("T")[0];
-                        dateArray = datePart.split("-");
-                        date = new Date(dateArray[0], (dateArray[1] - 1), dateArray[2]);
-                        return stripLocaleCharacterFromDateString(bbMoment(date).format(upperFormat));
-                    }
-
-                    //If there aren't enough parts to the date or any part is zero, let the validator handle it
-                    if (parts.length !== 3 || parts.some(function (e) {
-                            return Number(e) === 0;
-                        })) {
-                        return value;
-                    }
-
-                    //If all else fails and momentjs can't parse the date, log an error and let the validator handle it
-                    try {
-                        return stripLocaleCharacterFromDateString(bbMoment(value, upperFormat).format(upperFormat));
-                    } catch (e) {
-                        /*istanbul ignore next: sanity check */
-                        return value;
-                    }
-                }
-
-                return value;
-            }
-
-            function getLocaleDate(value) {
-                var date,
-                    dateArray,
-                    separator,
-                    formatUpper = bbDateFieldConfig.currentCultureDateFormatString.toUpperCase();
-
-                //If the value is not a valid representation of a date, let the validator handle it
-                if (!isNaN(value)) {
-                    return value;
-                }
-
-                //If the date array doesn't have enough parts or any part is zero, return it as is and let the validator handle it, otherwise create a date
-                separator = value.match(/[.\/\-\s].*?/);
-                dateArray = value.split(separator);
-
-                if (dateArray.length !== 3 || dateArray.some(function (e) {
-                        return Number(e) === 0;
-                    })) {
-                    return value;
-                }
-
-                date = bbMoment(value, formatUpper);
-                return stripLocaleCharacterFromDateString(date.format(formatUpper));
-            }
-
-            return {
-                scope: {
-                    bbDateFieldOptions: '='
-                },
-                link: function (scope, el, attrs, ngModel) {
-                    /*jslint unparam: true */
-                    var hasCustomFormatting = (scope.bbDateFieldOptions && !!scope.bbDateFieldOptions.formatValue),
-                        input = el.find('input'),
-                        today,
-                        datefieldHTML = $templateCache.get('sky/templates/datefield/datefield.html'),
-                        errorMessage,
-                        skipValidation;
-
-                    function resolveValidation(deferred) {
-                        deferred[errorMessage ? 'reject' : 'resolve']();
-                    }
-
-                    function setInputDate() {
-                        if (ngModel.$viewValue) {
-                            el.datepicker('setValue', ngModel.$viewValue);
-                            input.val(ngModel.$viewValue);
-                        }
-                    }
-
-                    function setDateValue(value, trigger) {
-                        ngModel.$setViewValue(value, trigger);
-                        setInputDate(value);
-                    }
-
-                    input = el.children('input');
-
-                    input.on('change', function () {
-                        if (input.val() === "") {
-                            errorMessage = null;
-                            ngModel.invalidFormatMessage = null;
-                        }
-                        setDateValue(input.val(), 'change');
-                    });
-
-                    ////set model value as well as datepicker control value when manually entering a date.
-                    ngModel.$asyncValidators.dateFormat = function () {
-                        var deferred,
-                            localeDate,
-                            value,
-                            customFormattinedResult;
-
-                        function handleCustomFormattingValidation(result) {
-                            var formattedValue;
-
-                            /*istanbul ignore next: sanity check */
-                            result = result || {};
-                            formattedValue = result.formattedValue;
-
-                            errorMessage = result.formattingErrorMessage;
-
-                            ngModel.invalidFormatMessage = errorMessage;
-
-                            resolveValidation(deferred);
-
-                            if (formattedValue !== value) {
-                                skipValidation = true;
-
-                                input.val(formattedValue);
-                                setDateValue(formattedValue);
-                            }
-                        }
-
-                        deferred = $q.defer();
-
-                        if (skipValidation || ngModel.$pristine) {
-                            ngModel.invalidFormatMessage = null;
-                            resolveValidation(deferred);
-                        } else {
-                            if (hasCustomFormatting) {
-                                value = input.val();
-
-                                if (value) {
-                                    customFormattinedResult = scope.bbDateFieldOptions.formatValue(value);
-                                    if (customFormattinedResult.then) {
-                                        customFormattinedResult.then(handleCustomFormattingValidation);
-                                    } else {
-                                        handleCustomFormattingValidation(customFormattinedResult);
-                                    }
-                                }
-                            } else {
-                                value = beautifyDate(input.val(), bbDateFieldConfig.currentCultureDateFormatString);
-                                /*istanbul ignore else: sanity check */
-                                if (angular.isDefined(value)) {
-                                    //Need to set input to value to validate
-                                    localeDate = getLocaleDate(value);
-                                    if (value !== "Invalid date" && localeDate !== "Invalid date") {
-                                        if (validateDate(localeDate, ngModel.required)) {
-                                            errorMessage = null;
-                                            skipValidation = true;
-                                            input.val(localeDate);
-                                            setDateValue(localeDate);
-                                        } else {
-                                            errorMessage = bbResources.date_field_invalid_date_message;
-                                            ngModel.invalidFormatMessage = errorMessage;
-                                            el.datepicker('setValue', '');
-                                        }
-                                    } else {
-                                        errorMessage = bbResources.date_field_invalid_date_message;
-                                        ngModel.invalidFormatMessage = errorMessage;
-                                        el.datepicker('setValue', '');
-                                    }
-
-                                    resolveValidation(deferred);
+                                if (p === DEFAULT_PROP) {
+                                    resultItem = resultData;
                                 } else {
-                                    ngModel.invalidFormatMessage = null;
+                                    resultItem = resultItem || {};
+                                    resultItem[p] = resultData;
                                 }
+
+                                argIndex++;
                             }
                         }
 
-                        skipValidation = false;
-
-                        return deferred.promise;
-                    };
-
-                    ngModel.$render = function () {
-
-                        ngModel.$viewValue = beautifyDate(ngModel.$viewValue, bbDateFieldConfig.currentCultureDateFormatString);
-
-                        setInputDate(ngModel.$viewValue);
-                    };
-
-                    //IE11 inserts left-to-right characters (code 8206) for locale strings, removing for now
-                    today = getLocaleDate(new Date());
-
-                    //Set up HTML
-                    el.attr('data-date-format', bbDateFieldConfig.currentCultureDateFormatString)
-                        .attr('data-date', today)
-                        .append(datefieldHTML);
-
-                    if (hasCustomFormatting) {
-                        input.addClass('datefield-customformatting');
+                        if (angular.isDefined(resultItem)) {
+                            result[name] = resultItem;
+                        }
                     }
 
-                    input.attr('placeholder', (hasCustomFormatting ? "" : bbDateFieldConfig.currentCultureDateFormatString.toLowerCase()));
+                    addResult('data', dataProps, true);
+                    addResult('resources', resourcesProps);
+                    addResult('text', textProps);
 
-                    el.datepicker().on('changeDate', function (ev) {
-                        var value = null;
-
-                        errorMessage = null;
-                        skipValidation = true;
-
-                        // Need to clear validation
-                        el.datepicker('set', ev.date);
-                        value = el.data('date');
-                        validateDate(value, ngModel.required);
-
-                        setDateValue(value);
-
-                        el.datepicker('hide');
-                    });
-
-                    //Override the place function to align the picker with the left side of the input
-                    el.datepicker.Constructor.prototype.place = function () {
-                        /*istanbul ignore next: sanity check */
-                        var offset = this.component ? this.component.offset() : this.element.offset();
-                        this.picker.css({
-                            top: offset.top + this.height,
-                            left: offset.left - 118
-                        });
-                    };
-
-                    //I have to do this because for some reason we're using bootstrap-datepicker-eyecon and not the regular bootstrap datepicker.
-                    el.datepicker.Constructor.prototype.remove = function () {
-                        this.hide();
-                        this.picker.remove();
-                        delete this.element.data().datepicker;
-                        delete this.element.data().date;
-                    };
-
-                    // Setup max length for input control
-                    input.attr('maxlength', '10');
-
-                    scope.$on('$destroy', function () {
-                        el.datepicker('remove');
-                    });
-                },
-                replace: true,
-                require: 'ngModel',
-                restrict: 'E',
-                template: function (el, attrs) {
-                    /*jslint unparam: true */
-                    var html = '<div class="date input-group"><input type="text"';
-
-                    if (attrs.id) {
-                        html += ' id="' + attrs.id + '"';
-                    }
-
-                    if (attrs.bbautoField) {
-                        html += ' data-bbauto-field="' + attrs.bbautoField + 'Input"';
-                    }
-
-                    html += '/ class="has-right-addon text-box single-line form-control"></div>';
-
-                    return html;
+                    resolve(result);
                 }
-            };
-        }]);
 
-}());
+                function failure() {
+                    /*jshint validthis: true */
+                    reject.apply(this, arguments);
+                }
+
+                dataOption = options.data;
+                resourcesOption = options.resources;
+                textOption = options.text;
+
+                if (dataOption) {
+                    dataProps = [];
+                    dataUrls = [];
+                    fillUrls(dataOption, dataProps, dataUrls);
+                }
+
+                if (resourcesOption) {
+                    resourcesProps = [];
+                    resourcesUrls = [];
+                    fillUrls(resourcesOption, resourcesProps, resourcesUrls);
+                }
+
+                if (textOption) {
+                    textProps = [];
+                    textUrls = [];
+                    fillUrls(textOption, textProps, textUrls);
+                }
+
+                addPromises(promises, dataUrls, REQUEST_TYPE_DATA);
+                addPromises(promises, resourcesUrls, REQUEST_TYPE_RESOURCES);
+                addPromises(promises, textUrls, REQUEST_TYPE_TEXT);
+
+                $q.all(promises)
+                    .then(success)
+                    .catch(failure);
+            });
+        }
+
+        return {
+            load: function (options) {
+                if (options.loadManager) {
+                    options.loadManager.load = function () {
+                        return loadData(options);
+                    };
+
+                    return loadManager(options.loadManager).loaded;
+                }
+
+                return loadData(options);
+            },
+            loadManager: loadManager,
+            query: function (url, params) {
+                return url + '?' + $.param(params);
+            },
+            post: function (url, data) {
+                return {
+                    url: url,
+                    data: data,
+                    BB_DATA_POST: true
+                };
+            },
+            save: function (options) {
+                return createAjaxPromise(options, true);
+            }
+        };
+    }
+
+    bbData.$inject = ['$http', '$q', '$templateCache', 'bbDataConfig'];
+
+    angular.module('sky.data', [])
+        .constant('bbDataConfig', {})
+        .factory('bbData', bbData);
+}(this, jQuery));
 
 /*jshint browser: true */
 /*global angular, jQuery */
@@ -3667,11 +3284,11 @@ to the function.
                     if (options && options.applyFilters) {
                         options.applyFilters(args);
                         $scope.updateFilters(args.filters);
-                            
+
                         if (bbMediaBreakpoints.getCurrent().xs) {
-                            $scope.expanded = false;    
+                            $scope.expanded = false;
                         }
-                    }      
+                    }
                 };
                 $scope.clearFilters = function () {
                     var args = {},
@@ -3687,20 +3304,25 @@ to the function.
                 /*jslint unparam: true */
                 var box = element.find('.bb-grid-filters-box'),
                     filtersContainer = element.find('.bb-grid-filters-container');
-                    
+
                 $scope.viewKeeperOptions = {};
 
                 bbGrid.viewKeeperChangedHandler = function (val) {
                     $scope.viewKeeperOptions.viewKeeperOffsetElId = val;
                 };
 
-                bbGrid.toggleFilterMenu = function () {
-                    $scope.expanded = !$scope.expanded;
+                bbGrid.toggleFilterMenu = function (isOpen) {
+                    if (angular.isDefined(isOpen)) {
+                        $scope.expanded = isOpen;
+                    } else {
+                        $scope.expanded = !$scope.expanded;
+                    }
+
                     if ($scope.expanded) {
                         bbHelp.close();
                     }
                 };
-                
+
                 bbGrid.openFilterMenu = function () {
                     $scope.expanded = true;
                 };
@@ -3708,6 +3330,10 @@ to the function.
                 bbGrid.scope.$watch('gridCreated', function (newValue) {
                     if (newValue) {
                         element.show();
+
+                        if ($scope.expanded) {
+                            animateFilters($scope.expanded);
+                        }
                     }
                 });
 
@@ -3717,26 +3343,29 @@ to the function.
 
                 $scope.resources = bbResources;
 
-                $scope.$watch('expanded', function (newValue, oldValue) {
+                function animateFilters(isExpanded) {
                     var animationDuration = 250;
+                    if (isExpanded) {
+                        box.css('left', '240px');
+                        filtersContainer.show();
+                        box.animate({ 'left': '0' }, animationDuration);
+                    } else {
+                        box.animate({ 'left': '240px' }, {
+                            duration: animationDuration,
+                            complete: function () {
+                                box.css('left', '0');
+                                filtersContainer.hide();
+                            }
+                        });
+                    }
+                }
 
+                $scope.$watch('expanded', function (newValue, oldValue) {
                     if (newValue !== oldValue) {
-                        if (newValue) {
-                            box.css('left', '240px');
-                            filtersContainer.show();
-                            box.animate({ 'left': '0' }, animationDuration);
-                        } else {
-                            box.animate({ 'left': '240px' }, {
-                                duration: animationDuration,
-                                complete: function () {
-                                    box.css('left', '0');
-                                    filtersContainer.hide();
-                                }
-                            });
-                        }
+                        animateFilters(newValue);
                     }
                 });
-                    
+
             },
             templateUrl: 'sky/templates/grids/filters.html'
         };
@@ -3774,7 +3403,7 @@ to the function.
                 };
 
                 $scope.resources = bbResources;
-                    
+
             }],
             link: function ($scope, element, attrs, bbGrid) {
                 /*jslint unparam: true */
@@ -3791,18 +3420,18 @@ to the function.
                         bbGrid.openFilterMenu();
                     }
                 };
-                $scope.$watch(function () { 
+                $scope.$watch(function () {
                     return element.is(':visible');
                 }, function (newValue, oldValue) {
                     if (newValue !== oldValue) {
-                        bbGrid.syncViewKeepers();                        
+                        bbGrid.syncViewKeepers();
                     }
                 });
             },
             templateUrl: 'sky/templates/grids/filterssummary.html'
         };
     }]);
-    
+
 }());
 
 /*jslint plusplus: true */
@@ -3852,6 +3481,7 @@ The Grid directive allows you to build a full-featured grid with a search box, c
   - `data` An array of objects representing the rows in the grid.  Each row should have properties that correspond to the `columns` `jsonmap` properties.
   - `fixedToolbar` Prevents the toolbar and grid headers from scrolling with the window. Defaults to false.
   - `filtersAreActive` If true, the filter button highlights to indicate that filters are active.
+  - `filtersOpen` If set to true, opens filters. If set to false, closes filters.
   - `getContextMenuItems` If a function is specified, then the grid rows will attempt to create a bootstrap dropdown based on the return value of the function. The return value should be an array of objects that represent the items in a dropdown. The objects should contain the following properties:
       - `id` A unique string identifier for the option.
       - `title` The title shown for the dropdown option.
@@ -3892,6 +3522,15 @@ reloading the grid with the current data after the event has fired.
 (function ($) {
     'use strict';
 
+    var DEFAULT_ITEMS_PER_PAGE = 5,
+        DEFAULT_MAX_PAGES = 5,
+        DEFAULT_COLUMN_SIZE = 150,
+        MULTISELECT_COLUMN_SIZE = 35,
+        DROPDOWN_TOGGLE_COLUMN_SIZE = 40,
+        DROPDOWN_TOGGLE_COLUMN_NAME = 'dropdownToggle',
+        MULTISELECT_COLUMN_NAME = 'cb';
+
+
     function arrayObjectIndexOf(array, obj) {
         var i;
         for (i = 0; i < array.length; i++) {
@@ -3901,15 +3540,6 @@ reloading the grid with the current data after the event has fired.
         }
         return -1;
     }
-
-    var DEFAULT_ITEMS_PER_PAGE = 5,
-        DEFAULT_MAX_PAGES = 5,
-        DEFAULT_COLUMN_SIZE = 150,
-        MULTISELECT_COLUMN_SIZE = 35,
-        DROPDOWN_TOGGLE_COLUMN_SIZE = 40,
-        DROPDOWN_TOGGLE_COLUMN_NAME = 'dropdownToggle',
-        MULTISELECT_COLUMN_NAME = 'cb';
-
 
     angular.module('sky.grids', ['sky.contextmenu', 'sky.modal', 'sky.mediabreakpoints', 'sky.viewkeeper', 'sky.highlight', 'sky.resources', 'sky.data', 'sky.grids.columnpicker', 'sky.grids.filters', 'sky.grids.actionbar', 'sky.window'])
         .controller('bbGridContextMenuController', ['$scope', function ($scope) {
@@ -4014,11 +3644,16 @@ reloading the grid with the current data after the event has fired.
                                     $scope.options.onAddClick();
                                 }
                             },
-                            toggleFilterMenu: function () {
+                            toggleFilterMenu: function (isOpen) {
                                 if ($scope.options && $scope.options.hasInlineFilters) {
-                                    $scope.locals.filtersVisible = !$scope.locals.filtersVisible;
+                                    if (angular.isDefined(isOpen)) {
+                                        $scope.locals.filtersVisible = isOpen;
+                                    } else {
+                                        $scope.locals.filtersVisible = !$scope.locals.filtersVisible;
+                                    }
+
                                 } else if (angular.isFunction(self.toggleFilterMenu)) {
-                                    self.toggleFilterMenu();
+                                    self.toggleFilterMenu(isOpen);
                                 }
                             },
                             loadMore: function () {
@@ -5022,6 +4657,7 @@ reloading the grid with the current data after the event has fired.
                                 setUpFancyCheckHeader();
 
                                 $scope.gridCreated = true;
+
                             }
 
                         }
@@ -5258,6 +4894,12 @@ reloading the grid with the current data after the event has fired.
 
                         });
 
+                        $scope.$watch('options.filtersOpen', function (newValue) {
+                            if (angular.isDefined(newValue)) {
+                                $scope.locals.toggleFilterMenu(newValue);
+                            }
+                        });
+
                         $scope.$watch('paginationOptions', initializePagination, true);
 
                         $scope.$watchCollection('options.data', setRows);
@@ -5363,6 +5005,12 @@ reloading the grid with the current data after the event has fired.
 
 The Help service allows other Angular components to open or close the help panel programmatically.  When the widget is opened, it will interrogate the page to identify the current help topic and display the relevant help content.  Settings for this service are controlled with the `bbHelpConfig` object.
 
+### bbHelp Methods ###
+
+- `init()` Adds a global help button to the top-right corner of the page.  The appropriate `bbHelpConfig` options should be supplied before calling `init()`.
+- `open()` Opens help using the specified help key.  If `init()` has not yet been called then the global add button will be added to the page before opening the help topic.
+- `close()` Closes the current help topic.
+
 ### bbHelpConfig Settings ###
 
  - `productId` The current product identifier used to build the URL to the product's help content.
@@ -5381,57 +5029,82 @@ The Help service allows other Angular components to open or close the help panel
             customLocales: [],
             url: null
         })
-        .factory('bbHelp', ['$state', '$window', 'bbHelpConfig', function ($state, $window, bbHelpConfig) {
+        .factory('bbHelp', ['$q', '$state', '$window', 'bbHelpConfig', function ($q, $state, $window, bbHelpConfig) {
+            var initPromise;
+
+            function helpwidgetLoaded() {
+                return !!($window.BBHELP && $window.BBHELP.HelpWidget);
+            }
+
+            function init() {
+                var configOnHelpLoaded,
+                    deferred;
+
+                if (!initPromise) {
+                    deferred = $q.defer();
+                    initPromise = deferred.promise;
+
+                    if (helpwidgetLoaded()) {
+                        deferred.resolve();
+                    } else if (bbHelpConfig.url) {
+                        jQuery.ajax({
+                            cache: true,
+                            dataType: 'script',
+                            url: bbHelpConfig.url
+                        }).done(function () {
+                            var config = angular.extend({}, bbHelpConfig);
+
+                            if (!config.getCurrentHelpKey) {
+                                config.getCurrentHelpKey = function () {
+                                    // $state.current.helpKeyOverride outranks $state.current.pageData.helpKey
+                                    if ($state.current.helpKeyOverride) {
+                                        return $state.current.helpKeyOverride;
+                                    }
+
+                                    if ($state.current.pageData) {
+                                        return $state.current.pageData.helpKey;
+                                    }
+                                    return null;
+                                };
+                            }
+
+                            configOnHelpLoaded = config.onHelpLoaded;
+
+                            config.onHelpLoaded = function () {
+                                if (angular.isFunction(configOnHelpLoaded)) {
+                                    configOnHelpLoaded.apply(this, arguments);
+                                }
+
+                                deferred.resolve();
+                            };
+
+                            $window.BBHELP.HelpWidget.load(config);
+                        });
+                    } else {
+                        initPromise = null;
+                        throw new Error('bbHelpConfig.url is not defined.');
+                    }
+                }
+
+                return initPromise;
+            }
+
             function open() {
                 var args = arguments;
 
-                function openInner() {
+                init().then(function () {
                     $window.BBHELP.HelpWidget.open.apply($window.BBHELP.HelpWidget, args);
-                }
-
-                if ($window.BBHELP && $window.BBHELP.HelpWidget) {
-                    openInner();
-                } else {
-                    if (!bbHelpConfig.url) {
-                        throw new Error('bbHelpConfig.url is not defined.');
-                    }
-
-                    jQuery.ajax({
-                        cache: true,
-                        dataType: 'script',
-                        url: bbHelpConfig.url
-                    }).done(function () {
-                        var config = angular.extend({}, bbHelpConfig);
-
-                        if (!config.getCurrentHelpKey) {
-                            config.getCurrentHelpKey = function () {
-                                // $state.current.helpKeyOverride outranks $state.current.pageData.helpKey
-                                if ($state.current.helpKeyOverride) {
-                                    return $state.current.helpKeyOverride;
-                                }
-
-
-                                if ($state.current.pageData) {
-                                    return $state.current.pageData.helpKey;
-                                }
-                                return null;
-                            };
-                        }
-
-                        $window.BBHELP.HelpWidget.load(config);
-
-                        openInner();
-                    });
-                }
+                });
             }
 
             function close() {
-                if ($window.BBHELP && $window.BBHELP.HelpWidget) {
+                if (helpwidgetLoaded()) {
                     $window.BBHELP.HelpWidget.close.apply($window.BBHELP.HelpWidget, arguments);
                 }
             }
 
             return {
+                init: init,
                 open: open,
                 close: close
             };
@@ -5499,10 +5172,10 @@ The Help service allows other Angular components to open or close the help panel
 /** @module Helpwidget
 @deprecated
 @icon archive
-@summary This directive is no longer being maintained. For showing the help panel from a controller, see the Help service.
+@summary This directive is no longer being maintained. For adding the global help button to a page or showing the help panel from a controller, see the Help service.
  @description ### *Deprecated* ###
 
-This directive is no longer being maintained.  For showing the help panel from a controller, see the [Help](../help) service.
+This directive is no longer being maintained. For adding the global help button to a page or showing the help panel from a controller, see the Help service.
 
 <s>
 ### Additional Dependencies ###
@@ -6066,112 +5739,6 @@ In addition to the `bbModal` service for lauching modals, a `bb-modal` directive
     }
 
 }(this));
-/*jslint browser: true, plusplus: true */
-/*global angular */
-
-/** @module Money
-@deprecated
-@icon archive
-@summary This directive is no longer being maintained. For formatting currency in a textbox, see the Autonumeric directive.
- @description ### *Deprecated* ###
-
-This directive is no longer being maintained.  For formatting currency in a textbox, see the [Autonumeric](../autonumeric) directive.
-
-<s>
-### Additional Dependencies ###
-
- - **[autoNumeric](http://www.decorplanit.com/plugin/) (1.9.27 or higher)** Used to format money values
-
-The Money Input directive formats currency values as the user types in the input field.  The formatting options can be set globally using the `bbMoneyConfig` service.
-
-### Config Options ###
-
- - `currencyPositivePattern` *(Default: `$n`)* The pattern used to format positive currency values.
- - `currencyDecimalDigits` *(Default: `2`)* The number of digits to display after the decimal separator.
- - `currencyDecimalSeparator` *(Default: `.`)* The character to display before the decimal digits.
- - `currencyGroupSize` *(Default: `3`)* The number of digits each group should contain before displaying the group separator character.
- - `currencyGroupSeparator` *(Default: `,`)* The character to display between groups.
- - `currencySymbol` *(Default: `&#36;`)* The symbol that represents the value's currency type.
- </s>
- */
-
-(function () {
-    'use strict';
-
-    angular.module('sky.money', [])
-        .constant('bbMoneyConfig', {
-            currencyPositivePattern: '$n',
-            currencyDecimalDigits: 2,
-            currencyDecimalSeparator: '.',
-            currencyGroupSize: 3,
-            currencyGroupSeparator: ',',
-            currencySymbol: '$'
-        })
-        .directive('bbMoneyInput', ['$timeout', 'bbMoneyConfig', function ($timeout, bbMoneyConfig) {
-            return {
-                restrict: 'A',
-                scope: {
-                    numericValue: '=bbMoneyInput'
-                },
-                link: function ($scope, element) {
-                    var currencySymbol = bbMoneyConfig.currencySymbol,
-                        currencySymbolPlacement;
-
-                    //Derive some options based on the currency formatting pattern from the server.
-                    switch (bbMoneyConfig.currencyPositivePattern) {
-                    case 0: //$n
-                        currencySymbolPlacement = 'p'; //prefix
-                        break;
-                    case 1: //n$
-                        currencySymbolPlacement = 's'; //suffix
-                        break;
-                    case 2: //$ n
-                        currencySymbolPlacement = 'p'; //prefix
-                        currencySymbol += ' ';
-                        break;
-                    case 3: //n $
-                        currencySymbolPlacement = 's'; //suffix
-                        currencySymbol = ' ' + currencySymbol;
-                        break;
-                    }
-
-                    element.autoNumeric({
-                        aSep: bbMoneyConfig.currencyGroupSeparator,
-                        dGroup: bbMoneyConfig.currencyGroupSize,
-                        aDec: bbMoneyConfig.currencyDecimalSeparator,
-                        aSign: currencySymbol,
-                        pSign: currencySymbolPlacement,
-                        mDec: bbMoneyConfig.currencyDecimalDigits
-                    });
-
-                    //Setup on change handler to update scope value
-                    element.change(function () {
-                        var value = parseFloat(element.autoNumeric('get'));
-                        $scope.numericValue = value;
-                        $scope.$apply();
-                    });
-
-                    //When focusing in textbox, select all.  This is to workaround not having placeholder text for autonumeric.
-                    element.on('focus.bbMoneyInput', function () {
-                        $timeout(function () {
-                            element.select();
-                        });
-                    });
-
-                    $scope.$watch('numericValue', function (newValue, oldValue) {
-                        if (newValue !== oldValue) {
-                            if (newValue !== undefined && newValue !== null) {
-                                element.autoNumeric('set', newValue);
-                            } else {
-                                element.val(null);
-                            }
-                        }
-                    });
-                }
-            };
-        }]);
-}());
-
 /*global angular, jQuery */
 
 /** @module Navbar
@@ -7306,399 +6873,6 @@ The search field can be used for a local search (i.e. dropdown box where you hav
         }]);
 }(jQuery));
 
-/*jslint browser: true, plusplus: true */
-/*global angular */
-
-/** @module Tabs
-@deprecated
-@icon archive
-@summary This directive is no longer being maintained. For creating tabs, see the Angular UI Bootstrap tabs directive and use it in conjunction with the Tabscroll and Tabsref components if needed.
- @description ### *Deprecated* ###
-
-This directive is no longer being maintained.  For creating tabs, see the [Angular UI Bootstrap](https://angular-ui.github.io/bootstrap/) tabs directive and use it in conjunction with the [Tabscroll](../tabscroll) and [Tabsref](../tabsref) components if needed.
-
-<s>
-### Additional Dependencies ###
-
- - **[jQuery Responsive Tabs](https://github.com/jellekralt/Responsive-Tabs) (1.4.2 or higher)**
- - **[Angular UI Router](https://github.com/angular-ui/ui-router) (0.2.13 or higher)**
-
----
-
-The Tabs directive allows for content to be organized into a set of tabs.  The tabs can be grouped together across the tab bar in a `bb-tab-group`.  Within the group,  `bb-tab-group-item` specifies the tab components that can be opened.
-
-### Tab Group Item Settings ###
-
- - `bb-tab-item-header` The name of the tab
- - `bb-tab-item-count` Optional.  The number of items in the tab.
- - `bb-tab-item-header-function` Optional.  A function which can calculate the tab header and item count.
- - `bbTabItemSref` Optional.  Defines the state reference (?) for the tab.
- </s>
- */
-
-(function () {
-    'use strict';
-
-    var elIdSuffix = 0;
-
-    function createListAnchorItem(id, automationId) {
-        var automationAttribute;
-        if (automationId) {
-            automationAttribute = ' data-bbauto-field="' + automationId + '"';
-        }
-        return '<li><a href="#' + id + '"' + automationAttribute + '></a></li>';
-    }
-
-    function createGroupHeaderDiv() {
-        return '<div class="rt-tab-accordion-header"></div>';
-    }
-
-    function createTabContentDiv(content, id) {
-        var tabContentEl = angular.element(content).wrap('<div id="' + id + '"></div>');
-        tabContentEl.append('<div class="clearfix"></div>');
-
-        return angular.element("#" + id);
-    }
-
-    function getResponsiveTabHeader(headerCount, headerTitle) {
-        var header =
-            '<div>' +
-            '<span class="bb-tab-header-title-responsive">' + (headerTitle || '') + '</span>' +
-            '<span class="bb-tab-header-count-responsive">' + (headerCount >= 0 ? headerCount : '') + '</span>' +
-            '<div class="bb-tab-header-chervon-responsive glyphicon glyphicon-chevron-down"></div>' +
-            '<div class="bb-tab-header-chervon-responsive glyphicon glyphicon-chevron-up"></div>' +
-            '</div>';
-        return header;
-    }
-
-    function getTabHeader(headerCount, headerTitle) {
-        var header =
-            '<div>' +
-            '<span class="bb-tab-header-title">' + (headerTitle || '') + '</span>' +
-            '<span class="bb-tab-header-count">' + (headerCount >= 0 ? headerCount : '') + '</span>' +
-            '</div>';
-        return header;
-    }
-
-    angular.module('sky.tabs', [])
-        .directive('bbTab', ['$state', '$rootScope', '$timeout',
-            function ($state, $rootScope, $timeout) {
-                return {
-                    replace: true,
-                    transclude: true,
-                    restrict: 'E',
-                    templateUrl: 'sky/templates/tabs/tab.html',
-                    scope: {
-                        bbTabAutomationId: '=',
-                        bbTabOptions: '='
-                    },
-                    controller: ['$scope', function ($scope) {
-                        $scope.tabGroups = [];
-                        $scope.tabsInitialized = false;
-
-                        this.addTabGroup = function (group) {
-                            $scope.tabGroups.push(group);
-                        };
-
-                        this.updateTabItemHeader = function (item) {
-                            $scope.updateTabItemHeader(item);
-                        };
-                    }],
-                    link: function ($scope, element) {
-                        var activeTab = null,
-                            nextTabIndexToUse = 0,
-                            stateChangeDeregistration;
-
-                        function getActiveTabIndexFromCurrentState() {
-                            var i,
-                                j,
-                                tabGroup,
-                                tabGroupItem,
-                                tabGroups = $scope.tabGroups;
-
-                            for (i = 0; i < tabGroups.length; i++) {
-                                tabGroup = tabGroups[i];
-                                for (j = 0; j < tabGroup.tabs.length; j++) {
-                                    tabGroupItem = tabGroup.tabs[j];
-                                    if (tabGroupItem.sref && $state.is(tabGroupItem.sref)) {
-                                        return tabGroupItem.index - 1;
-                                    }
-                                }
-                            }
-                        }
-
-                        function buildTabs() {
-                            var contentEls,
-                                contentIndex = 0,
-                                i,
-                                j,
-                                tabGroups = $scope.tabGroups,
-                                tabGroup,
-                                tabGroupItem,
-                                unorderedListEl = element.find('ul:first');
-
-                            contentEls = element.find('bb-tab-group-item > div');
-
-                            //take div with ids of each tab and move them outside the ul
-                            for (i = 0; i < tabGroups.length; i++) {
-                                tabGroup = tabGroups[i];
-                                element.append(createGroupHeaderDiv());
-                                for (j = 0; j < tabGroup.tabs.length; j++) {
-                                    tabGroupItem = tabGroup.tabs[j];
-                                    tabGroupItem.index = (++nextTabIndexToUse);
-                                    tabGroupItem.id = 'bb-tab-id-' + (++elIdSuffix);
-
-                                    unorderedListEl.append(createListAnchorItem(tabGroupItem.id, tabGroupItem.automationId));
-                                    element.append(createTabContentDiv(contentEls[contentIndex], tabGroupItem.id));
-
-                                    contentIndex = contentIndex + 1;
-                                }
-                                unorderedListEl.append('<li class="rt-tab-spacer"></li>');
-                                element.append('<div class="rt-tab-accordion-spacer"></div>');
-                            }
-                            element.find('bb-tab-group').remove();
-                        }
-
-                        function activateActiveTabModel() {
-                            if (activeTab) {
-                                var activeTabModel,
-                                    activeTabId = activeTab.selector.substring(1),
-                                    i,
-                                    j,
-                                    sref,
-                                    tabGroup,
-                                    tabGroupItem,
-                                    tabGroups = $scope.tabGroups;
-
-                                for (i = 0; i < tabGroups.length; i++) {
-                                    tabGroup = tabGroups[i];
-                                    for (j = 0; j < tabGroup.tabs.length; j++) {
-                                        tabGroupItem = tabGroup.tabs[j];
-                                        if (tabGroupItem.id === activeTabId) {
-                                            activeTabModel = tabGroupItem;
-                                        }
-                                    }
-                                }
-
-                                if (activeTabModel) {
-                                    sref = activeTabModel.sref;
-                                    if (sref) {
-                                        if (!$state.is(sref)) {
-                                            // JPB - Delay calling state.go because the state change will fail
-                                            // if it is triggered while in the middle of processing of another state change.
-                                            // This can happen if you browse to the page without specifying the state of a particular tab
-                                            // and then this code tries to switch you over to the state of the first tab.
-                                            $timeout(function () {
-                                                $state.go(sref);
-                                            }, 0);
-                                        }
-                                    }
-                                }
-                                //this is where lazy loading/responsive logic would go, fire an event
-                            }
-                        }
-
-                        function handleTabActivate(event, tab) {
-                            /*jslint unparam: true */
-                            activeTab = tab;
-                            activateActiveTabModel();
-                        }
-
-                        function handleTabsActivateState(event, state) {
-                            /*jslint unparam: true */
-                            if (state.oldState !== state.newState) {
-                                activateActiveTabModel();
-                            }
-                        }
-
-                        //https://github.com/jellekralt/Responsive-Tabs
-                        function addResponsiveTabs() {
-                            var defaults,
-                                fixed,
-                                options;
-
-                            defaults = {
-                                active: getActiveTabIndexFromCurrentState() || 0,
-                                collapsible: 'accordion',
-                                rotate: false,
-                                startCollapsed: false
-                            };
-
-                            options = $scope.bbTabOptions || defaults;
-
-                            fixed = {
-                                activate: handleTabActivate,
-                                activateState: handleTabsActivateState
-                                //Needs implementation with routes
-                                //setHash: false
-                            };
-
-                            options = angular.extend({}, options, fixed);
-
-                            element.responsiveTabs(options);
-                        }
-
-                        function headersExistForAllTabs() {
-                            var i,
-                                j,
-                                tabGroup,
-                                tabGroupItem;
-                            for (i = 0; i < $scope.tabGroups.length; i++) {
-                                tabGroup = $scope.tabGroups[i];
-                                for (j = 0; j < tabGroup.tabs.length; j++) {
-                                    tabGroupItem = tabGroup.tabs[j];
-                                    if (!angular.isDefined(tabGroupItem.header) || tabGroupItem.header === null) {
-                                        return false;
-                                    }
-                                }
-                            }
-                            return true;
-                        }
-
-                        function headerCallBack(data, args) {
-                            var tabHeaderInfo = data,
-                                tabElements;
-                            if (tabHeaderInfo) {
-                                tabElements = angular.element('a[href=#' + args.id + ']');
-                                if (tabElements[0]) {
-                                    angular.element(tabElements[0]).html(getTabHeader(tabHeaderInfo.headerCount, tabHeaderInfo.headerTitle));
-                                }
-                                if (tabElements[1]) {
-                                    angular.element(tabElements[1]).html(getResponsiveTabHeader(tabHeaderInfo.headerCount, tabHeaderInfo.headerTitle));
-                                }
-                            }
-
-                            $scope.tabsInitialized = headersExistForAllTabs();
-                        }
-
-                        function initializeTabHeaders() {
-                            var headerCallBackArgs,
-                                i,
-                                j,
-                                tabGroup,
-                                tabGroupItem;
-                            for (i = 0; i < $scope.tabGroups.length; i++) {
-                                tabGroup = $scope.tabGroups[i];
-                                for (j = 0; j < tabGroup.tabs.length; j++) {
-                                    tabGroupItem = tabGroup.tabs[j];
-
-                                    headerCallBackArgs = { id: tabGroupItem.id };
-                                    if (angular.isDefined(tabGroupItem.header) && tabGroupItem.header !== null) {
-                                        if (angular.isString(tabGroupItem.header)) {
-                                            headerCallBack({ headerTitle: tabGroupItem.header }, headerCallBackArgs);
-                                        } else {
-                                            headerCallBack({ headerTitle: tabGroupItem.header.headerTitle, headerCount: tabGroupItem.header.headerCount }, headerCallBackArgs);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        function afterContentRender() {
-                            addResponsiveTabs(element[0], $scope.bbTabOptions);
-                            initializeTabHeaders();
-                        }
-
-                        buildTabs();
-
-                        afterContentRender();
-
-                        stateChangeDeregistration = $rootScope.$on('$stateChangeSuccess', function () {
-                            var tabId = getActiveTabIndexFromCurrentState();
-
-                            if (tabId >= 0 && activeTab && tabId !== activeTab.id) {
-                                //The state has changed and the new state matches a different tab
-                                //than is current active.  Activate that tab.
-                                element.responsiveTabs('activate', tabId);
-                            }
-                        });
-
-                        $scope.updateTabItemHeader = function (item) {
-                            var headerObject;
-                            if (angular.isString(item.header)) {
-                                headerObject = {
-                                    headerTitle: item.header
-                                };
-                            } else {
-                                headerObject = {
-                                    headerTitle: item.header.headerTitle,
-                                    headerCount: item.header.headerCount
-                                };
-                            }
-                            headerCallBack(
-                                headerObject,
-                                {
-                                    id: item.id
-                                }
-                            );
-                        };
-
-                        $scope.$on('$destroy', function () {
-                            stateChangeDeregistration();
-                            element.responsiveTabs('destroy');
-                        });
-                    }
-                };
-            }])
-        .directive('bbTabGroup', function () {
-            return {
-                require: '^bbTab',
-                restrict: 'E',
-                scope: {
-                },
-                controller: ['$scope', function ($scope) {
-                    $scope.tabGroupItems = [];
-
-                    this.addTabGroupItem = function (item) {
-                        $scope.tabGroupItems.push(item);
-                    };
-
-                    this.updateTabItemHeader = function (item) {
-                        $scope.tabCtrl.updateTabItemHeader(item);
-                    };
-                }],
-                link: function ($scope, element, attrs, tabCtrl) {
-                    /*jslint unparam: true */
-                    $scope.tabCtrl = tabCtrl;
-                    tabCtrl.addTabGroup({ tabs: $scope.tabGroupItems });
-                }
-            };
-        })
-        .directive('bbTabGroupItem', function () {
-            return {
-                require: '^bbTabGroup',
-                restrict: 'E',
-                transclude: true,
-                scope: {
-                    bbTabItemHeaderFunction: '&',
-                    bbTabItemHeader: '=',
-                    bbTabItemCount: '=',
-                    bbTabItemSref: '=',
-                    bbTabItemAutomationId: '='
-                },
-                link: function ($scope, element, attrs, tabGroupCtrl) {
-                    /*jslint unparam: true */
-                    var item = {
-                        header: $scope.bbTabItemHeader,
-                        sref: $scope.bbTabItemSref,
-                        automationId: $scope.bbTabItemAutomationId,
-                        id: null
-                    };
-                    tabGroupCtrl.addTabGroupItem(item);
-
-                    // Watching the header and its child properties so that changes to counts, etc will update the UI.
-                    $scope.$watch('bbTabItemHeader', function (newValue) {
-                        if (angular.isDefined(newValue) && newValue !== null) {
-                            item.header = newValue;
-                            tabGroupCtrl.updateTabItemHeader(item);
-                        }
-                    }, true);
-                },
-                template: '<div ng-transclude></div>'
-            };
-        });
-}());
-
 /*jslint nomen: true, plusplus: true */
 /*global angular, jQuery */
 
@@ -7712,6 +6886,7 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
 ### Tab Scroll Settings ###
 
  - `bb-tab-scroll-ready` Used to indicate the tabs are ready to be animated.  This should be used when the tabs are loaded dynamically based on some asynchronous logic like loading data from a web server.
+
  */
 
 (function ($) {
@@ -7868,6 +7043,65 @@ The `bb-tab-scroll` directive causes the row of tabs to be horizontally scrollab
             };
         }]);
 }(jQuery));
+
+/*jslint nomen: true, plusplus: true */
+/*global angular */
+
+/** @module Tabset
+@icon folder-open-o
+@summary The tabset module contains directives for enhancing ui-bootstrap tabs.
+ @description ### Additional Dependencies ###
+
+### Tabset Options ###
+
+The `bb-tabset-add` attribute creates an add button in the tab area and takes a callback that will be executed when the add button is clicked.
+
+The `bb-tabset-open` attribute creates an open button in the tab area and takes a callback that will be executed when the open button is clicked.
+
+### Tab Close Icon ###
+
+If you wish to add a close icon to a tab, just add the `bb-tab-close` class to the ui-bootstrap `tab` element, and add an `i` element with the `bb-tab-close-icon` class inside of the ui-bootstrap `tab-heading` directive.
+
+ */
+(function () {
+    'use strict';
+
+    function bbTabset($compile) {
+        return {
+            link: function ($scope, el, attr) {
+                var ulEl,
+                    liEl;
+                if (angular.isDefined(attr.bbTabsetAdd) || angular.isDefined(attr.bbTabsetOpen)) {
+                    ulEl = el.find('ul');
+                    liEl = angular.element('<li class="bb-tab-button"></li>');
+                    ulEl.append(liEl);
+
+                    if (angular.isDefined(attr.bbTabsetAdd)) {
+
+                        liEl.append($compile('<button ng-click="bbTabAdd()" type="button" class="bb-tab-button-wrap btn bb-tab-button-add btn-white"><span class="btn btn-white"><i class="fa fa-lg fa-plus-circle"></i></span></button>')($scope));
+
+                        $scope.bbTabAdd = function () {
+                            $scope.$eval(attr.bbTabsetAdd);
+                        };
+                    }
+
+                    if (angular.isDefined(attr.bbTabsetOpen)) {
+                        liEl.append($compile('<button ng-click="bbTabOpen()" type="button" class="bb-tab-button-wrap bb-tab-button-open btn btn-white"><span class="btn btn-white"><i class="fa fa-lg fa-folder-open-o"></i></span></button>')($scope));
+
+                        $scope.bbTabOpen = function () {
+                            $scope.$eval(attr.bbTabsetOpen);
+                        };
+                    }
+                }
+            }
+        };
+    }
+
+    bbTabset.$inject = ['$compile'];
+
+    angular.module('sky.tabset', ['ui.bootstrap.tabs'])
+        .directive('tabset', bbTabset);
+}());
 
 /*global angular */
 
@@ -8259,14 +7493,14 @@ When used on forms, it automatically adjusts the background color on the form an
  - `bb-tile-header` The header text for the tile.
  - `bb-tile-settings-click` A function to call when the user clicks the settings button (indicated by a wrench icon) in the tile header.  If not specified, the settings button is not displayed.
  - `bb-tile-collapsed` (optional) binds to the collapsed state of the tile so that the tile can respond to user setting collapsed state.
- 
+
  ### Tile Dashboard Directive ###
 
 The `bb-tile-dashboard` directive allows you to have a set of tiles within a page which have controllable layouts and collapsed states. It depends on [angular-ui router](https://github.com/angular-ui/ui-router/wiki) to define states that map to tile controllers and templates.
 
 ### Tile Dashboard Settings ###
 
-- `bb-tiles` An array of tile objects to be contained in the dashboard. Contains the following object: 
+- `bb-tiles` An array of tile objects to be contained in the dashboard. Contains the following object:
     - `id` Unique id for the tile.
     - `view_name` The name of the view for the tile defined in the ui-router `$stateProvider`.
     - `collapsed` True if the tile should be collapsed, false otherwise.
@@ -8305,8 +7539,7 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
                 link: function (scope, el, attrs, dashboardCtrl) {
                     var dashboardState = {},
                         displayModeChanging = false,
-                        tileInitialized = false,
-                        parentModal;
+                        tileInitialized = false;
 
                     //determines whether or not a tile is collapsed
                     function tileIsCollapsed(tileId, tiles) {
@@ -8381,12 +7614,6 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
                     scope.isCollapsed = scope.bbTileCollapsed || false;
                     scope.smallTileDisplayMode = false;
                     scope.tileId = '';
-
-                    //If the tile is inside a modal form, then add a class to modify the form background color.
-                    parentModal = el.parents('div.modal-body');
-                    if (parentModal && parentModal.length > 0) {
-                        parentModal.addClass('modal-body-tiled');
-                    }
 
                     scope.titleClick = function () {
                         scope.isCollapsed = !scope.isCollapsed;
@@ -8593,7 +7820,7 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
                                 smallTileDisplayMode: scope.smallTileDisplayMode,
                                 tiles: scope.tiles
                             });
-                            
+
                             scope.dashboardInitialized = true;
                         });
                     });
@@ -8655,11 +7882,11 @@ The `bb-tile-dashboard` directive allows you to have a set of tiles within a pag
                 },
                 controller: ['$scope', function ($scope) {
                     var self = this;
-                    
+
                     self.getDashboardState = function () {
                         return {tiles: $scope.tiles, smallTileDisplayMode: $scope.smallTileDisplayMode};
                     };
-                    
+
                     self.dashboardInitialized = function () {
                         return $scope.dashboardInitialized;
                     };
@@ -10008,7 +9235,6 @@ The `bbWizardNavigator` also exposes the following methods:
         'sky.checklist',
         'sky.contextmenu',
         'sky.data',
-        'sky.datefield',
         'sky.datepicker',
         'sky.daterangepicker',
         'sky.format',
@@ -10020,7 +9246,6 @@ The `bbWizardNavigator` also exposes the following methods:
         'sky.mediabreakpoints',
         'sky.modal',
         'sky.moment',
-        'sky.money',
         'sky.navbar',
         'sky.omnibar',
         'sky.palette',
@@ -10030,8 +9255,8 @@ The `bbWizardNavigator` also exposes the following methods:
         'sky.resources',
         'sky.scrollintoview',
         'sky.searchfield',
-        'sky.tabs',
         'sky.tabscroll',
+        'sky.tabset',
         'sky.tabsref',
         'sky.templates',
         'sky.templating',
@@ -10501,7 +9726,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '                <span class="fa fa-columns"></span>\n' +
         '                <span class="bb-toolbar-btn-label">{{resources.grid_columns_button}}</span>\n' +
         '            </button>\n' +
-        '            <button type="button" class="btn btn-white bb-grid-toolbar-btn bb-filter-btn" ng-class="{\'bb-filters-inline-active\': options.filtersAreActive}" data-bbauto-field="FilterButton" ng-show="locals.hasFilters" ng-click="locals.toggleFilterMenu();">\n' +
+        '            <button type="button" class="btn btn-white bb-grid-toolbar-btn bb-filter-btn" ng-class="{\'bb-filters-inline-active\': options.filtersAreActive}" data-bbauto-field="FilterButton" ng-show="locals.hasFilters" ng-click="locals.toggleFilterMenu()">\n' +
         '                <span class="fa fa-filter"></span>\n' +
         '                <span class="bb-toolbar-btn-label">{{resources.grid_filters_button}}</span>\n' +
         '            </button>\n' +
@@ -10563,11 +9788,12 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '<button class="btn btn-primary" type="submit" ng-transclude></button>');
     $templateCache.put('sky/templates/modal/modalheader.html',
         '<div class="modal-header">\n' +
-        '    <h4 class="bb-dialog-header" ng-transclude></h4>\n' +
+        '    <h1 class="bb-dialog-header" ng-transclude></h1>\n' +
         '    <div class="fa fa-times close" ng-click="$parent.$parent.$dismiss(\'close\');"></div>\n' +
-        '    <div bb-help-button bb-help-key="{{bbModalHelpKey}}" bb-set-help-key-override="true" data-bbauto-field="ModalHelpButton"></div>\n' +
+        '    <div bb-help-button bb-help-key="{{bbModalHelpKey}}" bb-set-help-key-override="true" data-bbauto-field="ModalHelpButton" ng-if="bbModalHelpKey"></div>\n' +
         '    <div class="clearfix"></div>\n' +
-        '</div>');
+        '</div>\n' +
+        '');
     $templateCache.put('sky/templates/navbar/navbar.html',
         '<nav class="navbar navbar-default bb-navbar" ng-transclude></nav>');
     $templateCache.put('sky/templates/page/page.html',
@@ -10612,7 +9838,7 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div class="ibox-title" ng-click="titleClick()">\n' +
         '            <div class="row">\n' +
         '                <div class="bb-tile-header-with-content col-xs-8">\n' +
-        '                    <h5 class="bb-tile-header">{{tileHeader}}</h5>\n' +
+        '                    <h2 class="bb-tile-header">{{tileHeader}}</h2>\n' +
         '                </div>\n' +
         '                <div class="col-xs-4 bb-tile-header-column-tools">\n' +
         '                    <div class="ibox-tools">\n' +
@@ -10626,7 +9852,8 @@ angular.module('sky.templates', []).run(['$templateCache', function($templateCac
         '        <div collapse="isCollapsed" class="ibox-content bb-tile-content" ng-transclude>\n' +
         '        </div>\n' +
         '    </div>\n' +
-        '</section>');
+        '</section>\n' +
+        '');
     $templateCache.put('sky/templates/tiles/tiledashboard.html',
         '<div class="row">\n' +
         '  <div class="col-md-6 bb-page-content-tile-column bb-page-content-tile-column-sortable" data-dashboard-column="1">\n' +

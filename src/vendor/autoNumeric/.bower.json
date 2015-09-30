@@ -41,6 +41,6 @@
     "commit": "e660044b8b8bb7d4af6934e5e3e77decb10ad223"
   },
   "_source": "git://github.com/BobKnothe/autoNumeric.git",
-  "_target": "~1.9.30",
+  "_target": "1.9.39",
   "_originalSource": "autoNumeric"
 }
