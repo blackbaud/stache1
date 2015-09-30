@@ -51,7 +51,6 @@ module.exports = function (grunt) {
             cli: grunt.option('cli'),
             pathConfig: 'stache.yml',
             pathPackage: 'package.json',
-            pathBower: '.bowerrc',
             package: '',
             config: '',
 
@@ -178,7 +177,7 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
-                        cwd: '<%= stache.dir %><%= stache.bower %>octicons/octicons/',
+                        cwd: '<%= stache.dir %>src/vendor/octicons/octicons/',
                         src: [
                             '*.eot',
                             '*.svg',
@@ -190,7 +189,7 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
-                        cwd: '<%= stache.dir %><%= stache.bower %>bb-sky-sass/dist/css/fonts/',
+                        cwd: '<%= stache.dir %>src/vendor/bb-sky-sass/dist/css/fonts/',
                         src: '*',
                         dest: '<%= stache.config.build %>css/fonts/'
                     },
@@ -875,9 +874,6 @@ module.exports = function (grunt) {
     // Read stache files
     if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathConfig)) {
         stacheConfig = grunt.file.readYAML(defaults.stache.dir + defaults.stache.pathConfig);
-    }
-    if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathBower)) {
-        defaults.stache.bower = grunt.file.readJSON(defaults.stache.dir + defaults.stache.pathBower).directory;
     }
 
     defaults.stache.config = merge(stacheConfig, localConfig);
