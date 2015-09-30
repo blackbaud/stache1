@@ -6,7 +6,7 @@ module.exports = function (grunt) {
         sass: {
             options: {
                 includePaths: [
-                    'src/vendor/'
+                    'bower_components/'
                 ]
             },
             build: {
@@ -18,8 +18,66 @@ module.exports = function (grunt) {
                     ext: '.css'
                 }]
             }
+        },
+        copy: {
+            build: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'bower_components',
+                        dest: 'src/vendor/',
+                        src: 'bb-sky-sass/dist/css/fonts/*.*'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components',
+                        dest: 'src/vendor/',
+                        src: 'bb-sky-sass/dist/css/libs.css'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/',
+                        dest: 'src/vendor/',
+                        src: 'bb-sky-sass/dist/css/sky.css'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/',
+                        dest: 'src/vendor/',
+                        src: 'bb-sky-sass/dist/js/libs.js'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/',
+                        dest: 'src/vendor/',
+                        src: 'bb-sky-sass/dist/js/sky.js'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/',
+                        dest: 'src/vendor/',
+                        src: 'holderjs/holder.min.js'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/',
+                        dest: 'src/vendor/',
+                        src: 'stellar/jquery.stellar.js'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/',
+                        dest: 'src/vendor/',
+                        src: 'angular-sanitize/angular-sanitize.min.js'
+                    }
+                ]
+            }
         }
     });
+
     grunt.task.loadNpmTasks('grunt-sass');
-    grunt.task.registerTask('default', ['sass']);
+    grunt.task.loadNpmTasks('grunt-contrib-copy');
+
+    grunt.task.registerTask('default', 'build');
+    grunt.task.registerTask('build', ['sass', 'copy:build']);
 };
