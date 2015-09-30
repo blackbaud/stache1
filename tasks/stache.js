@@ -107,7 +107,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'content/', //'<%= stache.config.content %>',
+                        cwd: '<%= stache.config.content %>',
                         dest: '<%= stache.config.build %>',
                         src: [
                             '**/*.md',
