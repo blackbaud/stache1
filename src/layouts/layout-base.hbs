@@ -144,13 +144,13 @@
     <script src="{{ assets }}js/stache-jquery.js"></script>
     <script src="{{ assets }}js/libs/jquery.mobile.custom.min.js"></script>
     <script src="{{ assets }}js/video.js"></script>
-    {{# if stache.config.clipboard }}
+    {{# inherit stache.config.clipboard clipboard }}
       <script src="{{ assets }}js/libs/ZeroClipboard.min.js"></script>
       <script src="{{ assets }}js/stache-clipboard.js"></script>
-    {{/ if }}
-    {{# if stache.config.prism }}
+    {{/ inherit }}
+    {{# inherit stache.config.prism prism }}
       <script src="{{ assets }}js/prism.js"></script>
-    {{/ if }}
+    {{/ inherit }}
     <!-- endbuild -->
 
     {{# each stache.config.files.js }}
