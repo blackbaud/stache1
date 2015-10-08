@@ -20,6 +20,7 @@
     if (btnCopy.length) {
 
         // Initialize the clipboard
+        ZeroClipboard.config({ swfPath: "/img/ZeroClipboard.swf" });
         client = new ZeroClipboard(btnCopy);
 
         // Show the tooltip

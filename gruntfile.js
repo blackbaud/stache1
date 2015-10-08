@@ -74,10 +74,13 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: 'bower_components/zeroclipboard/dist/',
                         dest: 'src/js/libs/',
-                        src: [
-                            'ZeroClipboard.min.js',
-                            'ZeroClipboard.swf'
-                        ]
+                        src: 'ZeroClipboard.min.js'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/zeroclipboard/dist/',
+                        dest: 'src/img/',
+                        src: 'ZeroClipboard.swf'
                     }
                 ]
             }
