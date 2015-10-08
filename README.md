@@ -4,6 +4,6 @@
 
 ## Building Stache
 
-- `npm install blackbaud-stache`
+- `npm install`
 - `bower install`
 - `grunt build`

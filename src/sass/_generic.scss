@@ -176,3 +176,22 @@ div.draft h3 {
 .bb-navbar.ng-scope {
   border-bottom: 0;
 }
+
+pre.has-copy-code {
+  position: relative;
+}
+
+.copy-code {
+  border-bottom-left-radius: 4px;
+  background: #FFF;
+  display: block;
+  padding: 2px 5px;
+  position: absolute;
+  right: 1px;
+  top: 1px;
+}
+
+.copy-code.zeroclipboard-is-hover {
+  color: #34b1ec;
+  cursor: pointer;
+}

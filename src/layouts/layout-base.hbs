@@ -144,6 +144,10 @@
     <script src="{{ assets }}js/stache-jquery.js"></script>
     <script src="{{ assets }}js/libs/jquery.mobile.custom.min.js"></script>
     <script src="{{ assets }}js/video.js"></script>
+    {{# if stache.config.clipboard }}
+      <script src="{{ assets }}js/libs/ZeroClipboard.min.js"></script>
+      <script src="{{ assets }}js/stache-clipboard.js"></script>
+    {{/ if }}
     {{# if stache.config.prism }}
       <script src="{{ assets }}js/prism.js"></script>
     {{/ if }}

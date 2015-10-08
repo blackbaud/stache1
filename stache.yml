@@ -65,6 +65,7 @@ video_description_top: false
 # STACHE - LAYOUTS
 # =============================================
 
+clipboard: true
 prism: true
 sky: true
 draft: true

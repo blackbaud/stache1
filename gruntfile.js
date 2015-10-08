@@ -69,6 +69,15 @@ module.exports = function (grunt) {
                         cwd: 'bower_components/',
                         dest: 'src/vendor/',
                         src: 'angular-sanitize/angular-sanitize.min.js'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/zeroclipboard/dist/',
+                        dest: 'src/js/libs/',
+                        src: [
+                            'ZeroClipboard.min.js',
+                            'ZeroClipboard.swf'
+                        ]
                     }
                 ]
             }
