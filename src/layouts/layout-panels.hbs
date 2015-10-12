@@ -8,52 +8,26 @@ layout: layout-container
   {{# withNewline }}{{ body }}{{/ withNewline }}
 {{/ inherit }}
 
-<div class="showcase">
-{{# eachChildLink mod=3 }}
-
-  {{# if firstOrMod0 }}
-    <div class="row equal-height-row" data-equal-height-selector=".panel">
-  {{/ if }}
-
-    <div class="col-sm-4">
-      <a href="{{ uri }}" class="panel-wrapper">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">
-              {{ name }}
-              {{# if deprecated }}
-                <span class="label label-danger pull-right">Deprecated</span>
-              {{/ if }}
-            </h3>
-          </div>
-          <div class="panel-body">
-            {{# if icon }}
-              <i class="showcase-icon fa fa-2x fa-{{ icon }}"></i>
-              <div class="showcase-desc">
-            {{/ if }}
-            {{# if summary }}
-              <p>{{ summary }}</p>
-            {{ else }}
-              {{# if synopsis }}
-                <p>{{ synopsis }}</p>
-              {{ else }}
-                {{# if description }}
-                  <p>{{ description }}</p>
-                {{/ if }}
-              {{/ if }}
-            {{/ if}}
-            {{# if icon }}
+<div class="showcase">{{# eachChildLink mod=3 }}{{# if firstOrMod0 }}
+    <div class="row equal-height-row" data-equal-height-selector=".panel">{{/ if }}
+        <div class="col-sm-4">
+         <a href="{{ uri }}" class="panel-wrapper">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  {{ name }}
+                  {{# if deprecated }}<span class="label label-danger pull-right">Deprecated</span>{{/ if }}
+                </h3>
               </div>
-            {{/ if }}
-          </div>
-        </div>
-      </a>
-
-    </div>
-
-  {{# if lastOrMod1 }}
-    </div>
-  {{/ if }}
-
-{{/ eachChildLink }}
+              <div class="panel-body">
+                {{# if icon }}<i class="showcase-icon fa fa-2x fa-{{ icon }}"></i><div class="showcase-desc">{{/ if }}
+                {{# if summary }}<p>{{ summary }}</p>
+                {{ else }}
+                  {{# if synopsis }}<p>{{ synopsis }}</p>{{ else }}{{# if description }}<p>{{ description }}</p>{{/ if }}{{/ if }}{{/ if}}
+                {{# if icon }}</div>{{/ if }}
+              </div>
+            </div>
+          </a>
+        </div>{{# if lastOrMod1 }}
+    </div>{{/ if }} {{/ eachChildLink }}
 </div>
