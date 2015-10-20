@@ -1,4 +1,9 @@
 @charset "UTF-8";
+/*
+* ==========================================================================
+* VARIABLE DECLARATION
+* ==========================================================================
+*/
 /*Imports all of Sky including Bootstrap*/
 /* Removing this from Inspinia because we are overriding it,
    and there is no !default, and we're trying to rip out Inspinia anyways
@@ -250,8 +255,8 @@ th {
 
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url("sky/bootstrap/fonts/glyphicons-halflings-regular.eot");
-  src: url("sky/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("sky/bootstrap/fonts/glyphicons-halflings-regular.woff2") format("woff2"), url("sky/bootstrap/fonts/glyphicons-halflings-regular.woff") format("woff"), url("sky/bootstrap/fonts/glyphicons-halflings-regular.ttf") format("truetype"), url("sky/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
+  src: url("fonts/glyphicons-halflings-regular.eot");
+  src: url("fonts/glyphicons-halflings-regular.eot?#iefix") format("embedded-opentype"), url("fonts/glyphicons-halflings-regular.woff2") format("woff2"), url("fonts/glyphicons-halflings-regular.woff") format("woff"), url("fonts/glyphicons-halflings-regular.ttf") format("truetype"), url("fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular") format("svg"); }
 
 .glyphicon, .ui-select-container .ui-select-match .ui-select-toggle > .caret {
   position: relative;
@@ -5662,8 +5667,8 @@ button.close {
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url("sky/fontawesome/fonts/fontawesome-webfont.eot?v=4.3.0");
-  src: url("sky/fontawesome/fonts/fontawesome-webfont.eot?#iefix&v=4.3.0") format("embedded-opentype"), url("sky/fontawesome/fonts/fontawesome-webfont.woff2?v=4.3.0") format("woff2"), url("sky/fontawesome/fonts/fontawesome-webfont.woff?v=4.3.0") format("woff"), url("sky/fontawesome/fonts/fontawesome-webfont.ttf?v=4.3.0") format("truetype"), url("sky/fontawesome/fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular") format("svg");
+  src: url("fonts//fontawesome-webfont.eot?v=4.3.0");
+  src: url("fonts//fontawesome-webfont.eot?#iefix&v=4.3.0") format("embedded-opentype"), url("fonts//fontawesome-webfont.woff2?v=4.3.0") format("woff2"), url("fonts//fontawesome-webfont.woff?v=4.3.0") format("woff"), url("fonts//fontawesome-webfont.ttf?v=4.3.0") format("truetype"), url("fonts//fontawesome-webfont.svg?v=4.3.0#fontawesomeregular") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -5671,7 +5676,7 @@ button.close {
 .pagination .previous a,
 .pagination .next a,
 .pagination .last a,
-.pagination [ng-if='::directionLinks'] a, .nav-tabs > li > a .bb-tab-close-icon, .nav-tabs.nav-justified > li > a .bb-tab-close-icon {
+.pagination [ng-if='::directionLinks'] a, .nav.nav-tabs > li > a .bb-tab-close-icon, .nav.nav-tabs ul.dropdown-menu > li > a .bb-tab-close-icon, .nav-tabs.nav-justified > li > a .bb-tab-close-icon, .nav-tabs.nav-justified ul.dropdown-menu > li > a .bb-tab-close-icon {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
   font-size: inherit;
@@ -5733,14 +5738,14 @@ button.close {
 .pagination .previous a.pull-left,
 .pagination .next a.pull-left,
 .pagination .last a.pull-left,
-.pagination [ng-if='::directionLinks'] a.pull-left, .nav-tabs > li > a .pull-left.bb-tab-close-icon {
+.pagination [ng-if='::directionLinks'] a.pull-left, .nav.nav-tabs > li > a .pull-left.bb-tab-close-icon, .nav.nav-tabs ul.dropdown-menu > li > a .pull-left.bb-tab-close-icon, .nav-tabs.nav-justified > li > a .pull-left.bb-tab-close-icon, .nav-tabs.nav-justified ul.dropdown-menu > li > a .pull-left.bb-tab-close-icon {
   margin-right: .3em; }
 
 .fa.pull-right, .ui-jqgrid thead .sorting-desc > div > span.pull-right, .ui-jqgrid thead .sorting-asc > div > span.pull-right, .pull-right.caret, .pagination .first a.pull-right,
 .pagination .previous a.pull-right,
 .pagination .next a.pull-right,
 .pagination .last a.pull-right,
-.pagination [ng-if='::directionLinks'] a.pull-right, .nav-tabs > li > a .pull-right.bb-tab-close-icon {
+.pagination [ng-if='::directionLinks'] a.pull-right, .nav.nav-tabs > li > a .pull-right.bb-tab-close-icon, .nav.nav-tabs ul.dropdown-menu > li > a .pull-right.bb-tab-close-icon, .nav-tabs.nav-justified > li > a .pull-right.bb-tab-close-icon, .nav-tabs.nav-justified ul.dropdown-menu > li > a .pull-right.bb-tab-close-icon {
   margin-left: .3em; }
 
 .fa-spin {
@@ -5871,8 +5876,10 @@ button.close {
 .fa-remove:before,
 .fa-close:before,
 .fa-times:before,
-.nav-tabs > li > a .bb-tab-close-icon:before,
-.nav-tabs.nav-justified > li > a .bb-tab-close-icon:before {
+.nav.nav-tabs > li > a .bb-tab-close-icon:before,
+.nav.nav-tabs ul.dropdown-menu > li > a .bb-tab-close-icon:before,
+.nav-tabs.nav-justified > li > a .bb-tab-close-icon:before,
+.nav-tabs.nav-justified ul.dropdown-menu > li > a .bb-tab-close-icon:before {
   content: ""; }
 
 .fa-search-plus:before {
@@ -7665,14 +7672,14 @@ h3, h4, h5 {
 .pagination .previous a.arrow:before,
 .pagination .next a.arrow:before,
 .pagination .last a.arrow:before,
-.pagination [ng-if='::directionLinks'] a.arrow:before, .nav-tabs > li > a .arrow.bb-tab-close-icon:before {
+.pagination [ng-if='::directionLinks'] a.arrow:before, .nav.nav-tabs > li > a .arrow.bb-tab-close-icon:before, .nav.nav-tabs ul.dropdown-menu > li > a .arrow.bb-tab-close-icon:before, .nav-tabs.nav-justified > li > a .arrow.bb-tab-close-icon:before, .nav-tabs.nav-justified ul.dropdown-menu > li > a .arrow.bb-tab-close-icon:before {
   content: "\f104"; }
 
 .active > a > .fa.arrow:before, .active > a > .arrow.caret:before, .pagination .first .active > a > a.arrow:before,
 .pagination .previous .active > a > a.arrow:before,
 .pagination .next .active > a > a.arrow:before,
 .pagination .last .active > a > a.arrow:before,
-.pagination [ng-if='::directionLinks'] .active > a > a.arrow:before, .nav-tabs > li.active > a > .arrow.bb-tab-close-icon:before {
+.pagination [ng-if='::directionLinks'] .active > a > a.arrow:before, .nav.nav-tabs > li.active > a > .arrow.bb-tab-close-icon:before, .nav.nav-tabs ul.dropdown-menu > li.active > a > .arrow.bb-tab-close-icon:before, .nav-tabs.nav-justified > li.active > a > .arrow.bb-tab-close-icon:before, .nav-tabs.nav-justified ul.dropdown-menu > li.active > a > .arrow.bb-tab-close-icon:before {
   content: "\f107"; }
 
 .nav-second-level li,
@@ -10494,7 +10501,34 @@ dd.project-people {
   border-bottom: 1px solid #e7eaec; }
   .bb-action-bar .bb-action-bar-group {
     display: inline-block; }
+    .bb-action-bar .bb-action-bar-group .dropdown-menu .bb-action-bar-item-button {
+      background-color: transparent;
+      display: block;
+      box-sizing: border-box;
+      padding: 3px 20px;
+      clear: both;
+      white-space: nowrap;
+      font-weight: normal;
+      font-size: 12px;
+      text-align: left;
+      margin: 4px;
+      line-height: 25px;
+      color: inherit;
+      border: none;
+      border-radius: 3px;
+      width: 95%; }
+    .bb-action-bar .bb-action-bar-group .dropdown-menu .bb-action-bar-item-button:hover, .bb-action-bar .bb-action-bar-group .dropdown-menu .bb-action-bar-item-button:focus {
+      text-decoration: none;
+      color: #262626;
+      background-color: #f5f5f5; }
+    .bb-action-bar .bb-action-bar-group .dropdown-menu .bb-action-bar-item-button:focus {
+      outline: 5px auto -webkit-focus-ring-color;
+      outline-offset: -2px; }
   .bb-action-bar .btn + .btn {
+    margin-left: 10px; }
+  .bb-action-bar .dropdown {
+    display: inline-block; }
+  .bb-action-bar .btn + .dropdown, .bb-action-bar .dropdown + .btn {
     margin-left: 10px; }
   .bb-action-bar .btn-white {
     min-width: 0; }
@@ -10917,6 +10951,36 @@ ul.bb-datefield.dropdown-menu {
 .open .dropdown-toggle.btn-white.bb-context-menu-btn {
   border-color: #b0b0b0; }
 
+.dropdown-menu .bb-submenu .panel-body a {
+  border-radius: 3px;
+  clear: both;
+  color: inherit;
+  display: block;
+  font-weight: normal;
+  line-height: 25px;
+  margin: 4px;
+  padding: 3px 20px;
+  text-align: left;
+  white-space: nowrap; }
+
+.dropdown-menu .bb-submenu .panel-body a.font-bold {
+  font-weight: 600; }
+
+.dropdown-menu .bb-submenu .panel-body a:hover, .dropdown-menu .bb-submenu .panel-body a:focus {
+  text-decoration: none;
+  color: #262626;
+  background-color: #f5f5f5; }
+
+.dropdown-menu .bb-submenu .disabled .panel-body a, .dropdown-menu .bb-submenu .disabled .panel-body a:hover, .dropdown-menu .bb-submenu .disabled .panel-body a:focus {
+  color: #999999; }
+
+.dropdown-menu .bb-submenu .disabled .panel-body a:hover, .dropdown-menu .bb-submenu .disabled .panel-body a:focus {
+  text-decoration: none;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  cursor: not-allowed; }
+
 .bb-context-menu .dropdown-menu li > a {
   border-radius: 3px;
   clear: both;
@@ -10932,7 +10996,7 @@ ul.bb-datefield.dropdown-menu {
 .bb-context-menu .dropdown-menu li > a.font-bold {
   font-weight: 600; }
 
-.bb-context-menu .dropdown-menu li > a:hover, .bb-context-menu .dropdown-menu li > a:focus {
+.bb-context-menu .dropdown-menu li > a:hover, .bb-context-menu .dropdown-menu li > a:focus, .bb-context-menu .dropdown-menu .bb-submenu .panel-body a:hover, .bb-context-menu .dropdown-menu .bb-submenu .panel-body a:focus {
   text-decoration: none;
   color: #262626;
   background-color: #f5f5f5; }
@@ -10958,6 +11022,33 @@ body.dropdown {
 
 body.dropup {
   position: static; }
+
+.bb-submenu {
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd; }
+  .bb-submenu .panel-group {
+    margin-bottom: 0; }
+    .bb-submenu .panel-group .panel {
+      border: none; }
+      .bb-submenu .panel-group .panel .panel-body {
+        padding: 0; }
+        .bb-submenu .panel-group .panel .panel-body a {
+          padding-left: 30px; }
+  .bb-submenu .panel-title > a {
+    outline: none;
+    font-weight: normal; }
+  .bb-submenu .panel-title .bb-submenu-chevron {
+    color: #D1DADE;
+    float: right;
+    margin: 1px 0;
+    padding: 0; }
+  .bb-submenu .panel-heading {
+    background-color: #f8f8f9;
+    margin-left: 0;
+    padding-left: 20px; }
+  .bb-submenu ul {
+    list-style: none outside none;
+    padding: 0; }
 
 /* Removing this from Inspinia because we are overriding it,
    and there is no !default, and we're trying to rip out Inspinia anyways
@@ -11172,6 +11263,9 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
   width: 100%; }
   .bb-grid-action-bar-and-back-to-top .table-backtotop {
     margin-top: 0; }
+    .bb-grid-action-bar-and-back-to-top .table-backtotop .btn-link {
+      font-size: 13px;
+      vertical-align: baseline; }
 
 .bb-grid-action-bar-mobile-buttons {
   background-color: #fff;
@@ -11207,6 +11301,11 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
 .bb-grid-toolbar-container .toolbar.bb-table-toolbar {
   height: auto;
   min-height: 39px; }
+
+.bb-grid-toolbar-button-container {
+  float: left;
+  font-size: 12px;
+  display: inline-block; }
 
 /* Removing this from Inspinia because we are overriding it,
    and there is no !default, and we're trying to rip out Inspinia anyways
@@ -11370,6 +11469,10 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
   border: 1px solid #cccccc;
   margin-top: 5px;
   cursor: pointer; }
+  .bb-table-loadmore .btn-link,
+  .bb-table-backtotop .btn-link {
+    font-size: 13px;
+    vertical-align: baseline; }
 
 .bb-table-loadmore {
   background-color: #eeeeee; }
@@ -18432,8 +18535,11 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
     font-weight: 100;
     margin: 0;
     padding: 9px 15px;
-    text-overflow: ellispsis;
-    display: inline-block; }
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    overflow: -moz-hidden-unscrollable; }
 
 .bb-tile .bb-tile-header-with-content {
   float: left;
@@ -18442,10 +18548,13 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
   overflow: hidden;
   -ms-text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
-  text-overflow: ellipsis; }
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: baseline; }
   .bb-tile .bb-tile-header-with-content .bb-tile-header {
     float: none;
-    padding-right: 10px; }
+    padding-right: 10px;
+    max-width: 80%; }
 
 .bb-tile .ibox-tools {
   -ms-touch-action: none;
@@ -18483,11 +18592,15 @@ body:not(.bb-viewkeeper-ignore-fixed) .bb-grid-filters.bb-viewkeeper-fixed, body
 
 .bb-tile-header-content {
   color: #1ab394;
-  display: inline;
+  display: inline-block;
   font-family: "Oswald", sans-serif;
   font-size: 18px;
   font-weight: 400;
-  opacity: 0; }
+  opacity: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow: -moz-hidden-unscrollable;
+  max-width: 50%; }
 
 .bb-tile.collapsed .bb-tile-header-content {
   -webkit-transition: opacity 0.5s;
@@ -18799,7 +18912,8 @@ select.ng-invalid.submitted,
     /* Keeps font descenders from being cut off */
     font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 600;
-    font-size: 14px; }
+    font-size: 14px;
+    margin: 0; }
   .modal-header .bb-helpbutton {
     float: right;
     margin-right: 20px;
@@ -19088,19 +19202,19 @@ body:not(.bb-viewkeeper-ignore-fixed) {
   background-color: #1f91da; }
 
 .bb-palette-multi-2 {
-  background-color: #1dc8a6; }
-
-.bb-palette-multi-3 {
-  background-color: #28d7d9; }
-
-.bb-palette-multi-4 {
   background-color: #f9b66d; }
 
+.bb-palette-multi-3 {
+  background-color: #1dc8a6; }
+
+.bb-palette-multi-4 {
+  background-color: #9176c6; }
+
 .bb-palette-multi-5 {
-  background-color: #ef6977; }
+  background-color: #28d7d9; }
 
 .bb-palette-multi-6 {
-  background-color: #9176c6; }
+  background-color: #ef6977; }
 
 .bb-palette-multi-7 {
   background-color: #919191; }
@@ -19109,19 +19223,19 @@ body:not(.bb-viewkeeper-ignore-fixed) {
   background-color: #7ec2ed; }
 
 .bb-palette-multi-9 {
-  background-color: #75ebd3; }
-
-.bb-palette-multi-10 {
-  background-color: #85e8ea; }
-
-.bb-palette-multi-11 {
   background-color: #fbcf9f; }
 
+.bb-palette-multi-10 {
+  background-color: #75ebd3; }
+
+.bb-palette-multi-11 {
+  background-color: #beaedd; }
+
 .bb-palette-multi-12 {
-  background-color: #f59ca6; }
+  background-color: #85e8ea; }
 
 .bb-palette-multi-13 {
-  background-color: #beaedd; }
+  background-color: #f59ca6; }
 
 .bb-palette-multi-14 {
   background-color: #afafaf; }
@@ -19414,58 +19528,80 @@ body > .ui-select-bootstrap.open {
 /* These are bootstrap-specific variables that will be set here to be inhereted by bootstrap*/
 /* end _bootstrap-variable-defaults */
 /* Font Awesome defaults */
-.nav-tabs, .nav-tabs.nav-justified {
+.bb-tabset-dropdown {
   border-bottom: 2px solid #1c84c6; }
-  .nav-tabs > li.bb-tab-close > a, .nav-tabs.nav-justified > li.bb-tab-close > a {
+  .bb-tabset-dropdown .bb-tab-dropdown-button {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-bottom: -1px; }
+    .bb-tabset-dropdown .bb-tab-dropdown-button .fa-caret-down, .bb-tabset-dropdown .bb-tab-dropdown-button .ui-jqgrid thead .sorting-desc > div > span, .ui-jqgrid thead .bb-tabset-dropdown .bb-tab-dropdown-button .sorting-desc > div > span, .bb-tabset-dropdown .bb-tab-dropdown-button .caret {
+      margin-left: 5px; }
+
+.nav.nav-tabs, .nav-tabs.nav-justified {
+  border-bottom: 2px solid #1c84c6; }
+  .nav.nav-tabs > li.bb-tab-close > a, .nav-tabs.nav-justified > li.bb-tab-close > a {
     padding-right: 5px; }
-  .nav-tabs > li.bb-tab-button .bb-tab-button-wrap, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap {
+  .nav.nav-tabs .bb-tab-button-wrap, .nav-tabs.nav-justified .bb-tab-button-wrap {
     background-color: transparent;
     border: none;
     padding: 0px 0px;
     width: 44px; }
-    .nav-tabs > li.bb-tab-button .bb-tab-button-wrap .btn-white, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap .btn-white {
+    .nav.nav-tabs .bb-tab-button-wrap .btn-white, .nav-tabs.nav-justified .bb-tab-button-wrap .btn-white {
       color: #1c84c6;
       padding-top: 5px;
       padding-bottom: 5px; }
-  .nav-tabs > li.bb-tab-button .bb-tab-button-wrap:active, .nav-tabs > li.bb-tab-button .bb-tab-button-wrap:hover, .nav-tabs > li.bb-tab-button .bb-tab-button-wrap:focus, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap:active, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap:hover, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-wrap:focus {
+  .nav.nav-tabs .bb-tab-button-wrap:active, .nav.nav-tabs .bb-tab-button-wrap:hover, .nav.nav-tabs .bb-tab-button-wrap:focus, .nav-tabs.nav-justified .bb-tab-button-wrap:active, .nav-tabs.nav-justified .bb-tab-button-wrap:hover, .nav-tabs.nav-justified .bb-tab-button-wrap:focus {
     box-shadow: none;
     outline: none; }
-  .nav-tabs > li.bb-tab-button .bb-tab-button-add .btn-white, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-add .btn-white {
+  .nav.nav-tabs .bb-tab-button-add .btn-white, .nav-tabs.nav-justified .bb-tab-button-add .btn-white {
     padding-left: 7px;
     padding-right: 7px; }
-  .nav-tabs > li.bb-tab-button .bb-tab-button-open .btn-white, .nav-tabs.nav-justified > li.bb-tab-button .bb-tab-button-open .btn-white {
+  .nav.nav-tabs .bb-tab-button-open .btn-white, .nav-tabs.nav-justified .bb-tab-button-open .btn-white {
     padding-left: 5px;
     padding-right: 5px; }
-  .nav-tabs > li > a, .nav-tabs.nav-justified > li > a {
+  .nav.nav-tabs > li.bb-tab-button, .nav-tabs.nav-justified > li.bb-tab-button {
+    border-bottom: none;
+    margin-bottom: 0;
+    margin-left: 5px; }
+  .nav.nav-tabs > li > a, .nav.nav-tabs ul.dropdown-menu > li > a, .nav-tabs.nav-justified > li > a, .nav-tabs.nav-justified ul.dropdown-menu > li > a {
     color: #999999;
     font-size: 14px;
     white-space: nowrap;
     text-overflow: ellipsis; }
-    .nav-tabs > li > a .bb-tab-close-icon, .nav-tabs.nav-justified > li > a .bb-tab-close-icon {
+    .nav.nav-tabs > li > a .bb-tab-close-icon, .nav.nav-tabs ul.dropdown-menu > li > a .bb-tab-close-icon, .nav-tabs.nav-justified > li > a .bb-tab-close-icon, .nav-tabs.nav-justified ul.dropdown-menu > li > a .bb-tab-close-icon {
       padding-left: 10px;
       cursor: pointer;
       -webkit-appearance: none;
       background-color: transparent;
       border: none;
       outline: none; }
-    .nav-tabs > li > a .bb-tab-close-icon:active, .nav-tabs > li > a .bb-tab-close-icon:hover, .nav-tabs > li > a .bb-tab-close-icon:focus, .nav-tabs.nav-justified > li > a .bb-tab-close-icon:active, .nav-tabs.nav-justified > li > a .bb-tab-close-icon:hover, .nav-tabs.nav-justified > li > a .bb-tab-close-icon:focus {
+    .nav.nav-tabs > li > a .bb-tab-close-icon:active, .nav.nav-tabs > li > a .bb-tab-close-icon:hover, .nav.nav-tabs > li > a .bb-tab-close-icon:focus, .nav.nav-tabs ul.dropdown-menu > li > a .bb-tab-close-icon:active, .nav.nav-tabs ul.dropdown-menu > li > a .bb-tab-close-icon:hover, .nav.nav-tabs ul.dropdown-menu > li > a .bb-tab-close-icon:focus, .nav-tabs.nav-justified > li > a .bb-tab-close-icon:active, .nav-tabs.nav-justified > li > a .bb-tab-close-icon:hover, .nav-tabs.nav-justified > li > a .bb-tab-close-icon:focus, .nav-tabs.nav-justified ul.dropdown-menu > li > a .bb-tab-close-icon:active, .nav-tabs.nav-justified ul.dropdown-menu > li > a .bb-tab-close-icon:hover, .nav-tabs.nav-justified ul.dropdown-menu > li > a .bb-tab-close-icon:focus {
       box-shadow: none;
       outline: none; }
-  .nav-tabs > li > a:hover, .nav-tabs.nav-justified > li > a:hover {
+  .nav.nav-tabs > li > a:hover, .nav.nav-tabs ul.dropdown-menu > li > a:hover, .nav-tabs.nav-justified > li > a:hover, .nav-tabs.nav-justified ul.dropdown-menu > li > a:hover {
     background-color: #eeeeee;
-    border-color: transparent; }
-  .nav-tabs > li .bb-tab-header-title, .nav-tabs.nav-justified > li .bb-tab-header-title {
+    border-color: transparent;
+    border-bottom-color: #1c84c6; }
+  .nav.nav-tabs > li .bb-tab-header-title, .nav.nav-tabs ul.dropdown-menu > li .bb-tab-header-title, .nav-tabs.nav-justified > li .bb-tab-header-title, .nav-tabs.nav-justified ul.dropdown-menu > li .bb-tab-header-title {
     margin-top: 0; }
-  .nav-tabs > li .bb-tab-header-count, .nav-tabs.nav-justified > li .bb-tab-header-count {
+  .nav.nav-tabs > li .bb-tab-header-count, .nav.nav-tabs ul.dropdown-menu > li .bb-tab-header-count, .nav-tabs.nav-justified > li .bb-tab-header-count, .nav-tabs.nav-justified ul.dropdown-menu > li .bb-tab-header-count {
     font-weight: normal; }
-  .nav-tabs > li.active > a,
-  .nav-tabs > li.active > a:hover,
-  .nav-tabs > li.active > a:focus, .nav-tabs.nav-justified > li.active > a, .nav-tabs.nav-justified > li.active > a:hover, .nav-tabs.nav-justified > li.active > a:focus {
+  .nav.nav-tabs ul.dropdown-menu > li > a, .nav-tabs.nav-justified ul.dropdown-menu > li > a {
+    padding-right: 5px; }
+    .nav.nav-tabs ul.dropdown-menu > li > a .bb-tab-close-icon, .nav-tabs.nav-justified ul.dropdown-menu > li > a .bb-tab-close-icon {
+      padding-top: 5px;
+      float: right; }
+  .nav.nav-tabs > li.active > a,
+  .nav.nav-tabs > li.active > a:hover,
+  .nav.nav-tabs > li.active > a:focus, .nav.nav-tabs ul.dropdown-menu > li.active > a,
+  .nav.nav-tabs ul.dropdown-menu > li.active > a:hover,
+  .nav.nav-tabs ul.dropdown-menu > li.active > a:focus, .nav-tabs.nav-justified > li.active > a, .nav-tabs.nav-justified > li.active > a:hover, .nav-tabs.nav-justified > li.active > a:focus, .nav-tabs.nav-justified ul.dropdown-menu > li.active > a, .nav-tabs.nav-justified ul.dropdown-menu > li.active > a:hover, .nav-tabs.nav-justified ul.dropdown-menu > li.active > a:focus {
     background-color: #1c84c6;
     border-color: transparent;
     color: #fff; }
-  .nav-tabs > li.active .bb-tab-header-title,
-  .nav-tabs > li.active .bb-tab-header-count, .nav-tabs.nav-justified > li.active .bb-tab-header-title, .nav-tabs.nav-justified > li.active .bb-tab-header-count {
+  .nav.nav-tabs > li.active .bb-tab-header-title,
+  .nav.nav-tabs > li.active .bb-tab-header-count, .nav.nav-tabs ul.dropdown-menu > li.active .bb-tab-header-title,
+  .nav.nav-tabs ul.dropdown-menu > li.active .bb-tab-header-count, .nav-tabs.nav-justified > li.active .bb-tab-header-title, .nav-tabs.nav-justified > li.active .bb-tab-header-count, .nav-tabs.nav-justified ul.dropdown-menu > li.active .bb-tab-header-title, .nav-tabs.nav-justified ul.dropdown-menu > li.active .bb-tab-header-count {
     color: #fff; }
 
 .bb-tab-header-count {
@@ -19524,6 +19660,7 @@ body > .ui-select-bootstrap.open {
 .bb-wizard .nav.nav-tabs {
   border: none; }
   .bb-wizard .nav.nav-tabs li {
+    border-bottom: none;
     margin-right: 5px; }
     .bb-wizard .nav.nav-tabs li a {
       -webkit-border-radius: 3px;
@@ -19599,7 +19736,7 @@ body > .ui-select-bootstrap.open {
   color: #666666;
   cursor: pointer;
   display: table;
-  min-height: 120px;
+  height: 120px;
   width: 100%;
   text-align: center; }
   .bb-file-drop-contents h4,
@@ -20814,7 +20951,7 @@ p.note {
 .pagination .last a,
 .pagination .last .btn-notes a, .btn-notes
 .pagination [ng-if='::directionLinks'] a,
-.pagination [ng-if='::directionLinks'] .btn-notes a, .btn-notes .nav-tabs > li > a .bb-tab-close-icon, .nav-tabs > li > a .btn-notes .bb-tab-close-icon {
+.pagination [ng-if='::directionLinks'] .btn-notes a, .btn-notes .nav.nav-tabs > li > a .bb-tab-close-icon, .nav.nav-tabs > li > a .btn-notes .bb-tab-close-icon, .btn-notes .nav.nav-tabs ul.dropdown-menu > li > a .bb-tab-close-icon, .nav.nav-tabs ul.dropdown-menu > li > a .btn-notes .bb-tab-close-icon, .btn-notes .nav-tabs.nav-justified > li > a .bb-tab-close-icon, .nav-tabs.nav-justified > li > a .btn-notes .bb-tab-close-icon, .btn-notes .nav-tabs.nav-justified ul.dropdown-menu > li > a .bb-tab-close-icon, .nav-tabs.nav-justified ul.dropdown-menu > li > a .btn-notes .bb-tab-close-icon {
   font-size: 16px; }
 
 .btn-notes-inline {
@@ -20828,7 +20965,7 @@ p.note {
 .pagination .last .btn-xs > a,
 .pagination .last .btn-group-xs > .btn > a,
 .pagination [ng-if='::directionLinks'] .btn-xs > a,
-.pagination [ng-if='::directionLinks'] .btn-group-xs > .btn > a, .nav-tabs > li > a .btn-xs > .bb-tab-close-icon, .nav-tabs > li > a .btn-group-xs > .btn > .bb-tab-close-icon {
+.pagination [ng-if='::directionLinks'] .btn-group-xs > .btn > a, .nav.nav-tabs > li > a .btn-xs > .bb-tab-close-icon, .nav.nav-tabs > li > a .btn-group-xs > .btn > .bb-tab-close-icon, .nav.nav-tabs ul.dropdown-menu > li > a .btn-xs > .bb-tab-close-icon, .nav.nav-tabs ul.dropdown-menu > li > a .btn-group-xs > .btn > .bb-tab-close-icon, .nav-tabs.nav-justified > li > a .btn-xs > .bb-tab-close-icon, .nav-tabs.nav-justified > li > a .btn-group-xs > .btn > .bb-tab-close-icon, .nav-tabs.nav-justified ul.dropdown-menu > li > a .btn-xs > .bb-tab-close-icon, .nav-tabs.nav-justified ul.dropdown-menu > li > a .btn-group-xs > .btn > .bb-tab-close-icon {
   font-size: 14px;
   top: 1px;
   position: relative; }
