@@ -63,7 +63,8 @@ module.exports = function (grunt) {
             searchContentToRemove: [
                 '.bb-navbar',
                 '.nav-sidebar',
-                '.footer-site'
+                '.footer-site',
+                'script'
             ]
         },
 
@@ -701,7 +702,7 @@ module.exports = function (grunt) {
     // Prepare the JSON for our search implementation
     grunt.registerTask('prepareSearch', function () {
         var status = grunt.config.get('stache.status'),
-            searchContentToRemove = grunt.config.get('stache.config.searchContentToRemove'),
+            searchContentToRemove = grunt.config.get('stache.searchContentToRemove'),
             search = [],
             item,
             file,
