@@ -51,14 +51,14 @@
 
 .navbar-collapse,
 .layout-row-content .layout,
-.zone-footer footer {
+.zone-footer .footer-site {
     margin: 0 auto;
 }
 
 // Mirrors Sky/Bootstrap/_grid.scss
 .navbar-collapse,
 .layout-row-content .layout,
-.zone-footer footer {
+.zone-footer .footer-site {
 
   @media (min-width: $screen-sm-min) {
     width: $container-sm;
@@ -184,4 +184,8 @@
 
 .zone-aside-first .badge-info {
   background-color: #5bc0de !important;
+}
+
+.copyright .col-sm-6 {
+  padding: 0;
 }
