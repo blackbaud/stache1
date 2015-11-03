@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     grunt.config.init({
         sass: {
             options: {
+                outputStyle: 'compressed',
                 includePaths: [
                     'bower_components/'
                 ]
@@ -22,36 +23,6 @@ module.exports = function (grunt) {
         copy: {
             build: {
                 files: [
-                    {
-                        expand: true,
-                        cwd: 'bower_components',
-                        dest: 'src/vendor/',
-                        src: 'bb-sky-sass/dist/css/fonts/*.*'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'bower_components',
-                        dest: 'src/vendor/',
-                        src: 'bb-sky-sass/dist/css/libs.css'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'bower_components/',
-                        dest: 'src/vendor/',
-                        src: 'bb-sky-sass/dist/css/sky.css'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'bower_components/',
-                        dest: 'src/vendor/',
-                        src: 'bb-sky-sass/dist/js/libs.js'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'bower_components/',
-                        dest: 'src/vendor/',
-                        src: 'bb-sky-sass/dist/js/sky.js'
-                    },
                     {
                         expand: true,
                         cwd: 'bower_components/',

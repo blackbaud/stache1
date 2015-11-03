@@ -4,17 +4,8 @@
 * ==========================================================================
 */
 
-// Undoing a few things defined in _bootstrap-variable-defaults.scss
-// @import "blackbaud-skyux/scss/bootstrap-variable-defaults.scss";
-// @import "_variables.scss";
-// @import "blackbaud-skyux/scss/_variables.scss";
-// @import "blackbaud-skyux/scss/_mixins.scss";
-
-// $nav-selected-border-width needs to be moved into variables in order for this to be removed
-// @import "blackbaud-skyux/scss/_navigation.scss";
-//@import "blackbaud-skyux/scss/_icons.scss";
-
-@import "blackbaud-skyux/scss/sky.scss";
+@import "blackbaud-skyux/scss/_variables.scss";
+@import "blackbaud-skyux/scss/_mixins.scss";
 @import "_variables.scss";
 
 /*

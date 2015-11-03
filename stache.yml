@@ -65,6 +65,7 @@ video_description_top: false
 # STACHE - LAYOUTS
 # =============================================
 
+latest_sky_release: 1.4.0
 clipboard: true
 prism: true
 sky: true

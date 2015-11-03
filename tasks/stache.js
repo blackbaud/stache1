@@ -178,18 +178,6 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
-                        cwd: '<%= stache.dir %>src/vendor/octicons/octicons/',
-                        src: [
-                            '*.eot',
-                            '*.svg',
-                            '*.ttf',
-                            '*.woff',
-                            '*.woff2'
-                        ],
-                        dest: '<%= stache.config.build %>css/fonts/'
-                    },
-                    {
-                        expand: true,
                         cwd: '<%= stache.dir %>src/vendor/bb-sky-sass/dist/css/fonts/',
                         src: '*',
                         dest: '<%= stache.config.build %>css/fonts/'
@@ -207,45 +195,17 @@ module.exports = function (grunt) {
                         dest: '<%= stache.config.build %>'
                     },
                     {
-                        src: '<%= stache.config.src %>css/azure.css',
-                        dest: '<%= stache.config.build %>css/azure.css'
+                        expand: true,
+                        cwd: '<%= stache.config.src %>css/',
+                        src: '*.*',
+                        dest: '<%= stache.config.build %>css/'
                     },
                     {
+                        // All other files in src/js are concated via usemin
                         src: '<%= stache.config.src %>js/azure.js',
                         dest: '<%= stache.config.build %>js/azure.js'
                     }
                 ]
-            }
-        },
-
-        cssmin: {
-            target: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= stache.config.build %>',
-                    src: ['*.css', '!*.min.css'],
-                    dest: '<%= stache.config.build %>',
-                    ext: '.min.css'
-                }]
-            }
-        },
-
-        // Adds timestamp to the assets
-        filerev: {
-            site: {
-                files: [{
-                    src: [
-                        '<%= stache.config.build %>/css/*.css',
-                        '<%= stache.config.build %>/js/*.js'
-                    ]
-                }]
-            }
-        },
-
-        // Needed to allow angular apps
-        uglify: {
-            options: {
-                mangle: false
             }
         },
 
@@ -258,7 +218,7 @@ module.exports = function (grunt) {
                 flow: {
                     steps: {
                         js: ['concat'],
-                        css: ['concat', 'cssmin']
+                        css: ['concat']
                     },
                     post: {}
                 }
@@ -774,7 +734,6 @@ module.exports = function (grunt) {
             'prepareSearch',
             'useminPrepare',
             'concat:generated',
-            'cssmin:generated',
             'usemin',
             'copy:build',
             'stacheHooks:post'
