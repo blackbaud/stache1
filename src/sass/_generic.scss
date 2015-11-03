@@ -16,27 +16,6 @@ body {
   position: relative;
 }
 
-h1, .h1, h2, .h2, h3, .h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-h4, .h4, h5, .h5, h6, .h6 {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-h2 {
-  padding-top: 40px;
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid #eee;
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
 hr.small {
   max-width: 100px;
   margin-left: auto;
@@ -44,16 +23,16 @@ hr.small {
 }
 
 .text-primary {
-  color: $brand-alternate;;
+  color: $bb-brand-alternate;
 }
 
 .bg-primary {
-  background: $brand-alternate;
+  background: $bb-brand-alternate;
   color: #FFF;
 }
 
 .bg-secondary {
-  background: $blue-light;
+  background: lighten($bb-color-blue, 40%);
 }
 
 .btn-fa-link {

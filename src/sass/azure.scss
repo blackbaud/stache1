@@ -1,4 +1,4 @@
-@import "bb-sky-sass/scss/_sky.scss";
+@import "blackbaud-skyux/scss/_sky.scss";
 @import "app";
 
 /*
@@ -28,6 +28,7 @@
 
 .zone-footer {
   background: $footer-bg;
+  padding: 0;
 }
 
 .navbar-collapse {
@@ -50,14 +51,14 @@
 
 .navbar-collapse,
 .layout-row-content .layout,
-.zone-footer footer {
+.zone-footer .footer-site {
     margin: 0 auto;
 }
 
 // Mirrors Sky/Bootstrap/_grid.scss
 .navbar-collapse,
 .layout-row-content .layout,
-.zone-footer footer {
+.zone-footer .footer-site {
 
   @media (min-width: $screen-sm-min) {
     width: $container-sm;
@@ -96,7 +97,7 @@
 #navigation .navbar-nav > li > a:focus,
 #navigation .navbar-nav > li.active > a {
   background-color: #293846;
-  border-bottom: solid $nav-selected-border-width $blue;
+  border-bottom: solid $bb-nav-selected-border-width $bb-color-blue;
   color: #FFF !important;
   padding-bottom: 11px;
 }
@@ -124,7 +125,7 @@
 .zone-aside-first .nav-pills li.acitve a:hover,
 .zone-aside-first .nav-pills li.active a:focus {
   background: none;
-  border-left-color: $blue;
+  border-left-color: $bb-color-blue;
   color: #8c8f90;
   font-weight: 700;
 }

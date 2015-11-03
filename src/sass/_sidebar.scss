@@ -5,6 +5,8 @@
 */
 
   .sidebar {
+    font-size: $font-size-base;
+    line-height: $line-height-base;
     margin-top: 20px;
   }
 
@@ -55,7 +57,7 @@
   .nav-sidebar.nav li a:hover,
   .nav-sidebar.nav li a:focus {
     background: none;
-    color: $nav-bg;
+    color: $bb-nav-bg-color;
   }
 
   .nav-sidebar.nav > li.active,
@@ -65,7 +67,7 @@
   }
 
   .nav-sidebar.nav li.active > a {
-    border-left-color: $blue;
+    border-left-color: $bb-color-blue;
     font-weight: bold;
   }
 

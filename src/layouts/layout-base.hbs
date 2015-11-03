@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
     <link rel="icon" href="{{ assets }}img/favicon.ico" type="image/ico">
-    <style>@import url("//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Oswald:300,400,700");</style>
 
     {{# if stache.config.sky }}
       {{{ include stache.config.partial_sky_css }}}
@@ -26,7 +25,7 @@
     {{/ inherit }}
 
   </head>
-  <body class="{{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+  <body class="bb-text-block {{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
 
     {{# inherit stache.config.google_tagmanager_id google_tagmanager_id }}
       {{{ include stache.config.partial_google_tagmanager }}}

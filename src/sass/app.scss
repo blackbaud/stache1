@@ -5,22 +5,23 @@
 */
 
 // Undoing a few things defined in _bootstrap-variable-defaults.scss
-@import "_variables.scss";
-@import "bb-sky-sass/scss/_variables.scss";
-@import "bb-sky-sass/scss/_mixins.scss";
+// @import "blackbaud-skyux/scss/bootstrap-variable-defaults.scss";
+// @import "_variables.scss";
+// @import "blackbaud-skyux/scss/_variables.scss";
+// @import "blackbaud-skyux/scss/_mixins.scss";
 
 // $nav-selected-border-width needs to be moved into variables in order for this to be removed
-@import "bb-sky-sass/scss/_navigation.scss";
-@import "bb-sky-sass/scss/_icons.scss";
+// @import "blackbaud-skyux/scss/_navigation.scss";
+//@import "blackbaud-skyux/scss/_icons.scss";
+
+@import "blackbaud-skyux/scss/sky.scss";
+@import "_variables.scss";
 
 /*
 * ==========================================================================
 * DOCUMENTATION
 * ==========================================================================
 */
-
-// SkyUI is currently using an older version of Bootstrap.  This shims that in the interim
-@import "_bootstrap-shim";
 
 @import "_omnibar";
 @import "_generic";

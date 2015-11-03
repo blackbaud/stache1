@@ -5,27 +5,27 @@
 */
 
   .contribute {
-    background: $brand-alternate;
+    background: $bb-brand-alternate;
     color: #FFF;
     padding: $section-padding;
   }
 
   .contribute a {
-    color: $brand-alternate-lighter;
+    color: $bb-brand-alternate-lighter;
   }
 
   .contribute a:hover,
   .contribute a:focus {
-    color: $brand-alternate-light;
+    color: $bb-brand-alternate-light;
   }
 
   .contribute p.lead a {
-    color: lighten($yellow, 25%);
+    color: lighten($bb-color-yellow, 25%);
   }
 
   .contribute p.lead a:hover,
   .contribute p.lead a:focus {
-    color: $brand-primary-hover;
+    color: lighten($bb-color-yellow, 10%);
   }
 
   .contribute p.lead {

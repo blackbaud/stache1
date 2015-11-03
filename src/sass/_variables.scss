@@ -4,20 +4,16 @@
 * ==========================================================================
 */
 
-// Set Bootstrap + FontAwesome fonts
-$icon-font-path: "fonts/";
-$fa-font-path: $icon-font-path;
-$sky-icon-font-path: $icon-font-path;
+// Octicon to same as Bootstrap/Font Awesome fonts
 $octicons-font-path: $icon-font-path;
 
-// Undo some Bootstrap variables
-$grid-gutter-width: 30px;
-$screen-lg: 1200px;
+// The only variable in Stache that should probably go away too.
 $section-padding: 50px 0;
 
 // Needed for azure footer parent
 $footer-bg: #f3f3f4;
 
+// Used to break word-wraps in search results in the omnibar
 @mixin word-wrap() {
   word-break:     break-word;
   -webkit-hyphens: auto;

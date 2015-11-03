@@ -4,7 +4,7 @@
   "dependencies": {
     "angular-sanitize": "~1.3.14",
     "angular-toastr": "~1.0.2",
-    "bb-sky-sass": "git@github.com:blackbaud/sky.git",
+    "blackbaud-skyux": "1.4.0",
     "bootbox": "~4.3.0",
     "bootstrap-sass": "~3.3.2",
     "flot": "~0.8.3",
