@@ -131,34 +131,16 @@
       {{{ include stache.config.partial_sky_js }}}
     {{/ if }}
 
-    <!-- build:js {{ assets }}js/stache.min.js -->
-    <script src="{{ assets }}js/libs/easyXDM.min.js"></script>
-    <script src="{{ assets }}vendor/holderjs/holder.min.js"></script>
-    <script src="{{ assets }}vendor/stellar/jquery.stellar.js"></script>
-    <script src="{{ assets }}vendor/angular-sanitize/angular-sanitize.min.js"></script>
-    <!-- endbuild -->
+    <script src="{{ assets }}js/stache.min.js"></script>
 
     <!-- build:js {{ assets }}js/app.min.js -->
-    <script src="{{ assets }}js/stache-app.js"></script>
-    <script src="{{ assets }}js/stache-jquery.js"></script>
-    <script src="{{ assets }}js/libs/jquery.mobile.custom.min.js"></script>
-    <script src="{{ assets }}js/video.js"></script>
-    {{# inherit stache.config.clipboard clipboard }}
-      <script src="{{ assets }}js/libs/ZeroClipboard.min.js"></script>
-      <script src="{{ assets }}js/stache-clipboard.js"></script>
-    {{/ inherit }}
-    {{# inherit stache.config.prism prism }}
-      <script src="{{ assets }}js/prism.js"></script>
-    {{/ inherit }}
-    <!-- endbuild -->
-
     {{# each stache.config.files.js }}
-      <script src="{{ this }}"></script>
+    <script src="{{ this }}"></script>
     {{/ each }}
-
     {{# each files.js }}
-      <script src="{{ this }}"></script>
+    <script src="{{ this }}"></script>
     {{/ each }}
+    <!-- endbuild -->
 
     {{# if example-js }}
       <script>

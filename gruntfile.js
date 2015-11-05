@@ -25,42 +25,38 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'bower_components/',
-                        dest: 'src/vendor/',
-                        src: 'holderjs/holder.min.js'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'bower_components/',
-                        dest: 'src/vendor/',
-                        src: 'stellar/jquery.stellar.js'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'bower_components/',
-                        dest: 'src/vendor/',
-                        src: 'angular-sanitize/angular-sanitize.min.js'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'bower_components/zeroclipboard/dist/',
-                        dest: 'src/js/libs/',
-                        src: 'ZeroClipboard.min.js'
-                    },
-                    {
-                        expand: true,
                         cwd: 'bower_components/zeroclipboard/dist/',
                         dest: 'src/img/',
                         src: 'ZeroClipboard.swf'
                     }
                 ]
             }
+        },
+        uglify: {
+            build: {
+                files: {
+                    'src/js/stache.min.js': [
+                        'src/js/libs/easyXDM.min.js',
+                        'bower_components/holderjs/holder.min.js',
+                        'bower_components/stellar/jquery.stellar.js',
+                        'bower_components/angular-sanitize/angular-sanitize.min.js',
+                        'src/js/stache-app.js',
+                        'src/js/stache-jquery.js',
+                        'src/js/libs/jquery.mobile.custom.min.js',
+                        'src/js/video.js',
+                        'bower_components/zeroclipboard/dist/ZeroClipboard.min.js',
+                        'src/js/stache-clipboard.js',
+                        'src/js/prism.js'
+                    ]
+                }
+            }
         }
     });
 
     grunt.task.loadNpmTasks('grunt-sass');
     grunt.task.loadNpmTasks('grunt-contrib-copy');
+    grunt.task.loadNpmTasks('grunt-contrib-uglify');
 
     grunt.task.registerTask('default', 'build');
-    grunt.task.registerTask('build', ['sass', 'copy:build']);
+    grunt.task.registerTask('build', ['sass', 'copy:build', 'uglify:build']);
 };

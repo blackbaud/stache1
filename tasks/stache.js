@@ -201,7 +201,10 @@ module.exports = function (grunt) {
                         dest: '<%= stache.config.build %>css/'
                     },
                     {
-                        // All other files in src/js are concated via usemin
+                        src: '<%= stache.config.src %>js/stache.min.js',
+                        dest: '<%= stache.config.build %>js/stache.min.js'
+                    },
+                    {
                         src: '<%= stache.config.src %>js/azure.js',
                         dest: '<%= stache.config.build %>js/azure.js'
                     }
@@ -212,12 +215,17 @@ module.exports = function (grunt) {
         useminPrepare: {
             html: '<%= stache.config.build %>index.html',
             options: {
-                assetsDirs: ['<%= stache.config.src %>'],
+                assetsDirs: [
+                    '<%= stache.config.src %>'
+                ],
                 dest: '<%= stache.config.build %>',
-                root: '<%= stache.config.src %>',
+                root: [
+                    '<%= stache.config.src %>',
+                    '<%= stache.config.static %>'
+                ],
                 flow: {
                     steps: {
-                        js: ['concat'],
+                        js: ['concat', 'uglify'],
                         css: ['concat']
                     },
                     post: {}
@@ -734,6 +742,7 @@ module.exports = function (grunt) {
             'prepareSearch',
             'useminPrepare',
             'concat:generated',
+            'uglify:generated',
             'usemin',
             'copy:build',
             'stacheHooks:post'
