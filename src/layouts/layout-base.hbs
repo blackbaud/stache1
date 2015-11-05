@@ -133,12 +133,27 @@
 
     <script src="{{ assets }}js/stache.min.js"></script>
 
-    <!-- build:js {{ assets }}js/app.min.js -->
     {{# each stache.config.files.js }}
-    <script src="{{ this }}"></script>
+      {{# contains this "//" }}
+        <script src="{{ this }}"></script>
+      {{/ contains }}
     {{/ each }}
     {{# each files.js }}
-    <script src="{{ this }}"></script>
+      {{# contains this "//" }}
+        <script src="{{ this }}"></script>
+      {{/ contains }}
+    {{/ each }}
+
+    <!-- build:js {{ assets }}js/app.min.js -->
+    {{# each stache.config.files.js }}
+      {{# contains this "//" }}{{ else }}
+        <script src="{{ this }}"></script>
+      {{/ contains }}
+    {{/ each }}
+    {{# each files.js }}
+      {{# contains this "//" }}{{ else }}
+        <script src="{{ this }}"></script>
+      {{/ contains }}
     {{/ each }}
     <!-- endbuild -->
 
