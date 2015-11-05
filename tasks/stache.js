@@ -212,6 +212,27 @@ module.exports = function (grunt) {
             }
         },
 
+        htmlmin: {
+            build: {
+                options: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    removeEmptyAttributes: true,
+                    removeCommentsFromCDATA: true,
+                    removeRedundantAttributes: true,
+                    collapseBooleanAttributes: true
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= stache.config.build %>',
+                        src: '**/*.html',
+                        dest: '<%= stache.config.build %>'
+                    }
+                ]
+            }
+        },
+
         useminPrepare: {
             html: '<%= stache.config.build %>index.html',
             options: {
@@ -744,6 +765,7 @@ module.exports = function (grunt) {
             'concat:generated',
             'uglify:generated',
             'usemin',
+            'htmlmin:build',
             'copy:build',
             'stacheHooks:post'
         ]

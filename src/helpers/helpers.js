@@ -20,6 +20,7 @@ module.exports.register = function (Handlebars, options, params) {
         cheerio = require('cheerio'),
         fs = require('fs'),
         marked = require('marked'),
+        UglifyJS = require('uglify-js'),
         renderer = new marked.Renderer(),
         lexer = new marked.Lexer(),
         counts = {};
@@ -806,6 +807,15 @@ module.exports.register = function (Handlebars, options, params) {
             }
 
             return html;
+        },
+
+        /**
+        * Uglifys a block of JavaScript
+        **/
+        uglify: function (options) {
+            return UglifyJS.minify(options.fn(this), {
+                fromString: true
+            }).code;
         }
 
     });
