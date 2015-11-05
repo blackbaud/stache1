@@ -765,7 +765,7 @@ module.exports = function (grunt) {
             'concat:generated',
             'uglify:generated',
             'usemin',
-            'htmlmin:build',
+            //'htmlmin:build',
             'copy:build',
             'stacheHooks:post'
         ]
