@@ -316,10 +316,13 @@ module.exports = function (grunt) {
     }
 
     function slugify(title) {
-        return title
-            .toLowerCase()
-            .replace(/ /g, '-')
-            .replace(/[^\w-]+/g, '');
+        if (typeof title === 'string') {
+            title = title
+                .toLowerCase()
+                .replace(/ /g, '-')
+                .replace(/[^\w-]+/g, '');
+        }
+        return title;
     }
 
     function createTitle(name, separator, isBreadcrumbs) {
