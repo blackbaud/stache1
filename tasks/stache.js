@@ -57,7 +57,9 @@ module.exports = function (grunt) {
             // Imports to automatically generate pages from
             pages: [],
             preStacheHooks: '',
-            postStacheHooks: '',
+            postStacheHooks: [
+                slugifyHeaders
+            ],
             preAssembleHooks: '',
             postAssembleHooks: '',
             searchContentToRemove: [
@@ -297,7 +299,7 @@ module.exports = function (grunt) {
     ****************************************************************
     **/
 
-    function postStacheHook(html) {
+    function slugifyHeaders(html) {
         var $html = cheerio(html);
 
         // Require all heading tags to have id attribute
