@@ -233,6 +233,14 @@ module.exports = function (grunt) {
             }
         },
 
+        // Mangling causes AngularJS issues.
+        // Please be careful turning this back on.
+        uglify: {
+            options: {
+                mangle: false
+            }
+        },
+
         useminPrepare: {
             html: '<%= stache.config.build %>index.html',
             options: {
