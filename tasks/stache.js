@@ -57,11 +57,12 @@ module.exports = function (grunt) {
             // Imports to automatically generate pages from
             pages: [],
             preStacheHooks: '',
-            postStacheHooks: [
-                slugifyHeaders
-            ],
+            postStacheHooks: '',
             preAssembleHooks: '',
             postAssembleHooks: '',
+            postHandlebarsHooks: [
+                slugifyHeaders
+            ],
             searchContentToRemove: [
                 '.bb-navbar',
                 '.nav-sidebar',

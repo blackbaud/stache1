@@ -800,8 +800,8 @@ module.exports.register = function (Handlebars, options, params) {
         stachePostProcess: function (options) {
             var html = options.fn(this);
 
-            if (stache.postStacheHooks && stache.postStacheHooks.length > 0) {
-                stache.postStacheHooks.forEach(function (hook) {
+            if (stache.postHandlebarsHooks && stache.postHandlebarsHooks.length > 0) {
+                stache.postHandlebarsHooks.forEach(function (hook) {
                     html = hook(html);
                 });
             }
