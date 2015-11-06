@@ -22,6 +22,7 @@ error:
 # STACHE - SERVING
 # =============================================
 
+partial_omnibar: <%= stache.config.partials %>partial-omnibar.hbs
 partial_header_nav: <%= stache.config.partials %>partial-header-nav.hbs
 partial_header_nav_link: <%= stache.config.partials %>partial-header-nav-link.hbs
 partial_header_nav_dropdown: <%= stache.config.partials %>partial-header-nav-dropdown.hbs

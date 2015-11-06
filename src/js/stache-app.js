@@ -4,17 +4,7 @@
     'use strict';
 
     function Config($stateProvider, $urlRouterProvider) {
-        $stateProvider
-            .state('search', {
-                controller: 'SearchController as searchController',
-                url: '/search?q&p',
-                templateUrl: '/views/view-search.html'
-            });
-
-        // This is a temporary fix to supports backwards compatabiliy
-        if (window.location.href.indexOf('/search/') > -1) {
-            $urlRouterProvider.otherwise('/search');
-        }
+        // Currently no registered routes
     }
 
     function OmnibarController($scope, $timeout, $document, bbOmnibarConfig, SearchService) {
