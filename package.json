@@ -35,10 +35,9 @@
     "uglify-js": "^2.5.0"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-uglify": "^0.8.1",
-    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-jshint": "^0.11.3",
     "grunt-jasmine-node-coverage": "^0.4.1",
+    "grunt-jscs": "^2.3.0",
     "grunt-sass": "^1.1.0-beta",
     "handlebars": "^4.0.4",
     "mocha": "^2.3.3"
