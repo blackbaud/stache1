@@ -7,10 +7,10 @@
   "description": "Blackbaud Stache",
   "repository": {
     "type": "git",
-    "url": "https://github.com/blackbaud-community/stache.git"
+    "url": "https://github.com/blackbaud/stache.git"
   },
   "bugs": {
-    "url": "https://github.com/blackbaud-community/stache/issues"
+    "url": "https://github.com/blackbaud/stache/issues"
   },
   "dependencies": {
     "assemble": "^0.4.42",
