@@ -50,12 +50,30 @@ module.exports = function (grunt) {
                     ]
                 }
             }
+        },
+        jasmine_node: {
+            all: {
+                options: {
+                    specFolders: ['src/helpers'],
+                    extensions: 'js',
+                    specNameMatcher: 'spec'
+                },
+                src: ['src/helpers/helpers.js']
+            }
+        },
+        watch: {
+            scripts: {
+                files: ['src/helpers/**/*.js'],
+                tasks: ['jasmine_node']
+            }
         }
     });
 
     grunt.task.loadNpmTasks('grunt-sass');
     grunt.task.loadNpmTasks('grunt-contrib-copy');
+    grunt.task.loadNpmTasks('grunt-jasmine-node-coverage');
     grunt.task.loadNpmTasks('grunt-contrib-uglify');
+    grunt.task.loadNpmTasks('grunt-contrib-watch');
 
     grunt.task.registerTask('default', 'build');
     grunt.task.registerTask('build', ['sass', 'copy:build', 'uglify:build']);
