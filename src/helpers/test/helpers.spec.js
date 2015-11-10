@@ -13,13 +13,13 @@
         {
         },
         {
-          assemble: {
-              options: {
-                  getBypassContext: function () {
-                      return {};
-                  }
-              }
-          }
+            assemble: {
+                options: {
+                    getBypassContext: function () {
+                        return {};
+                    }
+                }
+            }
         }
     );
 
