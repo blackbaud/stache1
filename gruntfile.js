@@ -2,6 +2,8 @@
 'use strict';
 
 module.exports = function (grunt) {
+    var jsHintFiles = ['gruntfile.js', 'src/helpers/**/*.js'];
+
     grunt.config.init({
         sass: {
             options: {
@@ -61,19 +63,33 @@ module.exports = function (grunt) {
                 src: ['src/helpers/helpers.js']
             }
         },
+        jshint: {
+            options: {
+                jshintrc: true
+            },
+            all: jsHintFiles
+        },
+        jscs: {
+            options: {
+                config: '.jscsrc'
+            },
+            all: jsHintFiles
+        },
         watch: {
             scripts: {
                 files: ['src/helpers/**/*.js'],
-                tasks: ['jasmine_node']
+                tasks: ['jasmine_node', 'jshint', 'jscs']
             }
         }
     });
 
-    grunt.task.loadNpmTasks('grunt-sass');
     grunt.task.loadNpmTasks('grunt-contrib-copy');
-    grunt.task.loadNpmTasks('grunt-jasmine-node-coverage');
+    grunt.task.loadNpmTasks('grunt-contrib-jshint');
     grunt.task.loadNpmTasks('grunt-contrib-uglify');
     grunt.task.loadNpmTasks('grunt-contrib-watch');
+    grunt.task.loadNpmTasks('grunt-jasmine-node-coverage');
+    grunt.task.loadNpmTasks('grunt-jscs');
+    grunt.task.loadNpmTasks('grunt-sass');
 
     grunt.task.registerTask('default', 'build');
     grunt.task.registerTask('build', ['sass', 'copy:build', 'uglify:build']);

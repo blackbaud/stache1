@@ -187,7 +187,8 @@ module.exports.register = function (Handlebars, options, params) {
                 return '';
             }
 
-            hasProperty = context.hash.property !== 'undefined',
+            hasProperty = context.hash.property !== 'undefined';
+            
             filtered = operations.filter(function (item) {
                 for (prop in context.hash) {
                     if (context.hash.hasOwnProperty(prop) && prop !== 'property') {
@@ -607,7 +608,9 @@ module.exports.register = function (Handlebars, options, params) {
         withFirstProperty: function (collection, options) {
             var property;
             for (property in collection) {
-                return options.fn(collection[property]);
+                if (collection.hasOwnProperty(property)) {
+                    return options.fn(collection[property]);
+                }
             }
         },
 
@@ -698,7 +701,7 @@ module.exports.register = function (Handlebars, options, params) {
         /**
         * Consistently generate the trigger link for a site rebuild
         **/
-        triggerSiteRebuildLink: function (options) {
+        triggerSiteRebuildLink: function () {
             return [
                 stache.config.kudu_protocol,
                 stache.config.kudu_repo,
@@ -709,7 +712,7 @@ module.exports.register = function (Handlebars, options, params) {
         /**
         * Consistently generate the GitHub repo link (for site rebuild)
         **/
-        gitSourceLink: function (options) {
+        gitSourceLink: function () {
             return [
                 stache.config.github_protocol,
                 stache.config.github_token,
