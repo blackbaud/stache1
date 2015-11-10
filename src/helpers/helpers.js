@@ -436,6 +436,8 @@ module.exports.register = function (Handlebars, options, params) {
                 fileWithPath,
                 c,
                 hideYFM,
+                indent,
+                indentString,
                 render,
                 fixNewline,
                 escape,
@@ -461,6 +463,7 @@ module.exports.register = function (Handlebars, options, params) {
             render = typeof options.hash.render !== 'undefined' ? options.hash.render : true;
             fixNewline = typeof options.hash.fixNewline !== 'undefined' ? options.hash.fixNewline : true;
             escape = typeof options.hash.escape !== 'undefined' ? options.hash.escape : false;
+            indent = options.hash.indent || 0;
 
             if (typeof Handlebars.partials[fileWithPath] !== 'undefined') {
                 template = Handlebars.partials[fileWithPath];
@@ -496,6 +499,11 @@ module.exports.register = function (Handlebars, options, params) {
                 r = template;
             }
 
+            // Many text editors add a trailing newline when saving a source file.  Strip it if it's there.
+            if (r.charAt(r.length - 1) === '\n') {
+                r = r.substr(0, r.length - 1);
+            }
+
             // I spent an entire day tracking down this bug.
             // Files created on different systems with different line endings freaked this out.
             if (fixNewline) {
@@ -507,6 +515,11 @@ module.exports.register = function (Handlebars, options, params) {
                 start = r.indexOf('---') + 1;
                 end = r.indexOf('---', start);
                 r = r.substr(end + 3);
+            }
+
+            if (indent > 0) {
+                indentString = new Array(indent + 1).join(' ');
+                r = indentString + r.replace(/\n/g, '\n' + indentString);
             }
 
             if (escape) {
