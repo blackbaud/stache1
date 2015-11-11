@@ -87,7 +87,7 @@ module.exports = function (grunt) {
             options: {
                 assets: '<%= stache.config.build %>',
                 data: '<%= stache.config.data %>**/*.*',
-                helpers: ['helper-moment', '<%= stache.config.helpers %>**/*.js'],
+                helpers: ['helper-moment', '<%= stache.config.helpers %>helpers.js'],
                 partials: ['<%= stache.config.partials %>**/*.hbs'],
                 layoutdir: '<%= stache.config.layouts %>',
                 layoutext: '.hbs',

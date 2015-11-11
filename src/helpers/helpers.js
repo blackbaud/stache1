@@ -20,6 +20,7 @@ module.exports.register = function (Handlebars, options, params) {
         cheerio = require('cheerio'),
         fs = require('fs'),
         marked = require('marked'),
+        minify = require('html-minifier').minify,
         UglifyJS = require('uglify-js'),
         renderer = new marked.Renderer(),
         lexer = new marked.Lexer(),
@@ -188,7 +189,7 @@ module.exports.register = function (Handlebars, options, params) {
             }
 
             hasProperty = context.hash.property !== 'undefined';
-            
+
             filtered = operations.filter(function (item) {
                 for (prop in context.hash) {
                     if (context.hash.hasOwnProperty(prop) && prop !== 'property') {
@@ -832,6 +833,13 @@ module.exports.register = function (Handlebars, options, params) {
             return UglifyJS.minify(options.fn(this), {
                 fromString: true
             }).code;
+        },
+
+        /**
+        * Minify an HTML block
+        **/
+        minify: function (options) {
+            return minify(options.fn(this), options.hash);
         }
 
     });

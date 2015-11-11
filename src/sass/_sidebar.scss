@@ -49,7 +49,7 @@
   .nav-sidebar.nav li a {
     color: #8c8f90;
     border-left: transparent solid 5px;
-    margin: 10px 5px;
+    margin: 0 0 10px 5px;
     padding: 0 5px;
     @include word-wrap();
   }
@@ -68,11 +68,10 @@
 
   .nav-sidebar.nav li.active > a {
     border-left-color: $bb-color-blue;
-    font-weight: bold;
   }
 
-  .nav-sidebar.nav li.current li a {
-    font-weight: normal;
+  .nav-sidebar.nav li.current > a {
+    font-weight: bold
   }
 
   .nav-sidebar.nav li ul {

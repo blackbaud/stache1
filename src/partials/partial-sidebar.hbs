@@ -4,7 +4,7 @@
     {{# isActiveNav dest=../../dest }}
 
       {{# withinParentDepth sidebarCurrentDepth=../../../sidebarCurrentDepth sidebarParentDepth=../../../sidebarParentDepth }}
-        <li class="current {{# if draft }}draft{{/ if }} {{# isActiveNav dest=../../../dest parentCanBeActive=false }}active{{/ isActiveNav }}">
+        <li class="current {{# if draft }}draft{{/ if }} {{# isActiveNav dest=../../../dest parentCanBeActive=true }}active{{/ isActiveNav }}">
         <a href="{{ uri }}">
           {{ name }}
         </a>

@@ -73,5 +73,18 @@
 
         });
 
+        describe('minify() function', function () {
+            it('should minify an HTML block', function () {
+                var minified = Handlebars.helpers.minify(
+                    'src/helpers/test/fixtures/multiline.html',
+                    {},
+                    {
+                        collapseWhitespace: true
+                    });
+
+                expect(minified).toBe('<div><div><span>Hello</span></div></div>');
+            });
+        });
+
     });
 }());
