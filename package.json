@@ -43,5 +43,7 @@
     "handlebars": "^4.0.4",
     "mocha": "^2.3.3"
   },
-  "scripts": {}
+  "scripts": {
+    "test": "grunt test"
+  }
 }

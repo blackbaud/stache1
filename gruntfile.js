@@ -93,4 +93,5 @@ module.exports = function (grunt) {
 
     grunt.task.registerTask('default', 'build');
     grunt.task.registerTask('build', ['sass', 'copy:build', 'uglify:build']);
+    grunt.task.registerTask('test', 'jasmine_node');
 };

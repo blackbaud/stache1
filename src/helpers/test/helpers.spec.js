@@ -3,7 +3,8 @@
 (function () {
     'use strict';
 
-    var Handlebars = require('handlebars'),
+    var fs = require('fs'),
+        Handlebars = require('handlebars'),
         helpers = require('../helpers');
 
     helpers.register(
@@ -20,6 +21,10 @@
             }
         }
     );
+
+    function readFile(file) {
+        return fs.readFileSync(file, 'utf8');
+    }
 
     describe('helpers', function () {
 
@@ -75,14 +80,13 @@
 
         describe('minify() function', function () {
             it('should minify an HTML block', function () {
-                var minified = Handlebars.helpers.minify(
-                    'src/helpers/test/fixtures/multiline.html',
-                    {},
-                    {
-                        collapseWhitespace: true
-                    });
+                var src = [
+                        '{{# minify collapseWhitespace=true }}',
+                        readFile('src/helpers/test/fixtures/multiline.html'),
+                        '{{/ minify }}'].join('\n'),
+                    content = Handlebars.compile(src)();
 
-                expect(minified).toBe('<div><div><span>Hello</span></div></div>');
+                expect(content).toBe('<div><div><span>Hello</span></div></div>');
             });
         });
 
