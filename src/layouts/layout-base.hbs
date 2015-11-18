@@ -72,6 +72,10 @@
         {{> partial-note }}
       {{/ withHash }}
     {{/ if }}
+    
+    {{# inherit stache.config.back_to_top back_to_top}}
+        {{{ include stache.config.partial_back_to_top}}}
+    {{/ inherit}}
 
     <div class="affix-stop">
       {{# inherit stache.config.contribute contribute }}
