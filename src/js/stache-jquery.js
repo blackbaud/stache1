@@ -110,23 +110,23 @@
             }
         }
     });
-  
-  //Back-to-top
-  // Code from here: http://www.developerdrive.com/2013/07/using-jquery-to-add-a-dynamic-back-to-top-floating-button-with-smooth-scroll/
-  
+
+    // Back-to-top
+    // Code from here: http://www.developerdrive.com/2013/07/using-jquery-to-add-a-dynamic-back-to-top-floating-button-with-smooth-scroll/
+
     if ($backToTop) {
-            $(window).scroll(function() {
-                if ($(this).scrollTop() > bttoffset) {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > bttoffset) {
                 $backToTop.fadeIn(bttduration);
-        } else {
+            } else {
                 $backToTop.fadeOut(bttduration);
-        }
-    });
-    
-        $backToTop.click(function(event) {
+            }
+        });
+
+        $backToTop.click(function (event) {
             event.preventDefault();
             $('html, body').animate({scrollTop: 0}, bttduration);
             return false;
         });
-    };
+    }
 }(jQuery, window, document));
