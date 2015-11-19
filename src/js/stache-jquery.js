@@ -9,9 +9,9 @@
         sidebarHeading = sidebar.find('li.heading'),
         height = 0,
         q,
-        bttoffset = $('.back-to-top').data('offset'),
-        bttduration = 500,
-        $backToTop = $('.back-to-top');
+        $backToTop = $('.back-to-top'),
+        bttoffset = $backToTop.data('offset'),
+        bttduration = 500;
 
     // Scrollspy + affix only run if there are li.heading's on the page
     // And the sidebar isn't taller than the page
