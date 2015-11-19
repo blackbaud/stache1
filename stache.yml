@@ -48,6 +48,7 @@ partial_layout_sandcastle: <%= stache.config.partials %>partial-layout-sandcastl
 partial_google_analytics: <%= stache.config.partials %>partial-google-analytics.hbs
 partial_google_tagmanager: <%= stache.config.partials %>partial-google-tagmanager.hbs
 partial_powershell: <%= stache.config.partials %>partial-layout-powershell.hbs
+partial_back_to_top: <%= stache.config.partials %>partial-back-to-top.hbs
 
 # =============================================
 # STACHE - SERVING
@@ -67,6 +68,8 @@ video_description_top: false
 # =============================================
 
 latest_sky_release: 1.4.2
+back_to_top: false
+back_to_top_offset: 220
 clipboard: true
 prism: true
 sky: true
