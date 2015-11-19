@@ -113,7 +113,9 @@
   
   //Back-to-top
   // Code from here: http://www.developerdrive.com/2013/07/using-jquery-to-add-a-dynamic-back-to-top-floating-button-with-smooth-scroll/
-   $(window).scroll(function() {
+  
+  if ($backToTop) {
+       $(window).scroll(function() {
         if ($(this).scrollTop() > bttoffset) {
            $backToTop.fadeIn(bttduration);
         } else {
@@ -121,7 +123,6 @@
         }
     });
     
-  if ($backToTop) {
    $backToTop.click(function(event) {
         event.preventDefault();
        $('html, body').animate({scrollTop: 0}, bttduration);
