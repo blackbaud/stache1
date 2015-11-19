@@ -69,6 +69,7 @@ video_description_top: false
 
 latest_sky_release: 1.4.2
 back_to_top: false
+back_to_top_offset: 220
 clipboard: true
 prism: true
 sky: true

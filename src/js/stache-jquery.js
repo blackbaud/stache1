@@ -8,7 +8,10 @@
         sidebarNav = $('.nav-sidebar'),
         sidebarHeading = sidebar.find('li.heading'),
         height = 0,
-        q;
+        q,
+        bttoffset = $('.back-to-top').data('offset'),
+        bttduration = 500,
+        $backToTop = $('.back-to-top');
 
     // Scrollspy + affix only run if there are li.heading's on the page
     // And the sidebar isn't taller than the page
@@ -110,19 +113,17 @@
   
   //Back-to-top
   // Code from here: http://www.developerdrive.com/2013/07/using-jquery-to-add-a-dynamic-back-to-top-floating-button-with-smooth-scroll/
-    var bttoffset = 220;
-    var bttduration = 500;
-    jQuery(window).scroll(function() {
-        if (jQuery(this).scrollTop() > bttoffset) {
-            jQuery('.back-to-top').fadeIn(bttduration);
+   $(window).scroll(function() {
+        if ($(this).scrollTop() > bttoffset) {
+           $backToTop.fadeIn(bttduration);
         } else {
-            jQuery('.back-to-top').fadeOut(bttduration);
+           $backToTop.fadeOut(bttduration);
         }
     });
     
-    jQuery('.back-to-top').click(function(event) {
+   $backToTop.click(function(event) {
         event.preventDefault();
-        jQuery('html, body').animate({scrollTop: 0}, bttduration);
+       $('html, body').animate({scrollTop: 0}, bttduration);
         return false;
     });
 
