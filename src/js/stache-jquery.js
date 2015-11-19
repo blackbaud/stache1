@@ -121,10 +121,11 @@
         }
     });
     
+  if ($backToTop) {
    $backToTop.click(function(event) {
         event.preventDefault();
        $('html, body').animate({scrollTop: 0}, bttduration);
         return false;
     });
-
+  };
 }(jQuery, window, document));
