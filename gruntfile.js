@@ -91,7 +91,14 @@ module.exports = function (grunt) {
     grunt.task.loadNpmTasks('grunt-jscs');
     grunt.task.loadNpmTasks('grunt-sass');
 
+    grunt.task.registerTask('build', [
+        'sass',
+        'copy:build',
+        'uglify:build'
+    ]);
+    grunt.task.registerTask('test', [
+        'jscs',
+        'jasmine_node'
+    ]);
     grunt.task.registerTask('default', 'build');
-    grunt.task.registerTask('build', ['sass', 'copy:build', 'uglify:build']);
-    grunt.task.registerTask('test', 'jasmine_node');
 };
