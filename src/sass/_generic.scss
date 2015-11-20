@@ -189,7 +189,8 @@ pre.has-copy-code {
   display: none;
 }
 
-.back-to-top:hover {
-  background: #1a7bb9; 
+.back-to-top:hover,
+.back-to-top:focus {
+  background: #1a7bb9;
   cursor: pointer;
 }
