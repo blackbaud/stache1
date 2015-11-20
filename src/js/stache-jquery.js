@@ -57,14 +57,16 @@
 
     // Smooth scroll
     $('a.smooth-scroll').click(function (e) {
-        var href,
-            top;
+        var href = $(this).attr('href'),
+            el = $(href),
+            top = 0;
 
         e.preventDefault();
 
-        // Manually making #top = 0
-        href = $(this).attr('href'),
-        top = href === '#top' ? 0 : $($(this).attr('href')).offset().top;
+        // Forcing #top = 0, Verifying element exists
+        if (href !== "#top" && el) {
+            top = el.offset().top;
+        }
 
         $('html, body').animate({
             scrollTop: top
