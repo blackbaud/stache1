@@ -42,5 +42,8 @@
     "grunt-sass": "^1.1.0-beta",
     "handlebars": "^4.0.4",
     "mocha": "^2.3.3"
+  },
+  "scripts": {
+    "test": "grunt test"
   }
 }
