@@ -59,6 +59,10 @@
       {{{ include stache.config.partial_admin_toolbar }}}
     {{/ inherit }}
 
+    {{# inherit stache.config.showBreadcrumbs showBreadcrumbs }}
+      {{{ include stache.config.partial_breadcrumbs }}}
+    {{/ inherit }}
+
     {{# stachePostProcess }}
       {{# inherit stache.config.markdown markdown }}
         {{# markdown }}{{ body }}{{/ markdown }}
@@ -72,10 +76,10 @@
         {{> partial-note }}
       {{/ withHash }}
     {{/ if }}
-    
-    {{# inherit stache.config.back_to_top back_to_top}}
-        {{{ include stache.config.partial_back_to_top}}}
-    {{/ inherit}}
+
+    {{# inherit stache.config.back_to_top back_to_top }}
+      {{{ include stache.config.partial_back_to_top }}}
+    {{/ inherit }}
 
     <div class="affix-stop">
       {{# inherit stache.config.contribute contribute }}
@@ -101,7 +105,6 @@
                   {{{ include stache.config.partial_footer_social }}}
                 </div>
               </div>
-
             </div>
           </div>
 
