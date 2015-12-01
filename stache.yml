@@ -49,6 +49,7 @@ partial_google_analytics: <%= stache.config.partials %>partial-google-analytics.
 partial_google_tagmanager: <%= stache.config.partials %>partial-google-tagmanager.hbs
 partial_powershell: <%= stache.config.partials %>partial-layout-powershell.hbs
 partial_back_to_top: <%= stache.config.partials %>partial-back-to-top.hbs
+partial_breadcrumbs: <%= stache.config.partials %>partial-breadcrumbs.hbs
 
 # =============================================
 # STACHE - SERVING
@@ -80,7 +81,7 @@ showOmnibar: true
 showNavDropdown: false
 showAdminToolbar: false
 showAdminTrigger: false
-showBreadcrumbs: true
+showBreadcrumbs: false
 editInGitHub: true
 editInProse: true
 markdown: true
