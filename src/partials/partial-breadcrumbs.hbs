@@ -1,3 +1,9 @@
-<ul class="breadcrumb">
-    <li>Breadcrumbs...</li>
-</ul>
+{{# withBreadcrumbs }}
+    {{# if nav_links }}
+        <ul class="breadcrumb">
+            {{# each nav_links }}
+                <li{{# if active }} class="active"{{/ if }}><a href="{{ uri }}">{{ name }}</a></li>
+            {{/ each }}
+        </ul>
+    {{/ if }}
+{{/ withBreadcrumbs }}

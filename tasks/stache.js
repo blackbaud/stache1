@@ -590,7 +590,7 @@ module.exports = function (grunt) {
                 m,
                 n;
 
-            // A few programmitcally created front-matter variables
+            // A few programmatically created front-matter variables
             item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
             item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
             item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;

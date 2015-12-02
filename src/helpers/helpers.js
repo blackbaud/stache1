@@ -26,6 +26,9 @@ module.exports.register = function (Handlebars, options, params) {
         lexer = new marked.Lexer(),
         counts = {};
 
+        var Log = require('log'),
+            log = new Log('info');
+
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
     // https://github.com/chjj/marked/blob/master/lib/marked.js#L890
@@ -168,7 +171,67 @@ module.exports.register = function (Handlebars, options, params) {
         return r;
     }
 
+    function getNavLinks(options) {
+        return options.hash.nav_links || bypassContext.nav_links;
+    }
+
+    function mergeOption(global, local) {
+        var res = false;
+        if (typeof local === 'undefined') {
+            if (typeof global !== 'undefined') {
+                res = global;
+            }
+        } else {
+            res = local;
+        }
+        return res;
+    }
+
     Handlebars.registerHelper({
+
+        extendPageOptions: function (options) {
+            var keys = ['showBreadcrumbs'];
+            var config = stache.config;
+            var i, len = keys.length;
+            for (i = 0; i < len; ++i) {
+                this[keys[i]] = mergeOption(config[keys[i]], this[keys[i]]);
+            }
+            return options.fn(this);
+        },
+
+        withBreadcrumbs: function (options) {
+            var nav_links = getNavLinks(options);
+            var temp = [
+                {
+                    name: stache.config.nav_title_home,
+                    uri: '/'
+                }
+            ];
+            var link = {};
+            var currentPageDirectory = this.page.dirname + "/";
+            for (var i = 0, len = nav_links.length; i < len; ++i) {
+                link = nav_links[i];
+                if (isActiveNav(link.dest, link.uri, true)) {
+                    temp.push({
+                        name: link.name,
+                        uri: link.uri
+                    });
+                    if (link.nav_links) {
+                        for (var k = 0, len2 = link.nav_links.length; k < len2; ++k) {
+                            if (currentPageDirectory.indexOf(link.nav_links[k].uri) > -1) {
+                                temp.push({
+                                    name: link.nav_links[k].name,
+                                    uri: link.nav_links[k].uri,
+                                    active: true
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            this.nav_links = temp;
+            return options.fn(this);
+        },
 
         /**
         * Get an operation from data.operations.
@@ -298,13 +361,9 @@ module.exports.register = function (Handlebars, options, params) {
                 dest = this.page.dest;
             }
 
-            if (typeof options.hash.nav_links !== 'undefined') {
-                nav_links = options.hash.nav_links;
-            } else if (typeof bypassContext.nav_links !== 'undefined') {
-                nav_links = bypassContext.nav_links;
-            }
-
+            nav_links = getNavLinks(options);
             active = getActiveNav(dest, nav_links, false);
+
             if (active && active.nav_links) {
                 active = active.nav_links;
             }
@@ -652,14 +711,8 @@ module.exports.register = function (Handlebars, options, params) {
         *   If locally true then
         *     TRUE
         **/
-        inherit: function (globally, locally, options) {
-            var r = false;
-            if (globally) {
-                r = typeof locally === 'undefined' || locally.toString() !== 'false';
-            } else {
-                r = locally;
-            }
-            return r ? options.fn(this) : options.inverse(this);
+        inherit: function (global, local, options) {
+            return (mergeOption(global, local)) ? options.fn(this) : options.inverse(this);
         },
 
         /**
@@ -770,8 +823,7 @@ module.exports.register = function (Handlebars, options, params) {
         * Used instead of us having to pass the nav_links object around in the context.
         **/
         withNavLinks: function (options) {
-            //return Handlebars.helpers.each(options.hash.nav_links || bypassContext.nav_links, options);
-            return Handlebars.helpers.eachWithMod(options.hash.nav_links || bypassContext.nav_links, options);
+            return Handlebars.helpers.eachWithMod(getNavLinks(options), options);
         },
 
         /**
@@ -816,13 +868,11 @@ module.exports.register = function (Handlebars, options, params) {
         **/
         stachePostProcess: function (options) {
             var html = options.fn(this);
-
             if (stache.postHandlebarsHooks && stache.postHandlebarsHooks.length > 0) {
                 stache.postHandlebarsHooks.forEach(function (hook) {
                     html = hook(html);
                 });
             }
-
             return html;
         },
 

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{{# extendPageOptions }}
 <html lang="en" class="{{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
   <head>
     <meta charset="utf-8">
@@ -59,9 +60,10 @@
       {{{ include stache.config.partial_admin_toolbar }}}
     {{/ inherit }}
 
-    {{# inherit stache.config.showBreadcrumbs showBreadcrumbs }}
-      {{{ include stache.config.partial_breadcrumbs }}}
-    {{/ inherit }}
+    <!-- breadcrumbs -->
+    {{# if showBreadcrumbs }}
+      {{{ include 'partial-breadcrumbs' }}}
+    {{/ if }}
 
     {{# stachePostProcess }}
       {{# inherit stache.config.markdown markdown }}
@@ -183,3 +185,4 @@
 
   </body>
 </html>
+{{/ extendPageOptions }}
