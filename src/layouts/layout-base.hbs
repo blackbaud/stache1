@@ -1,188 +1,190 @@
 <!DOCTYPE html>
-{{# extendPageOptions }}
-<html lang="en" class="{{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
-    <link rel="icon" href="{{ assets }}img/favicon.ico" type="image/ico">
+{{# extendRootOptions }}
+  <html lang="en" class="{{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
+      <link rel="icon" href="{{ assets }}img/favicon.ico" type="image/ico">
 
-    {{# if stache.config.sky }}
-      {{{ include stache.config.partial_sky_css }}}
-    {{/ if }}
-
-    {{# each stache.config.files.css }}
-      <link rel="stylesheet" href="{{ this }}">
-    {{/ each }}
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    {{# inherit stache.config.google_analytics_id google_analytics_id }}
-      {{{ include stache.config.partial_google_analytics }}}
-    {{/ inherit }}
-
-  </head>
-  <body class="bb-text-block {{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
-
-    {{# inherit stache.config.google_tagmanager_id google_tagmanager_id }}
-      {{{ include stache.config.partial_google_tagmanager }}}
-    {{/ inherit }}
-
-    <div id="top"></div>
-
-    {{# if stache.config.showHeader }}
-      {{# if stache.config.header }}
-        {{ include stache.config.header }}
-      {{ else }}
-
-        <div id="ng-stache" ng-controller="NavController"  class="bb-navbar">
-          <bb-navbar>
-            <div class="{{ stache.config.bootstrap_container }}">
-              <div class="row">
-                <div class="col-sm-12">
-                  {{{ include stache.config.partial_header_nav }}}
-                  {{{ include stache.config.partial_header_admin }}}
-                  {{{ include stache.config.partial_header_search }}}
-                </div>
-              </div>
-            </div>
-          </bb-navbar>
-        </div>
-
+      {{# if stache.config.sky }}
+        {{{ include stache.config.partial_sky_css }}}
       {{/ if }}
-    {{/ if }}
 
-    {{# inherit stache.config.showAdminToolbar showAdminToolbar }}
-      {{{ include stache.config.partial_admin_toolbar }}}
-    {{/ inherit }}
+      {{# each stache.config.files.css }}
+        <link rel="stylesheet" href="{{ this }}">
+      {{/ each }}
 
-    <!-- breadcrumbs -->
-    {{# if showBreadcrumbs }}
-      {{{ include 'partial-breadcrumbs' }}}
-    {{/ if }}
+      <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
 
-    {{# stachePostProcess }}
-      {{# inherit stache.config.markdown markdown }}
-        {{# markdown }}{{ body }}{{/ markdown }}
-      {{ else }}
-        {{# withNewline }}{{ body }}{{/ withNewline }}
-      {{/ inherit }}
-    {{/ stachePostProcess }}
-
-    {{# if note }}
-      {{# withHash isPageNote=true priority=priority note=note }}
-        {{> partial-note }}
-      {{/ withHash }}
-    {{/ if }}
-
-    {{# inherit stache.config.back_to_top back_to_top }}
-      {{{ include stache.config.partial_back_to_top }}}
-    {{/ inherit }}
-
-    <div class="affix-stop">
-      {{# inherit stache.config.contribute contribute }}
-        {{{ include stache.config.partial_contribute }}}
+      {{# inherit stache.config.google_analytics_id google_analytics_id }}
+        {{{ include stache.config.partial_google_analytics }}}
       {{/ inherit }}
 
-      {{# if stache.config.showFooter }}
-        {{# if stache.config.footer }}
-          {{ include stache.config.footer }}
+    </head>
+    <body class="bb-text-block {{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+
+      {{# inherit stache.config.google_tagmanager_id google_tagmanager_id }}
+        {{{ include stache.config.partial_google_tagmanager }}}
+      {{/ inherit }}
+
+      <div id="top"></div>
+
+      {{# if stache.config.showHeader }}
+        {{# if stache.config.header }}
+          {{ include stache.config.header }}
         {{ else }}
 
-          <div class="footer-site">
-            <div class="{{ stache.config.bootstrap_container }}">
-              <div class="row">
-                <div class="col-xs-6 col-sm-4">
-                  {{{ include stache.config.partial_footer_logo }}}
-                  {{{ include stache.config.partial_footer_navigation }}}
-                </div>
-                <div class="col-xs-6 col-sm-4">
-                  {{{ include stache.config.partial_footer_internal }}}
-                </div>
-                <div class="col-sm-4">
-                  {{{ include stache.config.partial_footer_social }}}
+          <div id="ng-stache" ng-controller="NavController"  class="bb-navbar">
+            <bb-navbar>
+              <div class="{{ stache.config.bootstrap_container }}">
+                <div class="row">
+                  <div class="col-sm-12">
+                    {{{ include stache.config.partial_header_nav }}}
+                    {{{ include stache.config.partial_header_admin }}}
+                    {{{ include stache.config.partial_header_search }}}
+                  </div>
                 </div>
               </div>
-            </div>
+            </bb-navbar>
           </div>
 
         {{/ if }}
       {{/ if }}
 
-      <div class="copyright">
-        <div class="{{ stache.config.bootstrap_container }}">
-          <div class="row">
+      {{# inherit stache.config.showAdminToolbar showAdminToolbar }}
+        {{{ include stache.config.partial_admin_toolbar }}}
+      {{/ inherit }}
 
-            <div class="col-sm-6">
-              <p>&copy; Blackbaud, Inc.  All rights reserved.</p>
-            </div>  <!-- .col-sm-6 -->
+      {{!-- BREADCRUMBS --}}
+      {{# if showBreadcrumbs }}
+        {{{ include 'partial-breadcrumbs' }}}
+      {{/ if }}
 
-            <div class="col-sm-6">
-            </div>  <!-- .col-sm-6 -->
+      {{# stachePostProcess }}
+        {{# inherit stache.config.markdown markdown }}
+          {{# markdown }}{{ body }}{{/ markdown }}
+        {{ else }}
+          {{# withNewline }}{{ body }}{{/ withNewline }}
+        {{/ inherit }}
+      {{/ stachePostProcess }}
 
-          </div>  <!-- .row -->
-        </div>  <!-- .container -->
-      </div>  <!-- .copyright -->
-    </div>
+      {{# if note }}
+        {{# withHash isPageNote=true priority=priority note=note }}
+          {{> partial-note }}
+        {{/ withHash }}
+      {{/ if }}
 
-    {{# inherit stache.config.showOmnibar showOmnibar }}
-      {{ include stache.config.partial_omnibar }}
-    {{/ inherit }}
+      {{# inherit stache.config.back_to_top back_to_top }}
+        {{{ include stache.config.partial_back_to_top }}}
+      {{/ inherit }}
 
-    {{# if stache.config.sky }}
-      {{{ include stache.config.partial_sky_js }}}
-    {{/ if }}
+      <div class="affix-stop">
+        {{# inherit stache.config.contribute contribute }}
+          {{{ include stache.config.partial_contribute }}}
+        {{/ inherit }}
 
-    <script src="{{ assets }}js/stache.min.js"></script>
+        {{# if stache.config.showFooter }}
+          {{# if stache.config.footer }}
+            {{ include stache.config.footer }}
+          {{ else }}
 
-    {{# each stache.config.files.js }}
-      {{# contains this "//" }}
-        <script src="{{ this }}"></script>
-      {{/ contains }}
-    {{/ each }}
-    {{# each files.js }}
-      {{# contains this "//" }}
-        <script src="{{ this }}"></script>
-      {{/ contains }}
-    {{/ each }}
+            <div class="footer-site">
+              <div class="{{ stache.config.bootstrap_container }}">
+                <div class="row">
+                  <div class="col-xs-6 col-sm-4">
+                    {{{ include stache.config.partial_footer_logo }}}
+                    {{{ include stache.config.partial_footer_navigation }}}
+                  </div>
+                  <div class="col-xs-6 col-sm-4">
+                    {{{ include stache.config.partial_footer_internal }}}
+                  </div>
+                  <div class="col-sm-4">
+                    {{{ include stache.config.partial_footer_social }}}
+                  </div>
+                </div>
+              </div>
+            </div>
 
-    <!-- build:js {{ assets }}js/app.min.js -->
-    {{# each stache.config.files.js }}
-      {{# contains this "//" }}{{ else }}
-        <script src="{{ this }}"></script>
-      {{/ contains }}
-    {{/ each }}
-    {{# each files.js }}
-      {{# contains this "//" }}{{ else }}
-        <script src="{{ this }}"></script>
-      {{/ contains }}
-    {{/ each }}
-    <!-- endbuild -->
+          {{/ if }}
+        {{/ if }}
 
-    {{# if example-js }}
-      <script>
-        {{{ newline example-js }}}
-      </script>
-    {{/ if }}
+        <div class="copyright">
+          <div class="{{ stache.config.bootstrap_container }}">
+            <div class="row">
 
-    {{# if stache.config.sky }}
-      {{# if stache.config.partial_sky_init }}
+              <div class="col-sm-6">
+                <p>&copy; Blackbaud, Inc.  All rights reserved.</p>
+              </div>  <!-- .col-sm-6 -->
+
+              <div class="col-sm-6">
+              </div>  <!-- .col-sm-6 -->
+
+            </div>  <!-- .row -->
+          </div>  <!-- .container -->
+        </div>  <!-- .copyright -->
+      </div>
+
+      {{# inherit stache.config.showOmnibar showOmnibar }}
+        {{ include stache.config.partial_omnibar }}
+      {{/ inherit }}
+
+      {{# if stache.config.sky }}
+        {{{ include stache.config.partial_sky_js }}}
+      {{/ if }}
+
+      <script src="{{ assets }}js/stache.min.js"></script>
+
+      {{# each stache.config.files.js }}
+        {{# contains this "//" }}
+          <script src="{{ this }}"></script>
+        {{/ contains }}
+      {{/ each }}
+
+      {{# each files.js }}
+        {{# contains this "//" }}
+          <script src="{{ this }}"></script>
+        {{/ contains }}
+      {{/ each }}
+
+      <!-- build:js {{ assets }}js/app.min.js -->
+      {{# each stache.config.files.js }}
+        {{# contains this "//" }}{{ else }}
+          <script src="{{ this }}"></script>
+        {{/ contains }}
+      {{/ each }}
+
+      {{# each files.js }}
+        {{# contains this "//" }}{{ else }}
+          <script src="{{ this }}"></script>
+        {{/ contains }}
+      {{/ each }}
+      <!-- endbuild -->
+
+      {{# if example-js }}
         <script>
-          {{{ include stache.config.partial_sky_init }}}
+          {{{ newline example-js }}}
         </script>
       {{/ if }}
-    {{/ if }}
 
-    {{# inherit stache.config.showAdminToolbar showAdminToolbar }}
-      <script>
-      {{{ include stache.config.partial_admin_script }}}
-      </script>
-    {{/ inherit }}
+      {{# if stache.config.sky }}
+        {{# if stache.config.partial_sky_init }}
+          <script>
+            {{{ include stache.config.partial_sky_init }}}
+          </script>
+        {{/ if }}
+      {{/ if }}
 
-  </body>
-</html>
-{{/ extendPageOptions }}
+      {{# inherit stache.config.showAdminToolbar showAdminToolbar }}
+        <script>
+          {{{ include stache.config.partial_admin_script }}}
+        </script>
+      {{/ inherit }}
+
+    </body>
+  </html>
+{{/ extendRootOptions }}

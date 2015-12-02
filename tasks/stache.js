@@ -370,7 +370,6 @@ module.exports = function (grunt) {
         var nav_links = grunt.config.get(key);
         sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100, 'name');
         grunt.config.set(key, nav_links);
-
         nav_links.forEach(function (el, idx) {
             if (el.nav_links) {
                 sortRecursive(key + '.' + idx + '.nav_links', sortAscending);
@@ -395,7 +394,7 @@ module.exports = function (grunt) {
 
     // Internal task to control header logging
     grunt.registerTask('header', function (toggle) {
-        grunt.log.header = toggle == 'true' ? header : function () {};
+        grunt.log.header = (toggle.toString() === 'true') ? header : function () {};
     });
 
     // Creates pages from jsdoc and sandcastle
@@ -551,14 +550,16 @@ module.exports = function (grunt) {
         pages = grunt.config.get('assemble.custom.options.pages');
         if (pages) {
             for (page in pages) {
-                sorted.push({
-                    abspath: page,
-                    rootdir: page.substr(0, page.indexOf('/')),
-                    subdir: page.substr(0, page.lastIndexOf('/')),
-                    filename: page.substr(page.lastIndexOf('/') + 1),
-                    frontmatter: pages[page].data,
-                    type: pages[page].type
-                });
+                if (pages.hasOwnProperty(page)) {
+                    sorted.push({
+                        abspath: page,
+                        rootdir: page.substr(0, page.indexOf('/')),
+                        subdir: page.substr(0, page.lastIndexOf('/')),
+                        filename: page.substr(page.lastIndexOf('/') + 1),
+                        frontmatter: pages[page].data,
+                        type: pages[page].type
+                    });
+                }
             }
         }
 

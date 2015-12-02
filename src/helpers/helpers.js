@@ -26,19 +26,14 @@ module.exports.register = function (Handlebars, options, params) {
         lexer = new marked.Lexer(),
         counts = {};
 
-        var Log = require('log'),
-            log = new Log('info');
-
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
     // https://github.com/chjj/marked/blob/master/lib/marked.js#L890
     renderer.image = function (href, title, text) {
         var out;
-
         if (href.indexOf('/static/') > -1) {
             href = href.replace('/static/', '/');
         }
-
         out = '<img src="' + href + '" alt="' + text + '"';
         if (title) {
             out += ' title="' + title + '"';
@@ -171,66 +166,166 @@ module.exports.register = function (Handlebars, options, params) {
         return r;
     }
 
+    /**
+     * Returns an object representing all pages, sorted.
+     * The object respects page hierarchies: child pages are stored in the respective
+     * parent page's property, 'nav_links'.
+     *
+     * @param {object} [options] Handlebars' options hash.
+     */
     function getNavLinks(options) {
         return options.hash.nav_links || bypassContext.nav_links;
     }
 
+    /**
+     * Returns the local value, if set. Otherwise, returns the global value.
+     * If neither is set, return false.
+     *
+     * @param {various} [global] A global option's value (stache.yml)
+     * @param {various} [local] A local option's value (front-matter)
+     */
     function mergeOption(global, local) {
-        var res = false;
-        if (typeof local === 'undefined') {
-            if (typeof global !== 'undefined') {
-                res = global;
+        var merged = false;
+        if (typeof local === "undefined") {
+            if (typeof global !== "undefined") {
+                merged = global;
             }
         } else {
-            res = local;
+            merged = local;
         }
-        return res;
+        return merged;
+    }
+
+    /**
+     * Returns an array representing all breadcrumb nav_links for a given page.
+     *
+     * @param {object} [options] Handlebars' options hash.
+     */
+    function getBreadcrumbNavLinks(navLinks, activeURI) {
+        var items = findBreadcrumb(navLinks, activeURI);
+
+        // Add Home page.
+        if (items !== false) {
+            items.unshift({
+                name: stache.config.nav_title_home,
+                uri: stache.config.base
+            });
+        }
+
+        return items;
+    }
+
+    /**
+     * Returns an object representing a page's properties, only if its URI is
+     * a fragment of the active page's URI. The method receives an array of objects,
+     * to be checked against the active URI.
+     *
+     * @param {array} [navLinks] Array of objects representing pages.
+     * @param {string} [activeURI] The path of the active page.
+     */
+    function findBreadcrumb(navLinks, activeURI) {
+        var breadcrumbs,
+            i,
+            navLink,
+            navLinksLength;
+
+        breadcrumbs = [];
+        navLinksLength = navLinks.length;
+
+        for (i = 0; i < navLinksLength; ++i) {
+
+            navLink = navLinks[i];
+
+            // Don't include the Home page because it cannot have sub-directories.
+            // (We add the Home page manually, in getBreadcrumbNavLinks.)
+            if (navLink.uri === "/") {
+                continue;
+            }
+
+            // Is this page's URI a fragment of the active page's URI?
+            if (activeURI.indexOf(navLink.uri) > -1) {
+                breadcrumbs.push({
+                    name: navLink.name,
+                    uri: navLink.uri
+                });
+
+                // Does this page have sub-directories?
+                if (navLink.hasOwnProperty('nav_links')) {
+                    breadcrumbs = concatArray(breadcrumbs, findBreadcrumb(navLink.nav_links, activeURI));
+                }
+
+                break;
+            }
+        }
+
+        // Set the final navigation link as 'active' and return the array.
+        if (breadcrumbs.length > 0) {
+            breadcrumbs[breadcrumbs.length - 1].active = true;
+            return breadcrumbs;
+        }
+
+        // The navigation links didn't contain a breadcrumb.
+        return false;
+    }
+
+    /**
+     * Returns a single array, the second appended to the first.
+     *
+     * @param {array} [arr1] The array to be extended.
+     * @param {array} [arr2] The array to be appended to the first.
+     */
+    function concatArray(arr1, arr2) {
+        var i,
+            len;
+
+        if (!Handlebars.Utils.isArray(arr2)) {
+            return arr1;
+        }
+
+        len = arr2.length;
+
+        for (i = 0; i < len; ++i) {
+            arr1.push(arr2[i]);
+        }
+
+        return arr1;
     }
 
     Handlebars.registerHelper({
 
-        extendPageOptions: function (options) {
-            var keys = ['showBreadcrumbs'];
-            var config = stache.config;
-            var i, len = keys.length;
-            for (i = 0; i < len; ++i) {
-                this[keys[i]] = mergeOption(config[keys[i]], this[keys[i]]);
+        /**
+         *
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        extendRootOptions: function (options) {
+            var config,
+                i,
+                key,
+                keys,
+                keysLength;
+
+            config = stache.config;
+            keys = ['showBreadcrumbs'];
+            keysLength = keys.length;
+
+            for (i = 0; i < keysLength; ++i) {
+                key = keys[i];
+                this[key] = mergeOption(config[key], this[key]);
             }
+
             return options.fn(this);
         },
 
+        /**
+         * Adds breadcrumb nav_links to the scope.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
         withBreadcrumbs: function (options) {
-            var nav_links = getNavLinks(options);
-            var temp = [
-                {
-                    name: stache.config.nav_title_home,
-                    uri: '/'
-                }
-            ];
-            var link = {};
-            var currentPageDirectory = this.page.dirname + "/";
-            for (var i = 0, len = nav_links.length; i < len; ++i) {
-                link = nav_links[i];
-                if (isActiveNav(link.dest, link.uri, true)) {
-                    temp.push({
-                        name: link.name,
-                        uri: link.uri
-                    });
-                    if (link.nav_links) {
-                        for (var k = 0, len2 = link.nav_links.length; k < len2; ++k) {
-                            if (currentPageDirectory.indexOf(link.nav_links[k].uri) > -1) {
-                                temp.push({
-                                    name: link.nav_links[k].name,
-                                    uri: link.nav_links[k].uri,
-                                    active: true
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            this.nav_links = temp;
-            return options.fn(this);
+            var activeURI = this.page.dirname + "/";
+            this.nav_links = getBreadcrumbNavLinks(getNavLinks(options), activeURI);
+            return (this.nav_links !== false) ? options.fn(this) : options.inverse(this);
         },
 
         /**
@@ -244,8 +339,7 @@ module.exports.register = function (Handlebars, options, params) {
         getOperation: function (context) {
             var operations = params.assemble.options.data.operations,
                 hasProperty,
-                filtered,
-                prop;
+                filtered;
 
             if (!operations) {
                 return '';
@@ -254,6 +348,7 @@ module.exports.register = function (Handlebars, options, params) {
             hasProperty = context.hash.property !== 'undefined';
 
             filtered = operations.filter(function (item) {
+                var prop;
                 for (prop in context.hash) {
                     if (context.hash.hasOwnProperty(prop) && prop !== 'property') {
                         if (!item.hasOwnProperty(prop) || item[prop].indexOf(context.hash[prop]) === -1) {
