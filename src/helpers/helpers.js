@@ -24,7 +24,10 @@ module.exports.register = function (Handlebars, options, params) {
         UglifyJS = require('uglify-js'),
         renderer = new marked.Renderer(),
         lexer = new marked.Lexer(),
-        counts = {};
+        counts = {},
+        Log = require('log'),
+        log = new Log('info'),
+        utils;
 
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
@@ -167,14 +170,14 @@ module.exports.register = function (Handlebars, options, params) {
     }
 
     /**
-     * Returns an object representing all pages, sorted.
-     * The object respects page hierarchies: child pages are stored in the respective
+     * Returns an array representing all pages, sorted.
+     * The array also respects page hierarchies: child pages are stored in the respective
      * parent page's property, 'nav_links'.
      *
      * @param {object} [options] Handlebars' options hash.
      */
     function getNavLinks(options) {
-        return options.hash.nav_links || bypassContext.nav_links;
+        return (options.hash && options.hash.nav_links) ? options.hash.nav_links : bypassContext.nav_links || [];
     }
 
     /**
@@ -202,13 +205,17 @@ module.exports.register = function (Handlebars, options, params) {
      * @param {object} [options] Handlebars' options hash.
      */
     function getBreadcrumbNavLinks(navLinks, activeURI) {
-        var items = findBreadcrumb(navLinks, activeURI);
+        var config,
+            items;
+
+        config = (typeof stache !== "undefined") ? stache.config : {};
+        items = findBreadcrumb(navLinks, activeURI);
 
         // Add Home page.
         if (items !== false) {
             items.unshift({
-                name: stache.config.nav_title_home,
-                uri: stache.config.base
+                name: config.nav_title_home || 'Home',
+                uri: config.base || '/'
             });
         }
 
@@ -238,23 +245,22 @@ module.exports.register = function (Handlebars, options, params) {
 
             // Don't include the Home page because it cannot have sub-directories.
             // (We add the Home page manually, in getBreadcrumbNavLinks.)
-            if (navLink.uri === "/") {
-                continue;
-            }
+            if (navLink.uri !== "/") {
 
-            // Is this page's URI a fragment of the active page's URI?
-            if (activeURI.indexOf(navLink.uri) > -1) {
-                breadcrumbs.push({
-                    name: navLink.name,
-                    uri: navLink.uri
-                });
+                // Is this page's URI a fragment of the active page's URI?
+                if (activeURI.indexOf(navLink.uri) > -1) {
+                    breadcrumbs.push({
+                        name: navLink.name,
+                        uri: navLink.uri
+                    });
 
-                // Does this page have sub-directories?
-                if (navLink.hasOwnProperty('nav_links')) {
-                    breadcrumbs = concatArray(breadcrumbs, findBreadcrumb(navLink.nav_links, activeURI));
+                    // Does this page have sub-directories?
+                    if (navLink.hasOwnProperty('nav_links')) {
+                        breadcrumbs = utils.concatArray(breadcrumbs, findBreadcrumb(navLink.nav_links, activeURI));
+                    }
+
+                    break;
                 }
-
-                break;
             }
         }
 
@@ -269,32 +275,51 @@ module.exports.register = function (Handlebars, options, params) {
     }
 
     /**
-     * Returns a single array, the second appended to the first.
-     *
-     * @param {array} [arr1] The array to be extended.
-     * @param {array} [arr2] The array to be appended to the first.
+     * Handlebars Stache utility methods.
      */
-    function concatArray(arr1, arr2) {
-        var i,
-            len;
+    utils = {
 
-        if (!Handlebars.Utils.isArray(arr2)) {
+        /**
+         * Returns a single array, the second appended to the first.
+         *
+         * @param {array} [arr1] The array to be extended.
+         * @param {array} [arr2] The array to be appended to the first.
+         */
+        concatArray: function (arr1, arr2) {
+            var i,
+                len,
+                arr1IsArray,
+                arr2IsArray;
+
+            arr1IsArray = Handlebars.Utils.isArray(arr1);
+            arr2IsArray = Handlebars.Utils.isArray(arr2);
+
+            if (!arr1IsArray && !arr2IsArray) {
+                return [];
+            }
+
+            if (!arr2IsArray && arr1IsArray) {
+                return arr1;
+            }
+
+            if (!arr1IsArray && arr2IsArray) {
+                return arr2;
+            }
+
+            len = arr2.length;
+
+            for (i = 0; i < len; ++i) {
+                arr1.push(arr2[i]);
+            }
+
             return arr1;
         }
-
-        len = arr2.length;
-
-        for (i = 0; i < len; ++i) {
-            arr1.push(arr2[i]);
-        }
-
-        return arr1;
-    }
+    };
 
     Handlebars.registerHelper({
 
         /**
-         *
+         * Returns the preferred value of a YAML option (either root or page).
          *
          * @param {object} [options] Handlebars' options hash.
          */
@@ -988,4 +1013,7 @@ module.exports.register = function (Handlebars, options, params) {
         }
 
     });
+
+    Handlebars.stache = Handlebars.stache || {};
+    Handlebars.stache.utils = utils;
 };
