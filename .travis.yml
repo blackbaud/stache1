@@ -5,3 +5,8 @@ node_js:
 # Install a few additional things outside those listed in package.json
 before_script:
   - npm install -g grunt-cli
+
+# Only run for pull requests and pushes to master
+branches:
+  only:
+    - master  
