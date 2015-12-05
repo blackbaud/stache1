@@ -25,10 +25,7 @@ module.exports.register = function (Handlebars, options, params) {
         renderer = new marked.Renderer(),
         lexer = new marked.Lexer(),
         counts = {},
-        Log = require('log'),
-        log = new Log('info'),
-        utils,
-        myutils = require('../../src/helpers/utils.js');
+        utils;
 
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
