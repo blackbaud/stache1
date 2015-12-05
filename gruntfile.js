@@ -60,7 +60,7 @@ module.exports = function (grunt) {
                     extensions: 'js',
                     specNameMatcher: 'spec'
                 },
-                src: ['src/helpers/helpers.js']
+                src: ['tasks/stache.js', 'src/helpers/helpers.js']
             }
         },
         jshint: {

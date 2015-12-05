@@ -27,7 +27,8 @@ module.exports.register = function (Handlebars, options, params) {
         counts = {},
         Log = require('log'),
         log = new Log('info'),
-        utils;
+        utils,
+        myutils = require('../../src/helpers/utils.js');
 
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
@@ -170,112 +171,7 @@ module.exports.register = function (Handlebars, options, params) {
     }
 
     /**
-     * Returns an array representing all pages, sorted.
-     * The array also respects page hierarchies: child pages are stored in the respective
-     * parent page's property, 'nav_links'.
-     *
-     * @param {object} [options] Handlebars' options hash.
-     */
-    function getNavLinks(options) {
-        return (options.hash && options.hash.nav_links) ? options.hash.nav_links : bypassContext.nav_links || [];
-    }
-
-    /**
-     * Returns the local value, if set. Otherwise, returns the global value.
-     * If neither is set, return false.
-     *
-     * @param {various} [global] A global option's value (stache.yml)
-     * @param {various} [local] A local option's value (front-matter)
-     */
-    function mergeOption(global, local) {
-        var merged = false;
-        if (typeof local === "undefined") {
-            if (typeof global !== "undefined") {
-                merged = global;
-            }
-        } else {
-            merged = local;
-        }
-        return merged;
-    }
-
-    /**
-     * Returns an array representing all breadcrumb nav_links for a given page.
-     *
-     * @param {object} [options] Handlebars' options hash.
-     */
-    function getBreadcrumbNavLinks(navLinks, activeURI) {
-        var config,
-            items;
-
-        config = (typeof stache !== "undefined") ? stache.config : {};
-        items = findBreadcrumb(navLinks, activeURI);
-
-        // Add Home page.
-        if (items !== false) {
-            items.unshift({
-                name: config.nav_title_home || 'Home',
-                uri: config.base || '/'
-            });
-        }
-
-        return items;
-    }
-
-    /**
-     * Returns an object representing a page's properties, only if its URI is
-     * a fragment of the active page's URI. The method receives an array of objects,
-     * to be checked against the active URI.
-     *
-     * @param {array} [navLinks] Array of objects representing pages.
-     * @param {string} [activeURI] The path of the active page.
-     */
-    function findBreadcrumb(navLinks, activeURI) {
-        var breadcrumbs,
-            i,
-            navLink,
-            navLinksLength;
-
-        breadcrumbs = [];
-        navLinksLength = navLinks.length;
-
-        for (i = 0; i < navLinksLength; ++i) {
-
-            navLink = navLinks[i];
-
-            // Don't include the Home page because it cannot have sub-directories.
-            // (We add the Home page manually, in getBreadcrumbNavLinks.)
-            if (navLink.uri !== "/") {
-
-                // Is this page's URI a fragment of the active page's URI?
-                if (activeURI.indexOf(navLink.uri) > -1) {
-                    breadcrumbs.push({
-                        name: navLink.name,
-                        uri: navLink.uri
-                    });
-
-                    // Does this page have sub-directories?
-                    if (navLink.hasOwnProperty('nav_links')) {
-                        breadcrumbs = utils.concatArray(breadcrumbs, findBreadcrumb(navLink.nav_links, activeURI));
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        // Set the final navigation link as 'active' and return the array.
-        if (breadcrumbs.length > 0) {
-            breadcrumbs[breadcrumbs.length - 1].active = true;
-            return breadcrumbs;
-        }
-
-        // The navigation links didn't contain a breadcrumb.
-        return false;
-    }
-
-    /**
-     * Handlebars Stache utility methods.
+     * Utility methods.
      */
     utils = {
 
@@ -313,7 +209,113 @@ module.exports.register = function (Handlebars, options, params) {
             }
 
             return arr1;
+        },
+
+        /**
+         * Returns an object representing a page's properties, only if its URI is
+         * a fragment of the active page's URI. The method receives an array of objects,
+         * to be checked against the active URI.
+         *
+         * @param {array} [navLinks] Array of objects representing pages.
+         * @param {string} [activeURI] The path of the active page.
+         */
+        findBreadcrumb: function (navLinks, activeURI) {
+            var breadcrumbs,
+                i,
+                navLink,
+                navLinksLength;
+
+            breadcrumbs = [];
+            navLinksLength = navLinks.length;
+
+            for (i = 0; i < navLinksLength; ++i) {
+
+                navLink = navLinks[i];
+
+                // Don't include the Home page because it cannot have sub-directories.
+                // (We add the Home page manually, in getBreadcrumbNavLinks.)
+                if (navLink.uri !== "/") {
+
+                    // Is this page's URI a fragment of the active page's URI?
+                    if (activeURI.indexOf(navLink.uri) > -1) {
+                        breadcrumbs.push({
+                            name: navLink.name,
+                            uri: navLink.uri
+                        });
+
+                        // Does this page have sub-directories?
+                        if (navLink.hasOwnProperty('nav_links')) {
+                            breadcrumbs = utils.concatArray(breadcrumbs, utils.findBreadcrumb(navLink.nav_links, activeURI));
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            // Set the final navigation link as 'active' and return the array.
+            if (breadcrumbs.length > 0) {
+                breadcrumbs[breadcrumbs.length - 1].active = true;
+                return breadcrumbs;
+            }
+
+            // The navigation links didn't contain a breadcrumb.
+            return false;
+        },
+
+        /**
+         * Returns an array representing all breadcrumb nav_links for a given page.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        getBreadcrumbNavLinks: function (navLinks, activeURI) {
+            var config,
+                items;
+
+            config = (typeof stache !== "undefined") ? stache.config : {};
+            items = utils.findBreadcrumb(navLinks, activeURI);
+
+            // Add Home page.
+            if (items !== false) {
+                items.unshift({
+                    name: config.nav_title_home || 'Home',
+                    uri: config.base || '/'
+                });
+            }
+
+            return items;
+        },
+
+        /**
+         * Returns an array representing all pages, sorted.
+         * The array also respects page hierarchies: child pages are stored in the respective
+         * parent page's property, 'nav_links'.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        getNavLinks: function (options) {
+            return (options.hash && options.hash.nav_links) ? options.hash.nav_links : bypassContext.nav_links || [];
+        },
+
+        /**
+         * Returns the local value, if set. Otherwise, returns the global value.
+         * If neither is set, return false.
+         *
+         * @param {various} [global] A global option's value (stache.yml)
+         * @param {various} [local] A local option's value (front-matter)
+         */
+        mergeOption: function (global, local) {
+            var merged = false;
+            if (typeof local === "undefined") {
+                if (typeof global !== "undefined") {
+                    merged = global;
+                }
+            } else {
+                merged = local;
+            }
+            return merged;
         }
+
     };
 
     Handlebars.registerHelper({
@@ -336,7 +338,7 @@ module.exports.register = function (Handlebars, options, params) {
 
             for (i = 0; i < keysLength; ++i) {
                 key = keys[i];
-                this[key] = mergeOption(config[key], this[key]);
+                this[key] = utils.mergeOption(config[key], this[key]);
             }
 
             return options.fn(this);
@@ -349,7 +351,7 @@ module.exports.register = function (Handlebars, options, params) {
          */
         withBreadcrumbs: function (options) {
             var activeURI = this.page.dirname + "/";
-            this.nav_links = getBreadcrumbNavLinks(getNavLinks(options), activeURI);
+            this.nav_links = utils.getBreadcrumbNavLinks(utils.getNavLinks(options), activeURI);
             return (this.nav_links !== false) ? options.fn(this) : options.inverse(this);
         },
 
@@ -481,7 +483,7 @@ module.exports.register = function (Handlebars, options, params) {
                 dest = this.page.dest;
             }
 
-            nav_links = getNavLinks(options);
+            nav_links = utils.getNavLinks(options);
             active = getActiveNav(dest, nav_links, false);
 
             if (active && active.nav_links) {
@@ -832,7 +834,7 @@ module.exports.register = function (Handlebars, options, params) {
         *     TRUE
         **/
         inherit: function (global, local, options) {
-            return (mergeOption(global, local)) ? options.fn(this) : options.inverse(this);
+            return (utils.mergeOption(global, local)) ? options.fn(this) : options.inverse(this);
         },
 
         /**
@@ -943,7 +945,7 @@ module.exports.register = function (Handlebars, options, params) {
         * Used instead of us having to pass the nav_links object around in the context.
         **/
         withNavLinks: function (options) {
-            return Handlebars.helpers.eachWithMod(getNavLinks(options), options);
+            return Handlebars.helpers.eachWithMod(utils.getNavLinks(options), options);
         },
 
         /**
@@ -1014,6 +1016,5 @@ module.exports.register = function (Handlebars, options, params) {
 
     });
 
-    Handlebars.stache = Handlebars.stache || {};
-    Handlebars.stache.utils = utils;
+    module.exports.utils = utils;
 };

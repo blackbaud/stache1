@@ -1,68 +1,142 @@
 /*jshint jasmine: true, node: true */
-
 (function () {
     'use strict';
 
-    var fs = require('fs'),
-        Handlebars = require('handlebars'),
-        helpers = require('../helpers'),
-        handlebarsOptions,
-        Log = require('log'),
-        log = new Log('info');
+    var fs,
+        grunt,
+        hbsOptions,
+        helpers,
+        Handlebars,
+        log,
+        Log,
+        stache;
 
-    // Run the register method to retrieve our custom helpers.
-    helpers.register(Handlebars, {}, {
-        assemble: {
-            options: {
-                getBypassContext: function () {
-                    return {};
-                }
-            }
-        }
-    });
+    fs = require('fs');
+    grunt = require('grunt');
+    stache = require('../../../tasks/stache.js')(grunt);
+    Handlebars = require('handlebars');
+    helpers = require('../helpers.js');
+    Log = require('log');
+    log = new Log('info');
 
-    handlebarsOptions = {
-        fn: function (obj) {
-            return Handlebars.compile(obj.tmp)(obj);
+    // This gets passed into our helpers as 'options'.
+    hbsOptions = {
+        fn: function (context) {
+            return Handlebars.compile(context.template)(context);
         },
-        inverse: function (obj) {
-            return Handlebars.compile(obj.tmp)(obj);
+        inverse: function (context) {
+            return Handlebars.compile(context.template)(context);
         },
-        hash: {
-            nav_links: [
-                {
-                    uri: '/',
-                    name: 'Home'
-                },
-                {
-                    uri: '/root/sample-parent/',
-                    name: 'Sample Parent',
-                    nav_links: [
-                        {
-                            uri: '/root/sample-parent/sample-child/',
-                            name: 'Sample Child',
-                            nav_links: [
-                                {
-                                    uri: '/root/sample-parent/sample-child/sample-grandchild/',
-                                    name: 'Sample Grandchild'
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
+        hash: {}
     };
 
+    // Overriding the location of the content directory, since it's relative.
+    grunt.config.set('stache.config.content', '../../content/');
+
+    // Execute createAutoNav task to build the 'nav_links' array.
+    stache.tasks.createAutoNav();
+
+    // Run the register method to retrieve our custom helpers.
+    helpers.register(Handlebars, {}, { assemble: grunt.config.get('assemble') });
+
+    /**
+     * Returns the first link in 'nav_links' that is not the home page.
+     *
+     * @param {string} [navLinks] Array of objects.
+     **/
+    function getSampleLink(navLinks) {
+        var i,
+            homeURI,
+            navLinksLength,
+            sampleLink;
+
+        homeURI = grunt.config.get('stache.config.base');
+        navLinksLength = navLinks.length;
+        sampleLink = false;
+
+        // Find the first link in 'nav_links' that isn't the home page.
+        for (i = 0; i < navLinksLength; ++i) {
+            if (navLinks[i].uri !== homeURI) {
+                sampleLink = navLinks[i];
+                break;
+            }
+        }
+
+        return sampleLink;
+    }
+
+    /**
+     * Returns a UTF8-encoded string, representative of a file's contents.
+     *
+     * @param {string} [file] The path of a file.
+     **/
     function readFile(file) {
         return fs.readFileSync(file, 'utf8');
     }
 
+    /**
+     * Handlebars.helpers
+     */
     describe('helpers', function () {
+        describe('extendRootOptions()', function () {
 
-        describe('include() function', function () {
+            // Represents 'this' inside a Handlebars helper function.
+            var context = {
+                page: {
+                    dirname: '/root/sample-parent/sample-child/sample-grandchild'
+                },
+                template: '{{# if showBreadcrumbs }}breadcrumbs visible{{/ if }}'
+            };
+
+            // Set project to hide breadcrumbs.
+            grunt.config.set('assemble.options.stache.config.showBreadcrumbs', false);
+
+            it('should use the page\'s value of a YAML property, if it exists', function () {
+                var result;
+
+                // Set the page to show breadcrumbs.
+                context.showBreadcrumbs = true;
+
+                result = Handlebars.helpers.extendRootOptions.call(context, hbsOptions);
+                expect(result).toBe('breadcrumbs visible');
+            });
+
+            it('should use the project\'s root value of a YAML property, if the page value is not set', function () {
+                var result;
+
+                // Delete the page's setting for showBreadcrumbs
+                delete context.showBreadcrumbs;
+
+                result = Handlebars.helpers.extendRootOptions.call(context, hbsOptions);
+                expect(result).toBe('');
+            });
+
+            it('should use the blackbaud-stache default YAML property, if the project AND page value is not set', function () {
+                var result;
+
+                // Delete the page's setting for showBreadcrumbs
+                delete context.showBreadcrumbs;
+
+                // Delete the project's setting for showBreadcrumbs
+                grunt.config.set('assemble.options.stache.config.showBreadcrumbs', null);
+
+                result = Handlebars.helpers.extendRootOptions.call(context, hbsOptions);
+                expect(result).toBe('');
+            });
+
+        });
+        describe('include()', function () {
+
+            /**
+             * Returns a string generated by the 'include' helper for a given
+             * file path and hash.
+             *
+             * @param {string} [file] The path to a file to include.
+             * @param {object} [hash] Simulated Handlebars block helper hash.
+             **/
             function getResult(file, hash) {
                 hash = hash || {};
+
                 return Handlebars.helpers.include(
                     'src/helpers/test/fixtures/' + file,
                     {},
@@ -74,6 +148,7 @@
 
             it('should remove trailing newline', function () {
                 var result = getResult('simple.html');
+
                 expect(result.string).toBe('<div>Hello</div>');
             });
 
@@ -106,55 +181,151 @@
             });
 
         });
-
-        describe('minify() function', function () {
+        describe('minify()', function () {
             it('should minify an HTML block', function () {
-                var src = [
-                        '{{# minify collapseWhitespace=true }}',
-                        readFile('src/helpers/test/fixtures/multiline.html'),
-                        '{{/ minify }}'].join('\n'),
-                    content = Handlebars.compile(src)();
+                var content,
+                    src;
+
+                src = [
+                    '{{# minify collapseWhitespace=true }}',
+                    readFile('src/helpers/test/fixtures/multiline.html'),
+                    '{{/ minify }}'
+                ].join('\n');
+                content = Handlebars.compile(src)();
 
                 expect(content).toBe('<div><div><span>Hello</span></div></div>');
             });
         });
-
-        // helpers.withBreadcrumbs
         describe('withBreadcrumbs()', function () {
-            it('should return HTML based on an array of objects', function () {
-                var result;
 
-                result = Handlebars.helpers.withBreadcrumbs.call({
-                    page: {
-                        dirname: '/root/sample-parent/sample-child/sample-grandchild'
-                    },
-                    tmp: readFile('src/helpers/test/fixtures/breadcrumbs.html')
-                }, handlebarsOptions);
+            // Represents 'this' inside a Handlebars helper function.
+            var context = {
+                page: {
+                    dirname: '/root/sample-parent/sample-child/sample-grandchild'
+                },
+                template: readFile('src/helpers/test/fixtures/partial-breadcrumbs.html')
+            };
 
-                result = [
+            /**
+             * Returns a Handlebars-compiled string for the breadcrumbs partial.
+             **/
+            function compile() {
+                var result = [
                     '{{# minify collapseWhitespace=true }}',
-                    result,
+                        Handlebars.helpers.withBreadcrumbs.call(context, hbsOptions),
                     '{{/ minify }}'
                 ].join('\n');
 
-                result = Handlebars.compile(result)();
+                return Handlebars.compile(result)();
+            }
+
+            it('should return a string', function () {
+                var result;
+
+                context.page.dirname = '/';
+                hbsOptions.hash.nav_links = grunt.config.get('bypassContext').nav_links;
+                result = compile(context);
+
+                expect(result).toEqual(jasmine.any(String));
+            });
+
+            it('should return a string of HTML based on an array of objects', function () {
+                var result;
+
+                context.page.dirname = '/root/sample-parent/sample-child/sample-grandchild';
+                hbsOptions.hash.nav_links = [
+                    {
+                        uri: '/',
+                        name: 'Home'
+                    },
+                    {
+                        uri: '/root/sample-parent/',
+                        name: 'Sample Parent',
+                        nav_links: [
+                            {
+                                uri: '/root/sample-parent/sample-child/',
+                                name: 'Sample Child',
+                                nav_links: [
+                                    {
+                                        uri: '/root/sample-parent/sample-child/sample-grandchild/',
+                                        name: 'Sample Grandchild'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ];
+                result = compile();
 
                 expect(result).toBe('<div id="breadcrumbs"><div class="container"><ul class="breadcrumb"><li><a href="/">Home</a></li><li><a href="/root/sample-parent/">Sample Parent</a></li><li><a href="/root/sample-parent/sample-child/">Sample Child</a></li><li class="active">Sample Grandchild</li></ul></div></div>');
             });
-        });
 
-        // helpers.extendRootOptions
-        describe('extendRootOptions', function () {
-            it('should', function () {
-                expect(1).toBe(1);
+            it('should contain at least 2 links', function () {
+                var result;
+
+                hbsOptions.hash.nav_links = [
+                    {
+                        uri: '/',
+                        name: 'Home'
+                    }
+                ];
+                result = compile();
+
+                expect(result).toBe('');
             });
+
+            it('should contain a link to the home page', function () {
+                var result,
+                    navLinks,
+                    sampleLink;
+
+                navLinks = grunt.config.get('bypassContext').nav_links;
+                sampleLink = getSampleLink(navLinks);
+
+                // No links in this navigation!
+                if (sampleLink === false) {
+                    log.info("No links found in site's 'nav_links'.");
+                    expect(1).toBe(1);
+                    return;
+                }
+
+                context.page.dirname = sampleLink.uri;
+                hbsOptions.hash.nav_links = navLinks;
+                result = compile(context);
+
+                expect(result).toContain('<li><a href="' + grunt.config.get('stache.config.base') + '">' + grunt.config.get('stache.config.nav_title_home') + '</a></li>');
+            });
+
+            it('should not produce an anchor for the active page', function () {
+                var result,
+                    navLinks,
+                    sampleLink;
+
+                navLinks = grunt.config.get('bypassContext').nav_links;
+                sampleLink = getSampleLink(navLinks);
+
+                // No links in this navigation!
+                if (sampleLink === false) {
+                    log.info("No links found in site's 'nav_links'.");
+                    expect(1).toBe(1);
+                    return;
+                }
+
+                context.page.dirname = sampleLink.uri;
+                hbsOptions.hash.nav_links = navLinks;
+                result = compile(context);
+
+                expect(result).toContain('<li class="active">' + sampleLink.name + '</li>');
+            });
+
         });
     });
 
-    describe('stache.utils', function () {
-
-        // stache.utils.concatArray()
-        describe('concatArray() function', function () {
+    /**
+     * Utilities
+     */
+    describe('helpers.utils', function () {
+        describe('concatArray()', function () {
             it('should append the second array to the first', function () {
                 var arr1,
                     arr2,
@@ -163,57 +334,66 @@
                 // Both valid arrays.
                 arr1 = ['a', 'b'];
                 arr2 = ['c', 'd'];
-
-                result = Handlebars.stache.utils.concatArray(arr1, arr2);
-
+                result = helpers.utils.concatArray(arr1, arr2);
                 expect(result).toEqual(['a', 'b', 'c', 'd']);
 
                 // arr1 is not an array.
                 arr1 = null;
                 arr2 = ['c', 5, undefined];
-
-                result = Handlebars.stache.utils.concatArray(arr1, arr2);
-
+                result = helpers.utils.concatArray(arr1, arr2);
                 expect(result).toEqual(['c', 5, undefined]);
+            });
 
-                // arr1 and arr2 are not arrays.
+            it('should return an array', function () {
+                var arr1,
+                    arr2,
+                    result;
+
                 arr1 = "my string";
                 arr2 = null;
-
-                result = Handlebars.stache.utils.concatArray(arr1, arr2);
+                result = helpers.utils.concatArray(arr1, arr2);
 
                 expect(result).toEqual([]);
             });
         });
+        describe('getNavLinks()', function () {
 
-        // stache.utils.findBreadcrumb
-        describe('findBreadcrumb', function () {
-            it('should', function () {
-                expect(1).toBe(1);
+            it('should return an array', function () {
+                var navLinks = helpers.utils.getNavLinks.call({}, {
+                    hash: {
+                        nav_links: grunt.config.get('bypassContext').nav_links
+                    }
+                });
+
+                expect(navLinks).toEqual(jasmine.any(Array));
             });
-        });
 
-        // stache.utils.getBreadcrumbNavLinks
-        describe('getBreadcrumbNavLinks', function () {
-            it('should', function () {
-                expect(1).toBe(1);
+            it('should return an array of objects', function () {
+                var navLinks = helpers.utils.getNavLinks.call({}, {
+                    hash: {
+                        nav_links: grunt.config.get('bypassContext').nav_links
+                    }
+                });
+
+                // No links in this navigation!
+                if (navLinks.length === 0) {
+                    log.info("No links found in site's 'nav_links'.");
+                    expect(1).toBe(1);
+                    return;
+                }
+
+                expect(navLinks[0]).toEqual(jasmine.any(Object));
             });
-        });
 
-        // stache.utils.getNavLinks
-        describe('getNavLinks', function () {
-            it('should', function () {
-                expect(1).toBe(1);
+            it('should return an empty array if no links are found', function () {
+                var result = helpers.utils.getNavLinks.call({}, {
+                    hash: {}
+                });
+
+                expect(result).toEqual(jasmine.any(Array));
             });
-        });
 
-        // stache.utils.mergeOption
-        describe('mergeOption', function () {
-            it('should', function () {
-                expect(1).toBe(1);
-            });
         });
-
     });
 
 }());
