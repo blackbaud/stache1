@@ -1,15 +1,15 @@
 {{# withBreadcrumbs }}
-  <div id="breadcrumbs">
-    <div class="container">
-    <ul class="breadcrumb">
-      {{# each nav_links }}
-        {{# if active }}
-          <li class="active">{{ name }}</li>
-        {{ else }}
-          <li><a href="{{ uri }}">{{ name }}</a></li>
-        {{/ if }}
-      {{/ each }}
-    </ul>
+    <div id="wrap-breadcrumbs">
+        <div class="container">
+            <ul class="breadcrumb">
+                {{# each nav_links }}
+                    {{# if active }}
+                        <li class="active">{{ name }}</li>
+                    {{ else }}
+                        <li><a href="{{ uri }}">{{ name }}</a></li>
+                    {{/ if }}
+                {{/ each }}
+            </ul>
+        </div>
     </div>
-  </div>
 {{/ withBreadcrumbs }}

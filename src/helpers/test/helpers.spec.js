@@ -257,7 +257,7 @@
                 ];
                 result = compile();
 
-                expect(result).toBe('<div id="breadcrumbs"><div class="container"><ul class="breadcrumb"><li><a href="/">Home</a></li><li><a href="/root/sample-parent/">Sample Parent</a></li><li><a href="/root/sample-parent/sample-child/">Sample Child</a></li><li class="active">Sample Grandchild</li></ul></div></div>');
+                expect(result).toBe('<div id="wrap-breadcrumbs"><div class="container"><ul class="breadcrumb"><li><a href="/">Home</a></li><li><a href="/root/sample-parent/">Sample Parent</a></li><li><a href="/root/sample-parent/sample-child/">Sample Child</a></li><li class="active">Sample Grandchild</li></ul></div></div>');
             });
 
             it('should contain at least 2 links', function () {
