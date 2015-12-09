@@ -27,7 +27,8 @@ module.exports = function (grunt) {
         stacheConfig = {},
         optionConfig = grunt.option('config') || '',
         optionConfigArray,
-        defaults;
+        defaults,
+        tasks;
 
     // Original reference to the header logging function.
     // Disabling grunt header unless verbose is enabled
@@ -294,6 +295,192 @@ module.exports = function (grunt) {
         }
     };
 
+    tasks = {
+        createAutoNav: function () {
+
+            var sorted,
+                root,
+                navKey,
+                content,
+                filesConfig,
+                files,
+                pages,
+                page,
+                nav_exclude,
+                sandcastlePath,
+                sandcastleCounter;
+
+            // User has manually specific nav_links in stache.yml
+            if (grunt.config('stache.config.nav_type') !== 'directory') {
+                grunt.config.set('bypassContext', grunt.config.get('stache.config.nav_links'));
+                return;
+            }
+
+            sorted = [];
+            root = 'bypassContext';
+            navKey = '.nav_links';
+            content = grunt.config.get('stache.config.content');
+            filesConfig = grunt.config.get('assemble.default.files.0');
+            files = grunt.file.expand(filesConfig, filesConfig.src);
+
+            grunt.config.set(root + navKey, []);
+
+            files.forEach(function (file) {
+                var fm = yfm.extractJSON(content + file);
+                if (typeof fm.published === 'undefined' || fm.published !== false) {
+                    sorted.push({
+                        abspath: file,
+                        rootdir: file.substr(0, file.indexOf('/')),
+                        subdir: file.substr(0, file.lastIndexOf('/')),
+                        filename: file.substr(file.lastIndexOf('/') + 1),
+                        frontmatter: fm,
+                        type: 'local'
+                    });
+                }
+            });
+
+            // Add any dynamically created pages here.
+            pages = grunt.config.get('assemble.custom.options.pages');
+            if (pages) {
+                for (page in pages) {
+                    if (pages.hasOwnProperty(page)) {
+                        sorted.push({
+                            abspath: page,
+                            rootdir: page.substr(0, page.indexOf('/')),
+                            subdir: page.substr(0, page.lastIndexOf('/')),
+                            filename: page.substr(page.lastIndexOf('/') + 1),
+                            frontmatter: pages[page].data,
+                            type: pages[page].type
+                        });
+                    }
+                }
+            }
+
+            // Sort alphabetically ensures that parents are created first.
+            // This is crucial to this process.  We can sort by order below.
+            sort(sorted, true, 'subdir', '');
+
+            nav_exclude = grunt.config.get('stache.config.nav_exclude') || [];
+            sandcastlePath = '';
+            sandcastleCounter = 1;
+
+            sorted.forEach(function (el, idx) {
+
+                var path = root,
+                    rootdir = el.rootdir,
+                    subdir = el.subdir,
+                    filename = el.filename,
+                    separator = grunt.config.get('stache.config.nav_title_separator') || ' ',
+                    home = grunt.config.get('stache.config.nav_title_home') || 'home',
+                    file = filename.replace('.md', '.html').replace('.hbs', '.html'),
+                    item = el.frontmatter,
+                    subdirParts,
+                    pathCurrent,
+                    pathCurrentItem,
+                    found,
+                    index,
+                    i,
+                    j,
+                    m,
+                    n;
+
+                // A few programmatically created front-matter variables
+                item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
+                item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
+                item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
+                item.showInSearch = typeof item.showInSearch !== 'undefined' ? item.showInSearch : true;
+                item.breadcrumbs = item.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
+                item.name = grunt.config.process(item.name || (subdir ? createTitle(subdir, separator, false) : home));
+                item.abspath = el.abspath;
+
+                // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
+                if (item.showInNav) {
+                    nav_exclude.forEach(function (f) {
+                        if (item.abspath.indexOf(f) > -1) {
+                            item.showInNav = false;
+                            return;
+                        }
+                    });
+                }
+
+                // Sandcastle is a strange case as we need to confirm it's subdir exists the first time,
+                // Then we can just add it to the array.  IF we don't do this, things get very slow!
+                if (el.type === 'sandcastle' && sandcastlePath !== '') {
+                    path = sandcastlePath + '.' + (sandcastleCounter++);
+                } else {
+
+                    // Nested directories
+                    if (subdir) {
+
+                        // Split the subdir into its different directories
+                        subdirParts = subdir.split('/');
+                        for (i = 0, j = subdirParts.length; i < j; i++) {
+                            index = 0;
+                            path += navKey;
+
+                            // Is the current path already an array?
+                            pathCurrent = grunt.config.get(path);
+
+                            // It is an array, let's try to find the index for our current subDirPart
+                            if (grunt.util.kindOf(pathCurrent) === 'array') {
+                                found = false;
+
+                                for (m = 0, n = pathCurrent.length; m < n; m++) {
+                                    pathCurrentItem = grunt.config.get(path + '.' + m);
+                                    if (pathCurrentItem.uri && pathCurrentItem.uri.indexOf('/' + subdirParts[i] + '/') > -1) {
+                                        found = true;
+                                        index = m;
+                                        break;
+                                    }
+                                }
+
+                                // Our array has previous items but no match was found, let's add a new item
+                                if (pathCurrent.length > 0 && !found) {
+                                    index = pathCurrent.length;
+                                }
+
+                                path += '.' + index;
+
+                            // It's not an array, which means we need to create the links property
+                            } else {
+                                grunt.config.set(path, []);
+
+                                // Catch the path for the first sandcastle file we hit
+                                if (el.type === 'sandcastle' && sandcastlePath === '') {
+                                    sandcastlePath = path;
+                                }
+
+                                path += '.0';
+                            }
+
+                        }
+
+                    } else {
+                        path += navKey;
+                        path += '.' + grunt.config.get(path).length;
+                    }
+                }
+
+                // Show in nav superceeds showInHeader and showInFooter
+                if (!item.showInNav) {
+                    grunt.verbose.writeln('Ignoring: ' + item.abspath);
+                    item.showInHeader = item.showInFooter = item.showInNav;
+                }
+
+                // Record this url
+                item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
+                grunt.config.set(path, item);
+                navSearchFiles.push(item);
+
+                grunt.log.writeln('Created nav_link ' + item.uri);
+
+            });
+
+            // Now we can rearrange each item according to order
+            sortRecursive(root + navKey, true);
+        }
+    };
+
     /**
     ****************************************************************
     * PRIVATE METHODS
@@ -370,7 +557,6 @@ module.exports = function (grunt) {
         var nav_links = grunt.config.get(key);
         sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100, 'name');
         grunt.config.set(key, nav_links);
-
         nav_links.forEach(function (el, idx) {
             if (el.nav_links) {
                 sortRecursive(key + '.' + idx + '.nav_links', sortAscending);
@@ -395,7 +581,7 @@ module.exports = function (grunt) {
 
     // Internal task to control header logging
     grunt.registerTask('header', function (toggle) {
-        grunt.log.header = toggle == 'true' ? header : function () {};
+        grunt.log.header = (toggle.toString() === 'true') ? header : function () {};
     });
 
     // Creates pages from jsdoc and sandcastle
@@ -505,186 +691,7 @@ module.exports = function (grunt) {
     });
 
     // Creates nav to mirror directory structure
-    grunt.registerTask('createAutoNav', function () {
-
-        var sorted,
-            root,
-            navKey,
-            content,
-            filesConfig,
-            files,
-            pages,
-            page,
-            nav_exclude,
-            sandcastlePath,
-            sandcastleCounter;
-
-        // User has manually specific nav_links in stache.yml
-        if (grunt.config('stache.config.nav_type') !== 'directory') {
-            grunt.config.set('bypassContext', grunt.config.get('stache.config.nav_links'));
-            return;
-        }
-
-        sorted = [];
-        root = 'bypassContext';
-        navKey = '.nav_links';
-        content = grunt.config.get('stache.config.content');
-        filesConfig = grunt.config.get('assemble.default.files.0');
-        files = grunt.file.expand(filesConfig, filesConfig.src);
-
-        grunt.config.set(root + navKey, []);
-        files.forEach(function (file) {
-            var fm = yfm.extractJSON(content + file);
-            if (typeof fm.published === 'undefined' || fm.published !== false) {
-                sorted.push({
-                    abspath: file,
-                    rootdir: file.substr(0, file.indexOf('/')),
-                    subdir: file.substr(0, file.lastIndexOf('/')),
-                    filename: file.substr(file.lastIndexOf('/') + 1),
-                    frontmatter: fm,
-                    type: 'local'
-                });
-            }
-        });
-
-        // Add any dynamically created pages here
-        pages = grunt.config.get('assemble.custom.options.pages');
-        if (pages) {
-            for (page in pages) {
-                sorted.push({
-                    abspath: page,
-                    rootdir: page.substr(0, page.indexOf('/')),
-                    subdir: page.substr(0, page.lastIndexOf('/')),
-                    filename: page.substr(page.lastIndexOf('/') + 1),
-                    frontmatter: pages[page].data,
-                    type: pages[page].type
-                });
-            }
-        }
-
-        // Sort alphabetically ensures that parents are created first.
-        // This is crucial to this process.  We can sort by order below.
-        sort(sorted, true, 'subdir', '');
-
-        nav_exclude = grunt.config.get('stache.config.nav_exclude') || [];
-        sandcastlePath = '';
-        sandcastleCounter = 1;
-
-        sorted.forEach(function (el, idx) {
-
-            var path = root,
-                rootdir = el.rootdir,
-                subdir = el.subdir,
-                filename = el.filename,
-                separator = grunt.config.get('stache.config.nav_title_separator') || ' ',
-                home = grunt.config.get('stache.config.nav_title_home') || 'home',
-                file = filename.replace('.md', '.html').replace('.hbs', '.html'),
-                item = el.frontmatter,
-                subdirParts,
-                pathCurrent,
-                pathCurrentItem,
-                found,
-                index,
-                i,
-                j,
-                m,
-                n;
-
-            // A few programmitcally created front-matter variables
-            item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
-            item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
-            item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
-            item.showInSearch = typeof item.showInSearch !== 'undefined' ? item.showInSearch : true;
-            item.breadcrumbs = item.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
-            item.name = grunt.config.process(item.name || (subdir ? createTitle(subdir, separator, false) : home));
-            item.abspath = el.abspath;
-
-            // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
-            if (item.showInNav) {
-                nav_exclude.forEach(function (f) {
-                    if (item.abspath.indexOf(f) > -1) {
-                        item.showInNav = false;
-                        return;
-                    }
-                });
-            }
-
-            // Sandcastle is a strange case as we need to confirm it's subdir exists the first time,
-            // Then we can just add it to the array.  IF we don't do this, things get very slow!
-            if (el.type === 'sandcastle' && sandcastlePath !== '') {
-                path = sandcastlePath + '.' + (sandcastleCounter++);
-            } else {
-
-                // Nested directories
-                if (subdir) {
-
-                    // Split the subdir into its different directories
-                    subdirParts = subdir.split('/');
-                    for (i = 0, j = subdirParts.length; i < j; i++) {
-                        index = 0;
-                        path += navKey;
-
-                        // Is the current path already an array?
-                        pathCurrent = grunt.config.get(path);
-
-                        // It is an array, let's try to find the index for our current subDirPart
-                        if (grunt.util.kindOf(pathCurrent) === 'array') {
-                            found = false;
-
-                            for (m = 0, n = pathCurrent.length; m < n; m++) {
-                                pathCurrentItem = grunt.config.get(path + '.' + m);
-                                if (pathCurrentItem.uri && pathCurrentItem.uri.indexOf('/' + subdirParts[i] + '/') > -1) {
-                                    found = true;
-                                    index = m;
-                                    break;
-                                }
-                            }
-
-                            // Our array has previous items but no match was found, let's add a new item
-                            if (pathCurrent.length > 0 && !found) {
-                                index = pathCurrent.length;
-                            }
-
-                            path += '.' + index;
-
-                        // It's not an array, which means we need to create the links property
-                        } else {
-                            grunt.config.set(path, []);
-
-                            // Catch the path for the first sandcastle file we hit
-                            if (el.type === 'sandcastle' && sandcastlePath === '') {
-                                sandcastlePath = path;
-                            }
-
-                            path += '.0';
-                        }
-
-                    }
-
-                } else {
-                    path += navKey;
-                    path += '.' + grunt.config.get(path).length;
-                }
-            }
-
-            // Show in nav superceeds showInHeader and showInFooter
-            if (!item.showInNav) {
-                grunt.verbose.writeln('Ignoring: ' + item.abspath);
-                item.showInHeader = item.showInFooter = item.showInNav;
-            }
-
-            // Record this url
-            item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
-            grunt.config.set(path, item);
-            navSearchFiles.push(item);
-
-            grunt.log.writeln('Created nav_link ' + item.uri);
-
-        });
-
-        // Now we can rearrange each item according to order
-        sortRecursive(root + navKey, true);
-    });
+    grunt.registerTask('createAutoNav', tasks.createAutoNav);
 
     // Looks for preStacheHooks and postStacheHooks in config
     grunt.registerTask('stacheHooks', function (context) {
@@ -893,5 +900,9 @@ module.exports = function (grunt) {
     })({
         pluginsRoot: defaults.stache.dir + 'node_modules/'
     });
+
+    return {
+        tasks: tasks
+    };
 
 };

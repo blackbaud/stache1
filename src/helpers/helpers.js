@@ -24,18 +24,17 @@ module.exports.register = function (Handlebars, options, params) {
         UglifyJS = require('uglify-js'),
         renderer = new marked.Renderer(),
         lexer = new marked.Lexer(),
-        counts = {};
+        counts = {},
+        utils;
 
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
     // https://github.com/chjj/marked/blob/master/lib/marked.js#L890
     renderer.image = function (href, title, text) {
         var out;
-
         if (href.indexOf('/static/') > -1) {
             href = href.replace('/static/', '/');
         }
-
         out = '<img src="' + href + '" alt="' + text + '"';
         if (title) {
             out += ' title="' + title + '"';
@@ -168,7 +167,190 @@ module.exports.register = function (Handlebars, options, params) {
         return r;
     }
 
+    /**
+     * Utility methods.
+     */
+    utils = {
+
+        /**
+         * Returns a single array, the second appended to the first.
+         *
+         * @param {array} [arr1] The array to be extended.
+         * @param {array} [arr2] The array to be appended to the first.
+         */
+        concatArray: function (arr1, arr2) {
+            var i,
+                len,
+                arr1IsArray,
+                arr2IsArray;
+
+            arr1IsArray = Handlebars.Utils.isArray(arr1);
+            arr2IsArray = Handlebars.Utils.isArray(arr2);
+
+            if (!arr1IsArray && !arr2IsArray) {
+                return [];
+            }
+
+            if (!arr2IsArray && arr1IsArray) {
+                return arr1;
+            }
+
+            if (!arr1IsArray && arr2IsArray) {
+                return arr2;
+            }
+
+            len = arr2.length;
+
+            for (i = 0; i < len; ++i) {
+                arr1.push(arr2[i]);
+            }
+
+            return arr1;
+        },
+
+        /**
+         * Returns an object representing a page's properties, only if its URI is
+         * a fragment of the active page's URI. The method receives an array of objects,
+         * to be checked against the active URI.
+         *
+         * @param {array} [navLinks] Array of objects representing pages.
+         * @param {string} [activeURI] The path of the active page.
+         */
+        findBreadcrumb: function (navLinks, activeURI) {
+            var breadcrumbs,
+                i,
+                navLink,
+                navLinksLength;
+
+            breadcrumbs = [];
+            navLinksLength = navLinks.length;
+
+            for (i = 0; i < navLinksLength; ++i) {
+
+                navLink = navLinks[i];
+
+                // Don't include the Home page because it cannot have sub-directories.
+                // (We add the Home page manually, in getBreadcrumbNavLinks.)
+                if (navLink.uri !== "/") {
+
+                    // Is this page's URI a fragment of the active page's URI?
+                    if (activeURI.indexOf(navLink.uri) > -1) {
+                        breadcrumbs.push({
+                            name: navLink.name,
+                            uri: navLink.uri
+                        });
+
+                        // Does this page have sub-directories?
+                        if (navLink.hasOwnProperty('nav_links')) {
+                            breadcrumbs = utils.concatArray(breadcrumbs, utils.findBreadcrumb(navLink.nav_links, activeURI));
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            // Set the final navigation link as 'active' and return the array.
+            if (breadcrumbs.length > 0) {
+                breadcrumbs[breadcrumbs.length - 1].active = true;
+                return breadcrumbs;
+            }
+
+            // The navigation links didn't contain a breadcrumb.
+            return false;
+        },
+
+        /**
+         * Returns an array representing all breadcrumb nav_links for a given page.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        getBreadcrumbNavLinks: function (navLinks, activeURI) {
+            var config,
+                items;
+
+            config = (typeof stache !== "undefined") ? stache.config : {};
+            items = utils.findBreadcrumb(navLinks, activeURI);
+
+            // Add Home page.
+            if (items !== false) {
+                items.unshift({
+                    name: config.nav_title_home || 'Home',
+                    uri: config.base || '/'
+                });
+            }
+
+            return items;
+        },
+
+        /**
+         * Returns an array representing all pages, sorted.
+         * The array also respects page hierarchies: child pages are stored in the respective
+         * parent page's property, 'nav_links'.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        getNavLinks: function (options) {
+            return (options.hash && options.hash.nav_links) ? options.hash.nav_links : bypassContext.nav_links || [];
+        },
+
+        /**
+         * Returns the local value, if set. Otherwise, returns the global value.
+         * If neither is set, return false.
+         *
+         * @param {various} [global] A global option's value (stache.yml)
+         * @param {various} [local] A local option's value (front-matter)
+         */
+        mergeOption: function (global, local) {
+            var merged = false;
+            if (typeof local === "undefined") {
+                if (typeof global !== "undefined") {
+                    merged = global;
+                }
+            } else {
+                merged = local;
+            }
+            return merged;
+        }
+
+    };
+
     Handlebars.registerHelper({
+
+        /**
+         * Returns the preferred value of a YAML option (either root or page).
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        extendRootOptions: function (options) {
+            var config,
+                i,
+                key,
+                keys,
+                keysLength;
+
+            config = stache.config;
+            keys = ['showBreadcrumbs'];
+            keysLength = keys.length;
+
+            for (i = 0; i < keysLength; ++i) {
+                key = keys[i];
+                this[key] = utils.mergeOption(config[key], this[key]);
+            }
+
+            return options.fn(this);
+        },
+
+        /**
+         * Adds breadcrumb nav_links to the scope.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withBreadcrumbs: function (options) {
+            var activeURI = this.page.dirname + "/";
+            this.nav_links = utils.getBreadcrumbNavLinks(utils.getNavLinks(options), activeURI);
+            return (this.nav_links !== false) ? options.fn(this) : options.inverse(this);
+        },
 
         /**
         * Get an operation from data.operations.
@@ -181,8 +363,7 @@ module.exports.register = function (Handlebars, options, params) {
         getOperation: function (context) {
             var operations = params.assemble.options.data.operations,
                 hasProperty,
-                filtered,
-                prop;
+                filtered;
 
             if (!operations) {
                 return '';
@@ -191,6 +372,7 @@ module.exports.register = function (Handlebars, options, params) {
             hasProperty = context.hash.property !== 'undefined';
 
             filtered = operations.filter(function (item) {
+                var prop;
                 for (prop in context.hash) {
                     if (context.hash.hasOwnProperty(prop) && prop !== 'property') {
                         if (!item.hasOwnProperty(prop) || item[prop].indexOf(context.hash[prop]) === -1) {
@@ -298,13 +480,9 @@ module.exports.register = function (Handlebars, options, params) {
                 dest = this.page.dest;
             }
 
-            if (typeof options.hash.nav_links !== 'undefined') {
-                nav_links = options.hash.nav_links;
-            } else if (typeof bypassContext.nav_links !== 'undefined') {
-                nav_links = bypassContext.nav_links;
-            }
-
+            nav_links = utils.getNavLinks(options);
             active = getActiveNav(dest, nav_links, false);
+
             if (active && active.nav_links) {
                 active = active.nav_links;
             }
@@ -652,14 +830,8 @@ module.exports.register = function (Handlebars, options, params) {
         *   If locally true then
         *     TRUE
         **/
-        inherit: function (globally, locally, options) {
-            var r = false;
-            if (globally) {
-                r = typeof locally === 'undefined' || locally.toString() !== 'false';
-            } else {
-                r = locally;
-            }
-            return r ? options.fn(this) : options.inverse(this);
+        inherit: function (global, local, options) {
+            return (utils.mergeOption(global, local)) ? options.fn(this) : options.inverse(this);
         },
 
         /**
@@ -770,8 +942,7 @@ module.exports.register = function (Handlebars, options, params) {
         * Used instead of us having to pass the nav_links object around in the context.
         **/
         withNavLinks: function (options) {
-            //return Handlebars.helpers.each(options.hash.nav_links || bypassContext.nav_links, options);
-            return Handlebars.helpers.eachWithMod(options.hash.nav_links || bypassContext.nav_links, options);
+            return Handlebars.helpers.eachWithMod(utils.getNavLinks(options), options);
         },
 
         /**
@@ -816,13 +987,11 @@ module.exports.register = function (Handlebars, options, params) {
         **/
         stachePostProcess: function (options) {
             var html = options.fn(this);
-
             if (stache.postHandlebarsHooks && stache.postHandlebarsHooks.length > 0) {
                 stache.postHandlebarsHooks.forEach(function (hook) {
                     html = hook(html);
                 });
             }
-
             return html;
         },
 
@@ -843,4 +1012,6 @@ module.exports.register = function (Handlebars, options, params) {
         }
 
     });
+
+    module.exports.utils = utils;
 };
