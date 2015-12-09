@@ -80,6 +80,7 @@ showOmnibar: true
 showNavDropdown: false
 showAdminToolbar: false
 showAdminTrigger: false
+showBreadcrumbs: false
 editInGitHub: true
 editInProse: true
 markdown: true

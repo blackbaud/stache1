@@ -60,7 +60,7 @@ module.exports = function (grunt) {
                     extensions: 'js',
                     specNameMatcher: 'spec'
                 },
-                src: ['src/helpers/helpers.js']
+                src: ['tasks/stache.js', 'src/helpers/helpers.js']
             }
         },
         jshint: {
@@ -98,6 +98,7 @@ module.exports = function (grunt) {
     ]);
     grunt.task.registerTask('test', [
         'jscs',
+        'jshint',
         'jasmine_node'
     ]);
     grunt.task.registerTask('default', 'build');
