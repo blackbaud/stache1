@@ -117,22 +117,16 @@ module.exports.register = function (Handlebars, options, params) {
     **/
     function getMarked(md) {
 
-        var cssClass = 'stache-marked',
-            input = md || '',
-            output = input;
+        var comment = '\n<!-- STACHE MARKED -->\n',
+            input = md || '';
 
-        if (cheerio('.' + cssClass, input).length === 0) {
-            output = [
-                '<span class="' + cssClass + '">',
-                marked.parser(lexer.lex(input), {
-                    headerPrefix: '',
-                    renderer: renderer
-                }),
-                '</span>'
-            ].join('');
-        }
-
-        return output;
+        return input.indexOf(comment) > -1 ? input : [
+            comment,
+            marked.parser(lexer.lex(input), {
+                headerPrefix: '',
+                renderer: renderer
+            })
+        ].join('');
     }
 
     /**
