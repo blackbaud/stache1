@@ -112,12 +112,20 @@ module.exports.register = function (Handlebars, options, params) {
 
     /**
     * Light wrapper for our custom markdown processor.
+    * Only process a block of Markdown once.
     **/
     function getMarked(md) {
-        return marked.parser(lexer.lex(md || ''), {
-            headerPrefix: '',
-            renderer: renderer
-        });
+
+        var comment = '\n<!-- STACHE MARKED -->\n',
+            input = md || '';
+
+        return input.indexOf(comment) > -1 ? input : [
+            comment,
+            marked.parser(lexer.lex(input), {
+                headerPrefix: '',
+                renderer: renderer
+            })
+        ].join('');
     }
 
     /**
