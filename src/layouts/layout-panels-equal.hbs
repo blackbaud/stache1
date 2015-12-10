@@ -1,0 +1,27 @@
+---
+layout: layout-container
+---
+
+{{# inherit stache.config.markdown markdown }}
+  {{# markdown }}{{ body }}{{/ markdown }}
+{{ else }}
+  {{# withNewline }}{{ body }}{{/ withNewline }}
+{{/ inherit }}
+
+<div class="showcase row equal">{{# eachChildLink mod=3 }}
+        <div class="col-lg-4 col-md-6 panel-col">
+         <a href="{{ uri }}" class="panel-wrapper">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">{{ name }}</h3>
+              </div>
+              <div class="panel-body">
+                {{# if icon }}<i class="showcase-icon fa fa-2x fa-{{ icon }}"></i><div class="showcase-desc">{{/ if }}
+
+                  {{# if description }}<p>{{ description }}</p>{{/ if}}
+                {{# if icon }}</div>{{/ if }}
+              </div>
+            </div>
+          </a>
+        </div>{{/ eachChildLink }}
+</div>
