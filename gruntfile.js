@@ -56,7 +56,7 @@ module.exports = function (grunt) {
         jasmine_node: {
             all: {
                 options: {
-                    specFolders: ['src/helpers'],
+                    specFolders: ['tests'],
                     extensions: 'js',
                     specNameMatcher: 'spec'
                 },
