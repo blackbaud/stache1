@@ -653,7 +653,7 @@ module.exports.register = function (Handlebars, options, params) {
             render = typeof options.hash.render !== 'undefined' ? options.hash.render : true;
             fixNewline = typeof options.hash.fixNewline !== 'undefined' ? options.hash.fixNewline : true;
             escape = typeof options.hash.escape !== 'undefined' ? options.hash.escape : false;
-            indent = options.hash.indent || 0,
+            indent = options.hash.indent || 0;
             more = typeof options.hash.more !== 'undefined' ? options.hash.more : true;
 
             if (typeof Handlebars.partials[fileWithPath] !== 'undefined') {
