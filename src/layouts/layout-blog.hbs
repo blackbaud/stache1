@@ -1,5 +1,5 @@
 ---
-layout: layout-blog-sidebar
+layout: layout-sidebar
 limit: <%= stache.config.blog_recent_limit %>
 ---
 
@@ -8,16 +8,26 @@ limit: <%= stache.config.blog_recent_limit %>
 {{# eachChildLink sortKey='uri' sortDesc=true }}
   {{# if sticky }}
     {{ include 'partial-blog-header' }}
-    {{ include abspath }}
-    <hr />
+    {{# if markdown }}
+      {{# markdown }}
+        {{ include abspath stache=../../../../stache more=false }}
+      {{/ markdown }}
+    {{ else }}
+      {{ include abspath stache=../../../stache more=false }}
+    {{/ if }}
   {{/ if }}
 {{/ eachChildLink }}
 
 {{# eachChildLink sortKey='uri' sortDesc=true }}
   {{# unless sticky }}
     {{ include 'partial-blog-header' }}
-    {{ include abspath }}
-    <hr />
+    {{# if markdown }}
+      {{# markdown }}
+        {{ include abspath stache=../../../../stache more=false }}
+      {{/ markdown }}
+    {{ else }}
+      {{ include abspath stache=../../../stache more=false }}
+    {{/ if }}
   {{/ unless }}
 {{/ eachChildLink }}
 
