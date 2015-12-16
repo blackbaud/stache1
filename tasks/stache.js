@@ -10,60 +10,78 @@
 **/
 
 /*jslint node: true, nomen: true, plusplus: true */
-'use strict';
-
-// For merging our YAML files
-var merge = require('merge'),
-    yfm = require('assemble-yaml'),
-    cheerio = require('cheerio'),
-    assemble = require('assemble');
-
 module.exports = function (grunt) {
+    'use strict';
+
+    var assemble,
+        cheerio,
+        defaults,
+        header,
+        jit,
+        merge,
+        navSearchFiles,
+        tasks,
+        utils,
+        yfm;
+
+    assemble = require('assemble');
+    cheerio = require('cheerio');
+    jit = require('jit-grunt');
+    merge = require('merge');
+    yfm = require('assemble-yaml');
 
     // No reason to pass files used for search around in grunt.config
-    var navSearchFiles = [],
-        header = grunt.log.header,
-        localConfig = {},
-        stacheConfig = {},
-        optionConfig = grunt.option('config') || '',
-        optionConfigArray,
-        defaults,
-        tasks;
+    navSearchFiles = [];
 
     // Original reference to the header logging function.
     // Disabling grunt header unless verbose is enabled
+    header = grunt.log.header;
     grunt.log.header = function () {};
 
     // Default configuration
     defaults = {
 
+        // Holds the project's global (and local) configurations.
         stache: {
 
-            // Necessary since we are actually running in the root project folder.
-            // There's probably a clever grunt / node way to find this value in case it changes.
+            // The relative path to the Stache NPM package.
+            // (Necessary since we are actually running in the root project folder.)
             dir: 'node_modules/blackbaud-stache/',
 
-            // Used to determine file locations, build or serve
+            // Used to determine file locations, build or serve.
             // This means when a user calls build or serve, the assembled files
             // will go into build or serve folder.
-            status: '',
+            status: 'build',
 
-            // Configuration file paths
-            cli: grunt.option('cli'),
+            // Path to local configuration file.
             pathConfig: 'stache.yml',
-            pathPackage: 'package.json',
-            package: '',
-            config: '',
 
-            // Imports to automatically generate pages from
+            // Stores all YAML configuration properties (extends global Stache YAML).
+            config: {},
+
+            // Manually provide an array of pages to build.
             pages: [],
-            preStacheHooks: '',
-            postStacheHooks: '',
-            preAssembleHooks: '',
-            postAssembleHooks: '',
-            postHandlebarsHooks: [
-                slugifyHeaders
-            ],
+
+            // Any Grunt tasks we wish to run at certain times in the build process
+            // should be added here.
+            hooks: {
+                preStache: [],
+                postStache: [],
+                preAssemble: [],
+                postAssemble: []
+            },
+
+            // Filters receive and return data, and should contain valid functions.
+            filters: {
+                preHandlebars: [],
+                postHandlebars: [
+                    function (data) {
+                        return utils.slugifyHeaders(data);
+                    }
+                ]
+            },
+
+            // An array of selectors to remove from searched page's DOM content.
             searchContentToRemove: [
                 '.bb-navbar',
                 '.nav-sidebar',
@@ -72,7 +90,7 @@ module.exports = function (grunt) {
             ]
         },
 
-        // Displays our title all fancy-like
+        // Takes the 'grunt help' title and converts it into fun ASCII art.
         asciify: {
             help: {
                 text: 'Blackbaud STACHE',
@@ -83,31 +101,34 @@ module.exports = function (grunt) {
             }
         },
 
-        // Static site gen
+        // Static site generator.
         assemble: {
-            options: {
-                assets: '<%= stache.config.build %>',
-                data: '<%= stache.config.data %>**/*.*',
-                helpers: ['helper-moment', '<%= stache.config.helpers %>helpers.js'],
-                partials: ['<%= stache.config.partials %>**/*.hbs'],
-                layoutdir: '<%= stache.config.layouts %>',
-                layoutext: '.hbs',
-                layout: 'layout-container',
-                stache: '<%= stache %>',
+            site: {
+                options: {
+                    assets: '<%= stache.config.build %>',
+                    data: '<%= stache.config.data %>**/*.*',
+                    helpers: ['helper-moment', '<%= stache.config.helpers %>helpers.js'],
+                    partials: ['<%= stache.config.partials %>**/*.hbs'],
+                    layoutdir: '<%= stache.config.layouts %>',
+                    layoutext: '.hbs',
+                    layout: 'layout-container',
+                    stache: '<%= stache %>',
 
-                // https://github.com/assemble/assemble/pull/468#issuecomment-38730532
-                initializeEngine: function (engine, options)  {
-                    var search = "{{\\s*body\\s*}}";
-                    engine.bodyRegex = new RegExp(search, 'ig');
-                    engine.init(options, { grunt: grunt, assemble: assemble });
+                    // https://github.com/assemble/assemble/pull/468#issuecomment-38730532
+                    initializeEngine: function (engine, options)  {
+                        var search = "{{\\s*body\\s*}}";
+                        engine.bodyRegex = new RegExp(search, 'ig');
+                        engine.init(options, { grunt: grunt, assemble: assemble });
+                    },
+
+                    getBypassContext: function () {
+                        return grunt.config.get('bypassContext');
+                    }
                 },
-
-                getBypassContext: function () {
-                    return grunt.config.get('bypassContext');
-                }
+                files: []
             },
             custom: {},
-            default: {
+            defaults: {
                 options: {},
                 files: [
                     {
@@ -125,7 +146,7 @@ module.exports = function (grunt) {
         },
 
         // Listing our available tasks
-        availabletasks: {
+        availableTasks: {
             tasks: {
                 options: {
                     filter: 'include',
@@ -142,14 +163,14 @@ module.exports = function (grunt) {
             }
         },
 
-        // Cleans the specified folder before serve/build
+        // Cleans the specified folder before serve/build.
         clean: {
-            build: {
-                src: ['<%= stache.config.build %>']
-            }
+            build: ['<%= stache.config.build %>'],
+            newer: [],
+            pages: ['<%= stache.config.build %>**/*.html']
         },
 
-        // Creates a server
+        // Creates a local server.
         connect: {
             dev: {
                 options: {
@@ -165,6 +186,7 @@ module.exports = function (grunt) {
             }
         },
 
+        // Copies files from the source directory, into production.
         copy: {
             build: {
                 files: [
@@ -216,35 +238,14 @@ module.exports = function (grunt) {
             }
         },
 
-        htmlmin: {
-            build: {
-                options: {
-                    removeComments: true,
-                    collapseWhitespace: true,
-                    removeEmptyAttributes: true,
-                    removeCommentsFromCDATA: true,
-                    removeRedundantAttributes: true,
-                    collapseBooleanAttributes: true
-                },
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%= stache.config.build %>',
-                        src: '**/*.html',
-                        dest: '<%= stache.config.build %>'
-                    }
-                ]
-            }
-        },
-
-        // Mangling causes AngularJS issues.
-        // Please be careful turning this back on.
+        // Mangling causes AngularJS issues. (Please be careful turning this back on.)
         uglify: {
             options: {
                 mangle: false
             }
         },
 
+        // Replaces un-optimized references to assets with their optimized versions.
         useminPrepare: {
             html: '<%= stache.config.build %>index.html',
             options: {
@@ -265,7 +266,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-
         usemin: {
             html: '<%= stache.config.build %>**/*.html'
         },
@@ -275,20 +275,37 @@ module.exports = function (grunt) {
             options: {
                 livereload: grunt.option('livereload') || '<%= stache.config.livereload %>'
             },
-            stache: {
+            pages: {
                 files: [
                     '<%= stache.config.content %>**/*.*',
-                    '<%= stache.config.static %>**/*.*',
+                    '<%= stache.config.static %>**/*.*'
+                ],
+                tasks: [
+                    'status:serve',
+                    'expandMappings',
+                    'clean:newer',
+                    'createAutoPages',
+                    'createAutoNav',
+                    'hook:assemble:pre',
+                    'newer:assemble:site',
+                    'hook:assemble:post',
+                    'copy:build'
+                ]
+            },
+            core: {
+                files: [
                     '<%= stache.config.includes %>**/*.*',
                     'stache.yml'
                 ],
                 tasks: [
                     'status:serve',
+                    'expandMappings',
+                    'clean:build',
                     'createAutoPages',
                     'createAutoNav',
-                    'assembleHooks:pre',
-                    'assemble',
-                    'assembleHooks:post',
+                    'hook:assemble:pre',
+                    'assemble:site',
+                    'hook:assemble:post',
                     'copy:build'
                 ]
             }
@@ -296,6 +313,124 @@ module.exports = function (grunt) {
     };
 
     tasks = {
+        /**
+         * Creates pages from jsdoc and sandcastle specifications.
+         */
+        createAutoPages: function () {
+            var found,
+                pages,
+                processStacheCastleSingleNode,
+                processStacheCastleMultipleNodes;
+
+            pages = {};
+            found = false;
+            processStacheCastleSingleNode = function (page, node, parents, siblings) {
+                var parentsToSend,
+                    siblingsToSend;
+
+                // Create the page for assemble to make
+                node.layout = 'layout-' + page.type;
+                node.parents = parents;
+
+                // Only add siblings if there are no more children (mirros Sandcastle output)
+                if (!node.HelpTOCNode && siblings) {
+                    siblingsToSend = [];
+                    siblings.forEach(function (sibling) {
+                        siblingsToSend.push({
+                            Title: sibling.Title,
+                            Url: sibling.Url
+                        });
+                    });
+                    node.siblings = siblingsToSend;
+                }
+
+                // Assemble expects the index to the where the page would exist
+                pages[node.Url.replace('.htm', '/index.md').replace('html/', page.dest)] = {
+                    type: page.type,
+                    data: node
+                };
+
+                // Recursively keep looking for pages
+                if (node.HelpTOCNode) {
+                    parentsToSend = parents.slice(0);
+                    parentsToSend.push({
+                        Title: node.Title,
+                        Url: node.Url
+                    });
+                    processStacheCastleMultipleNodes(page, node.HelpTOCNode, parentsToSend);
+                }
+            };
+            processStacheCastleMultipleNodes = function (page, node, parents) {
+                if (node) {
+                    if (node.length > 0) {
+                        node.forEach(function (v, idx) {
+                            processStacheCastleSingleNode(page, v, parents, node);
+                        });
+                    } else {
+                        processStacheCastleSingleNode(page, node, parents);
+                    }
+                }
+            };
+
+            grunt.config.get('stache.pages').forEach(function (page) {
+                var json,
+                    i,
+                    j;
+
+                if (page.url) {
+                    if (grunt.file.exists(page.url)) {
+                        found = true;
+                        json = grunt.file.readJSON(page.url);
+                        switch (page.type) {
+                            case 'jsdoc':
+                                for (i = 0, j = json.length; i < j; i++) {
+                                    json[i].layout = 'layout-' + page.type;
+                                    pages[page.dest + json[i].key + '/index.md'] = {
+                                        data: json[i]
+                                    };
+                                }
+                            break;
+                            case 'sandcastle':
+                                processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
+                            break;
+                            case 'powershell':
+                                json = json.cmdlet;
+                                for (i = 0, j = json.length; i < j; i++) {
+                                    json[i].layout = 'layout-' + page.type;
+                                    pages[page.dest + json[i].name + '/index.md'] = {
+                                        data: json[i]
+                                    };
+                                }
+                            break;
+                            default:
+                                grunt.log.writeln('Unknown custom page datatype.');
+                            break;
+                        }
+                    }
+                } else {
+                    grunt.log.error('"url" is required for each item in "stache.pages."');
+                }
+            });
+
+            // Assemble requires even dummy files to run this task.
+            if (found) {
+                grunt.config.set('assemble.custom', {
+                    options: {
+                        pages: pages
+                    },
+                    files: [{
+                        dest: '<%= stache.config.build %>',
+                        src: 'noop'
+                    }]
+                });
+            }
+        },
+
+        /**
+         * Creates an object named 'nav_links' representative of all pages and
+         * their hierarchies. This object is widely used by the Handlebars engine
+         * when building navigation patterns.
+         */
         createAutoNav: function () {
 
             var sorted,
@@ -320,7 +455,7 @@ module.exports = function (grunt) {
             root = 'bypassContext';
             navKey = '.nav_links';
             content = grunt.config.get('stache.config.content');
-            filesConfig = grunt.config.get('assemble.default.files.0');
+            filesConfig = grunt.config.get('assemble.defaults.files.0');
             files = grunt.file.expand(filesConfig, filesConfig.src);
 
             grunt.config.set(root + navKey, []);
@@ -341,6 +476,7 @@ module.exports = function (grunt) {
 
             // Add any dynamically created pages here.
             pages = grunt.config.get('assemble.custom.options.pages');
+
             if (pages) {
                 for (page in pages) {
                     if (pages.hasOwnProperty(page)) {
@@ -358,7 +494,7 @@ module.exports = function (grunt) {
 
             // Sort alphabetically ensures that parents are created first.
             // This is crucial to this process.  We can sort by order below.
-            sort(sorted, true, 'subdir', '');
+            utils.sort(sorted, true, 'subdir', '');
 
             nav_exclude = grunt.config.get('stache.config.nav_exclude') || [];
             sandcastlePath = '';
@@ -389,8 +525,8 @@ module.exports = function (grunt) {
                 item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
                 item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
                 item.showInSearch = typeof item.showInSearch !== 'undefined' ? item.showInSearch : true;
-                item.breadcrumbs = item.breadcrumbs || (subdir ? createTitle(subdir, separator, true) : home);
-                item.name = grunt.config.process(item.name || (subdir ? createTitle(subdir, separator, false) : home));
+                item.breadcrumbs = item.breadcrumbs || (subdir ? utils.createTitle(subdir, separator, true) : home);
+                item.name = grunt.config.process(item.name || (subdir ? utils.createTitle(subdir, separator, false) : home));
                 item.abspath = el.abspath;
 
                 // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
@@ -477,358 +613,434 @@ module.exports = function (grunt) {
             });
 
             // Now we can rearrange each item according to order
-            sortRecursive(root + navKey, true);
+            utils.sortRecursive(root + navKey, true);
+        },
+
+        expandFileMappings: function () {
+            var blob,
+                destinationFile,
+                file,
+                files,
+                filesConfig,
+                i,
+                len,
+                skip;
+
+            blob = [];
+            skip = grunt.config.get('clean.pages');
+            filesConfig = grunt.config.get('assemble.defaults.files.0');
+            files = grunt.file.expand(filesConfig, filesConfig.src);
+            len = files.length;
+
+            for (i = 0; i < len; ++i) {
+                file = files[i];
+                destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
+                blob.push({
+                    src: '<%= stache.config.content %>' + file,
+                    dest: destinationFile
+                });
+                skip.push('!' + destinationFile);
+            }
+
+            grunt.config.set('assemble.site.files', blob);
+            grunt.config.set('clean.newer', skip);
+        },
+
+        /**
+         * Internal task to control header logging.
+         *
+         * @param [boolean] toggle
+         */
+        header: function (toggle) {
+            grunt.log.header = (toggle.toString() === 'true') ? header : function () {};
+        },
+
+        /**
+         * Executes a list of registered Grunt tasks at a certain time in the build
+         * process. For example, to execute a task before pages are assembled, you would
+         * first add the task's name to stache.hooks.preAssemble. Then, you would run
+         * the task 'hook:assemble:pre'.
+         *
+         * @param [] where
+         * @param [] when
+         */
+        hook: function (where, when) {
+            var tasks = grunt.config.get('stache.hooks.' + when + utils.capitalizeFirstLetter(where));
+            if (tasks) {
+                grunt.task.run(tasks);
+            }
+        },
+
+        /**
+         * Prepares the JSON for our search implementation.
+         */
+        prepareSearch: function () {
+            var status = grunt.config.get('stache.status'),
+                searchContentToRemove = grunt.config.get('stache.searchContentToRemove'),
+                search = [],
+                item,
+                file,
+                html,
+                content,
+                i,
+                j,
+                $$;
+
+            function remove(selector) {
+                $$(selector).remove();
+            }
+
+            for (i = 0, j = navSearchFiles.length; i < j; i++) {
+                if (!navSearchFiles[i].showInSearch) {
+                    grunt.log.writeln('Ignoring from search: ' + navSearchFiles[i].uri);
+                } else {
+
+                    item = navSearchFiles[i];
+                    file = status + item.uri;
+
+                    if (grunt.file.isDir(file)) {
+                        file += 'index.html';
+                    }
+
+                    $$ = cheerio.load(grunt.file.read(file, 'utf8'));
+
+                    // Nav links just clutter everything up
+                    if (grunt.util.kindOf(searchContentToRemove) === 'array') {
+                        searchContentToRemove.forEach(remove);
+                    }
+
+                    // Try specifically reading the content div
+                    // Default to body if a content div doesn't exist
+                    content = $$('.content');
+                    if (content.length === 0) {
+                        content = $$('body');
+                    }
+
+                    // Trim the text
+                    item.text = content.text().replace(/\s{2,}/g, ' ');
+
+                    // Save the result
+                    search.push(item);
+                }
+            }
+
+            grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }, null, ' '));
+        },
+
+        stache: function (optionalTask) {
+            var key = '_tasks',
+                task = optionalTask || 'help';
+            if (grunt.task[key][task]) {
+                grunt.task.run(task);
+            } else {
+                grunt.fail.fatal('Unknown command requested: ' + task);
+            }
+        },
+
+        stacheBuild: function (scope) {
+            var tasks = [];
+            switch (scope) {
+            case 'newer':
+                tasks = [
+                    'hook:stache:pre',
+                    'status:build',
+                    'expandMappings',
+                    'clean:newer',
+                    'createAutoPages',
+                    'createAutoNav',
+                    'hook:assemble:pre',
+                    'newer:assemble:site',
+                    'hook:assemble:post',
+                    'prepareSearch',
+                    'copy:build',
+                    'hook:stache:post',
+                ];
+                grunt.log.writeln("Stache is set to rebuild only those pages that have changed. (To rebuild the entire site, type `stache build`.)");
+            break;
+            case 'all':
+            default:
+                tasks = [
+                    'hook:stache:pre',
+                    'status:build',
+                    'expandMappings',
+                    'clean:build',
+                    'createAutoPages',
+                    'createAutoNav',
+                    'hook:assemble:pre',
+                    'assemble:site',
+                    'hook:assemble:post',
+                    'prepareSearch',
+                    'useminPrepare',
+                    'concat:generated',
+                    'uglify:generated',
+                    'usemin',
+                    'copy:build',
+                    'hook:stache:post',
+                ];
+                grunt.log.writeln("Stache is set to rebuild the entire site. (To rebuild only those pages that have changed, type `stache build:newer`.)");
+            break;
+            }
+            grunt.task.run(tasks);
+        },
+
+        stacheServe: function (scope) {
+            var tasks = [];
+            switch (scope) {
+            case 'newer':
+                tasks = [
+                    'hook:stache:pre',
+                    'status:serve',
+                    'expandMappings',
+                    'clean:newer',
+                    'copy:build',
+                    'createAutoPages',
+                    'createAutoNav',
+                    'hook:assemble:pre',
+                    'newer:assemble:site',
+                    'hook:assemble:post',
+                    'prepareSearch',
+                    'connect',
+                    'watch',
+                    'hook:stache:post'
+                ];
+                grunt.log.writeln("Stache is set to rebuild only those pages that have changed. (To rebuild the entire site, type `stache build`.)");
+            break;
+            case 'all':
+            default:
+                tasks = [
+                    'hook:stache:pre',
+                    'status:serve',
+                    'expandMappings',
+                    'clean:build',
+                    'copy:build',
+                    'createAutoPages',
+                    'createAutoNav',
+                    'hook:assemble:pre',
+                    'assemble:site',
+                    'hook:assemble:post',
+                    'prepareSearch',
+                    'connect',
+                    'watch',
+                    'hook:stache:post'
+                ];
+                grunt.log.writeln("Stache is set to rebuild the entire site. (To rebuild only those pages that have changed, type `stache build:newer`.)");
+            break;
+            }
+            grunt.task.run(tasks);
+        },
+
+        /**
+         * Sets current build/serve status.
+         * Doesn't overwrite previous status (allows for external builds).
+         *
+         * @param [string] status - build or serve
+         */
+        status: function (status) {
+            var key = 'stache.status';
+            if (grunt.config.get(key) === '') {
+                grunt.config.set(key, status);
+            }
+        }
+    };
+
+    utils = {
+
+        capitalizeFirstLetter: function (str) {
+            str = str.toString();
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        },
+
+        createTitle: function (name, separator, isBreadcrumbs) {
+            var output = '',
+                parts = name.indexOf('/') > -1 ? name.split('/') : [name];
+
+            if (!isBreadcrumbs) {
+                parts = parts.slice(-1);
+            }
+
+            parts.forEach(function (el, idx) {
+                output += el[0].toUpperCase() + el.slice(1) + separator;
+            });
+            output = output.slice(0, 0 - separator.length);
+
+            return output;
+        },
+
+        /**
+         * Merges local and global Stache YAML files into defaults.stache.config.
+         */
+        extendStacheConfig: function () {
+            var configFileString,
+                localConfig,
+                stacheConfig;
+
+            configFileString = grunt.option('config') || '';
+            localConfig = {};
+            stacheConfig = {};
+
+            // Expand local Stache YAML files into workable object, if they exist.
+            // (These files may have been supplied via '--config=my-config.yml'.)
+            if (configFileString !== '') {
+
+                // Multiple config files specified.
+                if (configFileString.indexOf(',') > -1) {
+                    configFileString.split(',').forEach(function (file) {
+                        if (grunt.file.exists(file)) {
+                            grunt.log.writeln('Importing config file ' + file);
+                            localConfig = merge(localConfig, grunt.file.readYAML(file));
+                        } else {
+                            grunt.log.writeln('Error importing config file ' + file);
+                        }
+                    });
+
+                }
+
+                // Only one file specified.
+                else if (grunt.file.exists(configFileString)) {
+                    grunt.log.writeln('Importing config file ' + configFileString);
+                    localConfig = grunt.file.readYAML(configFileString);
+                }
+
+                // The file does not exist.
+                else {
+                    grunt.log.error("The config file " + configFileString + " does not exist!");
+                }
+            }
+
+            // Expand default local Stache YAML file into workable object, if it exists.
+            else if (grunt.file.exists(defaults.stache.pathConfig)) {
+                grunt.log.writeln('Defaulting to config file ' + defaults.stache.pathConfig);
+                localConfig = grunt.file.readYAML(defaults.stache.pathConfig);
+            }
+
+            // Expand global Stache YAML file into workable object.
+            if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathConfig)) {
+                stacheConfig = grunt.file.readYAML(defaults.stache.dir + defaults.stache.pathConfig);
+            }
+
+            // Merge global and local Stache config objects.
+            defaults.stache.config = merge(stacheConfig, localConfig);
+            return defaults.stache.config;
+        },
+
+        slugify: function (title) {
+            if (typeof title === 'string') {
+                title = title
+                    .toLowerCase()
+                    .replace(/ /g, '-')
+                    .replace(/[^\w-]+/g, '');
+            }
+            return title;
+        },
+
+        slugifyHeaders: function (html) {
+            var $html = cheerio(html);
+
+            // Require all heading tags to have id attribute
+            cheerio('h1, h2, h3, h4, h5, h6', $html).each(function () {
+                var el = cheerio(this),
+                    id = el.attr('id'),
+                    after;
+                if (typeof id === 'undefined' || id === '') {
+                    el.attr('id', utils.slugify(el.text()));
+                }
+            });
+
+            return cheerio.html($html);
+        },
+
+        sort: function (arr, sortAscending, prop, propDefault, propIfEqual) {
+            arr.sort(function (a, b) {
+                var ap = a[prop] || propDefault,
+                    bp = b[prop] || propDefault;
+
+                if (ap === bp && typeof propIfEqual !== 'undefined' && propIfEqual !== '') {
+                    ap = a[propIfEqual];
+                    bp = b[propIfEqual];
+                }
+
+                return utils.sortInner(ap, bp, sortAscending);
+            });
+        },
+
+        sortInner: function (a, b, sortAscending) {
+            if (a < b) {
+                return sortAscending ? -1 : 1;
+            } else if (a > b) {
+                return sortAscending ? 1 : -1;
+            } else {
+                return 0;
+            }
+        },
+
+        sortRecursive: function (key, sortAscending) {
+            var nav_links = grunt.config.get(key);
+            utils.sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100, 'name');
+            grunt.config.set(key, nav_links);
+            nav_links.forEach(function (el, idx) {
+                if (el.nav_links) {
+                    utils.sortRecursive(key + '.' + idx + '.nav_links', sortAscending);
+                }
+            });
         }
     };
 
     /**
-    ****************************************************************
-    * PRIVATE METHODS
-    ****************************************************************
-    **/
-
-    function slugifyHeaders(html) {
-        var $html = cheerio(html);
-
-        // Require all heading tags to have id attribute
-        cheerio('h1, h2, h3, h4, h5, h6', $html).each(function () {
-            var el = cheerio(this),
-                id = el.attr('id'),
-                after;
-            if (typeof id === 'undefined' || id === '') {
-                el.attr('id', slugify(el.text()));
-            }
-        });
-
-        return cheerio.html($html);
-    }
-
-    function slugify(title) {
-        if (typeof title === 'string') {
-            title = title
-                .toLowerCase()
-                .replace(/ /g, '-')
-                .replace(/[^\w-]+/g, '');
-        }
-        return title;
-    }
-
-    function createTitle(name, separator, isBreadcrumbs) {
-        var output = '',
-            parts = name.indexOf('/') > -1 ? name.split('/') : [name];
-
-        if (!isBreadcrumbs) {
-            parts = parts.slice(-1);
-        }
-
-        parts.forEach(function (el, idx) {
-            output += el[0].toUpperCase() + el.slice(1) + separator;
-        });
-        output = output.slice(0, 0 - separator.length);
-
-        return output;
-    }
-
-    function sort(arr, sortAscending, prop, propDefault, propIfEqual) {
-        arr.sort(function (a, b) {
-            var ap = a[prop] || propDefault,
-                bp = b[prop] || propDefault;
-
-            if (ap === bp && typeof propIfEqual !== 'undefined' && propIfEqual !== '') {
-                ap = a[propIfEqual];
-                bp = b[propIfEqual];
-            }
-
-            return sortInner(ap, bp, sortAscending);
-        });
-    }
-
-    function sortInner(a, b, sortAscending) {
-        if (a < b) {
-            return sortAscending ? -1 : 1;
-        } else if (a > b) {
-            return sortAscending ? 1 : -1;
-        } else {
-            return 0;
-        }
-    }
-
-    function sortRecursive(key, sortAscending) {
-        var nav_links = grunt.config.get(key);
-        sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100, 'name');
-        grunt.config.set(key, nav_links);
-        nav_links.forEach(function (el, idx) {
-            if (el.nav_links) {
-                sortRecursive(key + '.' + idx + '.nav_links', sortAscending);
-            }
-        });
-    }
-
-    /**
-    ****************************************************************
-    * PRIVATE TASKS
-    ****************************************************************
-    **/
-
-    // Internal task - sets current build/serve status
-    // Doesn't overwrite previous status (allows for external builds)
-    grunt.registerTask('status', function (status) {
-        var key = 'stache.status';
-        if (grunt.config.get(key) === '') {
-            grunt.config.set(key, status);
-        }
-    });
-
-    // Internal task to control header logging
-    grunt.registerTask('header', function (toggle) {
-        grunt.log.header = (toggle.toString() === 'true') ? header : function () {};
-    });
-
-    // Creates pages from jsdoc and sandcastle
-    grunt.registerTask('createAutoPages', function () {
-        var pages = {},
-            found = false,
-            processStacheCastleSingleNode = function (page, node, parents, siblings) {
-                var parentsToSend,
-                    siblingsToSend;
-
-                // Create the page for assemble to make
-                node.layout = 'layout-' + page.type;
-                node.parents = parents;
-
-                // Only add siblings if there are no more children (mirros Sandcastle output)
-                if (!node.HelpTOCNode && siblings) {
-                    siblingsToSend = [];
-                    siblings.forEach(function (sibling) {
-                        siblingsToSend.push({
-                            Title: sibling.Title,
-                            Url: sibling.Url
-                        });
-                    });
-                    node.siblings = siblingsToSend;
-                }
-
-                // Assemble expects the index to the where the page would exist
-                pages[node.Url.replace('.htm', '/index.md').replace('html/', page.dest)] = {
-                    type: page.type,
-                    data: node
-                };
-
-                // Recursively keep looking for pages
-                if (node.HelpTOCNode) {
-                    parentsToSend = parents.slice(0);
-                    parentsToSend.push({
-                        Title: node.Title,
-                        Url: node.Url
-                    });
-                    processStacheCastleMultipleNodes(page, node.HelpTOCNode, parentsToSend);
-                }
-            },
-            processStacheCastleMultipleNodes = function (page, node, parents) {
-                if (node) {
-                    if (node.length > 0) {
-                        node.forEach(function (v, idx) {
-                            processStacheCastleSingleNode(page, v, parents, node);
-                        });
-                    } else {
-                        processStacheCastleSingleNode(page, node, parents);
-                    }
-                }
-            };
-
-        grunt.config.get('stache.pages').forEach(function (page) {
-            var json,
-                i,
-                j;
-
-            if (page.url) {
-                if (grunt.file.exists(page.url)) {
-                    found = true;
-                    json = grunt.file.readJSON(page.url);
-                    switch (page.type) {
-                        case 'jsdoc':
-                            for (i = 0, j = json.length; i < j; i++) {
-                                json[i].layout = 'layout-' + page.type;
-                                pages[page.dest + json[i].key + '/index.md'] = {
-                                    data: json[i]
-                                };
-                            }
-                        break;
-                        case 'sandcastle':
-                            processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
-                        break;
-                        case 'powershell':
-                            json = json.cmdlet;
-                            for (i = 0, j = json.length; i < j; i++) {
-                                json[i].layout = 'layout-' + page.type;
-                                pages[page.dest + json[i].name + '/index.md'] = {
-                                    data: json[i]
-                                };
-                            }
-                        break;
-                        default:
-                            grunt.log.writeln('Unknown custom page datatype.');
-                        break;
-                    }
-                }
-            } else {
-                grunt.log.error('"url" is required for each item in "stache.pages."');
-            }
-        });
-
-        // Assemble requires even dummy files to run this task
-        if (found) {
-            grunt.config.set('assemble.custom', {
-                options: {
-                    pages: pages
-                },
-                files: [{
-                    dest: '<%= stache.config.build %>',
-                    src: 'noop'
-                }]
-            });
-        }
-    });
-
-    // Creates nav to mirror directory structure
+     * Private Tasks
+     * These tasks will be used by stache, but not available for end-user consumption.
+     */
+    grunt.registerTask('createAutoPages', tasks.createAutoPages);
     grunt.registerTask('createAutoNav', tasks.createAutoNav);
-
-    // Looks for preStacheHooks and postStacheHooks in config
-    grunt.registerTask('stacheHooks', function (context) {
-        var hooks = grunt.config.get('stache.' + context + 'StacheHooks');
-        if (hooks) {
-            grunt.task.run(hooks);
-        }
-    });
-
-    // Looks for preAssembleHooks and postAssembleHooks in config
-    grunt.registerTask('assembleHooks', function (context) {
-        var hooks = grunt.config.get('stache.' + context + 'AssembleHooks');
-        if (hooks) {
-            grunt.task.run(hooks);
-        }
-    });
-
-    // Prepare the JSON for our search implementation
-    grunt.registerTask('prepareSearch', function () {
-        var status = grunt.config.get('stache.status'),
-            searchContentToRemove = grunt.config.get('stache.searchContentToRemove'),
-            search = [],
-            item,
-            file,
-            html,
-            content,
-            i,
-            j,
-            $$;
-
-        function remove(selector) {
-            $$(selector).remove();
-        }
-
-        for (i = 0, j = navSearchFiles.length; i < j; i++) {
-            if (!navSearchFiles[i].showInSearch) {
-                grunt.log.writeln('Ignoring from search: ' + navSearchFiles[i].uri);
-            } else {
-
-                item = navSearchFiles[i];
-                file = status + item.uri;
-
-                if (grunt.file.isDir(file)) {
-                    file += 'index.html';
-                }
-
-                $$ = cheerio.load(grunt.file.read(file, 'utf8'));
-
-                // Nav links just clutter everything up
-                if (grunt.util.kindOf(searchContentToRemove) === 'array') {
-                    searchContentToRemove.forEach(remove);
-                }
-
-                // Try specifically reading the content div
-                // Default to body if a content div doesn't exist
-                content = $$('.content');
-                if (content.length === 0) {
-                    content = $$('body');
-                }
-
-                // Trim the text
-                item.text = content.text().replace(/\s{2,}/g, ' ');
-
-                // Save the result
-                search.push(item);
-            }
-        }
-
-        grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }, null, ' '));
-    });
+    grunt.registerTask('expandMappings', tasks.expandFileMappings);
+    grunt.registerTask('header', tasks.header);
+    grunt.registerTask('hook', tasks.hook);
+    grunt.registerTask('prepareSearch', tasks.prepareSearch);
+    grunt.registerTask('status', tasks.status);
 
     /**
-    ****************************************************************
-    * PUBLIC TASKS
-    ****************************************************************
-    **/
+     * Public Tasks
+     * These tasks will be made available to end users of Stache.
+     */
 
+    // Bash command: stache [task]
+    grunt.registerTask('stache', tasks.stache);
+
+    // Bash command: stache build
     grunt.registerTask(
         'build',
         'Build the documentation',
-        [
-            'stacheHooks:pre',
-            'status:build',
-            'clean',
-            'createAutoPages',
-            'createAutoNav',
-            'assembleHooks:pre',
-            'assemble',
-            'assembleHooks:post',
-            'prepareSearch',
-            'useminPrepare',
-            'concat:generated',
-            'uglify:generated',
-            'usemin',
-            //'htmlmin:build',
-            'copy:build',
-            'stacheHooks:post'
-        ]
+        tasks.stacheBuild
     );
 
+    // Bash command: stache help
     grunt.registerTask(
         'help',
         'Display this help message.',
         [
             'asciify:help',
-            'availabletasks'
+            'availableTasks'
         ]
     );
 
-    // This method is registered here in order to show up in the available tasks help screen.
-    // It's defined in the blackbaud-stache-cli package though.
+    /**
+     * Bash command: stache new
+     * This task is registered here in order to show up in the available
+     * tasks help screen. (It's defined in the blackbaud-stache-cli package.)
+     */
     grunt.registerTask(
         'new',
         'Create a new site using the STACHE boilerplate.',
         function () {}
     );
 
+    // Bash command: stache serve
     grunt.registerTask(
         'serve',
         'Serve the documentation',
-        [
-            'stacheHooks:pre',
-            'status:serve',
-            'clean',
-            'copy:build',
-            'createAutoPages',
-            'createAutoNav',
-            'assembleHooks:pre',
-            'assemble',
-            'assembleHooks:post',
-            'prepareSearch',
-            'connect',
-            'watch',
-            'stacheHooks:post'
-        ]
+        tasks.stacheServe
     );
 
+    // Bash command: stache version
     grunt.registerTask(
         'version',
         'Display the current installed stache version.',
@@ -837,72 +1049,25 @@ module.exports = function (grunt) {
         }
     );
 
-    grunt.registerTask('stache', function (optionalTask) {
-        var key = '_tasks',
-            task = optionalTask || 'help';
-        if (grunt.task[key][task]) {
-            grunt.task.run(task);
-        } else {
-            grunt.fail.fatal('Unknown command requested: ' + task);
-        }
-    });
+    // Merge local and global Stache config.
+    utils.extendStacheConfig();
 
-    /**
-    ****************************************************************
-    * CONSTRUCTOR
-    ****************************************************************
-    **/
-
-    // Read local files
-    if (optionConfig !== '') {
-
-        // Multiple config files specified
-        if (optionConfig.indexOf(',') > -1) {
-            optionConfigArray = optionConfig.split(',');
-            optionConfigArray.forEach(function (file) {
-                if (grunt.file.exists(file)) {
-                    grunt.log.writeln('Importing config file ' + file);
-                    localConfig = merge(localConfig, grunt.file.readYAML(file));
-                } else {
-                    grunt.log.writeln('Error importing config file ' + file);
-                }
-            });
-        } else if (grunt.file.exists(optionConfig)) {
-            grunt.log.writeln('Importing config file ' + optionConfig);
-            localConfig = grunt.file.readYAML(optionConfig);
-        }
-
-    // Read default local file, if it exists
-    } else if (grunt.file.exists(defaults.stache.pathConfig)) {
-        grunt.log.writeln('Defaulting to config file ' + defaults.stache.pathConfig);
-        localConfig = grunt.file.readYAML(defaults.stache.pathConfig);
-    }
-
-    // Add package info to stache
-    if (grunt.file.exists(defaults.stache.pathPackage)) {
-        defaults.stache.package = grunt.file.readJSON(defaults.stache.pathPackage);
-    }
-
-    // Read stache files
-    if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathConfig)) {
-        stacheConfig = grunt.file.readYAML(defaults.stache.dir + defaults.stache.pathConfig);
-    }
-
-    defaults.stache.config = merge(stacheConfig, localConfig);
+    // Merge options and defaults for the entire project.
     grunt.config.merge(defaults);
 
-    // Dynamically load our modules
-    require('jit-grunt')(grunt, {
+    // Dynamically load any NPM modules (some require static mappings).
+    jit(grunt, {
         usemin: 'grunt-usemin',
         useminPrepare: 'grunt-usemin',
-        availabletasks: 'grunt-available-tasks',
+        availableTasks: 'grunt-available-tasks',
         'sass-blackbaud': 'grunt-sass'
     })({
         pluginsRoot: defaults.stache.dir + 'node_modules/'
     });
 
+    // Expose certain things for testing purposes.
     return {
-        tasks: tasks
+        tasks: tasks,
+        utils: utils
     };
-
 };

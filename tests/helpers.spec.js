@@ -13,9 +13,9 @@
 
     fs = require('fs');
     grunt = require('grunt');
-    stache = require('../../../tasks/stache.js')(grunt);
+    stache = require('../tasks/stache.js')(grunt);
     Handlebars = require('handlebars');
-    helpers = require('../helpers.js');
+    helpers = require('../src/helpers/helpers.js');
     Log = require('log');
     log = new Log('info');
 
@@ -37,7 +37,7 @@
     stache.tasks.createAutoNav();
 
     // Run the register method to retrieve our custom helpers.
-    helpers.register(Handlebars, {}, { assemble: grunt.config.get('assemble') });
+    helpers.register(Handlebars, {}, { assemble: grunt.config.get('assemble.site') });
 
     /**
      * Returns the first link in 'nav_links' that is not the home page.
@@ -77,7 +77,7 @@
     /**
      * Handlebars.helpers
      */
-    describe('helpers', function () {
+    describe('Handlebars Helpers', function () {
         describe('extendRootOptions()', function () {
 
             // Represents 'this' inside a Handlebars helper function.
@@ -138,7 +138,7 @@
                 hash = hash || {};
 
                 return Handlebars.helpers.include(
-                    'src/helpers/test/fixtures/' + file,
+                    'tests/fixtures/' + file,
                     {},
                     {
                         hash: hash
@@ -188,7 +188,7 @@
 
                 src = [
                     '{{# minify collapseWhitespace=true }}',
-                    readFile('src/helpers/test/fixtures/multiline.html'),
+                    readFile('tests/fixtures/multiline.html'),
                     '{{/ minify }}'
                 ].join('\n');
                 content = Handlebars.compile(src)();
@@ -203,7 +203,7 @@
                 page: {
                     dirname: '/root/sample-parent/sample-child/sample-grandchild'
                 },
-                template: readFile('src/helpers/test/fixtures/partial-breadcrumbs.html')
+                template: readFile('tests/fixtures/partial-breadcrumbs.html')
             };
 
             /**
@@ -324,7 +324,7 @@
     /**
      * Utilities
      */
-    describe('helpers.utils', function () {
+    describe('Handlebars Utilities', function () {
         describe('concatArray()', function () {
             it('should append the second array to the first', function () {
                 var arr1,

@@ -14,18 +14,35 @@
 
 module.exports.register = function (Handlebars, options, params) {
 
-    var bypassContext = params.assemble.options.getBypassContext(),
-        stache = params.assemble.options.stache,
-        merge = require('merge'),
-        cheerio = require('cheerio'),
-        fs = require('fs'),
-        marked = require('marked'),
-        minify = require('html-minifier').minify,
-        UglifyJS = require('uglify-js'),
-        renderer = new marked.Renderer(),
-        lexer = new marked.Lexer(),
-        counts = {},
-        utils;
+    var bypassContext,
+        stache,
+        merge,
+        cheerio,
+        fs,
+        marked,
+        minify,
+        UglifyJS,
+        renderer,
+        lexer,
+        counts,
+        utils,
+        Log,
+        log;
+
+    Log = require('log');
+    log = new Log('info');
+
+    bypassContext = params.assemble.options.getBypassContext();
+    stache = params.assemble.options.stache;
+    merge = require('merge');
+    cheerio = require('cheerio');
+    fs = require('fs');
+    marked = require('marked');
+    minify = require('html-minifier').minify;
+    UglifyJS = require('uglify-js');
+    renderer = new marked.Renderer();
+    lexer = new marked.Lexer();
+    counts = {};
 
     lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
@@ -995,8 +1012,8 @@ module.exports.register = function (Handlebars, options, params) {
         **/
         stachePostProcess: function (options) {
             var html = options.fn(this);
-            if (stache.postHandlebarsHooks && stache.postHandlebarsHooks.length > 0) {
-                stache.postHandlebarsHooks.forEach(function (hook) {
+            if (stache.filters.postHandlebars && stache.filters.postHandlebars.length > 0) {
+                stache.filters.postHandlebars.forEach(function (hook) {
                     html = hook(html);
                 });
             }
