@@ -286,9 +286,9 @@ module.exports = function (grunt) {
                     'clean:newer',
                     'createAutoPages',
                     'createAutoNav',
-                    'hook:assemble:pre',
+                    'hook:preAssemble',
                     'newer:assemble:site',
-                    'hook:assemble:post',
+                    'hook:postAssemble',
                     'copy:build'
                 ]
             },
@@ -303,9 +303,9 @@ module.exports = function (grunt) {
                     'clean:build',
                     'createAutoPages',
                     'createAutoNav',
-                    'hook:assemble:pre',
+                    'hook:preAssemble',
                     'assemble:site',
-                    'hook:assemble:post',
+                    'hook:postAssemble',
                     'copy:build'
                 ]
             }
@@ -644,6 +644,8 @@ module.exports = function (grunt) {
 
             grunt.config.set('assemble.site.files', blob);
             grunt.config.set('clean.newer', skip);
+
+            return blob;
         },
 
         /**
@@ -659,15 +661,33 @@ module.exports = function (grunt) {
          * Executes a list of registered Grunt tasks at a certain time in the build
          * process. For example, to execute a task before pages are assembled, you would
          * first add the task's name to stache.hooks.preAssemble. Then, you would run
-         * the task 'hook:assemble:pre'.
+         * the task 'hook:preAssemble'.
          *
-         * @param [] where
-         * @param [] when
+         * @param [string] name - the name of the hook to execute
          */
-        hook: function (where, when) {
-            var tasks = grunt.config.get('stache.hooks.' + when + utils.capitalizeFirstLetter(where));
-            if (tasks) {
-                grunt.task.run(tasks);
+        hook: function (name) {
+            var i,
+                len,
+                tasks,
+                temp;
+
+            temp = grunt.config.get('stache.hooks.' + name);
+            tasks = [];
+
+            if (temp) {
+                // It's an array; let's check that the tasks exist.
+                if (!temp.push || !temp.pop) {
+                    temp = [temp];
+                }
+                len = temp.length;
+                for (i = 0; i < len; ++i) {
+                    if (grunt.task.exists(temp[i])) {
+                        tasks.push(temp[i]);
+                    }
+                }
+                if (tasks.length) {
+                    grunt.task.run(tasks);
+                }
             }
         },
 
@@ -742,42 +762,42 @@ module.exports = function (grunt) {
             switch (scope) {
             case 'newer':
                 tasks = [
-                    'hook:stache:pre',
+                    'hook:preStache',
                     'status:build',
-                    'expandMappings',
+                    'expandFileMappings',
                     'clean:newer',
                     'createAutoPages',
                     'createAutoNav',
-                    'hook:assemble:pre',
+                    'hook:preAssemble',
                     'newer:assemble:site',
-                    'hook:assemble:post',
+                    'hook:postAssemble',
                     'prepareSearch',
                     'copy:build',
-                    'hook:stache:post',
+                    'hook:postStache',
                 ];
-                grunt.log.writeln("Stache is set to rebuild only those pages that have changed. (To rebuild the entire site, type `stache build`.)");
+                grunt.log.writeln("Stache is only rebuilding pages that have changed. (To rebuild the entire site, type `stache build`.)");
             break;
             case 'all':
             default:
                 tasks = [
-                    'hook:stache:pre',
+                    'hook:preStache',
                     'status:build',
-                    'expandMappings',
+                    'expandFileMappings',
                     'clean:build',
                     'createAutoPages',
                     'createAutoNav',
-                    'hook:assemble:pre',
+                    'hook:preAssemble',
                     'assemble:site',
-                    'hook:assemble:post',
+                    'hook:postAssemble',
                     'prepareSearch',
                     'useminPrepare',
                     'concat:generated',
                     'uglify:generated',
                     'usemin',
                     'copy:build',
-                    'hook:stache:post',
+                    'hook:postStache',
                 ];
-                grunt.log.writeln("Stache is set to rebuild the entire site. (To rebuild only those pages that have changed, type `stache build:newer`.)");
+                grunt.log.writeln("Stache is rebuilding the entire site. (To rebuild only those pages that have changed, type `stache build:newer`.)");
             break;
             }
             grunt.task.run(tasks);
@@ -788,42 +808,42 @@ module.exports = function (grunt) {
             switch (scope) {
             case 'newer':
                 tasks = [
-                    'hook:stache:pre',
+                    'hook:preStache',
                     'status:serve',
-                    'expandMappings',
+                    'expandFileMappings',
                     'clean:newer',
                     'copy:build',
                     'createAutoPages',
                     'createAutoNav',
-                    'hook:assemble:pre',
+                    'hook:preAssemble',
                     'newer:assemble:site',
-                    'hook:assemble:post',
+                    'hook:postAssemble',
                     'prepareSearch',
                     'connect',
                     'watch',
-                    'hook:stache:post'
+                    'hook:postStache'
                 ];
-                grunt.log.writeln("Stache is set to rebuild only those pages that have changed. (To rebuild the entire site, type `stache build`.)");
+                grunt.log.writeln("Stache is set to rebuild only those pages that have changed. (To rebuild the entire site, type `stache serve`.)");
             break;
             case 'all':
             default:
                 tasks = [
-                    'hook:stache:pre',
+                    'hook:preStache',
                     'status:serve',
-                    'expandMappings',
+                    'expandFileMappings',
                     'clean:build',
                     'copy:build',
                     'createAutoPages',
                     'createAutoNav',
-                    'hook:assemble:pre',
+                    'hook:preAssemble',
                     'assemble:site',
-                    'hook:assemble:post',
+                    'hook:postAssemble',
                     'prepareSearch',
                     'connect',
                     'watch',
-                    'hook:stache:post'
+                    'hook:postStache'
                 ];
-                grunt.log.writeln("Stache is set to rebuild the entire site. (To rebuild only those pages that have changed, type `stache build:newer`.)");
+                grunt.log.writeln("Stache is set to rebuild the entire site when content files change. (To rebuild only those pages that have changed, type `stache serve:newer`.)");
             break;
             }
             grunt.task.run(tasks);
@@ -844,12 +864,6 @@ module.exports = function (grunt) {
     };
 
     utils = {
-
-        capitalizeFirstLetter: function (str) {
-            str = str.toString();
-            return str.charAt(0).toUpperCase() + str.slice(1);
-        },
-
         createTitle: function (name, separator, isBreadcrumbs) {
             var output = '',
                 parts = name.indexOf('/') > -1 ? name.split('/') : [name];
@@ -991,7 +1005,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('createAutoPages', tasks.createAutoPages);
     grunt.registerTask('createAutoNav', tasks.createAutoNav);
-    grunt.registerTask('expandMappings', tasks.expandFileMappings);
+    grunt.registerTask('expandFileMappings', tasks.expandFileMappings);
     grunt.registerTask('header', tasks.header);
     grunt.registerTask('hook', tasks.hook);
     grunt.registerTask('prepareSearch', tasks.prepareSearch);
