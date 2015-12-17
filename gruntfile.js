@@ -99,6 +99,7 @@ module.exports = function (grunt) {
     grunt.task.registerTask('test', [
         'jscs',
         'jshint',
+        'build',
         'jasmine_node'
     ]);
     grunt.task.registerTask('default', 'build');

@@ -5,8 +5,10 @@ node_js:
 # Install a few additional things outside those listed in package.json
 before_script:
   - npm install -g grunt-cli
+  - npm install -g bower
+  - bower install
 
 # Only run for pull requests and pushes to master
 branches:
   only:
-    - master  
+    - master
