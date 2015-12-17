@@ -53,7 +53,7 @@ module.exports = function (grunt) {
             // Used to determine file locations, build or serve.
             // This means when a user calls build or serve, the assembled files
             // will go into build or serve folder.
-            status: 'build',
+            status: '',
 
             // Path to local configuration file.
             pathConfig: 'stache.yml',
@@ -642,19 +642,17 @@ module.exports = function (grunt) {
                 filesConfig,
                 i,
                 len,
-                skip,
-                status;
+                skip;
 
             mappings = [];
             skip = grunt.config.get('clean.pages');
             filesConfig = grunt.config.get('assemble.defaults.files.0');
             files = grunt.file.expand(filesConfig, filesConfig.src);
             len = files.length;
-            status = grunt.config.get('stache.status');
 
             for (i = 0; i < len; ++i) {
                 file = files[i];
-                destinationFile = status + '/' + file.substring(0, file.lastIndexOf(".")) + '.html';
+                destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
                 mappings.push({
                     src: '<%= stache.config.content %>' + file,
                     dest: destinationFile
@@ -686,15 +684,42 @@ module.exports = function (grunt) {
          * @param [string] name - the name of the hook to execute
          */
         hook: function (name) {
-            var i,
+            var depreciatedHooks,
+                d1,
+                d2,
+                dhook,
+                d1len,
+                d2len,
+                i,
                 len,
                 tasks,
                 temp;
 
-            temp = grunt.config.get('stache.hooks.' + name);
             tasks = [];
+            temp = grunt.config.get('stache.hooks.' + name);
 
+            // Depreciated hooks:
+            depreciatedHooks = [
+                'preStacheHooks',
+                'postStacheHooks',
+                'preAssembleHooks',
+                'postAssembleHooks'
+            ];
+            for (d1 = 0, d1len = depreciatedHooks.length; d1 < d1len; ++d1) {
+                dhook = grunt.config.get('stache.' + depreciatedHooks[d1]);
+                if (dhook) {
+                    if (temp.push && temp.pop) {
+                        for (d2 = 0, d2len = dhook.length; d2 < d2len; ++d2) {
+                            temp.push(dhook[d2]);
+                        }
+                    }
+                    temp.push(dhook);
+                }
+            }
+
+            // If any hooks exist, add them to the tasks list and execute them.
             if (temp) {
+
                 // It's an array; let's check that the tasks exist.
                 if (!temp.push || !temp.pop) {
                     temp = [temp];
