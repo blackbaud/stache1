@@ -272,19 +272,36 @@ module.exports = function (grunt) {
             html: '<%= stache.config.build %>**/*.html'
         },
 
-        // When serving, watch for file changes
-        watch: {
-            options: {
-                livereload: grunt.option('livereload') || '<%= stache.config.livereload %>'
-            },
-            pages: {
+        // When serving, watch for changes.
+        watch: (function () {
+            var core,
+                pages;
+
+            core = {
+                files: [
+                    '<%= stache.config.includes %>**/*.*',
+                    'stache.yml'
+                ],
+                tasks: [
+                    'status:serve',
+                    'clean:build',
+                    'expandFileMappings',
+                    'createAutoPages',
+                    'createAutoNav',
+                    'hook:preAssemble',
+                    'assemble:site',
+                    'hook:postAssemble',
+                    'copy:build'
+                ]
+            };
+            pages = {
                 files: [
                     '<%= stache.config.content %>**/*.*',
                     '<%= stache.config.static %>**/*.*'
                 ],
                 tasks: [
                     'status:serve',
-                    'expandMappings',
+                    'expandFileMappings',
                     'clean:newer',
                     'createAutoPages',
                     'createAutoNav',
@@ -293,25 +310,24 @@ module.exports = function (grunt) {
                     'hook:postAssemble',
                     'copy:build'
                 ]
-            },
-            core: {
-                files: [
-                    '<%= stache.config.includes %>**/*.*',
-                    'stache.yml'
-                ],
-                tasks: [
-                    'status:serve',
-                    'expandMappings',
-                    'clean:build',
-                    'createAutoPages',
-                    'createAutoNav',
-                    'hook:preAssemble',
-                    'assemble:site',
-                    'hook:postAssemble',
-                    'copy:build'
-                ]
-            }
-        }
+            };
+
+            return {
+                options: {
+                    livereload: grunt.option('livereload') || '<%= stache.config.livereload %>'
+                },
+                all: {
+                    files: (function (arr) {
+                        arr.push.apply(pages.files);
+                        arr.push.apply(core.files);
+                        return arr;
+                    }([])),
+                    tasks: core.tasks
+                },
+                core: core,
+                pages: pages
+            };
+        }())
     };
 
     tasks = {
@@ -759,95 +775,94 @@ module.exports = function (grunt) {
             }
         },
 
-        stacheBuild: function (scope) {
+        /**
+         * Runs a series of tasks.
+         * Adding the switch statement to get access to any context commands.
+         * Not doing anything with the context currently, but we probably will,
+         * in the near future.
+         */
+        stacheBuild: function (context) {
             var tasks = [];
-            switch (scope) {
-            case 'newer':
-                tasks = [
-                    'hook:preStache',
-                    'status:build',
-                    'expandFileMappings',
-                    'clean:newer',
-                    'createAutoPages',
-                    'createAutoNav',
-                    'hook:preAssemble',
-                    'newer:assemble:site',
-                    'hook:postAssemble',
-                    'prepareSearch',
-                    'copy:build',
-                    'hook:postStache',
-                ];
-                grunt.log.writeln("Stache is only rebuilding pages that have changed. (To rebuild the entire site, type `stache build`.)");
-            break;
-            case 'all':
-            default:
-                tasks = [
-                    'hook:preStache',
-                    'status:build',
-                    'expandFileMappings',
-                    'clean:build',
-                    'createAutoPages',
-                    'createAutoNav',
-                    'hook:preAssemble',
-                    'assemble:site',
-                    'hook:postAssemble',
-                    'prepareSearch',
-                    'useminPrepare',
-                    'concat:generated',
-                    'uglify:generated',
-                    'usemin',
-                    'copy:build',
-                    'hook:postStache',
-                ];
-                grunt.log.writeln("Stache is rebuilding the entire site. (To rebuild only those pages that have changed, type `stache build:newer`.)");
-            break;
+            switch (context) {
+                default:
+                    tasks = [
+                        'hook:preStache',
+                        'status:build',
+                        'expandFileMappings',
+                        'clean:build',
+                        'createAutoPages',
+                        'createAutoNav',
+                        'hook:preAssemble',
+                        'assemble:site',
+                        'hook:postAssemble',
+                        'prepareSearch',
+                        'useminPrepare',
+                        'concat:generated',
+                        'uglify:generated',
+                        'usemin',
+                        'copy:build',
+                        'hook:postStache',
+                    ];
+                break;
             }
             grunt.task.run(tasks);
         },
 
-        stacheServe: function (scope) {
-            var tasks = [];
-            switch (scope) {
-            case 'newer':
-                tasks = [
-                    'hook:preStache',
-                    'status:serve',
-                    'expandFileMappings',
-                    'clean:newer',
-                    'copy:build',
-                    'createAutoPages',
-                    'createAutoNav',
-                    'hook:preAssemble',
-                    'newer:assemble:site',
-                    'hook:postAssemble',
-                    'prepareSearch',
-                    'connect',
-                    'watch',
-                    'hook:postStache'
-                ];
-                grunt.log.writeln("Stache is set to rebuild only those pages that have changed. (To rebuild the entire site, type `stache serve`.)");
-            break;
-            case 'all':
-            default:
-                tasks = [
-                    'hook:preStache',
-                    'status:serve',
-                    'expandFileMappings',
-                    'clean:build',
-                    'copy:build',
-                    'createAutoPages',
-                    'createAutoNav',
-                    'hook:preAssemble',
-                    'assemble:site',
-                    'hook:postAssemble',
-                    'prepareSearch',
-                    'connect',
-                    'watch',
-                    'hook:postStache'
-                ];
-                grunt.log.writeln("Stache is set to rebuild the entire site when content files change. (To rebuild only those pages that have changed, type `stache serve:newer`.)");
-            break;
+        /**
+         * Runs a series of tasks, issues a local server, and watches for newer
+         * files, depending on the type of watch set in the stache.yml file.
+         */
+        stacheServe: function (context) {
+            var tasks,
+                watchNewer;
+
+            // Only update the watchNewer property if it is explicitly set in bash.
+            // Otherwise, we'll use the value set in the stache.yml config (see default, below).
+            switch (context) {
+                case 'newer':
+                    watchNewer = true;
+                break;
+                case 'all':
+                    watchNewer = false;
+                break;
+                default:
+                    watchNewer = grunt.config.get('stache.config.watchNewer');
+                break;
             }
+
+            // Default serve tasks:
+            tasks = [
+                'hook:preStache',
+                'status:serve',
+                'expandFileMappings',
+                'clean:build',
+                'copy:build',
+                'createAutoPages',
+                'createAutoNav',
+                'hook:preAssemble',
+                'assemble:site',
+                'hook:postAssemble',
+                'prepareSearch',
+                'connect'
+            ];
+
+            // Set the variable in the config
+            grunt.config.set('stache.config.watchNewer', watchNewer);
+
+            // Determine which watch task to execute:
+            if (watchNewer) {
+                tasks.push('watch:pages');
+                tasks.push('watch:core');
+                grunt.log.writeln("Stache is set to rebuild only those pages that have changed. (To rebuild the entire site, type `stache serve:all`.)");
+            } else {
+                tasks.push('watch:all');
+                grunt.log.writeln("Stache is set to rebuild the entire site when content files change. (To rebuild only those pages that have changed, type `stache serve:newer`.)");
+            }
+
+            // Add the postStache hook:
+            tasks.push('hook:postStache');
+
+            // Run the tasks
             grunt.task.run(tasks);
         },
 
