@@ -14,8 +14,6 @@
     Log = require('log');
     log = new Log('info');
 
-    //log.info(using);
-
     // Overriding the location of the content directory, since it's relative.
     grunt.config.set('stache.config.content', '../../content/');
 
@@ -66,6 +64,9 @@
                         grunt.task.run('hook:preStache');
                         grunt.config.set('stache.hooks.myHook', 15);
                         grunt.task.run('hook:myHook');
+
+                        // Reset hooks.
+                        grunt.config.set('stache.hooks', {});
                     } catch (e) {
                         throw new TypeError("hook() failed: " + e.message);
                     }
@@ -80,10 +81,23 @@
     describe('Stache Utilities', function () {
         describe('extendStacheConfig()', function () {
             it('should return an object', function () {
-                expect(1).toEqual(1);
+                var config = stache.utils.extendStacheConfig();
+                expect(config).toEqual(jasmine.any(Object));
             });
-            it('should merge the global YAML data with the local YAML data', function () {
-                expect(1).toEqual(1);
+            it('should merge global stache.yml with local stache.yml', function () {
+                var config;
+                grunt.config.set('stache.pathConfig', 'tests/fixtures/stache.yml');
+                grunt.config.set('stache.dir', '../');
+                config = stache.utils.extendStacheConfig();
+                expect(config.base).toBe('different/base');
+            });
+            it('should merge global stache.yml with any custom .yml files, if provided', function () {
+                var config;
+                grunt.config.set('stache.dir', '../');
+                grunt.option('config', 'tests/fixtures/custom1.yml,tests/fixtures/custom2.yml');
+                config = stache.utils.extendStacheConfig();
+                expect(config.base).toBe('yet/another/base');
+                expect(config.foo).toBe('bar');
             });
         });
     });

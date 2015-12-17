@@ -18,6 +18,8 @@ module.exports = function (grunt) {
         defaults,
         header,
         jit,
+        log,
+        Log,
         merge,
         navSearchFiles,
         tasks,
@@ -881,16 +883,18 @@ module.exports = function (grunt) {
         },
 
         /**
-         * Merges local and global Stache YAML files into defaults.stache.config.
+         * Merges local and global Stache YAML files into stache.config.
          */
         extendStacheConfig: function () {
             var configFileString,
                 localConfig,
+                stache,
                 stacheConfig;
 
             configFileString = grunt.option('config') || '';
             localConfig = {};
             stacheConfig = {};
+            stache = grunt.config.get('stache');
 
             // Expand local Stache YAML files into workable object, if they exist.
             // (These files may have been supplied via '--config=my-config.yml'.)
@@ -899,6 +903,7 @@ module.exports = function (grunt) {
                 // Multiple config files specified.
                 if (configFileString.indexOf(',') > -1) {
                     configFileString.split(',').forEach(function (file) {
+                        file = file.trim();
                         if (grunt.file.exists(file)) {
                             grunt.log.writeln('Importing config file ' + file);
                             localConfig = merge(localConfig, grunt.file.readYAML(file));
@@ -922,19 +927,20 @@ module.exports = function (grunt) {
             }
 
             // Expand default local Stache YAML file into workable object, if it exists.
-            else if (grunt.file.exists(defaults.stache.pathConfig)) {
-                grunt.log.writeln('Defaulting to config file ' + defaults.stache.pathConfig);
-                localConfig = grunt.file.readYAML(defaults.stache.pathConfig);
+            else if (grunt.file.exists(stache.pathConfig)) {
+                grunt.log.writeln('Defaulting to config file ' + stache.pathConfig);
+                localConfig = grunt.file.readYAML(stache.pathConfig);
             }
 
             // Expand global Stache YAML file into workable object.
-            if (grunt.file.exists(defaults.stache.dir + defaults.stache.pathConfig)) {
-                stacheConfig = grunt.file.readYAML(defaults.stache.dir + defaults.stache.pathConfig);
+            if (grunt.file.exists(stache.dir + stache.pathConfig)) {
+                stacheConfig = grunt.file.readYAML(stache.dir + stache.pathConfig);
             }
 
             // Merge global and local Stache config objects.
-            defaults.stache.config = merge(stacheConfig, localConfig);
-            return defaults.stache.config;
+            stache.config = merge(stacheConfig, localConfig);
+            grunt.config.set('stache.config', stache.config);
+            return stache.config;
         },
 
         slugify: function (title) {
@@ -1063,11 +1069,11 @@ module.exports = function (grunt) {
         }
     );
 
-    // Merge local and global Stache config.
-    utils.extendStacheConfig();
-
     // Merge options and defaults for the entire project.
     grunt.config.merge(defaults);
+
+    // Merge local and global stache.yml config.
+    utils.extendStacheConfig();
 
     // Dynamically load any NPM modules (some require static mappings).
     jit(grunt, {
@@ -1076,7 +1082,7 @@ module.exports = function (grunt) {
         availableTasks: 'grunt-available-tasks',
         'sass-blackbaud': 'grunt-sass'
     })({
-        pluginsRoot: defaults.stache.dir + 'node_modules/'
+        pluginsRoot: grunt.config.get('stache.dir') + 'node_modules/'
     });
 
     // Expose certain things for testing purposes.
