@@ -25,12 +25,7 @@ module.exports.register = function (Handlebars, options, params) {
         renderer,
         lexer,
         counts,
-        utils,
-        Log,
-        log;
-
-    Log = require('log');
-    log = new Log('info');
+        utils;
 
     bypassContext = params.assemble.options.getBypassContext();
     stache = params.assemble.options.stache;
