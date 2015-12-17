@@ -642,17 +642,19 @@ module.exports = function (grunt) {
                 filesConfig,
                 i,
                 len,
-                skip;
+                skip,
+                status;
 
             mappings = [];
             skip = grunt.config.get('clean.pages');
             filesConfig = grunt.config.get('assemble.defaults.files.0');
             files = grunt.file.expand(filesConfig, filesConfig.src);
             len = files.length;
+            status = grunt.config.get('stache.status');
 
             for (i = 0; i < len; ++i) {
                 file = files[i];
-                destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
+                destinationFile = status + '/' + file.substring(0, file.lastIndexOf(".")) + '.html';
                 mappings.push({
                     src: '<%= stache.config.content %>' + file,
                     dest: destinationFile
