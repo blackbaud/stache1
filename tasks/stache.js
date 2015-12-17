@@ -635,7 +635,7 @@ module.exports = function (grunt) {
         },
 
         expandFileMappings: function () {
-            var blob,
+            var mappings,
                 destinationFile,
                 file,
                 files,
@@ -644,7 +644,7 @@ module.exports = function (grunt) {
                 len,
                 skip;
 
-            blob = [];
+            mappings = [];
             skip = grunt.config.get('clean.pages');
             filesConfig = grunt.config.get('assemble.defaults.files.0');
             files = grunt.file.expand(filesConfig, filesConfig.src);
@@ -653,17 +653,17 @@ module.exports = function (grunt) {
             for (i = 0; i < len; ++i) {
                 file = files[i];
                 destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
-                blob.push({
+                mappings.push({
                     src: '<%= stache.config.content %>' + file,
                     dest: destinationFile
                 });
                 skip.push('!' + destinationFile);
             }
 
-            grunt.config.set('assemble.site.files', blob);
+            grunt.config.set('assemble.site.files', mappings);
             grunt.config.set('clean.newer', skip);
 
-            return blob;
+            return mappings;
         },
 
         /**
