@@ -220,10 +220,12 @@
             }
 
             it('should return a string', function () {
-                var result;
+                var bypassContext,
+                    result;
 
+                bypassContext = grunt.config.get('bypassContext');
                 context.page.dirname = '/';
-                hbsOptions.hash.nav_links = grunt.config.get('bypassContext').nav_links;
+                hbsOptions.hash.nav_links = bypassContext.nav_links;
                 result = compile(context);
 
                 expect(result).toEqual(jasmine.any(String));
