@@ -18,8 +18,6 @@ module.exports = function (grunt) {
         defaults,
         header,
         jit,
-        log,
-        Log,
         merge,
         navSearchFiles,
         tasks,
@@ -40,38 +38,20 @@ module.exports = function (grunt) {
     header = grunt.log.header;
     grunt.log.header = function () {};
 
-    // Default configuration
+    /**
+     * Grunt config defaults
+     */
     defaults = {
 
         // Holds the project's global (and local) configurations.
         stache: {
 
-            // The relative path to the Stache NPM package.
-            // (Necessary since we are actually running in the root project folder.)
-            dir: 'node_modules/blackbaud-stache/',
-
-            // Used to determine file locations, build or serve.
-            // This means when a user calls build or serve, the assembled files
-            // will go into build or serve folder.
-            status: '',
-
-            // Path to local configuration file.
-            pathConfig: 'stache.yml',
-
             // Stores all YAML configuration properties (extends global Stache YAML).
             config: {},
 
-            // Manually provide an array of pages to build.
-            pages: [],
-
-            // Any Grunt tasks we wish to run at certain times in the build process
-            // should be added here.
-            hooks: {
-                preStache: [],
-                postStache: [],
-                preAssemble: [],
-                postAssemble: []
-            },
+            // The relative path to the Stache NPM package.
+            // (Necessary since we are actually running in the root project folder.)
+            dir: 'node_modules/blackbaud-stache/',
 
             // Filters receive and return data, and should contain valid functions.
             filters: {
@@ -83,13 +63,47 @@ module.exports = function (grunt) {
                 ]
             },
 
+            // Used by the expandFileMappings task to create static file maps.
+            globPatterns: {
+                content: {
+                    expand: true,
+                    cwd: '<%= stache.config.content %>',
+                    dest: '<%= stache.config.build %>',
+                    src: [
+                        '**/*.md',
+                        '**/*.hbs',
+                        '**/*.html'
+                    ]
+                }
+            },
+
+            // Any Grunt tasks we wish to run at certain times in the build process
+            // should be added here.
+            hooks: {
+                preStache: [],
+                postStache: [],
+                preAssemble: [],
+                postAssemble: []
+            },
+
+            // Manually provide an array of pages to build.
+            pages: [],
+
+            // Path to local configuration file.
+            pathConfig: 'stache.yml',
+
             // An array of selectors to remove from searched page's DOM content.
             searchContentToRemove: [
                 '.bb-navbar',
                 '.nav-sidebar',
                 '.footer-site',
                 'script'
-            ]
+            ],
+
+            // Used to determine file locations, build or serve.
+            // This means when a user calls build or serve, the assembled files
+            // will go into build or serve folder.
+            status: ''
         },
 
         // Takes the 'grunt help' title and converts it into fun ASCII art.
@@ -105,46 +119,32 @@ module.exports = function (grunt) {
 
         // Static site generator.
         assemble: {
-            site: {
-                options: {
-                    assets: '<%= stache.config.build %>',
-                    data: '<%= stache.config.data %>**/*.*',
-                    helpers: ['helper-moment', '<%= stache.config.helpers %>helpers.js'],
-                    partials: ['<%= stache.config.partials %>**/*.hbs'],
-                    layoutdir: '<%= stache.config.layouts %>',
-                    layoutext: '.hbs',
-                    layout: 'layout-container',
-                    stache: '<%= stache %>',
+            options: {
+                assets: '<%= stache.config.build %>',
+                data: '<%= stache.config.data %>**/*.*',
+                helpers: ['helper-moment', '<%= stache.config.helpers %>helpers.js'],
+                partials: ['<%= stache.config.partials %>**/*.hbs'],
+                layoutdir: '<%= stache.config.layouts %>',
+                layoutext: '.hbs',
+                layout: 'layout-container',
+                stache: '<%= stache %>',
 
-                    // https://github.com/assemble/assemble/pull/468#issuecomment-38730532
-                    initializeEngine: function (engine, options)  {
-                        var search = "{{\\s*body\\s*}}";
-                        engine.bodyRegex = new RegExp(search, 'ig');
-                        engine.init(options, { grunt: grunt, assemble: assemble });
-                    },
-
-                    getBypassContext: function () {
-                        return grunt.config.get('bypassContext');
-                    }
+                // https://github.com/assemble/assemble/pull/468#issuecomment-38730532
+                initializeEngine: function (engine, options)  {
+                    var search = "{{\\s*body\\s*}}";
+                    engine.bodyRegex = new RegExp(search, 'ig');
+                    engine.init(options, { grunt: grunt, assemble: assemble });
                 },
+
+                getBypassContext: function () {
+                    return grunt.config.get('bypassContext');
+                }
+            },
+            site: {
+                options: {},
                 files: []
             },
-            custom: {},
-            defaults: {
-                options: {},
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%= stache.config.content %>',
-                        dest: '<%= stache.config.build %>',
-                        src: [
-                            '**/*.md',
-                            '**/*.hbs',
-                            '**/*.html'
-                        ]
-                    }
-                ]
-            }
+            custom: {}
         },
 
         // Listing our available tasks
@@ -167,9 +167,9 @@ module.exports = function (grunt) {
 
         // Cleans the specified folder before serve/build.
         clean: {
-            build: ['<%= stache.config.build %>'],
-            newer: [],
-            pages: ['<%= stache.config.build %>**/*.html']
+            build: {
+                src: ['<%= stache.config.build %>']
+            }
         },
 
         // Creates a local server.
@@ -284,12 +284,11 @@ module.exports = function (grunt) {
                 ],
                 tasks: [
                     'status:serve',
-                    'clean:build',
                     'expandFileMappings',
                     'createAutoPages',
                     'createAutoNav',
                     'hook:preAssemble',
-                    'assemble:site',
+                    'assemble',
                     'hook:postAssemble',
                     'copy:build'
                 ]
@@ -302,11 +301,9 @@ module.exports = function (grunt) {
                 tasks: [
                     'status:serve',
                     'expandFileMappings',
-                    'clean:newer',
-                    'createAutoPages',
                     'createAutoNav',
                     'hook:preAssemble',
-                    'newer:assemble:site',
+                    'newer:assemble',
                     'hook:postAssemble',
                     'copy:build'
                 ]
@@ -330,6 +327,9 @@ module.exports = function (grunt) {
         }())
     };
 
+    /**
+     * Grunt tasks
+     */
     tasks = {
         /**
          * Creates pages from jsdoc and sandcastle specifications.
@@ -342,6 +342,7 @@ module.exports = function (grunt) {
 
             pages = {};
             found = false;
+
             processStacheCastleSingleNode = function (page, node, parents, siblings) {
                 var parentsToSend,
                     siblingsToSend;
@@ -378,6 +379,7 @@ module.exports = function (grunt) {
                     processStacheCastleMultipleNodes(page, node.HelpTOCNode, parentsToSend);
                 }
             };
+
             processStacheCastleMultipleNodes = function (page, node, parents) {
                 if (node) {
                     if (node.length > 0) {
@@ -451,217 +453,219 @@ module.exports = function (grunt) {
          */
         createAutoNav: function () {
 
-            var sorted,
-                root,
-                navKey,
-                content,
-                filesConfig,
+            var contentDir,
                 files,
-                pages,
-                page,
+                filesConfig,
                 nav_exclude,
+                navKey,
+                pages,
+                root,
+                sandcastleCounter,
                 sandcastlePath,
-                sandcastleCounter;
+                sorted;
 
-            // User has manually specific nav_links in stache.yml
+            // User has manually specific nav_links in stache.yml. Let's use that.
             if (grunt.config('stache.config.nav_type') !== 'directory') {
                 grunt.config.set('bypassContext', grunt.config.get('stache.config.nav_links'));
                 return;
             }
 
+            // Set initial values
             sorted = [];
             root = 'bypassContext';
             navKey = '.nav_links';
-            content = grunt.config.get('stache.config.content');
-            filesConfig = grunt.config.get('assemble.defaults.files.0');
+            sandcastlePath = '';
+            sandcastleCounter = 1;
+            contentDir = grunt.config.get('stache.config.content');
+            filesConfig = grunt.config.get('stache.globPatterns.content');
             files = grunt.file.expand(filesConfig, filesConfig.src);
+            nav_exclude = grunt.config.get('stache.config.nav_exclude') || [];
 
+            // Reset bypassContext
             grunt.config.set(root + navKey, []);
 
-            files.forEach(function (file) {
-                var fm = yfm.extractJSON(content + file);
-                if (typeof fm.published === 'undefined' || fm.published !== false) {
-                    sorted.push({
-                        abspath: file,
-                        rootdir: file.substr(0, file.indexOf('/')),
-                        subdir: file.substr(0, file.lastIndexOf('/')),
-                        filename: file.substr(file.lastIndexOf('/') + 1),
-                        frontmatter: fm,
-                        type: 'local'
-                    });
-                }
-            });
+            // Add the pages from the content directory
+            if (files) {
+                files.forEach(function (file) {
+                    var fm = yfm.extractJSON(contentDir + file);
+                    if (typeof fm.published === 'undefined' || fm.published !== false) {
+                        grunt.verbose.writeln("Adding nav_link from content/ " + file);
+                        sorted.push({
+                            abspath: file,
+                            rootdir: file.substr(0, file.indexOf('/')),
+                            subdir: file.substr(0, file.lastIndexOf('/')),
+                            filename: file.substr(file.lastIndexOf('/') + 1),
+                            frontmatter: fm,
+                            type: 'local'
+                        });
+                    }
+                });
+            }
 
             // Add any dynamically created pages here.
             pages = grunt.config.get('assemble.custom.options.pages');
-
-            if (pages) {
-                for (page in pages) {
-                    if (pages.hasOwnProperty(page)) {
-                        sorted.push({
-                            abspath: page,
-                            rootdir: page.substr(0, page.indexOf('/')),
-                            subdir: page.substr(0, page.lastIndexOf('/')),
-                            filename: page.substr(page.lastIndexOf('/') + 1),
-                            frontmatter: pages[page].data,
-                            type: pages[page].type
-                        });
-                    }
-                }
+            if (pages && pages.length) {
+                pages.forEach(function (page) {
+                    sorted.push({
+                        abspath: page,
+                        rootdir: page.substr(0, page.indexOf('/')),
+                        subdir: page.substr(0, page.lastIndexOf('/')),
+                        filename: page.substr(page.lastIndexOf('/') + 1),
+                        frontmatter: pages[page].data,
+                        type: pages[page].type
+                    });
+                });
             }
 
-            // Sort alphabetically ensures that parents are created first.
+            // Sorting alphabetically ensures that parents are created first.
             // This is crucial to this process.  We can sort by order below.
             utils.sort(sorted, true, 'subdir', '');
 
-            nav_exclude = grunt.config.get('stache.config.nav_exclude') || [];
-            sandcastlePath = '';
-            sandcastleCounter = 1;
+            // Create the nav_links array.
+            if (sorted) {
+                sorted.forEach(function (el, idx) {
 
-            sorted.forEach(function (el, idx) {
+                    var path = root,
+                        rootdir = el.rootdir,
+                        subdir = el.subdir,
+                        filename = el.filename,
+                        separator = grunt.config.get('stache.config.nav_title_separator') || ' ',
+                        home = grunt.config.get('stache.config.nav_title_home') || 'home',
+                        file = filename.replace('.md', '.html').replace('.hbs', '.html'),
+                        item = el.frontmatter,
+                        subdirParts,
+                        pathCurrent,
+                        pathCurrentItem,
+                        found,
+                        index,
+                        i,
+                        j,
+                        m,
+                        n;
 
-                var path = root,
-                    rootdir = el.rootdir,
-                    subdir = el.subdir,
-                    filename = el.filename,
-                    separator = grunt.config.get('stache.config.nav_title_separator') || ' ',
-                    home = grunt.config.get('stache.config.nav_title_home') || 'home',
-                    file = filename.replace('.md', '.html').replace('.hbs', '.html'),
-                    item = el.frontmatter,
-                    subdirParts,
-                    pathCurrent,
-                    pathCurrentItem,
-                    found,
-                    index,
-                    i,
-                    j,
-                    m,
-                    n;
+                    // A few programmatically created front-matter variables
+                    item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
+                    item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
+                    item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
+                    item.showInSearch = typeof item.showInSearch !== 'undefined' ? item.showInSearch : true;
+                    item.breadcrumbs = item.breadcrumbs || (subdir ? utils.createTitle(subdir, separator, true) : home);
+                    item.name = grunt.config.process(item.name || (subdir ? utils.createTitle(subdir, separator, false) : home));
+                    item.abspath = el.abspath;
 
-                // A few programmatically created front-matter variables
-                item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
-                item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
-                item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
-                item.showInSearch = typeof item.showInSearch !== 'undefined' ? item.showInSearch : true;
-                item.breadcrumbs = item.breadcrumbs || (subdir ? utils.createTitle(subdir, separator, true) : home);
-                item.name = grunt.config.process(item.name || (subdir ? utils.createTitle(subdir, separator, false) : home));
-                item.abspath = el.abspath;
+                    // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
+                    if (item.showInNav) {
+                        nav_exclude.forEach(function (f) {
+                            if (item.abspath.indexOf(f) > -1) {
+                                item.showInNav = false;
+                                return;
+                            }
+                        });
+                    }
 
-                // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
-                if (item.showInNav) {
-                    nav_exclude.forEach(function (f) {
-                        if (item.abspath.indexOf(f) > -1) {
-                            item.showInNav = false;
-                            return;
-                        }
-                    });
-                }
+                    // Sandcastle is a strange case as we need to confirm it's subdir exists the first time,
+                    // Then we can just add it to the array.  IF we don't do this, things get very slow!
+                    if (el.type === 'sandcastle' && sandcastlePath !== '') {
+                        path = sandcastlePath + '.' + (sandcastleCounter++);
+                    } else {
 
-                // Sandcastle is a strange case as we need to confirm it's subdir exists the first time,
-                // Then we can just add it to the array.  IF we don't do this, things get very slow!
-                if (el.type === 'sandcastle' && sandcastlePath !== '') {
-                    path = sandcastlePath + '.' + (sandcastleCounter++);
-                } else {
+                        // Nested directories
+                        if (subdir) {
 
-                    // Nested directories
-                    if (subdir) {
+                            // Split the subdir into its different directories
+                            subdirParts = subdir.split('/');
+                            for (i = 0, j = subdirParts.length; i < j; i++) {
+                                index = 0;
+                                path += navKey;
 
-                        // Split the subdir into its different directories
-                        subdirParts = subdir.split('/');
-                        for (i = 0, j = subdirParts.length; i < j; i++) {
-                            index = 0;
-                            path += navKey;
+                                // Is the current path already an array?
+                                pathCurrent = grunt.config.get(path);
 
-                            // Is the current path already an array?
-                            pathCurrent = grunt.config.get(path);
+                                // It is an array, let's try to find the index for our current subDirPart
+                                if (grunt.util.kindOf(pathCurrent) === 'array') {
+                                    found = false;
 
-                            // It is an array, let's try to find the index for our current subDirPart
-                            if (grunt.util.kindOf(pathCurrent) === 'array') {
-                                found = false;
-
-                                for (m = 0, n = pathCurrent.length; m < n; m++) {
-                                    pathCurrentItem = grunt.config.get(path + '.' + m);
-                                    if (pathCurrentItem.uri && pathCurrentItem.uri.indexOf('/' + subdirParts[i] + '/') > -1) {
-                                        found = true;
-                                        index = m;
-                                        break;
+                                    for (m = 0, n = pathCurrent.length; m < n; m++) {
+                                        pathCurrentItem = grunt.config.get(path + '.' + m);
+                                        if (pathCurrentItem.uri && pathCurrentItem.uri.indexOf('/' + subdirParts[i] + '/') > -1) {
+                                            found = true;
+                                            index = m;
+                                            break;
+                                        }
                                     }
+
+                                    // Our array has previous items but no match was found, let's add a new item
+                                    if (pathCurrent.length > 0 && !found) {
+                                        index = pathCurrent.length;
+                                    }
+
+                                    path += '.' + index;
+
+                                // It's not an array, which means we need to create the links property
+                                } else {
+                                    grunt.config.set(path, []);
+
+                                    // Catch the path for the first sandcastle file we hit
+                                    if (el.type === 'sandcastle' && sandcastlePath === '') {
+                                        sandcastlePath = path;
+                                    }
+
+                                    path += '.0';
                                 }
 
-                                // Our array has previous items but no match was found, let's add a new item
-                                if (pathCurrent.length > 0 && !found) {
-                                    index = pathCurrent.length;
-                                }
-
-                                path += '.' + index;
-
-                            // It's not an array, which means we need to create the links property
-                            } else {
-                                grunt.config.set(path, []);
-
-                                // Catch the path for the first sandcastle file we hit
-                                if (el.type === 'sandcastle' && sandcastlePath === '') {
-                                    sandcastlePath = path;
-                                }
-
-                                path += '.0';
                             }
 
+                        } else {
+                            path += navKey;
+                            path += '.' + grunt.config.get(path).length;
                         }
-
-                    } else {
-                        path += navKey;
-                        path += '.' + grunt.config.get(path).length;
                     }
-                }
 
-                // Show in nav superceeds showInHeader and showInFooter
-                if (!item.showInNav) {
-                    grunt.verbose.writeln('Ignoring: ' + item.abspath);
-                    item.showInHeader = item.showInFooter = item.showInNav;
-                }
+                    // Show in nav superceeds showInHeader and showInFooter
+                    if (!item.showInNav) {
+                        grunt.verbose.writeln('Ignoring: ' + item.abspath);
+                        item.showInHeader = item.showInFooter = item.showInNav;
+                    }
 
-                // Record this url
-                item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
-                grunt.config.set(path, item);
-                navSearchFiles.push(item);
+                    // Record this url
+                    item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
+                    grunt.config.set(path, item);
+                    navSearchFiles.push(item);
 
-                grunt.log.writeln('Created nav_link ' + item.uri);
+                    grunt.verbose.writeln('Created nav_link ' + item.uri);
 
-            });
+                });
+            }
 
             // Now we can rearrange each item according to order
-            utils.sortRecursive(root + navKey, true);
+            utils.sortByOrder(root + navKey, true);
         },
 
+        /**
+         * Creates and returns an array of static src->dest mappings for files,
+         * based on a glob pattern. Grunt Newer cannot use glob patterns, so this
+         * is a requirement to watch for recently changed files.
+         */
         expandFileMappings: function () {
             var mappings,
-                destinationFile,
-                file,
                 files,
-                filesConfig,
-                i,
-                len,
-                skip;
+                filesConfig;
 
             mappings = [];
-            skip = grunt.config.get('clean.pages');
-            filesConfig = grunt.config.get('assemble.defaults.files.0');
+            filesConfig = grunt.config.get('stache.globPatterns.content');
             files = grunt.file.expand(filesConfig, filesConfig.src);
-            len = files.length;
 
-            for (i = 0; i < len; ++i) {
-                file = files[i];
-                destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
-                mappings.push({
-                    src: '<%= stache.config.content %>' + file,
-                    dest: destinationFile
+            if (files) {
+                files.forEach(function (file) {
+                    var destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
+                    grunt.verbose.writeln("Built File Map: " + '<%= stache.config.content %>' + file + " --> " + destinationFile);
+                    mappings.push({
+                        src: '<%= stache.config.content %>' + file,
+                        dest: destinationFile
+                    });
                 });
-                skip.push('!' + destinationFile);
             }
 
             grunt.config.set('assemble.site.files', mappings);
-            grunt.config.set('clean.newer', skip);
 
             return mappings;
         },
@@ -685,51 +689,55 @@ module.exports = function (grunt) {
          */
         hook: function (name) {
             var depreciatedHooks,
-                d1,
-                d2,
-                dhook,
-                d1len,
-                d2len,
-                i,
-                len,
                 tasks,
                 temp;
 
             tasks = [];
             temp = grunt.config.get('stache.hooks.' + name);
-
-            // Depreciated hooks:
             depreciatedHooks = [
                 'preStacheHooks',
                 'postStacheHooks',
                 'preAssembleHooks',
                 'postAssembleHooks'
             ];
-            for (d1 = 0, d1len = depreciatedHooks.length; d1 < d1len; ++d1) {
-                dhook = grunt.config.get('stache.' + depreciatedHooks[d1]);
-                if (dhook) {
-                    if (temp.push && temp.pop) {
-                        for (d2 = 0, d2len = dhook.length; d2 < d2len; ++d2) {
-                            temp.push(dhook[d2]);
-                        }
+
+            // Check if any depreciated hook names are registered.
+            depreciatedHooks.forEach(function (name) {
+                var hooks = grunt.config.get('stache.' + name);
+
+                // Are there any depreciated hooks registered?
+                if (hooks) {
+
+                    // The user passed the hooks as an array
+                    if (hooks.push && hooks.pop) {
+                        hooks.forEach(function (hook) {
+                            temp.push(hook);
+                        });
                     }
-                    temp.push(dhook);
+
+                    // It's just a string
+                    else {
+                        temp.push(hooks);
+                    }
                 }
-            }
+            });
 
             // If any hooks exist, add them to the tasks list and execute them.
             if (temp) {
 
-                // It's an array; let's check that the tasks exist.
-                if (!temp.push || !temp.pop) {
+                // Make sure the task list is an array.
+                if (!temp.push && !temp.pop) {
                     temp = [temp];
                 }
-                len = temp.length;
-                for (i = 0; i < len; ++i) {
-                    if (grunt.task.exists(temp[i])) {
-                        tasks.push(temp[i]);
+
+                // Only add the hooks if they reference actual tasks.
+                temp.forEach(function (task) {
+                    if (grunt.task.exists(task)) {
+                        tasks.push(task);
                     }
-                }
+                });
+
+                // Run the hooks!
                 if (tasks.length) {
                     grunt.task.run(tasks);
                 }
@@ -757,7 +765,7 @@ module.exports = function (grunt) {
 
             for (i = 0, j = navSearchFiles.length; i < j; i++) {
                 if (!navSearchFiles[i].showInSearch) {
-                    grunt.log.writeln('Ignoring from search: ' + navSearchFiles[i].uri);
+                    grunt.verbose.writeln('Ignoring from search: ' + navSearchFiles[i].uri);
                 } else {
 
                     item = navSearchFiles[i];
@@ -792,6 +800,9 @@ module.exports = function (grunt) {
             grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }, null, ' '));
         },
 
+        /**
+         * Masks 'grunt' command with 'stache'.
+         */
         stache: function (optionalTask) {
             var key = '_tasks',
                 task = optionalTask || 'help';
@@ -820,7 +831,7 @@ module.exports = function (grunt) {
                         'createAutoPages',
                         'createAutoNav',
                         'hook:preAssemble',
-                        'assemble:site',
+                        'assemble',
                         'hook:postAssemble',
                         'prepareSearch',
                         'useminPrepare',
@@ -867,7 +878,7 @@ module.exports = function (grunt) {
                 'createAutoPages',
                 'createAutoNav',
                 'hook:preAssemble',
-                'assemble:site',
+                'assemble',
                 'hook:postAssemble',
                 'prepareSearch',
                 'connect'
@@ -907,6 +918,9 @@ module.exports = function (grunt) {
         }
     };
 
+    /**
+     * Utility functions
+     */
     utils = {
         createTitle: function (name, separator, isBreadcrumbs) {
             var output = '',
@@ -1011,6 +1025,15 @@ module.exports = function (grunt) {
             return cheerio.html($html);
         },
 
+        /**
+         * Sorts an array of objects.
+         *
+         * @param [array] arr - The array to sort
+         * @param [boolean] sortAscending - Sort asc or dec
+         * @param [string] prop - The field to sort by
+         * @param [string] propDefault - The field to sort by if prop doesn't exist
+         * @param [string] propIfEqual - The field to sort by if the compared values are equal (e.g., if 1 === 1, compare against another field)
+         */
         sort: function (arr, sortAscending, prop, propDefault, propIfEqual) {
             arr.sort(function (a, b) {
                 var ap = a[prop] || propDefault,
@@ -1035,17 +1058,39 @@ module.exports = function (grunt) {
             }
         },
 
-        sortRecursive: function (key, sortAscending) {
+        /**
+         * Sorts nav_links by the YFM property 'order'.
+         *
+         * @param [string] key - The grunt config key that references an array of nav_links
+         * @param [boolean] sortAscending - Sort asc or desc
+         */
+        sortByOrder: function (key, sortAscending) {
             var nav_links = grunt.config.get(key);
             utils.sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100, 'name');
             grunt.config.set(key, nav_links);
             nav_links.forEach(function (el, idx) {
                 if (el.nav_links) {
-                    utils.sortRecursive(key + '.' + idx + '.nav_links', sortAscending);
+                    utils.sortByOrder(key + '.' + idx + '.nav_links', sortAscending);
                 }
             });
         }
     };
+
+    // Merge options and defaults for the entire project.
+    grunt.config.merge(defaults);
+
+    // Merge local and global stache.yml config.
+    utils.extendStacheConfig();
+
+    // Dynamically load any NPM modules (some require static mappings).
+    jit(grunt, {
+        usemin: 'grunt-usemin',
+        useminPrepare: 'grunt-usemin',
+        availableTasks: 'grunt-available-tasks',
+        'sass-blackbaud': 'grunt-sass'
+    })({
+        pluginsRoot: grunt.config.get('stache.dir') + 'node_modules/'
+    });
 
     /**
      * Private Tasks
@@ -1065,7 +1110,10 @@ module.exports = function (grunt) {
      */
 
     // Bash command: stache [task]
-    grunt.registerTask('stache', tasks.stache);
+    grunt.registerTask(
+        'stache',
+        tasks.stache
+    );
 
     // Bash command: stache build
     grunt.registerTask(
@@ -1110,22 +1158,6 @@ module.exports = function (grunt) {
             grunt.log.writeln('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
         }
     );
-
-    // Merge options and defaults for the entire project.
-    grunt.config.merge(defaults);
-
-    // Merge local and global stache.yml config.
-    utils.extendStacheConfig();
-
-    // Dynamically load any NPM modules (some require static mappings).
-    jit(grunt, {
-        usemin: 'grunt-usemin',
-        useminPrepare: 'grunt-usemin',
-        availableTasks: 'grunt-available-tasks',
-        'sass-blackbaud': 'grunt-sass'
-    })({
-        pluginsRoot: grunt.config.get('stache.dir') + 'node_modules/'
-    });
 
     // Expose certain things for testing purposes.
     return {

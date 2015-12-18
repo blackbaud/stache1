@@ -26,20 +26,20 @@
 
             mappings = [];
             mappings.push(stache.tasks.expandFileMappings());
-            grunt.config.set('assemble.defaults.files.cwd', 'fixtures/content');
+            grunt.config.set('stache.globPatterns.cwd', 'fixtures/content');
             mappings.push(stache.tasks.expandFileMappings());
 
             using("valid values", mappings, function (value) {
                 it('should return an array of objects', function () {
                     expect(value).toEqual(jasmine.any(Array));
-                    if (value.length) {
+                    if (value) {
                         for (var i in value) {
                             expect(value[i]).toEqual(jasmine.any(Object));
                         }
                     }
                 });
                 it('should create objects with a string set to both the "src" and "dest" properties', function () {
-                    if (value.length) {
+                    if (value) {
                         for (var i in value) {
                             expect(value[i].hasOwnProperty("src")).toEqual(true);
                             expect(value[i].hasOwnProperty("dest")).toEqual(true);
