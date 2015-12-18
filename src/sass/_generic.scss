@@ -156,6 +156,11 @@ div.draft h3 {
   border-bottom: 0;
 }
 
+// Remove margin when used in footer
+.footer-size .navbar-nav {
+  margin: 0;
+}
+
 pre.has-copy-code {
   position: relative;
 }
