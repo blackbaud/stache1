@@ -294,6 +294,9 @@ module.exports = function (grunt) {
                 ]
             };
             pages = {
+                options: {
+                    spawn: false
+                },
                 files: [
                     '<%= stache.config.content %>**/*.*',
                     '<%= stache.config.static %>**/*.*'
@@ -304,6 +307,7 @@ module.exports = function (grunt) {
                     'createAutoNav',
                     'hook:preAssemble',
                     'newer:assemble',
+                    'checkNewer',
                     'hook:postAssemble',
                     'copy:build'
                 ]
@@ -423,7 +427,7 @@ module.exports = function (grunt) {
                                 }
                             break;
                             default:
-                                grunt.log.writeln('Unknown custom page datatype.');
+                                utils.log('Unknown custom page datatype.');
                             break;
                         }
                     }
@@ -458,6 +462,7 @@ module.exports = function (grunt) {
                 filesConfig,
                 nav_exclude,
                 navKey,
+                page,
                 pages,
                 root,
                 sandcastleCounter,
@@ -489,7 +494,7 @@ module.exports = function (grunt) {
                 files.forEach(function (file) {
                     var fm = yfm.extractJSON(contentDir + file);
                     if (typeof fm.published === 'undefined' || fm.published !== false) {
-                        grunt.verbose.writeln("Adding nav_link from content/ " + file);
+                        utils.log.verbose("Adding nav_link from content/ " + file);
                         sorted.push({
                             abspath: file,
                             rootdir: file.substr(0, file.indexOf('/')),
@@ -504,17 +509,19 @@ module.exports = function (grunt) {
 
             // Add any dynamically created pages here.
             pages = grunt.config.get('assemble.custom.options.pages');
-            if (pages && pages.length) {
-                pages.forEach(function (page) {
-                    sorted.push({
-                        abspath: page,
-                        rootdir: page.substr(0, page.indexOf('/')),
-                        subdir: page.substr(0, page.lastIndexOf('/')),
-                        filename: page.substr(page.lastIndexOf('/') + 1),
-                        frontmatter: pages[page].data,
-                        type: pages[page].type
-                    });
-                });
+            if (pages) {
+                for (page in pages) {
+                    if (pages.hasOwnProperty(page)) {
+                        sorted.push({
+                            abspath: page,
+                            rootdir: page.substr(0, page.indexOf('/')),
+                            subdir: page.substr(0, page.lastIndexOf('/')),
+                            filename: page.substr(page.lastIndexOf('/') + 1),
+                            frontmatter: pages[page].data,
+                            type: pages[page].type
+                        });
+                    }
+                }
             }
 
             // Sorting alphabetically ensures that parents are created first.
@@ -622,7 +629,7 @@ module.exports = function (grunt) {
 
                     // Show in nav superceeds showInHeader and showInFooter
                     if (!item.showInNav) {
-                        grunt.verbose.writeln('Ignoring: ' + item.abspath);
+                        utils.log.verbose('Ignoring: ' + item.abspath);
                         item.showInHeader = item.showInFooter = item.showInNav;
                     }
 
@@ -631,7 +638,7 @@ module.exports = function (grunt) {
                     grunt.config.set(path, item);
                     navSearchFiles.push(item);
 
-                    grunt.verbose.writeln('Created nav_link ' + item.uri);
+                    utils.log.verbose('Creating nav_link ' + item.uri);
 
                 });
             }
@@ -657,7 +664,7 @@ module.exports = function (grunt) {
             if (files) {
                 files.forEach(function (file) {
                     var destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
-                    grunt.verbose.writeln("Built File Map: " + '<%= stache.config.content %>' + file + " --> " + destinationFile);
+                    utils.log.verbose("Building file map: " + '<%= stache.config.content %>' + file + " --> " + destinationFile);
                     mappings.push({
                         src: '<%= stache.config.content %>' + file,
                         dest: destinationFile
@@ -688,45 +695,17 @@ module.exports = function (grunt) {
          * @param [string] name - the name of the hook to execute
          */
         hook: function (name) {
-            var depreciatedHooks,
-                tasks,
+            var tasks,
                 temp;
 
             tasks = [];
             temp = grunt.config.get('stache.hooks.' + name);
-            depreciatedHooks = [
-                'preStacheHooks',
-                'postStacheHooks',
-                'preAssembleHooks',
-                'postAssembleHooks'
-            ];
-
-            // Check if any depreciated hook names are registered.
-            depreciatedHooks.forEach(function (name) {
-                var hooks = grunt.config.get('stache.' + name);
-
-                // Are there any depreciated hooks registered?
-                if (hooks) {
-
-                    // The user passed the hooks as an array
-                    if (hooks.push && hooks.pop) {
-                        hooks.forEach(function (hook) {
-                            temp.push(hook);
-                        });
-                    }
-
-                    // It's just a string
-                    else {
-                        temp.push(hooks);
-                    }
-                }
-            });
 
             // If any hooks exist, add them to the tasks list and execute them.
             if (temp) {
 
                 // Make sure the task list is an array.
-                if (!temp.push && !temp.pop) {
+                if (!utils.isArray(temp)) {
                     temp = [temp];
                 }
 
@@ -741,6 +720,9 @@ module.exports = function (grunt) {
                 if (tasks.length) {
                     grunt.task.run(tasks);
                 }
+
+                // Update the hooks list.
+                grunt.config.set('stache.hooks.' + name, tasks);
             }
         },
 
@@ -765,7 +747,7 @@ module.exports = function (grunt) {
 
             for (i = 0, j = navSearchFiles.length; i < j; i++) {
                 if (!navSearchFiles[i].showInSearch) {
-                    grunt.verbose.writeln('Ignoring from search: ' + navSearchFiles[i].uri);
+                    utils.log.verbose('Ignoring from search: ' + navSearchFiles[i].uri);
                 } else {
 
                     item = navSearchFiles[i];
@@ -821,6 +803,9 @@ module.exports = function (grunt) {
          */
         stacheBuild: function (context) {
             var tasks = [];
+
+            utils.setupHooks();
+
             switch (context) {
                 default:
                     tasks = [
@@ -853,6 +838,8 @@ module.exports = function (grunt) {
         stacheServe: function (context) {
             var tasks,
                 watchNewer;
+
+            utils.setupHooks();
 
             // Only update the watchNewer property if it is explicitly set in bash.
             // Otherwise, we'll use the value set in the stache.yml config (see default, below).
@@ -891,10 +878,10 @@ module.exports = function (grunt) {
             if (watchNewer) {
                 tasks.push('watch:pages');
                 tasks.push('watch:core');
-                grunt.log.writeln("Stache is set to rebuild only those pages that have changed. (To rebuild the entire site, type `stache serve:all`.)");
+                utils.log("Stache is set to rebuild only those pages that have changed (to rebuild the entire site when files change, type `stache serve:all`).");
             } else {
                 tasks.push('watch:all');
-                grunt.log.writeln("Stache is set to rebuild the entire site when content files change. (To rebuild only those pages that have changed, type `stache serve:newer`.)");
+                utils.log("Stache is set to rebuild the entire site when content files change (to rebuild only those pages that have changed, type `stache serve:newer`).");
             }
 
             // Add the postStache hook:
@@ -922,6 +909,55 @@ module.exports = function (grunt) {
      * Utility functions
      */
     utils = {
+
+        /**
+         * Converts deprecated hooks to their supported counterparts.
+         */
+        checkDeprecatedHooks: function () {
+            var deprecatedHookNames,
+                hooks;
+
+            deprecatedHookNames = [
+                'preStacheHooks',
+                'postStacheHooks',
+                'preAssembleHooks',
+                'postAssembleHooks'
+            ];
+            hooks = grunt.config.get('stache.hooks');
+
+            // Check if any deprecated hook names are registered.
+            deprecatedHookNames.forEach(function (deprecatedName) {
+                var deprecatedHook,
+                    hookName,
+                    message;
+
+                deprecatedHook = grunt.config.get('stache.' + deprecatedName);
+                hookName = deprecatedName.replace("Hooks", "");
+
+                // Are there any deprecated hooks registered?
+                if (deprecatedHook) {
+
+                    message = 'You are referencing the deprecated hook, ' + deprecatedName + '. Consider using `hooks.' + hookName + '`.';
+                    utils.log(message['yellow']);
+
+                    // The user passed the hooks as an array
+                    if (utils.isArray(deprecatedHook)) {
+                        deprecatedHooks.forEach(function (hook) {
+                            hooks[hookName].push(hook);
+                        });
+                    }
+
+                    // It's just a string
+                    else {
+                        hooks[hookName].push(deprecatedHook);
+                    }
+                }
+            });
+
+            // Save the hooks.
+            grunt.config.set('stache.hooks', hooks);
+        },
+
         createTitle: function (name, separator, isBreadcrumbs) {
             var output = '',
                 parts = name.indexOf('/') > -1 ? name.split('/') : [name];
@@ -961,10 +997,10 @@ module.exports = function (grunt) {
                     configFileString.split(',').forEach(function (file) {
                         file = file.trim();
                         if (grunt.file.exists(file)) {
-                            grunt.log.writeln('Importing config file ' + file);
+                            utils.log('Importing config file ' + file);
                             localConfig = merge(localConfig, grunt.file.readYAML(file));
                         } else {
-                            grunt.log.writeln('Error importing config file ' + file);
+                            utils.log('Error importing config file ' + file);
                         }
                     });
 
@@ -972,7 +1008,7 @@ module.exports = function (grunt) {
 
                 // Only one file specified.
                 else if (grunt.file.exists(configFileString)) {
-                    grunt.log.writeln('Importing config file ' + configFileString);
+                    utils.log('Importing config file ' + configFileString);
                     localConfig = grunt.file.readYAML(configFileString);
                 }
 
@@ -984,7 +1020,7 @@ module.exports = function (grunt) {
 
             // Expand default local Stache YAML file into workable object, if it exists.
             else if (grunt.file.exists(stache.pathConfig)) {
-                grunt.log.writeln('Defaulting to config file ' + stache.pathConfig);
+                utils.log('Defaulting to config file ' + stache.pathConfig);
                 localConfig = grunt.file.readYAML(stache.pathConfig);
             }
 
@@ -997,6 +1033,46 @@ module.exports = function (grunt) {
             stache.config = merge(stacheConfig, localConfig);
             grunt.config.set('stache.config', stache.config);
             return stache.config;
+        },
+
+        isArray: function (arr) {
+            return (arr.pop && arr.push);
+        },
+
+        /**
+         * Using grunt.log, this method prefixes a message with a "branded" phrase
+         * to allow users to easily spot Stache-specific console messages.
+         *
+         * @param [string] message
+         */
+        log: function (message) {
+            grunt.log.writeln('STACHE '['magenta'] + message);
+        },
+
+        /**
+         * Validates the format of hooks that were added to defaults.stache, or by third-parties.
+         * This method also catches deprecated hooks from previous versions.
+         */
+        setupHooks: function () {
+            var hooks,
+                message;
+
+            hooks = grunt.config.get('stache.hooks');
+
+            // Make sure the task list is an array.
+            if (hooks) {
+                for (var hook in hooks) {
+                    if (!utils.isArray(hooks[hook])) {
+                        message = 'The hooks in "' + hook + '" should be listed in an array format (for example, `[\'task1\', \'task2\', \'task3\']`).';
+                        utils.log(message['yellow']);
+                        hooks[hook] = [hooks[hook]];
+                    }
+                }
+                grunt.config.set('stache.hooks', hooks);
+            }
+
+            // Add any deprecated hooks, if necessary.
+            utils.checkDeprecatedHooks();
         },
 
         slugify: function (title) {
@@ -1073,6 +1149,13 @@ module.exports = function (grunt) {
                     utils.sortByOrder(key + '.' + idx + '.nav_links', sortAscending);
                 }
             });
+        }
+    };
+
+    // Allow the log method to recognize grunt's "verbose" mode.
+    utils.log.verbose = function (message) {
+        if (grunt.option('verbose') === true) {
+            utils.log(message);
         }
     };
 
@@ -1155,7 +1238,7 @@ module.exports = function (grunt) {
         'version',
         'Display the current installed stache version.',
         function () {
-            grunt.log.writeln('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
+            utils.log('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
         }
     );
 
