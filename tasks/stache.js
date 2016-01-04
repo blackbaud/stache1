@@ -307,22 +307,16 @@ module.exports = function (grunt) {
                     'createAutoNav',
                     'hook:preAssemble',
                     'newer:assemble',
-                    'checkNewer',
                     'hook:postAssemble',
                     'copy:build'
                 ]
             };
-
             return {
                 options: {
                     livereload: grunt.option('livereload') || '<%= stache.config.livereload %>'
                 },
                 all: {
-                    files: (function (arr) {
-                        arr.push.apply(pages.files);
-                        arr.push.apply(core.files);
-                        return arr;
-                    }([])),
+                    files: pages.files.concat(core.files),
                     tasks: core.tasks
                 },
                 core: core,
