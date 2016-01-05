@@ -330,7 +330,7 @@ module.exports = function (grunt) {
      */
     tasks = {
         /**
-         * Creates pages from jsdoc and sandcastle specifications.
+         * Creates pages from jsdoc, sandcastle, and powershell specifications.
          */
         createAutoPages: function () {
             var found,
@@ -338,8 +338,17 @@ module.exports = function (grunt) {
                 processStacheCastleSingleNode,
                 processStacheCastleMultipleNodes;
 
-            pages = {};
-            found = false;
+            processStacheCastleMultipleNodes = function (page, node, parents) {
+                if (node) {
+                    if (node.length > 0) {
+                        node.forEach(function (v, idx) {
+                            processStacheCastleSingleNode(page, v, parents, node);
+                        });
+                    } else {
+                        processStacheCastleSingleNode(page, node, parents);
+                    }
+                }
+            };
 
             processStacheCastleSingleNode = function (page, node, parents, siblings) {
                 var parentsToSend,
@@ -378,57 +387,53 @@ module.exports = function (grunt) {
                 }
             };
 
-            processStacheCastleMultipleNodes = function (page, node, parents) {
-                if (node) {
-                    if (node.length > 0) {
-                        node.forEach(function (v, idx) {
-                            processStacheCastleSingleNode(page, v, parents, node);
-                        });
-                    } else {
-                        processStacheCastleSingleNode(page, node, parents);
-                    }
-                }
-            };
+            pages = grunt.config.get('assemble.custom.options.pages');
 
-            grunt.config.get('stache.pages').forEach(function (page) {
-                var json,
-                    i,
-                    j;
+            if (pages) {
+                found = true;
+            } else {
+                pages = {};
+                found = false;
+                grunt.config.get('stache.pages').forEach(function (page) {
+                    var json,
+                        i,
+                        j;
 
-                if (page.url) {
-                    if (grunt.file.exists(page.url)) {
-                        found = true;
-                        json = grunt.file.readJSON(page.url);
-                        switch (page.type) {
-                            case 'jsdoc':
-                                for (i = 0, j = json.length; i < j; i++) {
-                                    json[i].layout = 'layout-' + page.type;
-                                    pages[page.dest + json[i].key + '/index.md'] = {
-                                        data: json[i]
-                                    };
-                                }
-                            break;
-                            case 'sandcastle':
-                                processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
-                            break;
-                            case 'powershell':
-                                json = json.cmdlet;
-                                for (i = 0, j = json.length; i < j; i++) {
-                                    json[i].layout = 'layout-' + page.type;
-                                    pages[page.dest + json[i].name + '/index.md'] = {
-                                        data: json[i]
-                                    };
-                                }
-                            break;
-                            default:
-                                utils.log('Unknown custom page datatype.');
-                            break;
+                    if (page.url) {
+                        if (grunt.file.exists(page.url)) {
+                            found = true;
+                            json = grunt.file.readJSON(page.url);
+                            switch (page.type) {
+                                case 'jsdoc':
+                                    for (i = 0, j = json.length; i < j; i++) {
+                                        json[i].layout = 'layout-' + page.type;
+                                        pages[page.dest + json[i].key + '/index.md'] = {
+                                            data: json[i]
+                                        };
+                                    }
+                                break;
+                                case 'sandcastle':
+                                    processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
+                                break;
+                                case 'powershell':
+                                    json = json.cmdlet;
+                                    for (i = 0, j = json.length; i < j; i++) {
+                                        json[i].layout = 'layout-' + page.type;
+                                        pages[page.dest + json[i].name + '/index.md'] = {
+                                            data: json[i]
+                                        };
+                                    }
+                                break;
+                                default:
+                                    utils.log('Unknown custom page datatype.');
+                                break;
+                            }
                         }
+                    } else {
+                        utils.log('tasks.createAutoPages() - "url" is required for each item in "stache.pages."');
                     }
-                } else {
-                    grunt.log.error('"url" is required for each item in "stache.pages."');
-                }
-            });
+                });
+            }
 
             // Assemble requires even dummy files to run this task.
             if (found) {
@@ -463,9 +468,13 @@ module.exports = function (grunt) {
                 sandcastlePath,
                 sorted;
 
+            utils.log("Building navigation links...Please wait.");
+
             // User has manually specific nav_links in stache.yml. Let's use that.
             if (grunt.config('stache.config.nav_type') !== 'directory') {
                 grunt.config.set('bypassContext', grunt.config.get('stache.config.nav_links'));
+                utils.log("Navigation links set in config.");
+                utils.log("Done.".green);
                 return;
             }
 
@@ -639,6 +648,8 @@ module.exports = function (grunt) {
 
             // Now we can rearrange each item according to order
             utils.sortByOrder(root + navKey, true);
+
+            utils.log("Done.".green);
         },
 
         /**
