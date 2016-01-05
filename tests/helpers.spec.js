@@ -13,9 +13,9 @@
 
     fs = require('fs');
     grunt = require('grunt');
-    stache = require('../../../tasks/stache.js')(grunt);
+    stache = require('../tasks/stache.js')(grunt);
     Handlebars = require('handlebars');
-    helpers = require('../helpers.js');
+    helpers = require('../src/helpers/helpers.js');
     Log = require('log');
     log = new Log('info');
 
@@ -77,7 +77,7 @@
     /**
      * Handlebars.helpers
      */
-    describe('helpers', function () {
+    describe('Handlebars Helpers', function () {
         describe('extendRootOptions()', function () {
 
             // Represents 'this' inside a Handlebars helper function.
@@ -138,7 +138,7 @@
                 hash = hash || {};
 
                 return Handlebars.helpers.include(
-                    'src/helpers/test/fixtures/' + file,
+                    'tests/fixtures/' + file,
                     {},
                     {
                         hash: hash
@@ -188,7 +188,7 @@
 
                 src = [
                     '{{# minify collapseWhitespace=true }}',
-                    readFile('src/helpers/test/fixtures/multiline.html'),
+                    readFile('tests/fixtures/multiline.html'),
                     '{{/ minify }}'
                 ].join('\n');
                 content = Handlebars.compile(src)();
@@ -203,7 +203,7 @@
                 page: {
                     dirname: '/root/sample-parent/sample-child/sample-grandchild'
                 },
-                template: readFile('src/helpers/test/fixtures/partial-breadcrumbs.html')
+                template: readFile('tests/fixtures/partial-breadcrumbs.html')
             };
 
             /**
@@ -220,10 +220,12 @@
             }
 
             it('should return a string', function () {
-                var result;
+                var bypassContext,
+                    result;
 
+                bypassContext = grunt.config.get('bypassContext');
                 context.page.dirname = '/';
-                hbsOptions.hash.nav_links = grunt.config.get('bypassContext').nav_links;
+                hbsOptions.hash.nav_links = bypassContext.nav_links;
                 result = compile(context);
 
                 expect(result).toEqual(jasmine.any(String));
@@ -324,7 +326,7 @@
     /**
      * Utilities
      */
-    describe('helpers.utils', function () {
+    describe('Handlebars Utilities', function () {
         describe('concatArray()', function () {
             it('should append the second array to the first', function () {
                 var arr1,
