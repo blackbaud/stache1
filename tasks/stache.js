@@ -947,7 +947,7 @@ module.exports = function (grunt) {
 
                     // The user passed the hooks as an array
                     if (utils.isArray(deprecatedHook)) {
-                        deprecatedHooks.forEach(function (hook) {
+                        deprecatedHook.forEach(function (hook) {
                             hooks[hookName].push(hook);
                         });
                     }
