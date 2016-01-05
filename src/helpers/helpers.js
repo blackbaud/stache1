@@ -641,6 +641,8 @@ module.exports.register = function (Handlebars, options, params) {
                 render,
                 fixNewline,
                 escape,
+                moreIndex,
+                more,
                 src,
                 start,
                 end;
@@ -664,6 +666,7 @@ module.exports.register = function (Handlebars, options, params) {
             fixNewline = typeof options.hash.fixNewline !== 'undefined' ? options.hash.fixNewline : true;
             escape = typeof options.hash.escape !== 'undefined' ? options.hash.escape : false;
             indent = options.hash.indent || 0;
+            more = typeof options.hash.more !== 'undefined' ? options.hash.more : true;
 
             if (typeof Handlebars.partials[fileWithPath] !== 'undefined') {
                 template = Handlebars.partials[fileWithPath];
@@ -694,6 +697,14 @@ module.exports.register = function (Handlebars, options, params) {
 
             // Allows for raw includes
             if (typeof template === 'string' && render) {
+
+                // User has specifically asked for the show more functionality
+                // This must happen prior to compilation below
+                moreIndex = template.indexOf('<!-- more -->');
+                if (!more && moreIndex > -1) {
+                    template = template.substr(0, moreIndex) + '\n{{ include stache.config.partial_blog_more }}\n';
+                }
+
                 r = Handlebars.compile(template)(c);
             } else if (!render) {
                 r = template;
