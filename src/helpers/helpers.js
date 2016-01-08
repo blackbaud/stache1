@@ -514,6 +514,7 @@ module.exports.register = function (Handlebars, options, params) {
             var r = '',
                 slim = [],
                 counter = 0,
+                h,
                 i = 0,
                 m = 0,
                 mod = options.hash.mod || 0,
@@ -556,8 +557,13 @@ module.exports.register = function (Handlebars, options, params) {
                     }
 
                     if (show) {
-                        for (var a in options.hash) {
-                          context[i][a] = options.hash[a];
+                        // Add any hash values to the context.
+                        if (options.hash) {
+                            for (h in options.hash) {
+                                if (options.hash.hasOwnProperty(h)) {
+                                    context[i][h] = options.hash[h];
+                                }
+                            }
                         }
                         slim.push(context[i]);
                         counter++;
