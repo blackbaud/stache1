@@ -272,12 +272,16 @@ module.exports = function (grunt) {
             html: '<%= stache.config.build %>**/*.html'
         },
 
-        // When serving, watch for changes.
-        watch: (function () {
-            var core,
-                pages;
-
-            core = {
+        // Watch certain files and perform tasks when they change.
+        watch: {
+            options: {
+                livereload: grunt.option('livereload') || '<%= stache.config.livereload %>',
+                newerFiles: [
+                    '<%= stache.config.content %>**/*.*',
+                    '<%= stache.config.static %>**/*.*'
+                ]
+            },
+            core: {
                 files: [
                     '<%= stache.config.includes %>**/*.*',
                     'stache.yml'
@@ -292,37 +296,8 @@ module.exports = function (grunt) {
                     'hook:postAssemble',
                     'copy:build'
                 ]
-            };
-            pages = {
-                options: {
-                    spawn: false
-                },
-                files: [
-                    '<%= stache.config.content %>**/*.*',
-                    '<%= stache.config.static %>**/*.*'
-                ],
-                tasks: [
-                    'status:serve',
-                    'expandFileMappings',
-                    'createAutoNav',
-                    'hook:preAssemble',
-                    'newer:assemble',
-                    'hook:postAssemble',
-                    'copy:build'
-                ]
-            };
-            return {
-                options: {
-                    livereload: grunt.option('livereload') || '<%= stache.config.livereload %>'
-                },
-                all: {
-                    files: pages.files.concat(core.files),
-                    tasks: core.tasks
-                },
-                core: core,
-                pages: pages
-            };
-        }())
+            }
+        }
     };
 
     /**
@@ -801,6 +776,7 @@ module.exports = function (grunt) {
         },
 
         /**
+         * Bash command: stache build
          * Runs a series of tasks.
          * Adding the switch statement to get access to any context commands.
          * Not doing anything with the context currently, but we probably will,
@@ -837,6 +813,25 @@ module.exports = function (grunt) {
         },
 
         /**
+         * Bash command: stache help
+         * Prints Stache's available commands.
+         */
+        stacheHelp: function () {
+            grunt.task.run([
+                'asciify:help',
+                'availableTasks'
+            ]);
+        },
+
+        /**
+         * Bash command: stache new
+         * This task is registered here in order to show up in the available
+         * tasks help screen. (It's defined in the blackbaud-stache-cli package.)
+         */
+        stacheNew: function () {},
+
+        /**
+         * Bash command: stache serve
          * Runs a series of tasks, issues a local server, and watches for newer
          * files, depending on the type of watch set in the stache.yml file.
          */
@@ -881,8 +876,7 @@ module.exports = function (grunt) {
 
             // Determine which watch task to execute:
             if (watchNewer) {
-                tasks.push('watch:pages');
-                tasks.push('watch:core');
+                tasks.push('watch:newer');
                 utils.log("Stache is set to rebuild only those pages that have changed (to rebuild the entire site when files change, type `stache serve:all`).");
             } else {
                 tasks.push('watch:all');
@@ -897,6 +891,14 @@ module.exports = function (grunt) {
         },
 
         /**
+         * Bash command: stache version
+         * Prints the current version of Stache in the console.
+         */
+        stacheVersion: function () {
+            utils.log('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
+        },
+
+        /**
          * Sets current build/serve status.
          * Doesn't overwrite previous status (allows for external builds).
          *
@@ -907,6 +909,55 @@ module.exports = function (grunt) {
             if (grunt.config.get(key) === '') {
                 grunt.config.set(key, status);
             }
+        },
+
+        /**
+         * Watch all tasks.
+         */
+        watchAll: function () {
+            grunt.config.merge({
+                watch: {
+                    all: {
+                        files: defaults.watch.options.newerFiles,
+                        tasks: [
+                            'status:serve',
+                            'expandFileMappings',
+                            'createAutoNav',
+                            'hook:preAssemble',
+                            'assemble',
+                            'hook:postAssemble',
+                            'copy:build'
+                        ]
+                    }
+                }
+            });
+            grunt.task.run('watch');
+        },
+
+        /**
+         * Watch newer tasks.
+         */
+        watchNewer: function () {
+            grunt.config.merge({
+                watch: {
+                    newer: {
+                        options: {
+                            spawn: false
+                        },
+                        files: defaults.watch.options.newerFiles,
+                        tasks: [
+                            'status:serve',
+                            'expandFileMappings',
+                            'createAutoNav',
+                            'hook:preAssemble',
+                            'newer:assemble',
+                            'hook:postAssemble',
+                            'newer:copy:build'
+                        ]
+                    }
+                }
+            });
+            grunt.task.run('watch');
         }
     };
 
@@ -1191,61 +1242,19 @@ module.exports = function (grunt) {
     grunt.registerTask('hook', tasks.hook);
     grunt.registerTask('prepareSearch', tasks.prepareSearch);
     grunt.registerTask('status', tasks.status);
+    grunt.registerTask('watch:newer', tasks.watchNewer);
+    grunt.registerTask('watch:all', tasks.watchAll);
 
     /**
      * Public Tasks
      * These tasks will be made available to end users of Stache.
      */
-
-    // Bash command: stache [task]
-    grunt.registerTask(
-        'stache',
-        tasks.stache
-    );
-
-    // Bash command: stache build
-    grunt.registerTask(
-        'build',
-        'Build the documentation',
-        tasks.stacheBuild
-    );
-
-    // Bash command: stache help
-    grunt.registerTask(
-        'help',
-        'Display this help message.',
-        [
-            'asciify:help',
-            'availableTasks'
-        ]
-    );
-
-    /**
-     * Bash command: stache new
-     * This task is registered here in order to show up in the available
-     * tasks help screen. (It's defined in the blackbaud-stache-cli package.)
-     */
-    grunt.registerTask(
-        'new',
-        'Create a new site using the STACHE boilerplate.',
-        function () {}
-    );
-
-    // Bash command: stache serve
-    grunt.registerTask(
-        'serve',
-        'Serve the documentation',
-        tasks.stacheServe
-    );
-
-    // Bash command: stache version
-    grunt.registerTask(
-        'version',
-        'Display the current installed stache version.',
-        function () {
-            utils.log('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
-        }
-    );
+    grunt.registerTask('stache', tasks.stache);
+    grunt.registerTask('build', 'Build the documentation', tasks.stacheBuild);
+    grunt.registerTask('help', 'Display available Stache commands', tasks.stacheHelp);
+    grunt.registerTask('new', 'Create a new site using the Stache boilerplate', tasks.stacheNew);
+    grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
+    grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
 
     // Expose certain things for testing purposes.
     return {

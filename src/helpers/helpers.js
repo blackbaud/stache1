@@ -350,7 +350,7 @@ module.exports.register = function (Handlebars, options, params) {
                 keysLength;
 
             config = stache.config;
-            keys = ['showBreadcrumbs'];
+            keys = ['showBreadcrumbs', 'blogReadMoreLabel'];
             keysLength = keys.length;
 
             for (i = 0; i < keysLength; ++i) {
@@ -539,6 +539,8 @@ module.exports.register = function (Handlebars, options, params) {
                     });
                 }
 
+
+
                 j = context.length;
                 for (i; i < j; i++) {
 
@@ -554,6 +556,9 @@ module.exports.register = function (Handlebars, options, params) {
                     }
 
                     if (show) {
+                        for (var a in options.hash) {
+                          context[i][a] = options.hash[a];
+                        }
                         slim.push(context[i]);
                         counter++;
                     }
@@ -702,7 +707,7 @@ module.exports.register = function (Handlebars, options, params) {
                 // This must happen prior to compilation below
                 moreIndex = template.indexOf('<!-- more -->');
                 if (!more && moreIndex > -1) {
-                    template = template.substr(0, moreIndex) + '\n{{ include stache.config.partial_blog_more }}\n';
+                    template = template.substr(0, moreIndex) + '{{ include stache.config.partial_blog_more }}';
                 }
 
                 r = Handlebars.compile(template)(c);
