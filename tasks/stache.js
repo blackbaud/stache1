@@ -24,19 +24,23 @@ module.exports = function (grunt) {
         utils,
         yfm;
 
+
     assemble = require('assemble');
     cheerio = require('cheerio');
     jit = require('jit-grunt');
     merge = require('merge');
     yfm = require('assemble-yaml');
 
+
     // No reason to pass files used for search around in grunt.config
     navSearchFiles = [];
+
 
     // Original reference to the header logging function.
     // Disabling grunt header unless verbose is enabled
     header = grunt.log.header;
     grunt.log.header = function () {};
+
 
     /**
      * Grunt config defaults
@@ -299,6 +303,7 @@ module.exports = function (grunt) {
             }
         }
     };
+
 
     /**
      * Grunt tasks
@@ -914,22 +919,14 @@ module.exports = function (grunt) {
         },
 
         /**
-         * Watch all tasks.
+         * Rebuilds all pages when any single page is changed.
          */
         watchAll: function () {
             grunt.config.merge({
                 watch: {
                     all: {
                         files: defaults.watch.options.newerFiles,
-                        tasks: [
-                            'status:serve',
-                            'expandFileMappings',
-                            'createAutoNav',
-                            'hook:preAssemble',
-                            'assemble',
-                            'hook:postAssemble',
-                            'copy:build'
-                        ]
+                        tasks: defaults.watch.core.tasks
                     }
                 }
             });
@@ -937,7 +934,7 @@ module.exports = function (grunt) {
         },
 
         /**
-         * Watch newer tasks.
+         * Only rebuilds those pages that have been changed during a serve session.
          */
         watchNewer: function () {
             grunt.config.merge({
@@ -949,8 +946,6 @@ module.exports = function (grunt) {
                         files: defaults.watch.options.newerFiles,
                         tasks: [
                             'status:serve',
-                            'expandFileMappings',
-                            'createAutoNav',
                             'hook:preAssemble',
                             'newer:assemble',
                             'hook:postAssemble',
@@ -962,6 +957,7 @@ module.exports = function (grunt) {
             grunt.task.run('watch');
         }
     };
+
 
     /**
      * Utility functions
@@ -1220,6 +1216,7 @@ module.exports = function (grunt) {
         }
     };
 
+
     // Merge options and defaults for the entire project.
     grunt.config.merge(defaults);
 
@@ -1236,6 +1233,7 @@ module.exports = function (grunt) {
         pluginsRoot: grunt.config.get('stache.dir') + 'node_modules/'
     });
 
+
     /**
      * Private Tasks
      * These tasks will be used by stache, but not available for end-user consumption.
@@ -1250,6 +1248,7 @@ module.exports = function (grunt) {
     grunt.registerTask('watch:newer', tasks.watchNewer);
     grunt.registerTask('watch:all', tasks.watchAll);
 
+
     /**
      * Public Tasks
      * These tasks will be made available to end users of Stache.
@@ -1260,6 +1259,7 @@ module.exports = function (grunt) {
     grunt.registerTask('new', 'Create a new site using the Stache boilerplate', tasks.stacheNew);
     grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
     grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
+
 
     // Expose certain things for testing purposes.
     return {
