@@ -148,7 +148,7 @@ module.exports = function (grunt) {
         },
 
         // Listing our available tasks
-        availableTasks: {
+        availabletasks: {
             tasks: {
                 options: {
                     filter: 'include',
@@ -819,7 +819,7 @@ module.exports = function (grunt) {
         stacheHelp: function () {
             grunt.task.run([
                 'asciify:help',
-                'availableTasks'
+                'availabletasks'
             ]);
         },
 
@@ -877,10 +877,12 @@ module.exports = function (grunt) {
             // Determine which watch task to execute:
             if (watchNewer) {
                 tasks.push('watch:newer');
-                utils.log("Stache is set to rebuild only those pages that have changed (to rebuild the entire site when files change, type `stache serve:all`).");
+                utils.log("Site set to rebuild only those pages that have been changed.");
+                utils.log("(To rebuild all pages when one is changed, type `stache serve:all`)".grey);
             } else {
                 tasks.push('watch:all');
-                utils.log("Stache is set to rebuild the entire site when content files change (to rebuild only those pages that have changed, type `stache serve:newer`).");
+                utils.log("Site set to rebuild all pages when one is changed.");
+                utils.log("(To rebuild only those pages that have been changed, type `stache serve:newer`)".grey);
             }
 
             // Add the postStache hook:
@@ -1101,9 +1103,19 @@ module.exports = function (grunt) {
          *
          * @param [string] message
          */
-        log: function (message) {
-            grunt.log.writeln('STACHE '['magenta'] + message);
-        },
+        log: (function () {
+            var log = function (message) {
+                grunt.log.writeln('STACHE '['magenta'] + message);
+            };
+
+            // Allow the log method to recognize grunt's "verbose" mode.
+            log.verbose = function (message) {
+                if (grunt.option('verbose') === true) {
+                    utils.log(message);
+                }
+            };
+            return log;
+        }()),
 
         /**
          * Validates the format of hooks that were added to defaults.stache, or by third-parties.
@@ -1208,13 +1220,6 @@ module.exports = function (grunt) {
         }
     };
 
-    // Allow the log method to recognize grunt's "verbose" mode.
-    utils.log.verbose = function (message) {
-        if (grunt.option('verbose') === true) {
-            utils.log(message);
-        }
-    };
-
     // Merge options and defaults for the entire project.
     grunt.config.merge(defaults);
 
@@ -1225,8 +1230,8 @@ module.exports = function (grunt) {
     jit(grunt, {
         usemin: 'grunt-usemin',
         useminPrepare: 'grunt-usemin',
-        availableTasks: 'grunt-available-tasks',
-        'sass-blackbaud': 'grunt-sass'
+        'sass-blackbaud': 'grunt-sass',
+        'availabletasks': 'grunt-available-tasks'
     })({
         pluginsRoot: grunt.config.get('stache.dir') + 'node_modules/'
     });
