@@ -3,7 +3,7 @@ layout: layout-sidebar
 limit: <%= stache.config.blog_recent_limit %>
 ---
 
-{{ include 'partial-blog-header' }}
+{{ include 'partial-blog-header' this isSingle=true }}
 
 <div class="blog-post">
   {{# inherit stache.config.markdown markdown }}
@@ -15,17 +15,17 @@ limit: <%= stache.config.blog_recent_limit %>
 
 {{# if stache.config.comments }}
   {{# is comments false }} {{ else }}
-  {{# raw }}
-    <div class="blog-comments">
-      <div id="disqus_thread"></div>
-      <script type="text/javascript">
-        (function() {
-          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-          dsq.src = '//{{ stache.config.comments_key }}.disqus.com/embed.js';
-          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-      </script>
-    </div>
-  {{/ raw }}
+    {{# raw }}
+      <div class="blog-comments">
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+          (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//{{ stache.config.comments_key }}.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+        </script>
+      </div>
+    {{/ raw }}
   {{/ is }}
 {{/ if }}
