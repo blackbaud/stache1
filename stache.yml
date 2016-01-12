@@ -50,6 +50,7 @@ partial_google_tagmanager: <%= stache.config.partials %>partial-google-tagmanage
 partial_powershell: <%= stache.config.partials %>partial-layout-powershell.hbs
 partial_back_to_top: <%= stache.config.partials %>partial-back-to-top.hbs
 partial_blog_more: <%= stache.config.partials %>partial-blog-more.hbs
+partial_nav: <%= stache.config.partials %>partial-nav.hbs
 
 # =============================================
 # STACHE - SERVING
@@ -93,6 +94,20 @@ blog_recent_limit: 10
 bootstrap_container: container
 modules:
   - stache
+
+# =============================================
+# STACHE - SIDEBAR
+# =============================================
+sidebar:
+  headingSelector: h2
+  isSmoothScroll: true
+  isSticky: true
+  numParents: 0
+  position: left
+  showHeadings: true
+  showParentSiblings: false
+  sortBy:
+  sortOrder: asc
 
 # =============================================
 # STACHE - ANALYTICS

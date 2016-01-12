@@ -4,6 +4,26 @@ showHeadings: true
 ---
 
 <div class="row">
+  <main class="col-sm-9{{# compare sidebar.position "===" "left" }} col-sm-push-3{{/ compare }}">
+    Content...
+  </main>
+  <aside class="col-sm-3{{# compare sidebar.position "===" "left" }} col-sm-pull-9{{/ compare }}">
+    <div class="sidebar">
+      {{# if sidebar.title }}
+        <h3>{{ sidebar.title }}</h3>
+      {{/ if }}
+      {{# withPageNav }}
+        {{!--# if sidebar.isSticky --}}
+          {{!-- include 'partial-nav' class="nav nav-stacked nav-sidebar affix" --}}
+        {{!-- else --}}
+          {{ include 'partial-nav' class="nav nav-stacked nav-sidebar" }}
+        {{!--/ if --}}
+      {{/ withPageNav }}
+    </div>
+  </aside>
+</div>
+
+<div class="row">
   <div class="col-sm-3">
     <div class="sidebar">
       {{# minify collapseWhitespace=true removeEmptyElements=true }}

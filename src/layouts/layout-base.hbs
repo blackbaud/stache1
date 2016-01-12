@@ -62,7 +62,13 @@
 
       {{!-- BREADCRUMBS --}}
       {{# if showBreadcrumbs }}
-        {{{ include 'partial-breadcrumbs' }}}
+        {{# withBreadcrumbs }}
+          <div id="wrap-breadcrumbs">
+              <div class="container">
+                {{ include 'partial-nav' class="breadcrumb" }}
+              </div>
+          </div>
+        {{/ withBreadcrumbs }}
       {{/ if }}
 
       {{# stachePostProcess }}

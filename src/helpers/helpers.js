@@ -1,63 +1,40 @@
 /**
-* Stache Helpers
-* Bobby Earl, 2015-02-12
-*
-* NOTES
-*   - Overriding default markdown / md helpers for one simple reason.
-*   - Nesting HTML generated text with four spaces.  Marked thinks this is code.
-*   - In order to fix this, I override the rule that supports four spaces as code.
-*   - The GFM (```) for code still works.
-**/
+ * Stache Helpers
+ * Bobby Earl, 2015-02-12
+ */
 
 /*jslint node: true, nomen: true, plusplus: true */
-'use strict';
-
 module.exports.register = function (Handlebars, options, params) {
+    'use strict';
 
     var bypassContext,
-        stache,
-        merge,
         cheerio,
-        fs,
-        marked,
-        minify,
-        UglifyJS,
-        renderer,
-        lexer,
         counts,
+        engine,
+        fs,
+        helpers,
+        merge,
+        minify,
+        Navigation,
+        stache,
+        UglifyJS,
         utils;
 
     bypassContext = params.assemble.options.getBypassContext();
     stache = params.assemble.options.stache;
+    counts = {};
+
     merge = require('merge');
     cheerio = require('cheerio');
     fs = require('fs');
-    marked = require('marked');
     minify = require('html-minifier').minify;
     UglifyJS = require('uglify-js');
-    renderer = new marked.Renderer();
-    lexer = new marked.Lexer();
-    counts = {};
-
-    lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
-
-    // https://github.com/chjj/marked/blob/master/lib/marked.js#L890
-    renderer.image = function (href, title, text) {
-        var out;
-        if (href.indexOf('/static/') > -1) {
-            href = href.replace('/static/', '/');
-        }
-        out = '<img src="' + href + '" alt="' + text + '"';
-        if (title) {
-            out += ' title="' + title + '"';
-        }
-        out += renderer.options.xhtml ? '/>' : '>';
-        return out;
-    };
+    Navigation = require('../../src/helpers/navigation')(Handlebars, params);
+    engine = require('../../src/helpers/engine')();
 
     /**
-    * Utility function to get the basename
-    **/
+     * Utility function to get the basename
+     */
     function basename(path, clean) {
         var dot;
 
@@ -90,10 +67,10 @@ module.exports.register = function (Handlebars, options, params) {
     }
 
     /**
-    * Determines if two URI's are the same.
-    * Supports thinking parent uri's are active.
-    * Wrapping the basenames in '/' prevents false matches, ie docs vs docs2 vs 2docs.
-    **/
+     * Determines if two URI's are the same.
+     * Supports thinking parent uri's are active.
+     * Wrapping the basenames in '/' prevents false matches, ie docs vs docs2 vs 2docs.
+     */
     function isActiveNav(dest, uri, parentCanBeActive) {
         dest = '/' + basename(dest) + '/';
         uri = '/' + basename(uri) + '/';
@@ -101,8 +78,8 @@ module.exports.register = function (Handlebars, options, params) {
     }
 
     /**
-    * Recursively searches the nav array to find the active link
-    **/
+     * Recursively searches the nav array to find the active link
+     */
     function getActiveNav(dest, nav_links, parentCanBeActive) {
         var j = nav_links.length,
             i = 0,
@@ -123,26 +100,8 @@ module.exports.register = function (Handlebars, options, params) {
     }
 
     /**
-    * Light wrapper for our custom markdown processor.
-    * Only process a block of Markdown once.
-    **/
-    function getMarked(md) {
-
-        var comment = '\n<!-- STACHE MARKED -->\n',
-            input = md || '';
-
-        return input.indexOf(comment) > -1 ? input : [
-            comment,
-            marked.parser(lexer.lex(input), {
-                headerPrefix: '',
-                renderer: renderer
-            })
-        ].join('');
-    }
-
-    /**
-    * http://stackoverflow.com/questions/10015027/javascript-tofixed-not-rounding
-    **/
+     * http://stackoverflow.com/questions/10015027/javascript-tofixed-not-rounding
+     */
     function toFixed(number, precision) {
         var multiplier = Math.pow(10, precision + 1),
             wholeNumber = Math.round(number * multiplier).toString(),
@@ -156,15 +115,15 @@ module.exports.register = function (Handlebars, options, params) {
     }
 
     /**
-    * Fixes Windows Newlines
-    **/
+     * Fixes Windows Newlines
+     */
     function newline(text) {
         return text ? text.replace(/\r\n/g, '\n') : '';
     }
 
     /**
-    * Function for arranging an array for vertical display.
-    **/
+     * Function for arranging an array for vertical display.
+     */
     function forVertical(arr, cols) {
         var temp,
             r = [],
@@ -191,6 +150,22 @@ module.exports.register = function (Handlebars, options, params) {
      * Utility methods.
      */
     utils = {
+
+        /**
+         *
+         *
+         * @param {} []
+         */
+        checkDeprecatedVariables: function (options) {
+            if (this.sidebar_title) {
+                utils.log("[" + this.page.dirname + "] The YAML variable `sidebar_title` is no longer supported! Use: \n---\nsidebar:\n  title: My Title\n---");
+                this.sidebar.title = this.sidebar_title;
+            }
+            if (this.showHeadings) {
+                utils.log("[" + this.page.dirname + "] The YAML variable `showHeadings` is no longer supported! Use: \n---\nsidebar:\n  showHeadings: true\n---");
+                this.sidebar.showHeadings = this.showHeadings;
+            }
+        },
 
         /**
          * Returns a single array, the second appended to the first.
@@ -315,6 +290,15 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
+         *
+         *
+         * @param {} []
+         */
+        log: function (message) {
+            console.log("STACHE".magenta, message.yellow);
+        },
+
+        /**
          * Returns the local value, if set. Otherwise, returns the global value.
          * If neither is set, return false.
          *
@@ -323,7 +307,9 @@ module.exports.register = function (Handlebars, options, params) {
          */
         mergeOption: function (global, local) {
             var merged = false;
-            if (typeof local === "undefined") {
+            if (typeof global === "object") {
+                merged = merge(true, global, local);
+            } else if (typeof local === "undefined") {
                 if (typeof global !== "undefined") {
                     merged = global;
                 }
@@ -335,7 +321,35 @@ module.exports.register = function (Handlebars, options, params) {
 
     };
 
-    Handlebars.registerHelper({
+    helpers = {
+
+        /**
+         *
+         *
+         * @param {} []
+         */
+        withPageNav: function (options) {
+
+            var navLinks,
+                navOptions,
+                sidebarNav;
+
+            navLinks = utils.getNavLinks(options);
+
+            navOptions = this.sidebar;
+            navOptions.currentURI = this.page.dirname.split(stache.status)[1] + "/";
+            navOptions.pageMarkdown = this.pages[this.page.index].page;
+
+            sidebarNav = new Navigation(navLinks, navOptions);
+
+            this.nav_links = sidebarNav.getSidebarNavLinks(this.sidebar);
+
+            console.log("Preparing nav_links for ", this.page.name);
+            console.log("Done preparing nav_links. Finding parents...");
+            console.log("------------");
+
+            return options.fn(this);
+        },
 
         /**
          * Returns the preferred value of a YAML option (either root or page).
@@ -350,13 +364,15 @@ module.exports.register = function (Handlebars, options, params) {
                 keysLength;
 
             config = stache.config;
-            keys = ['showBreadcrumbs'];
+            keys = ['showBreadcrumbs', 'sidebar'];
             keysLength = keys.length;
 
             for (i = 0; i < keysLength; ++i) {
                 key = keys[i];
                 this[key] = utils.mergeOption(config[key], this[key]);
             }
+
+            utils.checkDeprecatedVariables.call(this, options);
 
             return options.fn(this);
         },
@@ -373,13 +389,13 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Get an operation from data.operations.
-        * @param {string} [property] - Returns a specific property of the operation.
-        * @param {string} [name] - Search the list of operations on any property.
-        * @example
-        * {{# withOperation name="Address (Create)" }} {{ id }} {{/ withOperation }}
-        * {{ getOperation name="Address (Create)" property="description" }}
-        **/
+         * Get an operation from data.operations.
+         * @param {string} [property] - Returns a specific property of the operation.
+         * @param {string} [name] - Search the list of operations on any property.
+         * @example
+         * {{# withOperation name="Address (Create)" }} {{ id }} {{/ withOperation }}
+         * {{ getOperation name="Address (Create)" property="description" }}
+         */
         getOperation: function (context) {
             var operations = params.assemble.options.data.operations,
                 hasProperty,
@@ -415,9 +431,9 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Shortcut for this "{{ getOperation name='Address (Create)' property='id' }}"
-        * AND, more importantly, it corrects the azure links.
-        **/
+         * Shortcut for this "{{ getOperation name='Address (Create)' property='id' }}"
+         * AND, more importantly, it corrects the azure links.
+         */
         getOperationUri: function (context) {
             var operation = Handlebars.helpers.getOperation(context);
             if (operation) {
@@ -426,51 +442,61 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Presents a context with the results returned from getOperation
-        * @param {array} [context.hash] - Optional key/value pairs to pass to @getOperation
-        **/
+         * Presents a context with the results returned from getOperation
+         *
+         * @param {array} [context.hash] - Optional key/value pairs to pass to @getOperation
+         */
         withOperation: function (context) {
             return context.fn(Handlebars.helpers.getOperation(context));
         },
 
         /**
-        * Compares "uri" in the current context (or the first parameter) to the current URL
-        * http://assemble.io/docs/FAQ.html
-        **/
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         * Compares "uri" in the current context (or the first parameter) to the current URL
+         * http://assemble.io/docs/FAQ.html
+         */
         isActiveNav: function (options) {
             var r = isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '', typeof options.hash.parentCanBeActive !== 'undefined' ? options.hash.parentCanBeActive : true);
             return r ? options.fn(this) : options.inverse(this);
         },
 
         /**
-        * Is the current page home
-        **/
+         * Is the current page home
+         */
         isHome: function (options) {
             var b = basename(options.hash.dest || this.page.dest || 'NOT_HOME', true);
             return b === '' ? options.fn(this) : options.inverse(this);
         },
 
         /**
-        * Debugging JSON content
-        **/
+         * Debugging JSON content
+         */
         json: function (context) {
             return JSON.stringify(context);
         },
 
         /**
-        * Does the current page have headings?
-        **/
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         * Does the current page have headings?
+         */
         hasHeadings: function (options) {
             return Handlebars.helpers.eachHeading(options) !== '' ? options.fn(this) : options.inverse(this);
         },
 
         /**
-        * This innocuous looking helper took quite a long time to figure out.
-        * It takes the current pages entire RAW source, crompiles it, and loads it in cheerio (jQuery).
-        * Then it parses for the relevant headers and executes the template for each one.
-        **/
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         * This innocuous looking helper took quite a long time to figure out.
+         * It takes the current pages entire RAW source, crompiles it, and loads it in cheerio (jQuery).
+         * Then it parses for the relevant headers and executes the template for each one.
+         */
         eachHeading: function (options) {
-            var html = getMarked(Handlebars.compile(options.hash.page || '')(params.assemble.options)),
+            var html = engine.getCached(Handlebars.compile(options.hash.page || '')(params.assemble.options)),
                 r = '';
 
             cheerio(options.hash.selector || 'h2', html).each(function () {
@@ -486,9 +512,9 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Finds the current page in the nav and iterates its child links
-        * Supports optional modulus parameters.
-        **/
+         * Finds the current page in the nav and iterates its child links
+         * Supports optional modulus parameters.
+         */
         eachChildLink: function (options) {
             var dest = '',
                 nav_links = '',
@@ -510,6 +536,11 @@ module.exports.register = function (Handlebars, options, params) {
             return Handlebars.helpers.eachWithMod(active, options);
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
         eachWithMod: function (context, options) {
             var r = '',
                 slim = [],
@@ -585,33 +616,33 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Loop through a certain number of times.
-        **/
+         * Loop through a certain number of times.
+         */
         loop: function (options) {
             var arr = new Array(options.hash.end);
             return Handlebars.helpers.each(arr, options);
         },
 
         /**
-        * Overriding default markdown helper.
-        * See notes above for more information.
-        **/
+         * Overriding default markdown helper.
+         * See notes above for more information.
+         */
         markdown: function (options) {
-            var md = getMarked(options.fn(this)),
+            var md = engine.getCached(options.fn(this)),
                 nl = typeof options.hash.newline !== 'undefined' ? options.hash.newline : true;
             return nl ? newline(md) : md;
         },
 
         /**
-        * If settings say to render, wrap content in div
-        **/
+         * If settings say to render, wrap content in div
+         */
         draft: function (options) {
-            return stache.config.draft ? ('<div class="draft">\r\n\r\n' + getMarked(options.fn(this)) + '\r\n\r\n</div>') : '';
+            return stache.config.draft ? ('<div class="draft">\r\n\r\n' + engine.getCached(options.fn(this)) + '\r\n\r\n</div>') : '';
         },
 
         /**
-        * Return the current count for the required property
-        **/
+         * Return the current count for the required property
+         */
         count: function (prop) {
             if (typeof counts[prop] === 'undefined') {
                 counts[prop] = 0;
@@ -620,15 +651,15 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Increment the count for the required property
-        **/
+         * Increment the count for the required property
+         */
         increment: function (prop) {
             counts[prop] = typeof counts[prop] === 'undefined' ? 0 : (counts[prop] + 1);
         },
 
         /**
-        * Render a file.  Search path order: partial, absolute, relative, content folder
-        **/
+         * Render a file.  Search path order: partial, absolute, relative, content folder
+         */
         include: function (file, context, options) {
 
             var r,
@@ -746,8 +777,8 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Supports object + arrays
-        **/
+         * Supports object + arrays
+         */
         length: function (collection) {
             var length,
                 prop;
@@ -766,8 +797,8 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Total all coverage from instanbul report
-        **/
+         * Total all coverage from instanbul report
+         */
         withCoverageTotal: function (collection, property, options) {
 
             var file,
@@ -806,15 +837,19 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * I don't believe this works
-        **/
+         * (I don't believe this works)
+         *
+         * @param {} []
+         */
         raw: function (options) {
             return '<raw>' + options.fn(this) + '</raw>';
         },
 
         /**
-        *
-        **/
+         *
+         *
+         * @param {} []
+         */
         withFirstProperty: function (collection, options) {
             var property;
             for (property in collection) {
@@ -825,8 +860,10 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        *
-        **/
+         *
+         *
+         * @param {} []
+         */
         percent: function (dividend, divisor, options) {
             var r = 0;
             if (dividend === divisor) {
@@ -838,36 +875,36 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Many functions of the site, including grunt-yeomin fails on windows line endings.
-        * This helpers replaces those.
-        **/
+         * Many functions of the site, including grunt-yeomin fails on windows line endings.
+         * This helpers replaces those.
+         */
         newline: function (text) {
             return newline(text);
         },
 
         /**
-        * Same as newline method but wraps context
-        **/
+         * Same as newline method but wraps context
+         */
         withNewline: function (options) {
             return newline(options.fn(this));
         },
 
         /**
-        * Block helper to emulate the following logic:
-        * If Globally true then
-        *   Unless locally false (blank is true)
-        *     TRUE
-        * Else if globally false then
-        *   If locally true then
-        *     TRUE
-        **/
+         * Block helper to emulate the following logic:
+         * If Globally true then
+         *   Unless locally false (blank is true)
+         *     TRUE
+         * Else if globally false then
+         *   If locally true then
+         *     TRUE
+         */
         inherit: function (global, local, options) {
             return (utils.mergeOption(global, local)) ? options.fn(this) : options.inverse(this);
         },
 
         /**
-        * Consistently generate the edit link for a file in GitHub
-        **/
+         * Consistently generate the edit link for a file in GitHub
+         */
         editInGitHubLink: function (options) {
             var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
             return [
@@ -885,8 +922,8 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Consistently generate the edit link for a file in Prose
-        **/
+         * Consistently generate the edit link for a file in Prose
+         */
         editInProseLink: function (options) {
             var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
             return [
@@ -903,8 +940,8 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Consistently generate the trigger link for a site rebuild
-        **/
+         * Consistently generate the trigger link for a site rebuild
+         */
         triggerSiteRebuildLink: function () {
             return [
                 stache.config.kudu_protocol,
@@ -914,8 +951,8 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Consistently generate the GitHub repo link (for site rebuild)
-        **/
+         * Consistently generate the GitHub repo link (for site rebuild)
+         */
         gitSourceLink: function () {
             return [
                 stache.config.github_protocol,
@@ -931,30 +968,30 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Allows context against specific item in object
-        **/
+         * Allows context against specific item in object
+         */
         withItem: function (object, options) {
             return typeof object[options.hash.key] !== 'undefined' ? options.fn(object[options.hash.key]) : '';
         },
 
         /**
-        * Removes the extension from a filename
-        **/
+         * Removes the extension from a filename
+         */
         removeExt: function (filename) {
             var dot = filename.lastIndexOf('.');
             return dot > -1 ? filename.substr(0, dot) : filename;
         },
 
         /**
-        * Is the item an array or object?
-        **/
+         * Is the item an array or object?
+         */
         isArray: function (item, options) {
             return Handlebars.Utils.isArray(item) ? options.fn(this) : options.inverse(this);
         },
 
         /**
-        * Helper for converting Sandcastle types to Prism types
-        **/
+         * Helper for converting Sandcastle types to Prism types
+         */
         getPrismType: function (type) {
             var r = type;
             switch (type.toUpperCase()) {
@@ -970,16 +1007,16 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Used instead of us having to pass the nav_links object around in the context.
-        **/
+         * Used instead of us having to pass the nav_links object around in the context.
+         */
         withNavLinks: function (options) {
             return Handlebars.helpers.eachWithMod(utils.getNavLinks(options), options);
         },
 
         /**
-        * If the user specified a maximum parent depth, make sure this is within in.
-        * This is still a WIP.
-        **/
+         * If the user specified a maximum parent depth, make sure this is within in.
+         * This is still a WIP.
+         */
         withinParentDepth: function (options) {
             var a = options.hash.sidebarCurrentDepth || -1,
                 b = options.hash.sidebarParentDepth || -1;
@@ -992,8 +1029,8 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Normalizes Sandcastle URL
-        **/
+         * Normalizes Sandcastle URL
+         */
         normalizeSandcastleUrl: function (url) {
             var u = url || '';
 
@@ -1003,9 +1040,9 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Creates a url "slug" based on a string
-        * This sucks, but needs to be the same implementation in stache.js
-        **/
+         * Creates a url "slug" based on a string
+         * This sucks, but needs to be the same implementation in stache.js
+         */
         slugify: function (title) {
             return title
                 .toLowerCase()
@@ -1014,8 +1051,8 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Last chance for us to modify the page's content at build-time.
-        **/
+         * Last chance for us to modify the page's content at build-time.
+         */
         stachePostProcess: function (options) {
             var html = options.fn(this);
             if (stache.filters.postHandlebars && stache.filters.postHandlebars.length > 0) {
@@ -1027,8 +1064,8 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Uglifys a block of JavaScript
-        **/
+         * Uglifys a block of JavaScript
+         */
         uglify: function (options) {
             return UglifyJS.minify(options.fn(this), {
                 fromString: true
@@ -1036,13 +1073,14 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-        * Minify an HTML block
-        **/
+         * Minify an HTML block
+         */
         minify: function (options) {
             return minify(options.fn(this), options.hash);
         }
 
-    });
+    };
 
+    Handlebars.registerHelper(helpers);
     module.exports.utils = utils;
 };

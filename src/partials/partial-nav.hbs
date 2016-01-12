@@ -1,0 +1,12 @@
+{{# if nav_links }}
+    <ul class="{{ class }}">
+        {{# each nav_links }}
+            {{# if showInNav }}
+                <li{{# if class }} class="{{ class }}"{{/ if }}>
+                    <a href="{{ uri }}">{{ name }}</a>
+                    {{ include 'partial-nav' class="nav subnav" }}
+                </li>
+            {{/ if }}
+        {{/ each }}
+    </ul>
+{{/ if }}
