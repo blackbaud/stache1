@@ -24,19 +24,23 @@ module.exports = function (grunt) {
         utils,
         yfm;
 
+
     assemble = require('assemble');
     cheerio = require('cheerio');
     jit = require('jit-grunt');
     merge = require('merge');
     yfm = require('assemble-yaml');
 
+
     // No reason to pass files used for search around in grunt.config
     navSearchFiles = [];
+
 
     // Original reference to the header logging function.
     // Disabling grunt header unless verbose is enabled
     header = grunt.log.header;
     grunt.log.header = function () {};
+
 
     /**
      * Grunt config defaults
@@ -148,7 +152,7 @@ module.exports = function (grunt) {
         },
 
         // Listing our available tasks
-        availableTasks: {
+        availabletasks: {
             tasks: {
                 options: {
                     filter: 'include',
@@ -272,12 +276,16 @@ module.exports = function (grunt) {
             html: '<%= stache.config.build %>**/*.html'
         },
 
-        // When serving, watch for changes.
-        watch: (function () {
-            var core,
-                pages;
-
-            core = {
+        // Watch certain files and perform tasks when they change.
+        watch: {
+            options: {
+                livereload: grunt.option('livereload') || '<%= stache.config.livereload %>',
+                newerFiles: [
+                    '<%= stache.config.content %>**/*.*',
+                    '<%= stache.config.static %>**/*.*'
+                ]
+            },
+            core: {
                 files: [
                     '<%= stache.config.includes %>**/*.*',
                     'stache.yml'
@@ -292,38 +300,10 @@ module.exports = function (grunt) {
                     'hook:postAssemble',
                     'copy:build'
                 ]
-            };
-            pages = {
-                options: {
-                    spawn: false
-                },
-                files: [
-                    '<%= stache.config.content %>**/*.*',
-                    '<%= stache.config.static %>**/*.*'
-                ],
-                tasks: [
-                    'status:serve',
-                    'expandFileMappings',
-                    'createAutoNav',
-                    'hook:preAssemble',
-                    'newer:assemble',
-                    'hook:postAssemble',
-                    'copy:build'
-                ]
-            };
-            return {
-                options: {
-                    livereload: grunt.option('livereload') || '<%= stache.config.livereload %>'
-                },
-                all: {
-                    files: pages.files.concat(core.files),
-                    tasks: core.tasks
-                },
-                core: core,
-                pages: pages
-            };
-        }())
+            }
+        }
     };
+
 
     /**
      * Grunt tasks
@@ -801,6 +781,7 @@ module.exports = function (grunt) {
         },
 
         /**
+         * Bash command: stache build
          * Runs a series of tasks.
          * Adding the switch statement to get access to any context commands.
          * Not doing anything with the context currently, but we probably will,
@@ -837,6 +818,25 @@ module.exports = function (grunt) {
         },
 
         /**
+         * Bash command: stache help
+         * Prints Stache's available commands.
+         */
+        stacheHelp: function () {
+            grunt.task.run([
+                'asciify:help',
+                'availabletasks'
+            ]);
+        },
+
+        /**
+         * Bash command: stache new
+         * This task is registered here in order to show up in the available
+         * tasks help screen. (It's defined in the blackbaud-stache-cli package.)
+         */
+        stacheNew: function () {},
+
+        /**
+         * Bash command: stache serve
          * Runs a series of tasks, issues a local server, and watches for newer
          * files, depending on the type of watch set in the stache.yml file.
          */
@@ -881,12 +881,13 @@ module.exports = function (grunt) {
 
             // Determine which watch task to execute:
             if (watchNewer) {
-                tasks.push('watch:pages');
-                tasks.push('watch:core');
-                utils.log("Stache is set to rebuild only those pages that have changed (to rebuild the entire site when files change, type `stache serve:all`).");
+                tasks.push('watch:newer');
+                utils.log("Site set to rebuild only those pages that have been changed.");
+                utils.log("(To rebuild all pages when one is changed, type `stache serve:all`)".grey);
             } else {
                 tasks.push('watch:all');
-                utils.log("Stache is set to rebuild the entire site when content files change (to rebuild only those pages that have changed, type `stache serve:newer`).");
+                utils.log("Site set to rebuild all pages when one is changed.");
+                utils.log("(To rebuild only those pages that have been changed, type `stache serve:newer`)".grey);
             }
 
             // Add the postStache hook:
@@ -894,6 +895,14 @@ module.exports = function (grunt) {
 
             // Run the tasks
             grunt.task.run(tasks);
+        },
+
+        /**
+         * Bash command: stache version
+         * Prints the current version of Stache in the console.
+         */
+        stacheVersion: function () {
+            utils.log('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
         },
 
         /**
@@ -907,8 +916,48 @@ module.exports = function (grunt) {
             if (grunt.config.get(key) === '') {
                 grunt.config.set(key, status);
             }
+        },
+
+        /**
+         * Rebuilds all pages when any single page is changed.
+         */
+        watchAll: function () {
+            grunt.config.merge({
+                watch: {
+                    all: {
+                        files: defaults.watch.options.newerFiles,
+                        tasks: defaults.watch.core.tasks
+                    }
+                }
+            });
+            grunt.task.run('watch');
+        },
+
+        /**
+         * Only rebuilds those pages that have been changed during a serve session.
+         */
+        watchNewer: function () {
+            grunt.config.merge({
+                watch: {
+                    newer: {
+                        options: {
+                            spawn: false
+                        },
+                        files: defaults.watch.options.newerFiles,
+                        tasks: [
+                            'status:serve',
+                            'hook:preAssemble',
+                            'newer:assemble',
+                            'hook:postAssemble',
+                            'newer:copy:build'
+                        ]
+                    }
+                }
+            });
+            grunt.task.run('watch');
         }
     };
+
 
     /**
      * Utility functions
@@ -1050,9 +1099,19 @@ module.exports = function (grunt) {
          *
          * @param [string] message
          */
-        log: function (message) {
-            grunt.log.writeln('STACHE '['magenta'] + message);
-        },
+        log: (function () {
+            var log = function (message) {
+                grunt.log.writeln('STACHE '['magenta'] + message);
+            };
+
+            // Allow the log method to recognize grunt's "verbose" mode.
+            log.verbose = function (message) {
+                if (grunt.option('verbose') === true) {
+                    utils.log(message);
+                }
+            };
+            return log;
+        }()),
 
         /**
          * Validates the format of hooks that were added to defaults.stache, or by third-parties.
@@ -1157,12 +1216,6 @@ module.exports = function (grunt) {
         }
     };
 
-    // Allow the log method to recognize grunt's "verbose" mode.
-    utils.log.verbose = function (message) {
-        if (grunt.option('verbose') === true) {
-            utils.log(message);
-        }
-    };
 
     // Merge options and defaults for the entire project.
     grunt.config.merge(defaults);
@@ -1174,11 +1227,12 @@ module.exports = function (grunt) {
     jit(grunt, {
         usemin: 'grunt-usemin',
         useminPrepare: 'grunt-usemin',
-        availableTasks: 'grunt-available-tasks',
-        'sass-blackbaud': 'grunt-sass'
+        'sass-blackbaud': 'grunt-sass',
+        'availabletasks': 'grunt-available-tasks'
     })({
         pluginsRoot: grunt.config.get('stache.dir') + 'node_modules/'
     });
+
 
     /**
      * Private Tasks
@@ -1191,61 +1245,21 @@ module.exports = function (grunt) {
     grunt.registerTask('hook', tasks.hook);
     grunt.registerTask('prepareSearch', tasks.prepareSearch);
     grunt.registerTask('status', tasks.status);
+    grunt.registerTask('watch:newer', tasks.watchNewer);
+    grunt.registerTask('watch:all', tasks.watchAll);
+
 
     /**
      * Public Tasks
      * These tasks will be made available to end users of Stache.
      */
+    grunt.registerTask('stache', tasks.stache);
+    grunt.registerTask('build', 'Build the documentation', tasks.stacheBuild);
+    grunt.registerTask('help', 'Display available Stache commands', tasks.stacheHelp);
+    grunt.registerTask('new', 'Create a new site using the Stache boilerplate', tasks.stacheNew);
+    grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
+    grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
 
-    // Bash command: stache [task]
-    grunt.registerTask(
-        'stache',
-        tasks.stache
-    );
-
-    // Bash command: stache build
-    grunt.registerTask(
-        'build',
-        'Build the documentation',
-        tasks.stacheBuild
-    );
-
-    // Bash command: stache help
-    grunt.registerTask(
-        'help',
-        'Display this help message.',
-        [
-            'asciify:help',
-            'availableTasks'
-        ]
-    );
-
-    /**
-     * Bash command: stache new
-     * This task is registered here in order to show up in the available
-     * tasks help screen. (It's defined in the blackbaud-stache-cli package.)
-     */
-    grunt.registerTask(
-        'new',
-        'Create a new site using the STACHE boilerplate.',
-        function () {}
-    );
-
-    // Bash command: stache serve
-    grunt.registerTask(
-        'serve',
-        'Serve the documentation',
-        tasks.stacheServe
-    );
-
-    // Bash command: stache version
-    grunt.registerTask(
-        'version',
-        'Display the current installed stache version.',
-        function () {
-            utils.log('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
-        }
-    );
 
     // Expose certain things for testing purposes.
     return {

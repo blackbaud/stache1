@@ -1,38 +1,43 @@
-<h2>
-  <a href="{{uri}}">{{ name }}</a>
-</h2>
+<div class="blog-header{{# if isSingle }} page-header{{/ if }}">
 
-<ul class="list-inline">
-  {{# if pubDate }}
-    <li>
-      <i class="fa fa-calendar"></i>
-      {{ pubDate }}
-    </li>
+  {{# if isSingle }}
+    <h1>{{ name }}</h1>
+  {{ else }}
+    <h2><a href="{{uri}}">{{ name }}</a></h2>
   {{/ if }}
-  {{# if author }}
-    <li>
-      <a href="https://github.com/{{ author }}">
-        <img src="https://avatars.githubusercontent.com/{{ author }}?s=15" alt="{{ author }}" class="author-image" />
-        {{# if authorName }}
-          {{ authorName }}
-        {{ else }}
-          {{ author }}
-        {{/ if }}
-      </a>
-    </li>
-  {{/ if }}
-  {{# is comments false }}{{ else }}
-    <li>
-      <i class="fa fa-comments"></i>
-      <a href="{{ uri }}#disqus_thread">Comments</a>
-    </li>
-  {{/ is }}
-  {{# if sticky }}
-    <li>
-      <span class="label label-warning">
-        <i class="fa fa-star"></i>
-        Sticky
-      </span>
-    </li>
-  {{/ if }}
-</ul>
+
+  <ul class="list-inline">
+    {{# if pubDate }}
+      <li>
+        <i class="fa fa-calendar"></i>
+        {{ pubDate }}
+      </li>
+    {{/ if }}
+    {{# if author }}
+      <li>
+        <a href="https://github.com/{{ author }}">
+          <img src="https://avatars.githubusercontent.com/{{ author }}?s=15" alt="{{ author }}" class="author-image" />
+          {{# if authorName }}
+            {{ authorName }}
+          {{ else }}
+            {{ author }}
+          {{/ if }}
+        </a>
+      </li>
+    {{/ if }}
+    {{# is comments false }}{{ else }}
+      <li>
+        <i class="fa fa-comments"></i>
+        <a href="{{ uri }}#disqus_thread">Comments</a>
+      </li>
+    {{/ is }}
+    {{# if sticky }}
+      <li>
+        <span class="label label-warning">
+          <i class="fa fa-star"></i>
+          Sticky
+        </span>
+      </li>
+    {{/ if }}
+  </ul>
+</div>

@@ -64,7 +64,7 @@
         e.preventDefault();
 
         // Forcing #top = 0, Verifying element exists
-        if (href !== "#top" && el) {
+        if (href !== "#top" && el.length) {
             top = el.offset().top;
         }
 
