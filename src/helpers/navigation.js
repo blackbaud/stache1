@@ -6,11 +6,11 @@
         Handlebars,
         merge,
         _params,
-        stacheMarked;
+        engine;
 
     $ = require('cheerio');
     merge = require('merge');
-    stacheMarked = require('../../src/helpers/stache-marked')();
+    engine = require('../../src/helpers/engine')();
 
 
     /**
@@ -94,7 +94,7 @@
         // Build the current page's HTML from Markdown.
         template = Handlebars.compile(instance.settings.pageMarkdown);
         buffer = template(_params.assemble.options);
-        html = stacheMarked.getCached(buffer);
+        html = engine.getCached(buffer);
 
         // Find all of the headings.
         $(instance.settings.headingSelector, html).each(function () {

@@ -35,7 +35,6 @@
         marked = require('marked');
         renderer = new marked.Renderer();
         lexer = new marked.Lexer();
-
         lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
 
         // https://github.com/chjj/marked/blob/master/lib/marked.js#L890
