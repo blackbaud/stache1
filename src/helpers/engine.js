@@ -30,6 +30,19 @@
         ].join('');
     }
 
+    function markdown(options) {
+        var md = getCached(options.fn(this)),
+            nl = typeof options.hash.newline !== 'undefined' ? options.hash.newline : true;
+        return nl ? newline(md) : md;
+    }
+
+    /**
+     * Fixes Windows Newlines
+     */
+    function newline(text) {
+        return text ? text.replace(/\r\n/g, '\n') : '';
+    }
+
     module.exports = function (options) {
 
         marked = require('marked');
@@ -52,7 +65,9 @@
         };
 
         return {
-            getCached: getCached
+            getCached: getCached,
+            markdown: markdown,
+            newline: newline
         };
     };
 

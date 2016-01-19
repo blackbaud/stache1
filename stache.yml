@@ -1,7 +1,6 @@
 # =============================================
-# STACHE - PATHS
+# PATHS
 # =============================================
-
 base: /
 static: static/
 content: content/
@@ -19,9 +18,8 @@ error:
   404: <%= stache.config.build %>404/index.html
 
 # =============================================
-# STACHE - SERVING
+# PARTIALS
 # =============================================
-
 partial_omnibar: <%= stache.config.partials %>partial-omnibar.hbs
 partial_header_nav: <%= stache.config.partials %>partial-header-nav.hbs
 partial_header_nav_link: <%= stache.config.partials %>partial-header-nav-link.hbs
@@ -53,9 +51,8 @@ partial_blog_more: <%= stache.config.partials %>partial-blog-more.hbs
 partial_nav: <%= stache.config.partials %>partial-nav.hbs
 
 # =============================================
-# STACHE - SERVING
+# SERVE
 # =============================================
-
 port: 4000
 livereload: 4100
 omnibar_title: Developer
@@ -67,58 +64,34 @@ video_description_top: false
 watchNewer: true
 
 # =============================================
-# STACHE - LAYOUTS
+# LAYOUTS
 # =============================================
-
 latest_sky_release: 1.4.2
-back_to_top: false
-back_to_top_offset: 220
 clipboard: true
 prism: true
 sky: true
-draft: true
 showHeader: true
 showFooter: true
 showOmnibar: true
-showNavDropdown: false
 showAdminToolbar: false
 showAdminTrigger: false
-showBreadcrumbs: false
 editInGitHub: true
 editInProse: true
 markdown: true
 contribute: false
-comments: true
-comments_key: blackbaud
-blog_recent_limit: 10
 bootstrap_container: container
 modules:
   - stache
 
 # =============================================
-# STACHE - SIDEBAR
+# PAGE
 # =============================================
-sidebar:
-  headingSelector: h2
-  isSmoothScroll: true
-  isSticky: true
-  numParents: 0
-  position: left
-  showHeadings: true
-  showParentSiblings: false
-  sortBy:
-  sortOrder: asc
+showInHeader: true
+showInFooter: true
 
 # =============================================
-# STACHE - ANALYTICS
+# NAVIGATION
 # =============================================
-google_analytics_id: UA-2418840-1
-google_tagmanager_id: GTM-W56QP9
-
-# =============================================
-# STACHE - NAVIGATION
-# =============================================
-
 nav_type: directory # or links
 nav_title_home: Home
 nav_links:
@@ -126,11 +99,38 @@ nav_exclude:
   - 404
   - assets
   - .DS_Store
+navDropdownDepth: 1
+back_to_top: false
+back_to_top_offset: 220
+showBreadcrumbs: false
+showNavDropdown: false
+homeLinkURI: <%= stache.config.base %>
+homeLinkName: <%= stache.config.nav_title_home %>
+
+sidebar:
+  headingSelector: h2
+  isSmoothScroll: true
+  limit: -1
+  numParents: 99
+  position: left
+  showHeadings: true
+  sortBy:
+  sortOrder: asc
 
 # =============================================
-# STACHE - BLOG
+# ANALYTICS
+# =============================================
+google_analytics_id: UA-2418840-1
+google_tagmanager_id: GTM-W56QP9
+
+# =============================================
+# BLOG
 # =============================================
 blogReadMoreLabel: 'Continue reading...'
+comments: true
+comments_key: blackbaud
+blog_recent_limit: 10
+draft: false
 
 # =============================================
 # STACHE - EDIT LINKS

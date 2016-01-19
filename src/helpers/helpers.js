@@ -16,6 +16,8 @@ module.exports.register = function (Handlebars, options, params) {
         merge,
         minify,
         Navigation,
+        navLinks,
+        slog,
         stache,
         UglifyJS,
         utils;
@@ -31,325 +33,9 @@ module.exports.register = function (Handlebars, options, params) {
     UglifyJS = require('uglify-js');
     Navigation = require('../../src/helpers/navigation')(Handlebars, params);
     engine = require('../../src/helpers/engine')();
-
-    /**
-     * Utility function to get the basename
-     */
-    function basename(path, clean) {
-        var dot;
-
-        // Clean is optional, but defaults to true
-        if (arguments.length !== 2) {
-            clean = true;
-        }
-
-        if (clean && path) {
-            dot = path.lastIndexOf('.');
-
-            // Replace the extension
-            path = dot === -1 ? path : path.substr(0, dot);
-
-            // Replace the default page name
-            path = path.replace('index', '');
-
-            // Remove our build folder
-            path = path.replace(stache.config.build, '');
-
-            // Remove leading & trailing slash
-            path = path.replace(/^\/|\/$/g, '');
-
-        // Always return a path
-        } else {
-            path = '';
-        }
-
-        return path;
-    }
-
-    /**
-     * Determines if two URI's are the same.
-     * Supports thinking parent uri's are active.
-     * Wrapping the basenames in '/' prevents false matches, ie docs vs docs2 vs 2docs.
-     */
-    function isActiveNav(dest, uri, parentCanBeActive) {
-        dest = '/' + basename(dest) + '/';
-        uri = '/' + basename(uri) + '/';
-        return (parentCanBeActive && uri !== '') ? dest.indexOf(uri) > -1 : uri === dest;
-    }
-
-    /**
-     * Recursively searches the nav array to find the active link
-     */
-    function getActiveNav(dest, nav_links, parentCanBeActive) {
-        var j = nav_links.length,
-            i = 0,
-            r = '';
-
-        for (i; i < j; i++) {
-            if (isActiveNav(dest, nav_links[i].uri, parentCanBeActive)) {
-                r = nav_links[i];
-            } else if (nav_links[i].nav_links) {
-                r = getActiveNav(dest, nav_links[i].nav_links, parentCanBeActive);
-            }
-            if (r !== '') {
-                break;
-            }
-        }
-
-        return r;
-    }
-
-    /**
-     * http://stackoverflow.com/questions/10015027/javascript-tofixed-not-rounding
-     */
-    function toFixed(number, precision) {
-        var multiplier = Math.pow(10, precision + 1),
-            wholeNumber = Math.round(number * multiplier).toString(),
-            length = wholeNumber.length - 1;
-
-        wholeNumber = wholeNumber.substr(0, length);
-        return [
-            wholeNumber.substr(0, length - precision),
-            wholeNumber.substr(-precision)
-        ].join('.');
-    }
-
-    /**
-     * Fixes Windows Newlines
-     */
-    function newline(text) {
-        return text ? text.replace(/\r\n/g, '\n') : '';
-    }
-
-    /**
-     * Function for arranging an array for vertical display.
-     */
-    function forVertical(arr, cols) {
-        var temp,
-            r = [],
-            row = 0,
-            col = 0,
-            len = arr.length,
-            rows = Math.ceil(len / cols);
-
-        while (row < rows) {
-            temp = row + (col * rows);
-            if (temp >= len) {
-                row++;
-                col = 0;
-            } else {
-                r.push(arr[temp]);
-                col++;
-            }
-        }
-
-        return r;
-    }
-
-    /**
-     * Utility methods.
-     */
-    utils = {
-
-        /**
-         *
-         *
-         * @param {} []
-         */
-        checkDeprecatedVariables: function (options) {
-            if (this.sidebar_title) {
-                utils.log("[" + this.page.dirname + "] The YAML variable `sidebar_title` is no longer supported! Use: \n---\nsidebar:\n  title: My Title\n---");
-                this.sidebar.title = this.sidebar_title;
-            }
-            if (this.showHeadings) {
-                utils.log("[" + this.page.dirname + "] The YAML variable `showHeadings` is no longer supported! Use: \n---\nsidebar:\n  showHeadings: true\n---");
-                this.sidebar.showHeadings = this.showHeadings;
-            }
-        },
-
-        /**
-         * Returns a single array, the second appended to the first.
-         *
-         * @param {array} [arr1] The array to be extended.
-         * @param {array} [arr2] The array to be appended to the first.
-         */
-        concatArray: function (arr1, arr2) {
-            var i,
-                len,
-                arr1IsArray,
-                arr2IsArray;
-
-            arr1IsArray = Handlebars.Utils.isArray(arr1);
-            arr2IsArray = Handlebars.Utils.isArray(arr2);
-
-            if (!arr1IsArray && !arr2IsArray) {
-                return [];
-            }
-
-            if (!arr2IsArray && arr1IsArray) {
-                return arr1;
-            }
-
-            if (!arr1IsArray && arr2IsArray) {
-                return arr2;
-            }
-
-            len = arr2.length;
-
-            for (i = 0; i < len; ++i) {
-                arr1.push(arr2[i]);
-            }
-
-            return arr1;
-        },
-
-        /**
-         * Returns an object representing a page's properties, only if its URI is
-         * a fragment of the active page's URI. The method receives an array of objects,
-         * to be checked against the active URI.
-         *
-         * @param {array} [navLinks] Array of objects representing pages.
-         * @param {string} [activeURI] The path of the active page.
-         */
-        findBreadcrumb: function (navLinks, activeURI) {
-            var breadcrumbs,
-                i,
-                navLink,
-                navLinksLength;
-
-            breadcrumbs = [];
-            navLinksLength = navLinks.length;
-
-            for (i = 0; i < navLinksLength; ++i) {
-
-                navLink = navLinks[i];
-
-                // Don't include the Home page because it cannot have sub-directories.
-                // (We add the Home page manually, in getBreadcrumbNavLinks.)
-                if (navLink.uri !== "/") {
-
-                    // Is this page's URI a fragment of the active page's URI?
-                    if (activeURI.indexOf(navLink.uri) > -1) {
-                        breadcrumbs.push({
-                            name: navLink.name,
-                            uri: navLink.uri
-                        });
-
-                        // Does this page have sub-directories?
-                        if (navLink.hasOwnProperty('nav_links')) {
-                            breadcrumbs = utils.concatArray(breadcrumbs, utils.findBreadcrumb(navLink.nav_links, activeURI));
-                        }
-
-                        break;
-                    }
-                }
-            }
-
-            // Set the final navigation link as 'active' and return the array.
-            if (breadcrumbs.length > 0) {
-                breadcrumbs[breadcrumbs.length - 1].active = true;
-                return breadcrumbs;
-            }
-
-            // The navigation links didn't contain a breadcrumb.
-            return false;
-        },
-
-        /**
-         * Returns an array representing all breadcrumb nav_links for a given page.
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        getBreadcrumbNavLinks: function (navLinks, activeURI) {
-            var config,
-                items;
-
-            config = (typeof stache !== "undefined") ? stache.config : {};
-            items = utils.findBreadcrumb(navLinks, activeURI);
-
-            // Add Home page.
-            if (items !== false) {
-                items.unshift({
-                    name: config.nav_title_home || 'Home',
-                    uri: config.base || '/'
-                });
-            }
-
-            return items;
-        },
-
-        /**
-         * Returns an array representing all pages, sorted.
-         * The array also respects page hierarchies: child pages are stored in the respective
-         * parent page's property, 'nav_links'.
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        getNavLinks: function (options) {
-            return (options.hash && options.hash.nav_links) ? options.hash.nav_links : bypassContext.nav_links || [];
-        },
-
-        /**
-         *
-         *
-         * @param {} []
-         */
-        log: function (message) {
-            console.log("STACHE".magenta, message.yellow);
-        },
-
-        /**
-         * Returns the local value, if set. Otherwise, returns the global value.
-         * If neither is set, return false.
-         *
-         * @param {various} [global] A global option's value (stache.yml)
-         * @param {various} [local] A local option's value (front-matter)
-         */
-        mergeOption: function (global, local) {
-            var merged = false;
-            if (typeof global === "object") {
-                merged = merge(true, global, local);
-            } else if (typeof local === "undefined") {
-                if (typeof global !== "undefined") {
-                    merged = global;
-                }
-            } else {
-                merged = local;
-            }
-            return merged;
-        }
-
-    };
+    slog = require('../../src/helpers/log')(params.assemble.grunt);
 
     helpers = {
-
-        /**
-         *
-         *
-         * @param {} []
-         */
-        withPageNav: function (options) {
-
-            var navLinks,
-                navOptions,
-                sidebarNav;
-
-            navLinks = utils.getNavLinks(options);
-
-            navOptions = this.sidebar;
-            navOptions.currentURI = this.page.dirname.split(stache.status)[1] + "/";
-            navOptions.pageMarkdown = this.pages[this.page.index].page;
-
-            sidebarNav = new Navigation(navLinks, navOptions);
-
-            this.nav_links = sidebarNav.getSidebarNavLinks(this.sidebar);
-
-            console.log("Preparing nav_links for ", this.page.name);
-            console.log("Done preparing nav_links. Finding parents...");
-            console.log("------------");
-
-            return options.fn(this);
-        },
 
         /**
          * Returns the preferred value of a YAML option (either root or page).
@@ -359,33 +45,209 @@ module.exports.register = function (Handlebars, options, params) {
         extendRootOptions: function (options) {
             var config,
                 i,
+                frontMatterVariables,
                 key,
-                keys,
                 keysLength;
 
             config = stache.config;
-            keys = ['showBreadcrumbs', 'sidebar', 'blogReadMoreLabel'];
-            keysLength = keys.length;
+
+            // This list should include page-specific variables only.
+            frontMatterVariables = [
+                'showBreadcrumbs',
+                'showInFooter',
+                'showInHeader',
+                'sidebar'
+            ];
+            keysLength = frontMatterVariables.length;
 
             for (i = 0; i < keysLength; ++i) {
-                key = keys[i];
+                key = frontMatterVariables[i];
                 this[key] = utils.mergeOption(config[key], this[key]);
             }
 
-            utils.checkDeprecatedVariables.call(this, options);
+            //utils.checkDeprecatedFrontMatter.call(this, options);
 
             return options.fn(this);
         },
 
         /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         *
          * Adds breadcrumb nav_links to the scope.
          *
          * @param {object} [options] Handlebars' options hash.
          */
         withBreadcrumbs: function (options) {
-            var activeURI = this.page.dirname + "/";
-            this.nav_links = utils.getBreadcrumbNavLinks(utils.getNavLinks(options), activeURI);
+            options.hash.location = "breadcrumbs";
+            return helpers.withNav.call(this, options);
+        },
+
+        /**
+         * Total all coverage from instanbul report
+         *
+         * @param {} []
+         * @param {} []
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withCoverageTotal: function (collection, property, options) {
+
+            var file,
+                r = {
+                    total: 0,
+                    covered: 0,
+                    skipped: 0,
+                    pct: 0
+                };
+
+            for (file in collection) {
+                if (collection[file].hasOwnProperty(property)) {
+                    r.total += parseInt(collection[file][property].total);
+                    r.covered += parseInt(collection[file][property].covered);
+                    r.skipped += parseInt(collection[file][property].skipped);
+                }
+            }
+
+            if (r.total > 0) {
+                r.pct = (r.covered / r.total) * 100;
+            }
+
+            if (r.pct < 50) {
+                r.cssClass = 'danger';
+            } else if (r.pct < 80) {
+                r.cssClass = 'warning';
+            } else {
+                r.cssClass = 'success';
+            }
+
+            if (options.hash.fixed && r.pct !== 100) {
+                r.pct = utils.toFixed(r.pct, options.hash.fixed);
+            }
+
+            return options.fn(r, options);
+        },
+
+        /**
+         *
+         *
+         * @param {} []
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withFirstProperty: function (collection, options) {
+            var property;
+            for (property in collection) {
+                if (collection.hasOwnProperty(property)) {
+                    return options.fn(collection[property]);
+                }
+            }
+        },
+
+        /**
+         * Allows context against specific item in object
+         *
+         * @param {} []
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withItem: function (object, options) {
+            return typeof object[options.hash.key] !== 'undefined' ? options.fn(object[options.hash.key]) : '';
+        },
+
+        /**
+         *
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withNav: function (options) {
+
+            var location,
+                navLinks,
+                navOptions,
+                nav;
+
+            navOptions = {};
+            location = (options.hash && options.hash.location) ? options.hash.location : "global";
+            navLinks = utils.getNavLinks(options);
+            nav = new Navigation(this.page.dirname.split(stache.status)[1] + "/");
+            nav.setNavLinks(navLinks);
+
+            switch (location) {
+                case "breadcrumbs":
+                    this.nav_links = nav.getAnchorsFor(location, {
+                        homeLinkName: stache.config.homeLinkName,
+                        homeLinkURI: stache.config.homeLinkURI
+                    });
+                break;
+                case "footer":
+                    this.nav_links = nav.getAnchorsFor(location, {});
+                break;
+                default:
+                case "header":
+                    this.nav_links = nav.getAnchorsFor(location, {
+                        showNavDropdown: stache.config.showNavDropdown,
+                        navDropdownDepth: stache.config.navDropdownDepth
+                    });
+                break;
+                case "sidebar":
+                    navOptions = merge(true, navOptions, this.sidebar);
+                    navOptions.pageMarkdown = this.pages[this.page.index].page;
+                    this.nav_links = nav.getAnchorsFor(location, navOptions);
+                break;
+            }
+
             return (this.nav_links !== false) ? options.fn(this) : options.inverse(this);
+        },
+
+        /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         *
+         * Used instead of us having to pass the nav_links object around in the context.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withNavLinks: function (options) {
+            return Handlebars.helpers.eachWithMod(utils.getNavLinks(options), options);
+        },
+
+        /**
+         * Same as newline method but wraps context
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withNewline: function (options) {
+            return engine.newline(options.fn(this));
+        },
+
+        /**
+         * Presents a context with the results returned from getOperation
+         *
+         * @param {array} [context.hash] - Optional key/value pairs to pass to @getOperation
+         */
+        withOperation: function (context) {
+            return context.fn(Handlebars.helpers.getOperation(context));
+        },
+
+        /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         *
+         * If the user specified a maximum parent depth, make sure this is within in.
+         * This is still a WIP.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withinParentDepth: function (options) {
+            var a = options.hash.sidebarCurrentDepth || -1,
+                b = options.hash.sidebarParentDepth || -1;
+
+            if (a === -1 || b === -1) {
+                return options.fn(this);
+            } else {
+                return options.fn(this);
+            }
         },
 
         /**
@@ -433,6 +295,8 @@ module.exports.register = function (Handlebars, options, params) {
         /**
          * Shortcut for this "{{ getOperation name='Address (Create)' property='id' }}"
          * AND, more importantly, it corrects the azure links.
+         *
+         * @param {} []
          */
         getOperationUri: function (context) {
             var operation = Handlebars.helpers.getOperation(context);
@@ -442,31 +306,27 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-         * Presents a context with the results returned from getOperation
-         *
-         * @param {array} [context.hash] - Optional key/value pairs to pass to @getOperation
-         */
-        withOperation: function (context) {
-            return context.fn(Handlebars.helpers.getOperation(context));
-        },
-
-        /**
          * ------------------
          * (!) DEPRECATED (!)
          * ------------------
+         *
          * Compares "uri" in the current context (or the first parameter) to the current URL
          * http://assemble.io/docs/FAQ.html
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         isActiveNav: function (options) {
-            var r = isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '', typeof options.hash.parentCanBeActive !== 'undefined' ? options.hash.parentCanBeActive : true);
+            var r = utils.isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '', typeof options.hash.parentCanBeActive !== 'undefined' ? options.hash.parentCanBeActive : true);
             return r ? options.fn(this) : options.inverse(this);
         },
 
         /**
          * Is the current page home
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         isHome: function (options) {
-            var b = basename(options.hash.dest || this.page.dest || 'NOT_HOME', true);
+            var b = utils.basename(options.hash.dest || this.page.dest || 'NOT_HOME', true);
             return b === '' ? options.fn(this) : options.inverse(this);
         },
 
@@ -481,7 +341,10 @@ module.exports.register = function (Handlebars, options, params) {
          * ------------------
          * (!) DEPRECATED (!)
          * ------------------
+         *
          * Does the current page have headings?
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         hasHeadings: function (options) {
             return Handlebars.helpers.eachHeading(options) !== '' ? options.fn(this) : options.inverse(this);
@@ -491,9 +354,12 @@ module.exports.register = function (Handlebars, options, params) {
          * ------------------
          * (!) DEPRECATED (!)
          * ------------------
+         *
          * This innocuous looking helper took quite a long time to figure out.
          * It takes the current pages entire RAW source, crompiles it, and loads it in cheerio (jQuery).
          * Then it parses for the relevant headers and executes the template for each one.
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         eachHeading: function (options) {
             var html = engine.getCached(Handlebars.compile(options.hash.page || '')(params.assemble.options)),
@@ -504,7 +370,7 @@ module.exports.register = function (Handlebars, options, params) {
                 r = r + options.fn({
                     name: el.text(),
                     id: el.attr('id'),
-                    draft: el.parent().hasClass('draft')
+                    isDraft: el.parent().hasClass('draft')
                 });
             });
 
@@ -512,8 +378,14 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         *
          * Finds the current page in the nav and iterates its child links
          * Supports optional modulus parameters.
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         eachChildLink: function (options) {
             var dest = '',
@@ -527,7 +399,7 @@ module.exports.register = function (Handlebars, options, params) {
             }
 
             nav_links = utils.getNavLinks(options);
-            active = getActiveNav(dest, nav_links, false);
+            active = utils.getActiveNav(dest, nav_links, false);
 
             if (active && active.nav_links) {
                 active = active.nav_links;
@@ -537,9 +409,13 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
          *
          *
          * @param {} []
+         * @param {object} [options] Handlebars' options hash.
          */
         eachWithMod: function (context, options) {
             var r = '',
@@ -603,7 +479,7 @@ module.exports.register = function (Handlebars, options, params) {
 
                 // Organize vertically
                 if (layout === 'vertical' && mod > 0) {
-                    slim = forVertical(slim, mod);
+                    slim = utils.forVertical(slim, mod);
                 }
 
                 // Display the real items
@@ -636,16 +512,14 @@ module.exports.register = function (Handlebars, options, params) {
 
         /**
          * Overriding default markdown helper.
-         * See notes above for more information.
+         * See notes within the engine module for more information.
          */
-        markdown: function (options) {
-            var md = engine.getCached(options.fn(this)),
-                nl = typeof options.hash.newline !== 'undefined' ? options.hash.newline : true;
-            return nl ? newline(md) : md;
-        },
+        markdown: engine.markdown,
 
         /**
          * If settings say to render, wrap content in div
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         draft: function (options) {
             return stache.config.draft ? ('<div class="draft">\r\n\r\n' + engine.getCached(options.fn(this)) + '\r\n\r\n</div>') : '';
@@ -670,6 +544,10 @@ module.exports.register = function (Handlebars, options, params) {
 
         /**
          * Render a file.  Search path order: partial, absolute, relative, content folder
+         *
+         * @param {} []
+         * @param {} []
+         * @param {object} [options] Handlebars' options hash.
          */
         include: function (file, context, options) {
 
@@ -760,7 +638,7 @@ module.exports.register = function (Handlebars, options, params) {
             // I spent an entire day tracking down this bug.
             // Files created on different systems with different line endings freaked this out.
             if (fixNewline) {
-                r = newline(r);
+                r = engine.newline(r);
             }
 
             // Hide YAML Front Matter
@@ -808,49 +686,12 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-         * Total all coverage from instanbul report
-         */
-        withCoverageTotal: function (collection, property, options) {
-
-            var file,
-                r = {
-                    total: 0,
-                    covered: 0,
-                    skipped: 0,
-                    pct: 0
-                };
-
-            for (file in collection) {
-                if (collection[file].hasOwnProperty(property)) {
-                    r.total += parseInt(collection[file][property].total);
-                    r.covered += parseInt(collection[file][property].covered);
-                    r.skipped += parseInt(collection[file][property].skipped);
-                }
-            }
-
-            if (r.total > 0) {
-                r.pct = (r.covered / r.total) * 100;
-            }
-
-            if (r.pct < 50) {
-                r.cssClass = 'danger';
-            } else if (r.pct < 80) {
-                r.cssClass = 'warning';
-            } else {
-                r.cssClass = 'success';
-            }
-
-            if (options.hash.fixed && r.pct !== 100) {
-                r.pct = toFixed(r.pct, options.hash.fixed);
-            }
-
-            return options.fn(r, options);
-        },
-
-        /**
-         * (I don't believe this works)
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
          *
-         * @param {} []
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         raw: function (options) {
             return '<raw>' + options.fn(this) + '</raw>';
@@ -860,20 +701,8 @@ module.exports.register = function (Handlebars, options, params) {
          *
          *
          * @param {} []
-         */
-        withFirstProperty: function (collection, options) {
-            var property;
-            for (property in collection) {
-                if (collection.hasOwnProperty(property)) {
-                    return options.fn(collection[property]);
-                }
-            }
-        },
-
-        /**
-         *
-         *
          * @param {} []
+         * @param {object} [options] Handlebars' options hash.
          */
         percent: function (dividend, divisor, options) {
             var r = 0;
@@ -890,14 +719,7 @@ module.exports.register = function (Handlebars, options, params) {
          * This helpers replaces those.
          */
         newline: function (text) {
-            return newline(text);
-        },
-
-        /**
-         * Same as newline method but wraps context
-         */
-        withNewline: function (options) {
-            return newline(options.fn(this));
+            return engine.newline(text);
         },
 
         /**
@@ -915,6 +737,8 @@ module.exports.register = function (Handlebars, options, params) {
 
         /**
          * Consistently generate the edit link for a file in GitHub
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         editInGitHubLink: function (options) {
             var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
@@ -934,6 +758,8 @@ module.exports.register = function (Handlebars, options, params) {
 
         /**
          * Consistently generate the edit link for a file in Prose
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         editInProseLink: function (options) {
             var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
@@ -979,13 +805,6 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-         * Allows context against specific item in object
-         */
-        withItem: function (object, options) {
-            return typeof object[options.hash.key] !== 'undefined' ? options.fn(object[options.hash.key]) : '';
-        },
-
-        /**
          * Removes the extension from a filename
          */
         removeExt: function (filename) {
@@ -1018,28 +837,6 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-         * Used instead of us having to pass the nav_links object around in the context.
-         */
-        withNavLinks: function (options) {
-            return Handlebars.helpers.eachWithMod(utils.getNavLinks(options), options);
-        },
-
-        /**
-         * If the user specified a maximum parent depth, make sure this is within in.
-         * This is still a WIP.
-         */
-        withinParentDepth: function (options) {
-            var a = options.hash.sidebarCurrentDepth || -1,
-                b = options.hash.sidebarParentDepth || -1;
-
-            if (a === -1 || b === -1) {
-                return options.fn(this);
-            } else {
-                return options.fn(this);
-            }
-        },
-
-        /**
          * Normalizes Sandcastle URL
          */
         normalizeSandcastleUrl: function (url) {
@@ -1063,6 +860,8 @@ module.exports.register = function (Handlebars, options, params) {
 
         /**
          * Last chance for us to modify the page's content at build-time.
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         stachePostProcess: function (options) {
             var html = options.fn(this);
@@ -1076,6 +875,8 @@ module.exports.register = function (Handlebars, options, params) {
 
         /**
          * Uglifys a block of JavaScript
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         uglify: function (options) {
             return UglifyJS.minify(options.fn(this), {
@@ -1085,9 +886,336 @@ module.exports.register = function (Handlebars, options, params) {
 
         /**
          * Minify an HTML block
+         *
+         * @param {object} [options] Handlebars' options hash.
          */
         minify: function (options) {
             return minify(options.fn(this), options.hash);
+        }
+
+    };
+
+    utils = {
+
+        /**
+         * Utility function to get the basename
+         *
+         * @param {} []
+         * @param {} []
+         */
+        basename: function (path, clean) {
+            var dot;
+
+            // Clean is optional, but defaults to true
+            if (arguments.length !== 2) {
+                clean = true;
+            }
+
+            if (clean && path) {
+                dot = path.lastIndexOf('.');
+
+                // Replace the extension
+                path = dot === -1 ? path : path.substr(0, dot);
+
+                // Replace the default page name
+                path = path.replace('index', '');
+
+                // Remove our build folder
+                path = path.replace(stache.config.build, '');
+
+                // Remove leading & trailing slash
+                path = path.replace(/^\/|\/$/g, '');
+
+            // Always return a path
+            } else {
+                path = '';
+            }
+
+            return path;
+        },
+
+        /**
+         *
+         *
+         * @param {} []
+         */
+        checkDeprecatedFrontMatter: function (options) {
+            if (this.sidebar_title) {
+                slog.warning("[" + this.page.src + "] The YAML variable `sidebar_title` is no longer supported! Use: \n---\nsidebar:\n  title: " + this.sidebar_title + "\n---");
+                this.sidebar.title = this.sidebar_title;
+            }
+            /*
+            if (this.draft) {
+                slog.warning("[" + this.page.src + "] The YAML variable `draft` is no longer supported! Use: \n---\nisDraft: " + this.draft + "\n---");
+                this.isDraft = this.draft;
+            }
+            */
+            if (this.limit) {
+                slog.warning("[" + this.page.src + "] The YAML variable `limit` is no longer supported! Use: \n---\nsidebar:\n  limit: " + this.limit + "\n---");
+                this.sidebar.limit = this.limit;
+            }
+            if (this.showHeadings) {
+                slog.warning("[" + this.page.src + "] The YAML variable `showHeadings` is no longer supported! Use: \n---\nsidebar:\n  showHeadings: " + this.showHeadings + "\n---");
+                this.sidebar.showHeadings = this.showHeadings;
+            }
+        },
+
+        /**
+         *
+         *
+         * @param {} []
+         */
+        clone: function (obj) {
+            var cloned;
+            try {
+                cloned = JSON.parse(JSON.stringify(obj));
+            } catch (e) {
+                cloned = obj;
+            }
+            return cloned;
+        },
+
+        /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         *
+         * Returns a single array, the second appended to the first.
+         *
+         * @param {array} [arr1] The array to be extended.
+         * @param {array} [arr2] The array to be appended to the first.
+         */
+        concatArray: function (arr1, arr2) {
+            var i,
+                len,
+                arr1IsArray,
+                arr2IsArray;
+
+            arr1IsArray = Handlebars.Utils.isArray(arr1);
+            arr2IsArray = Handlebars.Utils.isArray(arr2);
+
+            if (!arr1IsArray && !arr2IsArray) {
+                return [];
+            }
+
+            if (!arr2IsArray && arr1IsArray) {
+                return arr1;
+            }
+
+            if (!arr1IsArray && arr2IsArray) {
+                return arr2;
+            }
+
+            len = arr2.length;
+
+            for (i = 0; i < len; ++i) {
+                arr1.push(arr2[i]);
+            }
+
+            return arr1;
+        },
+
+        /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         *
+         * Returns an object representing a page's properties, only if its URI is
+         * a fragment of the active page's URI. The method receives an array of objects,
+         * to be checked against the active URI.
+         *
+         * @param {array} [navLinks] Array of objects representing pages.
+         * @param {string} [activeURI] The path of the active page.
+         */
+        findBreadcrumb: function (navLinks, activeURI) {
+            var breadcrumbs,
+                i,
+                navLink,
+                navLinksLength;
+
+            breadcrumbs = [];
+            navLinksLength = navLinks.length;
+
+            for (i = 0; i < navLinksLength; ++i) {
+
+                navLink = navLinks[i];
+
+                // Don't include the Home page because it cannot have sub-directories.
+                // (We add the Home page manually, in getBreadcrumbNavLinks.)
+                if (navLink.uri !== "/") {
+
+                    // Is this page's URI a fragment of the active page's URI?
+                    if (activeURI.indexOf(navLink.uri) > -1) {
+                        breadcrumbs.push({
+                            name: navLink.name,
+                            uri: navLink.uri,
+                            showInNav: true
+                        });
+
+                        // Does this page have sub-directories?
+                        if (navLink.hasOwnProperty('nav_links')) {
+                            breadcrumbs = utils.concatArray(breadcrumbs, utils.findBreadcrumb(navLink.nav_links, activeURI));
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            // Set the final navigation link as 'active' and return the array.
+            if (breadcrumbs.length > 0) {
+                breadcrumbs[breadcrumbs.length - 1].active = true;
+                return breadcrumbs;
+            }
+
+            // The navigation links didn't contain a breadcrumb.
+            return false;
+        },
+
+        /**
+         * Function for arranging an array for vertical display.
+         *
+         * @param {} []
+         * @param {} []
+         */
+        forVertical: function (arr, cols) {
+            var temp,
+                r = [],
+                row = 0,
+                col = 0,
+                len = arr.length,
+                rows = Math.ceil(len / cols);
+
+            while (row < rows) {
+                temp = row + (col * rows);
+                if (temp >= len) {
+                    row++;
+                    col = 0;
+                } else {
+                    r.push(arr[temp]);
+                    col++;
+                }
+            }
+
+            return r;
+        },
+
+        /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         *
+         * Recursively searches the nav array to find the active link
+         */
+        getActiveNav: function (dest, nav_links, parentCanBeActive) {
+            var j = nav_links.length,
+                i = 0,
+                r = '';
+
+            for (i; i < j; i++) {
+                if (utils.isActiveNav(dest, nav_links[i].uri, parentCanBeActive)) {
+                    r = nav_links[i];
+                } else if (nav_links[i].nav_links) {
+                    r = utils.getActiveNav(dest, nav_links[i].nav_links, parentCanBeActive);
+                }
+                if (r !== '') {
+                    break;
+                }
+            }
+
+            return r;
+        },
+
+        /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         *
+         * Returns an array representing all breadcrumb nav_links for a given page.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        getBreadcrumbNavLinks: function (navLinks, activeURI) {
+            var config,
+                items;
+
+            config = (typeof stache !== "undefined") ? stache.config : {};
+            items = utils.findBreadcrumb(navLinks, activeURI);
+
+            // Add Home page.
+            if (items !== false) {
+                items.unshift({
+                    name: config.nav_title_home || 'Home',
+                    uri: config.base || '/',
+                    showInNav: true
+                });
+            }
+
+            return items;
+        },
+
+        /**
+         * Returns an array representing all pages, sorted.
+         * The array also respects page hierarchies: child pages are stored in the respective
+         * parent page's property, 'nav_links'.
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        getNavLinks: function (options) {
+            if (typeof navLinks === "undefined") {
+                navLinks = (options && options.hash && options.hash.nav_links) ? options.hash.nav_links : bypassContext.nav_links || [];
+            }
+            return utils.clone(navLinks);
+        },
+
+        /**
+         * ------------------
+         * (!) DEPRECATED (!)
+         * ------------------
+         *
+         * Determines if two URI's are the same.
+         * Supports thinking parent uri's are active.
+         * Wrapping the basenames in '/' prevents false matches, ie docs vs docs2 vs 2docs.
+         */
+        isActiveNav: function (dest, uri, parentCanBeActive) {
+            dest = '/' + utils.basename(dest) + '/';
+            uri = '/' + utils.basename(uri) + '/';
+            return (parentCanBeActive && uri !== '') ? dest.indexOf(uri) > -1 : uri === dest;
+        },
+
+        /**
+         * Returns the local value, if set. Otherwise, returns the global value.
+         * If neither is set, return false.
+         *
+         * @param {various} [global] A global option's value (stache.yml)
+         * @param {various} [local] A local option's value (front-matter)
+         */
+        mergeOption: function (global, local) {
+            var merged = false;
+            if (typeof global === "object") {
+                merged = merge(true, global, local);
+            } else if (typeof local === "undefined") {
+                if (typeof global !== "undefined") {
+                    merged = global;
+                }
+            } else {
+                merged = local;
+            }
+            return merged;
+        },
+
+        /**
+         * http://stackoverflow.com/questions/10015027/javascript-tofixed-not-rounding
+         */
+        toFixed: function (number, precision) {
+            var multiplier = Math.pow(10, precision + 1),
+                wholeNumber = Math.round(number * multiplier).toString(),
+                length = wholeNumber.length - 1;
+            wholeNumber = wholeNumber.substr(0, length);
+            return [
+                wholeNumber.substr(0, length - precision),
+                wholeNumber.substr(-precision)
+            ].join('.');
         }
 
     };

@@ -44,6 +44,9 @@
               <div class="{{ stache.config.bootstrap_container }}">
                 <div class="row">
                   <div class="col-sm-12">
+                    {{# withNav location="header" }}
+                        {{ include 'partial-nav' class="nav navbar-nav navbar-left" }}
+                    {{/ withNav }}
                     {{{ include stache.config.partial_header_nav }}}
                     {{{ include stache.config.partial_header_admin }}}
                     {{{ include stache.config.partial_header_search }}}
@@ -62,6 +65,13 @@
 
       {{!-- BREADCRUMBS --}}
       {{# if showBreadcrumbs }}
+        {{# withNav location="breadcrumbs" }}
+          <div id="wrap-breadcrumbs">
+            <div class="container">
+              {{ include 'partial-nav' class="breadcrumb" }}
+            </div>
+          </div>
+        {{/ withNav }}
         {{# withBreadcrumbs }}
           <div id="wrap-breadcrumbs">
               <div class="container">
@@ -104,6 +114,9 @@
                 <div class="row">
                   <div class="col-xs-6 col-sm-4">
                     {{{ include stache.config.partial_footer_logo }}}
+                    {{# withNav location="footer" }}
+                        {{ include 'partial-nav' class="list-unstyled" }}
+                    {{/ withNav }}
                     {{{ include stache.config.partial_footer_navigation }}}
                   </div>
                   <div class="col-xs-6 col-sm-4">

@@ -1,12 +1,20 @@
 {{# if nav_links }}
-    <ul class="{{ class }}">
-        {{# each nav_links }}
-            {{# if showInNav }}
-                <li{{# if class }} class="{{ class }}"{{/ if }}>
-                    <a href="{{ uri }}">{{ name }}</a>
-                    {{ include 'partial-nav' class="nav subnav" }}
-                </li>
+  {{# minify collapseWhitespace=true }}
+    <ul class="{{ class }}" role="menu">
+      {{# each nav_links }}
+        {{# if showInNav }}
+          <li{{# if class }} class="{{ class }}"{{/ if }}>
+            {{# if isClickable }}
+              <a href="{{ uri }}">{{{ name }}}</a>
+            {{ else }}
+              {{{ name }}}
             {{/ if }}
-        {{/ each }}
+            {{# if showChildNav }}
+              {{ include 'partial-nav' class=childNavClass }}
+            {{/ if }}
+          </li>
+        {{/ if }}
+      {{/ each }}
     </ul>
+  {{/ minify }}
 {{/ if }}

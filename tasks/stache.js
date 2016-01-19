@@ -20,6 +20,7 @@ module.exports = function (grunt) {
         jit,
         merge,
         navSearchFiles,
+        slog,
         tasks,
         utils,
         yfm;
@@ -29,8 +30,8 @@ module.exports = function (grunt) {
     cheerio = require('cheerio');
     jit = require('jit-grunt');
     merge = require('merge');
+    slog = require('../src/helpers/log')(grunt);
     yfm = require('assemble-yaml');
-
 
     // No reason to pass files used for search around in grunt.config
     navSearchFiles = [];
@@ -405,12 +406,12 @@ module.exports = function (grunt) {
                                     }
                                 break;
                                 default:
-                                    utils.log('Unknown custom page datatype.');
+                                    slog.warning('Unknown custom page datatype.');
                                 break;
                             }
                         }
                     } else {
-                        utils.log('tasks.createAutoPages() - "url" is required for each item in "stache.pages."');
+                        slog.warning('tasks.createAutoPages() - "url" is required for each item in "stache.pages."');
                     }
                 });
             }
@@ -441,6 +442,7 @@ module.exports = function (grunt) {
                 filesConfig,
                 nav_exclude,
                 navKey,
+                navLinkDefaults,
                 page,
                 pages,
                 root,
@@ -448,15 +450,23 @@ module.exports = function (grunt) {
                 sandcastlePath,
                 sorted;
 
-            utils.log("Building navigation links...Please wait.");
+            slog("Building navigation links...Please wait.");
 
             // User has manually specific nav_links in stache.yml. Let's use that.
             if (grunt.config('stache.config.nav_type') !== 'directory') {
                 grunt.config.set('bypassContext', grunt.config.get('stache.config.nav_links'));
-                utils.log("Navigation links set in config.");
-                utils.log("Done.".green);
+                slog.verbose("Navigation links set in config.");
+                slog("Done.".green);
                 return;
             }
+
+            navLinkDefaults = {
+                showInHeader: true,
+                showInFooter: true,
+                showInSearch: true,
+                showInNav: true,
+                isDraft: false
+            };
 
             // Set initial values
             sorted = [];
@@ -477,7 +487,7 @@ module.exports = function (grunt) {
                 files.forEach(function (file) {
                     var fm = yfm.extractJSON(contentDir + file);
                     if (typeof fm.published === 'undefined' || fm.published !== false) {
-                        utils.log.verbose("Adding nav_link from content/ " + file);
+                        slog.verbose("Adding nav_link from content/ " + file);
                         sorted.push({
                             abspath: file,
                             rootdir: file.substr(0, file.indexOf('/')),
@@ -534,13 +544,20 @@ module.exports = function (grunt) {
                         n;
 
                     // A few programmatically created front-matter variables
+                    //console.log("FM:",item);
+                    /*
                     item.showInNav = typeof item.showInNav !== 'undefined' ? item.showInNav : true;
                     item.showInHeader = typeof item.showInHeader !== 'undefined' ? item.showInHeader : true;
                     item.showInFooter = typeof item.showInFooter !== 'undefined' ? item.showInFooter : true;
                     item.showInSearch = typeof item.showInSearch !== 'undefined' ? item.showInSearch : true;
-                    item.breadcrumbs = item.breadcrumbs || (subdir ? utils.createTitle(subdir, separator, true) : home);
-                    item.name = grunt.config.process(item.name || (subdir ? utils.createTitle(subdir, separator, false) : home));
+                    */
+
+                    item.name = grunt.config.process(item.name || (subdir ? utils.createTitle(subdir, separator) : home));
                     item.abspath = el.abspath;
+
+                    utils.checkDeprecatedFrontMatter(item);
+
+                    item = merge(true, navLinkDefaults, item);
 
                     // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
                     if (item.showInNav) {
@@ -612,16 +629,38 @@ module.exports = function (grunt) {
 
                     // Show in nav superceeds showInHeader and showInFooter
                     if (!item.showInNav) {
-                        utils.log.verbose('Ignoring: ' + item.abspath);
+                        slog.verbose('Ignoring: ' + item.abspath);
                         item.showInHeader = item.showInFooter = item.showInNav;
                     }
 
                     // Record this url
-                    item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
+                    //item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
+
+                    // Home page
+                    if (item.name === home) {
+                        item.isHome = true;
+                        item.uri = grunt.config.get('stache.config.homeLinkURI');
+                        item.name = grunt.config.get('stache.config.homeLinkName');
+
+                    } else if (typeof item.uri === "undefined") {
+                         if (typeof subdir !== "undefined") {
+                             item.uri = '/' + subdir;
+                         } else {
+                             item.uri = "";
+                         }
+                         if (file === 'index.html') {
+                             item.uri += '/';
+                         } else {
+                             item.uri += '/' + file;
+                         }
+                    }
+
+
+
                     grunt.config.set(path, item);
                     navSearchFiles.push(item);
 
-                    utils.log.verbose('Creating nav_link ' + item.uri);
+                    slog.verbose('Creating nav_link ' + item.uri);
 
                 });
             }
@@ -629,7 +668,7 @@ module.exports = function (grunt) {
             // Now we can rearrange each item according to order
             utils.sortByOrder(root + navKey, true);
 
-            utils.log("Done.".green);
+            slog.success("Done.");
         },
 
         /**
@@ -649,7 +688,7 @@ module.exports = function (grunt) {
             if (files) {
                 files.forEach(function (file) {
                     var destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
-                    utils.log.verbose("Building file map: " + '<%= stache.config.content %>' + file + " --> " + destinationFile);
+                    slog.verbose("Building file map: " + '<%= stache.config.content %>' + file + " --> " + destinationFile);
                     mappings.push({
                         src: '<%= stache.config.content %>' + file,
                         dest: destinationFile
@@ -665,7 +704,7 @@ module.exports = function (grunt) {
         /**
          * Internal task to control header logging.
          *
-         * @param [boolean] toggle
+         * @param {boolean} [toggle]
          */
         header: function (toggle) {
             grunt.log.header = (toggle.toString() === 'true') ? header : function () {};
@@ -732,7 +771,7 @@ module.exports = function (grunt) {
 
             for (i = 0, j = navSearchFiles.length; i < j; i++) {
                 if (!navSearchFiles[i].showInSearch) {
-                    utils.log.verbose('Ignoring from search: ' + navSearchFiles[i].uri);
+                    slog.verbose('Ignoring from search: ' + navSearchFiles[i].uri);
                 } else {
 
                     item = navSearchFiles[i];
@@ -882,12 +921,12 @@ module.exports = function (grunt) {
             // Determine which watch task to execute:
             if (watchNewer) {
                 tasks.push('watch:newer');
-                utils.log("Site set to rebuild only those pages that have been changed.");
-                utils.log("(To rebuild all pages when one is changed, type `stache serve:all`)".grey);
+                slog("Site set to rebuild only those pages that have been changed.");
+                slog.muted("To rebuild all pages when one is changed, type `stache serve:all`");
             } else {
                 tasks.push('watch:all');
-                utils.log("Site set to rebuild all pages when one is changed.");
-                utils.log("(To rebuild only those pages that have been changed, type `stache serve:newer`)".grey);
+                slog("Site set to rebuild all pages when one is changed.");
+                slog.muted("To rebuild only those pages that have been changed, type `stache serve:newer`");
             }
 
             // Add the postStache hook:
@@ -902,7 +941,7 @@ module.exports = function (grunt) {
          * Prints the current version of Stache in the console.
          */
         stacheVersion: function () {
-            utils.log('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
+            slog('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
         },
 
         /**
@@ -965,6 +1004,31 @@ module.exports = function (grunt) {
     utils = {
 
         /**
+         *
+         *
+         * @param {} []
+         */
+        checkDeprecatedFrontMatter: function (item) {
+            if (item && typeof item.draft !== "undefined") {
+                slog.warning("[" + item.abspath + "] The YAML variable `draft` is no longer supported! Use: \n---\nisDraft: true\n---");
+                item.isDraft = item.draft;
+                //delete item.draft;
+            }
+            if (item.sidebar_title) {
+                slog.warning("[" + item.abspath + "] The YAML variable `sidebar_title` is no longer supported! Use: \n---\nsidebar:\n  title: " + item.sidebar_title + "\n---");
+                item.sidebar.title = item.sidebar_title;
+            }
+            if (item.limit) {
+                slog.warning("[" + item.abspath + "] The YAML variable `limit` is no longer supported! Use: \n---\nsidebar:\n  limit: " + item.limit + "\n---");
+                item.sidebar.limit = item.limit;
+            }
+            if (item.showHeadings) {
+                slog.warning("[" + item.abspath + "] The YAML variable `showHeadings` is no longer supported! Use: \n---\nsidebar:\n  showHeadings: " + item.showHeadings + "\n---");
+                item.sidebar.showHeadings = item.showHeadings;
+            }
+        },
+
+        /**
          * Converts deprecated hooks to their supported counterparts.
          */
         checkDeprecatedHooks: function () {
@@ -992,7 +1056,7 @@ module.exports = function (grunt) {
                 if (deprecatedHook) {
 
                     message = 'You are referencing the deprecated hook, ' + deprecatedName + '. Consider using `hooks.' + hookName + '`.';
-                    utils.log(message['yellow']);
+                    slog.warning(message);
 
                     // The user passed the hooks as an array
                     if (utils.isArray(deprecatedHook)) {
@@ -1012,13 +1076,25 @@ module.exports = function (grunt) {
             grunt.config.set('stache.hooks', hooks);
         },
 
-        createTitle: function (name, separator, isBreadcrumbs) {
-            var output = '',
-                parts = name.indexOf('/') > -1 ? name.split('/') : [name];
-
-            if (!isBreadcrumbs) {
-                parts = parts.slice(-1);
+        checkDeprecatedYAML: function (config) {
+            if (config.nav_title_home) {
+                slog.warning("[stache.yml] The YAML variable `nav_title_home` is no longer supported! Use: \nhomeLinkName: " + config.nav_title_home);
+                config.homeLinkName = config.nav_title_home;
             }
+        },
+
+        /**
+         *
+         *
+         * @param {} []
+         */
+        createTitle: function (name, separator) {
+            var output,
+                parts;
+
+            output = '';
+            parts = name.indexOf('/') > -1 ? name.split('/') : [name];
+            parts = parts.slice(-1);
 
             parts.forEach(function (el, idx) {
                 output += el[0].toUpperCase() + el.slice(1) + separator;
@@ -1051,10 +1127,10 @@ module.exports = function (grunt) {
                     configFileString.split(',').forEach(function (file) {
                         file = file.trim();
                         if (grunt.file.exists(file)) {
-                            utils.log('Importing config file ' + file);
+                            slog('Importing config file ' + file);
                             localConfig = merge(localConfig, grunt.file.readYAML(file));
                         } else {
-                            utils.log('Error importing config file ' + file);
+                            slog.warning('Error importing config file ' + file);
                         }
                     });
 
@@ -1062,19 +1138,20 @@ module.exports = function (grunt) {
 
                 // Only one file specified.
                 else if (grunt.file.exists(configFileString)) {
-                    utils.log('Importing config file ' + configFileString);
+                    slog('Importing config file ' + configFileString);
                     localConfig = grunt.file.readYAML(configFileString);
                 }
 
                 // The file does not exist.
                 else {
+                    slog.error("The config file " + configFileString + " does not exist!");
                     grunt.log.error("The config file " + configFileString + " does not exist!");
                 }
             }
 
             // Expand default local Stache YAML file into workable object, if it exists.
             else if (grunt.file.exists(stache.pathConfig)) {
-                utils.log('Defaulting to config file ' + stache.pathConfig);
+                slog('Defaulting to config file ' + stache.pathConfig);
                 localConfig = grunt.file.readYAML(stache.pathConfig);
             }
 
@@ -1085,33 +1162,20 @@ module.exports = function (grunt) {
 
             // Merge global and local Stache config objects.
             stache.config = merge(stacheConfig, localConfig);
+            utils.checkDeprecatedYAML(stache.config);
             grunt.config.set('stache.config', stache.config);
+
             return stache.config;
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
         isArray: function (arr) {
             return (arr.pop && arr.push);
         },
-
-        /**
-         * Using grunt.log, this method prefixes a message with a "branded" phrase
-         * to allow users to easily spot Stache-specific console messages.
-         *
-         * @param [string] message
-         */
-        log: (function () {
-            var log = function (message) {
-                grunt.log.writeln('STACHE '['magenta'] + message);
-            };
-
-            // Allow the log method to recognize grunt's "verbose" mode.
-            log.verbose = function (message) {
-                if (grunt.option('verbose') === true) {
-                    utils.log(message);
-                }
-            };
-            return log;
-        }()),
 
         /**
          * Validates the format of hooks that were added to defaults.stache, or by third-parties.
@@ -1128,7 +1192,7 @@ module.exports = function (grunt) {
                 for (var hook in hooks) {
                     if (!utils.isArray(hooks[hook])) {
                         message = 'The hooks in "' + hook + '" should be listed in an array format (for example, `[\'task1\', \'task2\', \'task3\']`).';
-                        utils.log(message['yellow']);
+                        slog.warning(message);
                         hooks[hook] = [hooks[hook]];
                     }
                 }
@@ -1139,6 +1203,11 @@ module.exports = function (grunt) {
             utils.checkDeprecatedHooks();
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
         slugify: function (title) {
             if (typeof title === 'string') {
                 title = title
@@ -1149,6 +1218,11 @@ module.exports = function (grunt) {
             return title;
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
         slugifyHeaders: function (html) {
             var $html = cheerio(html);
 
@@ -1188,6 +1262,11 @@ module.exports = function (grunt) {
             });
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
         sortInner: function (a, b, sortAscending) {
             if (a < b) {
                 return sortAscending ? -1 : 1;

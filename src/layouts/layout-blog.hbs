@@ -5,7 +5,7 @@ limit: <%= stache.config.blog_recent_limit %>
 
 {{ body }}
 
-{{# eachChildLink sortKey='uri' sortDesc=true }}
+{{# eachChildLink sortKey='uri' sortDesc=true blogReadMoreLabel=stache.config.blogReadMoreLabel }}
   {{# if sticky }}
     <div class="blog-post-summary">
       {{ include 'partial-blog-header' }}
@@ -20,7 +20,7 @@ limit: <%= stache.config.blog_recent_limit %>
   {{/ if }}
 {{/ eachChildLink }}
 
-{{# eachChildLink sortKey='uri' sortDesc=true blogReadMoreLabel=blogReadMoreLabel }}
+{{# eachChildLink sortKey='uri' sortDesc=true blogReadMoreLabel=stache.config.blogReadMoreLabel }}
   {{# unless sticky }}
     <div class="blog-post-summary">
       {{ include 'partial-blog-header' }}

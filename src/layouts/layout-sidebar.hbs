@@ -12,13 +12,9 @@ showHeadings: true
       {{# if sidebar.title }}
         <h3>{{ sidebar.title }}</h3>
       {{/ if }}
-      {{# withPageNav }}
-        {{!--# if sidebar.isSticky --}}
-          {{!-- include 'partial-nav' class="nav nav-stacked nav-sidebar affix" --}}
-        {{!-- else --}}
-          {{ include 'partial-nav' class="nav nav-stacked nav-sidebar" }}
-        {{!--/ if --}}
-      {{/ withPageNav }}
+      {{# withNav location="sidebar" }}
+        {{ include 'partial-nav' class="nav nav-stacked nav-sidebar" }}
+      {{/ withNav }}
     </div>
   </aside>
 </div>
@@ -26,7 +22,7 @@ showHeadings: true
 <div class="row">
   <div class="col-sm-3">
     <div class="sidebar">
-      {{# minify collapseWhitespace=true removeEmptyElements=true }}
+      {{# minify collapseWhitespace=true }}
         {{# if sidebar_title }}
           <h3>{{ sidebar_title }}</h3>
         {{/ if }}
@@ -45,10 +41,8 @@ showHeadings: true
 
               {{ include 'partial-sidebar' this sidebarCurrentDepth="0" sidebarParentDepth=../../sidebarParentDepth dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
 
-              <li class="visible-on-affix">
-                <a href="#top" class="smooth-scroll">
-                  <i class="fa fa-caret-square-o-up"></i>
-                </a>
+              <li class="visible-on-affix smooth-scroll">
+                <a href="#top"><i class="fa fa-caret-square-o-up"></i></a>
               </li>
 
             </ul>
