@@ -30,7 +30,7 @@
     "grunt-usemin": "^3.0.0",
     "helper-moment": "^0.1.0",
     "html-minifier": "^1.0.0",
-    "marked-blackbaud": "git+https://github.com/blackbaud-community/marked.git",
+    "marked": "git+https://github.com/blackbaud-community/marked.git",
     "merge": "^1.2.0",
     "uglify-js": "^2.5.0"
   },
