@@ -30,7 +30,6 @@
     "grunt-usemin": "^3.0.0",
     "helper-moment": "^0.1.0",
     "html-minifier": "^1.0.0",
-    "jit-grunt": "^0.9.1",
     "marked-blackbaud": "git+https://github.com/blackbaud-community/marked.git",
     "merge": "^1.2.0",
     "uglify-js": "^2.5.0"
@@ -40,9 +39,7 @@
     "grunt-jasmine-node-coverage": "^0.4.1",
     "grunt-jscs": "^2.3.0",
     "grunt-sass": "^1.1.0-beta",
-    "handlebars": "^4.0.4",
-    "log": "^1.4.0",
-    "mocha": "^2.3.3"
+    "handlebars": "^4.0.4"
   },
   "scripts": {
     "test": "grunt test"

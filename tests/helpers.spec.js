@@ -7,8 +7,6 @@
         hbsOptions,
         helpers,
         Handlebars,
-        log,
-        Log,
         stache;
 
     fs = require('fs');
@@ -16,8 +14,6 @@
     stache = require('../tasks/stache.js')(grunt);
     Handlebars = require('handlebars');
     helpers = require('../src/helpers/helpers.js');
-    Log = require('log');
-    log = new Log('info');
 
     // This gets passed into our helpers as 'options'.
     hbsOptions = {
@@ -286,7 +282,7 @@
 
                 // No links in this navigation!
                 if (sampleLink === false) {
-                    log.info("No links found in site's 'nav_links'.");
+                    console.log("No links found in site's 'nav_links'.");
                     expect(1).toBe(1);
                     return;
                 }
@@ -308,7 +304,7 @@
 
                 // No links in this navigation!
                 if (sampleLink === false) {
-                    log.info("No links found in site's 'nav_links'.");
+                    console.log("No links found in site's 'nav_links'.");
                     expect(1).toBe(1);
                     return;
                 }
@@ -379,7 +375,7 @@
 
                 // No links in this navigation!
                 if (navLinks.length === 0) {
-                    log.info("No links found in site's 'nav_links'.");
+                    console.log("No links found in site's 'nav_links'.");
                     expect(1).toBe(1);
                     return;
                 }
