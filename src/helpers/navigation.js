@@ -253,9 +253,10 @@
                     sortBy: '',
                     sortOrder: 'asc'
                 };
+
                 settings = merge(true, defaults, options);
 
-                var links = pruneParents(getInstance().navLinks);
+                var links = getInstance().navLinks;
 
                 /**
                  *
@@ -273,44 +274,40 @@
                 /**
                  *
                  */
-                function addHeadings() {
+                function addHeadings(navLinks) {
 
                     // 1) Get the active page's HTML
                     // 2) For each heading found, add it as a separate navLink
 
-                    var buffer,
-                        html,
-                        instance,
-                        navLinks,
-                        template;
+                    var temp = [];
 
-                    instance = getInstance();
+                    forAll(navLinks, function (navLink, level, i) {
+                        if (navLink.isCurrent) {
 
-                    // The current page contains sub-directories; it can't use headings.
-                    if (instance.currentNavLink.nav_links) {
-                        return;
-                    }
+                            // The current page contains sub-directories; it can't use headings.
+                            if (navLink.isParent === false) {
 
-                    // Create an empty nav_links array to store the headings.
-                    navLinks = instance.currentNavLink.nav_links = [];
+                                // Build the current page's HTML from Markdown.
+                                var template = Handlebars.compile(settings.pageMarkdown);
+                                var buffer = template(_params.assemble.options);
+                                var html = engine.getCached(buffer);
 
-                    // Build the current page's HTML from Markdown.
-                    template = Handlebars.compile(instance.settings.pageMarkdown);
-                    buffer = template(_params.assemble.options);
-                    html = engine.getCached(buffer);
+                                // Find all of the headings.
+                                $(settings.headingSelector, html).each(function () {
+                                    var el = $(this);
+                                    temp.push(new Anchor({
+                                        name: el.text(),
+                                        uri: '#' + el.attr('id'),
+                                        showInNav: true,
+                                        isDraft: el.parent().hasClass('draft'),
+                                        isSmoothScroll: settings.isSmoothScroll,
+                                        isHeading: true
+                                    }));
+                                });
 
-                    // Find all of the headings.
-                    $(instance.settings.headingSelector, html).each(function () {
-                        var el = $(this);
-                        console.log("heading:", el.text());
-                        navLinks.push(new Anchor({
-                            name: el.text(),
-                            uri: '#' + el.attr('id'),
-                            showInNav: true,
-                            isDraft: el.parent().hasClass('draft'),
-                            isSmoothScroll: settings.isSmoothScroll,
-                            isHeading: true
-                        }));
+                                this[i].nav_links = temp;
+                            }
+                        }
                     });
                 }
 
@@ -352,7 +349,7 @@
                                     });
 
                                     temp = navLink.nav_links;
-                                    return
+                                    return;
                                 } else {
                                     temp = pruneParents(navLink.nav_links);
                                     return;
@@ -408,7 +405,9 @@
                     }
                 }
 
-                addHeadings();
+
+                addHeadings(links);
+                links = pruneParents(links);
                 sortNavLinks(links);
                 addBackToTop(links);
                 anchors = links;
