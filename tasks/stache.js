@@ -1221,6 +1221,7 @@ module.exports = function (grunt) {
     (function () {
         var cwd,
             inRootDirectory,
+            isNpm2,
             modules;
 
         modules = [
@@ -1248,9 +1249,10 @@ module.exports = function (grunt) {
          */
         cwd = process.cwd();
         inRootDirectory = ((cwd + '/').indexOf(grunt.config.get('stache.dir')) === -1);
+        isNpm2 = grunt.file.exists(grunt.config.get('stache.dir') + 'node_modules');
 
         // Change the base to reflect Stache's node_modules folder.
-        if (inRootDirectory) {
+        if (inRootDirectory && isNpm2) {
             grunt.file.setBase(grunt.config.get('stache.dir'));
         }
 
@@ -1260,7 +1262,7 @@ module.exports = function (grunt) {
         });
 
         // Revert base to what it was.
-        if (inRootDirectory) {
+        if (inRootDirectory && isNpm2) {
             grunt.file.setBase(cwd);
         }
 
