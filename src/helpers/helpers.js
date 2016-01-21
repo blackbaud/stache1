@@ -467,7 +467,7 @@ module.exports.register = function (Handlebars, options, params) {
                         // Add any hash values to the context.
                         if (options.hash) {
                             for (h in options.hash) {
-                                if (options.hash.hasOwnProperty(h)) {
+                                if (h !== "nav_links" && options.hash.hasOwnProperty(h)) {
                                     context[i][h] = options.hash[h];
                                 }
                             }

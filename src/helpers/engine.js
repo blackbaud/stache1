@@ -45,7 +45,7 @@
 
     module.exports = function (options) {
 
-        marked = require('marked');
+        marked = require('blackbaud-marked');
         renderer = new marked.Renderer();
         lexer = new marked.Lexer();
         lexer.rules.code = /ANYTHING_BUT_FOUR_SPACES/;
