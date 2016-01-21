@@ -3,16 +3,12 @@
     'use strict';
 
     var grunt,
-        log,
-        Log,
         stache,
         using;
 
     using = require('../tests/utils/using')(jasmine);
     grunt = require('grunt');
     stache = require('../tasks/stache.js')(grunt);
-    Log = require('log');
-    log = new Log('info');
 
     // Overriding the location of the content directory, since it's relative.
     grunt.config.set('stache.config.content', '../../content/');

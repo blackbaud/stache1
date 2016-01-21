@@ -17,7 +17,6 @@ module.exports = function (grunt) {
         cheerio,
         defaults,
         header,
-        jit,
         merge,
         navSearchFiles,
         tasks,
@@ -27,7 +26,6 @@ module.exports = function (grunt) {
 
     assemble = require('assemble');
     cheerio = require('cheerio');
-    jit = require('jit-grunt');
     merge = require('merge');
     yfm = require('assemble-yaml');
 
@@ -1217,48 +1215,82 @@ module.exports = function (grunt) {
     };
 
 
-    // Merge options and defaults for the entire project.
-    grunt.config.merge(defaults);
-
-    // Merge local and global stache.yml config.
-    utils.extendStacheConfig();
-
-    // Dynamically load any NPM modules (some require static mappings).
-    jit(grunt, {
-        usemin: 'grunt-usemin',
-        useminPrepare: 'grunt-usemin',
-        'sass-blackbaud': 'grunt-sass',
-        'availabletasks': 'grunt-available-tasks'
-    })({
-        pluginsRoot: grunt.config.get('stache.dir') + 'node_modules/'
-    });
-
-
     /**
-     * Private Tasks
-     * These tasks will be used by stache, but not available for end-user consumption.
+     * Initializer
      */
-    grunt.registerTask('createAutoPages', tasks.createAutoPages);
-    grunt.registerTask('createAutoNav', tasks.createAutoNav);
-    grunt.registerTask('expandFileMappings', tasks.expandFileMappings);
-    grunt.registerTask('header', tasks.header);
-    grunt.registerTask('hook', tasks.hook);
-    grunt.registerTask('prepareSearch', tasks.prepareSearch);
-    grunt.registerTask('status', tasks.status);
-    grunt.registerTask('watch:newer', tasks.watchNewer);
-    grunt.registerTask('watch:all', tasks.watchAll);
+    (function () {
+        var cwd,
+            inRootDirectory,
+            isNpm2,
+            modules;
 
+        modules = [
+            'assemble',
+            'grunt-asciify',
+            'grunt-available-tasks',
+            'grunt-contrib-clean',
+            'grunt-contrib-concat',
+            'grunt-contrib-connect',
+            'grunt-contrib-copy',
+            'grunt-contrib-uglify',
+            'grunt-contrib-watch',
+            'grunt-newer',
+            'grunt-usemin'
+        ];
 
-    /**
-     * Public Tasks
-     * These tasks will be made available to end users of Stache.
-     */
-    grunt.registerTask('stache', tasks.stache);
-    grunt.registerTask('build', 'Build the documentation', tasks.stacheBuild);
-    grunt.registerTask('help', 'Display available Stache commands', tasks.stacheHelp);
-    grunt.registerTask('new', 'Create a new site using the Stache boilerplate', tasks.stacheNew);
-    grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
-    grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
+        // Merge options and defaults for the entire project.
+        grunt.config.merge(defaults);
+
+        // Merge local and global stache.yml config.
+        utils.extendStacheConfig();
+
+        /**
+         * Load Dependencies.
+         */
+        cwd = process.cwd();
+        inRootDirectory = ((cwd + '/').indexOf(grunt.config.get('stache.dir')) === -1);
+        isNpm2 = grunt.file.exists(grunt.config.get('stache.dir') + 'node_modules');
+
+        // Change the base to reflect Stache's node_modules folder.
+        if (inRootDirectory && isNpm2) {
+            grunt.file.setBase(grunt.config.get('stache.dir'));
+        }
+
+        // Load the modules.
+        modules.forEach(function (module) {
+            grunt.loadNpmTasks(module);
+        });
+
+        // Revert base to what it was.
+        if (inRootDirectory && isNpm2) {
+            grunt.file.setBase(cwd);
+        }
+
+        /**
+         * Private Tasks
+         * These tasks will be used by stache, but not available for end-user consumption.
+         */
+        grunt.registerTask('createAutoPages', tasks.createAutoPages);
+        grunt.registerTask('createAutoNav', tasks.createAutoNav);
+        grunt.registerTask('expandFileMappings', tasks.expandFileMappings);
+        grunt.registerTask('header', tasks.header);
+        grunt.registerTask('hook', tasks.hook);
+        grunt.registerTask('prepareSearch', tasks.prepareSearch);
+        grunt.registerTask('status', tasks.status);
+        grunt.registerTask('watch:newer', tasks.watchNewer);
+        grunt.registerTask('watch:all', tasks.watchAll);
+
+        /**
+         * Public Tasks
+         * These tasks will be made available to end users of Stache.
+         */
+        grunt.registerTask('stache', tasks.stache);
+        grunt.registerTask('build', 'Build the documentation', tasks.stacheBuild);
+        grunt.registerTask('help', 'Display available Stache commands', tasks.stacheHelp);
+        grunt.registerTask('new', 'Create a new site using the Stache boilerplate', tasks.stacheNew);
+        grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
+        grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
+    }());
 
 
     // Expose certain things for testing purposes.
