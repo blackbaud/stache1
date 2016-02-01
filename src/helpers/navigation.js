@@ -110,6 +110,19 @@
         anchors = [];
         location = location || "header";
         templates = {
+            boxes: function () {
+                var defaults = {
+                    type: 'showcase',
+                    containerClass: 'showcase',
+                    numColumns: 3,
+                    sameHeight: false
+                };
+
+                settings = merge(true, defaults, options);
+
+                anchors = getInstance().navLinks;
+
+            },
             breadcrumbs: function () {
                 var defaults = {
                     homeLinkName: '',
@@ -350,7 +363,9 @@
 
                                     temp = navLink.nav_links;
                                     return;
+
                                 } else {
+
                                     temp = pruneParents(navLink.nav_links);
                                     return;
                                 }

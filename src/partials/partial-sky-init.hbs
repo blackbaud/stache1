@@ -19,6 +19,7 @@
         // Adding custom properties to the omnibar config
         bbOmnibarConfig.selectorInput = '#omnibar_searchbox';
         bbOmnibarConfig.selectorResults = '.stache-omnibar-search';
+        bbOmnibarConfig.url = '//bbauth-signin-cdev.blackbaudhosting.com/omnibar.min.js';
 
         {{# if stache.config.omnibar_search }}
           bbOmnibarConfig.enableSearch = {{ stache.config.omnibar_search }};

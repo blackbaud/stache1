@@ -53,6 +53,7 @@ module.exports.register = function (Handlebars, options, params) {
 
             // This list should include page-specific variables only.
             frontMatterVariables = [
+                'boxes',
                 'showBreadcrumbs',
                 'showInFooter',
                 'showInHeader',
@@ -80,6 +81,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         withBreadcrumbs: function (options) {
+            slog("DEPRECATED METHOD CALLED: withBreadcrumbs()");
             options.hash.location = "breadcrumbs";
             return helpers.withNav.call(this, options);
         },
@@ -172,6 +174,10 @@ module.exports.register = function (Handlebars, options, params) {
             nav.setNavLinks(navLinks);
 
             switch (location) {
+                case "boxes":
+                    navOptions = merge(true, navOptions, this.boxes);
+                    this.nav_links = nav.getAnchorsFor(location, navOptions);
+                break;
                 case "breadcrumbs":
                     this.nav_links = nav.getAnchorsFor(location, {
                         homeLinkName: stache.config.homeLinkName,
@@ -347,6 +353,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         hasHeadings: function (options) {
+            slog("DEPRECATED METHOD CALLED: hasHeadings()");
             return Handlebars.helpers.eachHeading(options) !== '' ? options.fn(this) : options.inverse(this);
         },
 
@@ -362,6 +369,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         eachHeading: function (options) {
+            slog("DEPRECATED METHOD CALLED: eachHeading()");
             var html = engine.getCached(Handlebars.compile(options.hash.page || '')(params.assemble.options)),
                 r = '';
 
@@ -388,6 +396,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         eachChildLink: function (options) {
+            slog("DEPRECATED METHOD CALLED: eachChildLink()");
             var dest = '',
                 nav_links = '',
                 active;
@@ -418,6 +427,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         eachWithMod: function (context, options) {
+            slog("DEPRECATED METHOD CALLED: eachWithMod()");
             var r = '',
                 slim = [],
                 counter = 0,

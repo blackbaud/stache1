@@ -56,21 +56,32 @@
     });
 
     // Smooth scroll
-    $('a.smooth-scroll').click(function (e) {
-        var href = $(this).attr('href'),
-            el = $(href),
-            top = 0;
+    $('.smooth-scroll').on('click', function (e) {
+        var href,
+            link,
+            target,
+            top;
+
+        if (e.target.nodeName === "A") {
+            link = $(e.target);
+        } else {
+            link = $(this).find('>a');
+        }
+
+        href = link.attr('href');
+        target = $(href);
+        top = 0;
 
         e.preventDefault();
 
         // Forcing #top = 0, Verifying element exists
-        if (href !== "#top" && el.length) {
-            top = el.offset().top;
+        if (href !== "#top" && target.length) {
+            top = target.offset().top;
         }
 
         $('html, body').animate({
             scrollTop: top
-        }, 1000);
+        }, 800);
     });
 
     // Tooltips
@@ -89,7 +100,7 @@
             results;
 
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
         results = regex.exec(location.search);
 
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
