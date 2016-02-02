@@ -5,7 +5,11 @@ showHeadings: true
 
 <div class="row">
   <main class="col-sm-9{{# compare sidebar.position "===" "left" }} col-sm-push-3{{/ compare }}">
-    Content...
+    {{# inherit stache.config.markdown markdown }}
+      {{# markdown }}{{ body }}{{/ markdown }}
+    {{ else }}
+      {{# withNewline }}{{ body }}{{/ withNewline }}
+    {{/ inherit }}
   </main>
   <aside class="col-sm-3{{# compare sidebar.position "===" "left" }} col-sm-pull-9{{/ compare }}">
     <div class="sidebar">
@@ -17,45 +21,4 @@ showHeadings: true
       {{/ withNav }}
     </div>
   </aside>
-</div>
-
-<div class="row">
-  <div class="col-sm-3">
-    <div class="sidebar">
-      {{# minify collapseWhitespace=true }}
-        {{# if sidebar_title }}
-          <h3>{{ sidebar_title }}</h3>
-        {{/ if }}
-
-        {{# withNavLinks }}
-          {{# isActiveNav dest=../page.dest }}
-            <ul class="nav nav-stacked nav-sidebar">
-
-              {{# if showTitle }}
-                  <li class="title {{# if draft }}draft{{/ if }}">
-                    <a href="{{ uri }}">
-                      {{ name }}
-                    </a>
-                  </li>
-              {{/ if}}
-
-              {{ include 'partial-sidebar' this sidebarCurrentDepth="0" sidebarParentDepth=../../sidebarParentDepth dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
-
-              <li class="visible-on-affix smooth-scroll">
-                <a href="#top"><i class="fa fa-caret-square-o-up"></i></a>
-              </li>
-
-            </ul>
-          {{/ isActiveNav }}
-        {{/ withNavLinks }}
-      {{/ minify }}
-    </div>
-  </div>
-  <div class="col-sm-9">
-    {{# inherit stache.config.markdown markdown }}
-      {{# markdown }}{{ body }}{{/ markdown }}
-    {{ else }}
-      {{# withNewline }}{{ body }}{{/ withNewline }}
-    {{/ inherit }}
-  </div>
 </div>

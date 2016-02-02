@@ -1,0 +1,16 @@
+<div class="media">
+    <div class="media-left">
+        {{# if thumbnail }}
+            <a href="{{ uri }}"><img class="media-object" src="{{ thumbnail }}" alt=""></a>
+        {{/ if }}
+        {{# if icon }}
+            <i class="showcase-icon {{ icon }}"></i>
+        {{/ if }}
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading"><a href="{{ uri }}">{{ name }}</a></h4>
+        {{# if description }}
+            <p>{{ description }}</p>
+        {{/ if }}
+    </div>
+</div>

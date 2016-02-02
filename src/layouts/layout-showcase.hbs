@@ -1,44 +1,12 @@
 ---
 layout: layout-container
 boxes:
-  type: media
-  numColumnsPhone: 3
-  numColumnsTablet: 3
+  numColumnsPhone: 1
+  numColumnsTablet: 2
   numColumnsDesktop: 3
-  numColumnsLargeDesktop: 3
+  numColumnsLargeDesktop: 4
   sameHeight: false
 ---
-
-{{# withNav location="boxes" }}
-    {{# if nav_links }}
-        <div class="stache-boxes {{ boxes.containerClass }}">
-            <ul class="row">
-                {{# each nav_links }}
-                    <li class="col-sm-4">
-                        <div class="media">
-                            <div class="media-left">
-                                {{# if thumbnail }}
-                                    <a href="{{ uri }}"><img class="media-object" src="{{ thumbnail }}" alt=""></a>
-                                {{/ if }}
-                                {{# if icon }}
-                                    <i class="showcase-icon {{ icon }}"></i>
-                                {{/ if }}
-                            </div>
-                            <div class="media-body">
-                                <h4 class="media-heading"><a href="{{ uri }}">{{ name }}</a></h4>
-                                {{# if description }}
-                                    <p>{{ description }}</p>
-                                {{/ if }}
-                            </div>
-                        </div>
-                    </li>
-                {{/ each }}
-            </ul>
-        </div>
-    {{/ if }}
-{{/ withNav }}
-
-
 
 {{# inherit stache.config.markdown markdown }}
   {{# markdown }}{{ body }}{{/ markdown }}
@@ -46,24 +14,20 @@ boxes:
   {{# withNewline }}{{ body }}{{/ withNewline }}
 {{/ inherit }}
 
-<div class="showcase">
-  {{# eachChildLink mod=3 }}
-      {{# if firstOrMod0 }}<div class="row showcase-row {{# unless first }}showcase-more{{/ unless }}">{{/ if }}
-            <div class="col-sm-4">{{# if thumbnail }}
-              <div class="has-hover">
-                <img src="{{ thumbnail }}" alt="" />
-                <div class="show-on-hover">
-                  <div class="is-table">
-                    <div class="is-table-cell">
-                      <a href="{{ uri }}" class="btn btn-primary">View</a>
-                    </div>
-                  </div>
-                </div>
-              </div>{{/ if }}
-            {{# if icon }}<i class="showcase-icon {{ icon }}"></i><div class="showcase-desc">{{/ if }}<h3><a href="{{ uri }}">{{ name }}</a></h3>
-            {{# if description }}<p>{{ description }}</p>{{/ if }}
-            {{# if icon }}</div>{{/ if }}
-            </div>
-      {{# if lastOrMod1 }}</div>{{/ if }}
-  {{/ eachChildLink }}
-</div>
+{{# withNav location="boxes" }}
+    {{# if nav_links }}
+        <div class="stache-boxes {{ boxes.containerClass }}">
+            <ul class="row{{# if boxes.sameHeight }} stache-equal-height{{/ if }}">
+                {{# each nav_links }}
+                    <li class="col-xs-{{ columnWidthPhone }} col-sm-{{ columnWidthTablet }} col-md-{{ columnWidthDesktop }} col-lg-{{ columnWidthLargeDesktop }}">
+                        {{{ include 'partial-media' }}}
+                    </li>
+                    {{# if lastInRowPhone }}<li class="clearfix visible-xs"></li>{{/ if }}
+                    {{# if lastInRowTablet }}<li class="clearfix visible-sm"></li>{{/ if }}
+                    {{# if lastInRowDesktop }}<li class="clearfix visible-md"></li>{{/ if }}
+                    {{# if lastInRowLargeDesktop }}<li class="clearfix visible-lg"></li>{{/ if }}
+                {{/ each }}
+            </ul>
+        </div>
+    {{/ if }}
+{{/ withNav }}
