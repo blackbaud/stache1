@@ -1248,18 +1248,23 @@ module.exports = function (grunt) {
          * Load Dependencies.
          */
         cwd = process.cwd();
+        inRootDirectory = ((cwd + '/').indexOf(grunt.config.get('stache.dir')) === -1);
+        isNpm2 = grunt.file.exists(grunt.config.get('stache.dir') + 'node_modules');
+
+        // Change the base to reflect Stache's node_modules folder.
+        if (inRootDirectory && isNpm2) {
+            grunt.file.setBase(grunt.config.get('stache.dir'));
+        }
+
+        // Load the modules.
         modules.forEach(function (module) {
-            switch (grunt.file.isDir(cwd + '/node_modules/' + module)) {
-                case false:
-                    grunt.file.setBase(grunt.config.get('stache.dir'));
-                    grunt.loadNpmTasks(module);
-                    grunt.file.setBase(cwd);
-                break;
-                case true:
-                    grunt.loadNpmTasks(module);
-                break;
-            }
+            grunt.loadNpmTasks(module);
         });
+
+        // Revert base to what it was.
+        if (inRootDirectory && isNpm2) {
+            grunt.file.setBase(cwd);
+        }
 
         /**
          * Private Tasks
