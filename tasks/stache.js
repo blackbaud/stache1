@@ -1220,8 +1220,6 @@ module.exports = function (grunt) {
      */
     (function () {
         var cwd,
-            inRootDirectory,
-            isNpm2,
             modules;
 
         modules = [
@@ -1249,8 +1247,13 @@ module.exports = function (grunt) {
          */
         cwd = process.cwd();
         modules.forEach(function (module) {
+
+            // Has the module already been installed by the parent?
             switch (grunt.file.isDir(cwd + '/node_modules/' + module)) {
+
+                // Module wasn't found, so let's install this module in Stache's root.
                 case false:
+                    utils.log("Module " + module + " not found. Attempting to locate in Stache's root...");
                     grunt.file.setBase(grunt.config.get('stache.dir'));
                     grunt.loadNpmTasks(module);
                     grunt.file.setBase(cwd);
