@@ -2,9 +2,9 @@
     "use strict";
 
     var $,
+        engine,
         getNavigation,
-        merge,
-        engine;
+        merge;
 
 
     $ = require('cheerio');
