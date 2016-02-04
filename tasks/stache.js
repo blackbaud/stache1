@@ -25,11 +25,11 @@ module.exports = function (grunt) {
         yfm;
 
 
-    assemble = require('assemble');
-    cheerio = require('cheerio');
-    merge = require('merge');
+    assemble = require('../../assemble');
+    cheerio = require('../../cheerio');
+    merge = require('../../merge');
     slog = require('../src/helpers/log')(grunt);
-    yfm = require('assemble-yaml');
+    yfm = require('../../assemble-yaml');
 
     // No reason to pass files used for search around in grunt.config
     navSearchFiles = [];
@@ -1299,8 +1299,6 @@ module.exports = function (grunt) {
      */
     (function () {
         var cwd,
-            inRootDirectory,
-            isNpm2,
             modules;
 
         modules = [
@@ -1327,23 +1325,23 @@ module.exports = function (grunt) {
          * Load Dependencies.
          */
         cwd = process.cwd();
-        inRootDirectory = ((cwd + '/').indexOf(grunt.config.get('stache.dir')) === -1);
-        isNpm2 = grunt.file.exists(grunt.config.get('stache.dir') + 'node_modules');
-
-        // Change the base to reflect Stache's node_modules folder.
-        if (inRootDirectory && isNpm2) {
-            grunt.file.setBase(grunt.config.get('stache.dir'));
-        }
-
-        // Load the modules.
         modules.forEach(function (module) {
-            grunt.loadNpmTasks(module);
-        });
 
-        // Revert base to what it was.
-        if (inRootDirectory && isNpm2) {
-            grunt.file.setBase(cwd);
-        }
+            // Has the module already been installed by the parent?
+            switch (grunt.file.isDir(cwd + '/node_modules/' + module)) {
+
+                // Module wasn't found, so let's install this module in Stache's root.
+                case false:
+                    utils.log("Module " + module + " not found. Attempting to locate in Stache's root...");
+                    grunt.file.setBase(grunt.config.get('stache.dir'));
+                    grunt.loadNpmTasks(module);
+                    grunt.file.setBase(cwd);
+                break;
+                case true:
+                    grunt.loadNpmTasks(module);
+                break;
+            }
+        });
 
         /**
          * Private Tasks

@@ -30,6 +30,11 @@
         ].join('');
     }
 
+    /**
+     *
+     *
+     * @param {} []
+     */
     function markdown(options) {
         var md = getCached(options.fn(this)),
             nl = typeof options.hash.newline !== 'undefined' ? options.hash.newline : true;

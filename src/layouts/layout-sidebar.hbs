@@ -5,18 +5,18 @@ showHeadings: true
 
 <div class="row">
   <main class="col-sm-9{{# compare sidebar.position "===" "left" }} col-sm-push-3{{/ compare }}">
-    {{# inherit stache.config.markdown markdown }}
+    {{# if markdown }}
       {{# markdown }}{{ body }}{{/ markdown }}
     {{ else }}
       {{# withNewline }}{{ body }}{{/ withNewline }}
-    {{/ inherit }}
+    {{/ if }}
   </main>
   <aside class="col-sm-3{{# compare sidebar.position "===" "left" }} col-sm-pull-9{{/ compare }}">
     <div class="sidebar">
       {{# if sidebar.title }}
         <h3>{{ sidebar.title }}</h3>
       {{/ if }}
-      {{# withNav location="sidebar" }}
+      {{# withNav pattern="sidebar" }}
         {{ include 'partial-nav' class="nav nav-stacked nav-sidebar" }}
       {{/ withNav }}
     </div>

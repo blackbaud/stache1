@@ -1,30 +1,29 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ name }}
-            {{# if deprecated }}
-                <span class="label label-danger pull-right">Deprecated</span>
-            {{/ if }}
-        </h3>
-    </div>
-    <div class="panel-body">
-        {{# if icon }}
-            <i class="showcase-icon fa fa-2x fa-{{ icon }}"></i>
-            <div class="showcase-desc">
-        {{/ if }}
-        {{# if summary }}
-            <p>{{ summary }}</p>
-        {{ else }}
-            {{# if synopsis }}
-                <p>{{ synopsis }}</p>
-            {{ else }}
-                {{# if description }}
-                    <p>{{ description }}</p>
+<a href="{{ uri }}" class="panel-wrapper">
+    <div class="panel panel-default{{# if containerClass }} {{ containerClass }}{{/ if }}">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ name }}
+                {{# if deprecated }}
+                    <span class="label label-danger pull-right">Deprecated</span>
                 {{/ if }}
-            {{/ if }}
-        {{/ if}}
-        {{# if icon }}
-            </div>
-        {{/ if }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            {{# or thumbnail icon }}
+                {{ include 'partial-media' uri=false name=false containerClass=false }}
+            {{ else }}
+                {{# if summary }}
+                    <p>{{ summary }}</p>
+                {{ else }}
+                    {{# if synopsis }}
+                        <p>{{ synopsis }}</p>
+                    {{ else }}
+                        {{# if description }}
+                            <p>{{ description }}</p>
+                        {{/ if }}
+                    {{/ if }}
+                {{/ if }}
+            {{/ or }}
+        </div>
     </div>
-</div>
+</a>

@@ -3,7 +3,7 @@
 (function ($, window, document, undefined) {
     'use strict';
 
-    var body = $('body'),
+    var $body = $('body'),
         sidebar = $('.sidebar'),
         sidebarNav = $('.nav-sidebar'),
         sidebarHeading = sidebar.find('li.heading'),
@@ -20,7 +20,7 @@
         // Affix
         sidebarNav.affix({
             offset: {
-                top: body.css('padding-top').replace('px', ''),
+                top: $body.css('padding-top').replace('px', ''),
                 bottom: $('.affix-stop').outerHeight()
             }
         });
@@ -31,7 +31,7 @@
         }).trigger('resize');
 
         // Scrollspy
-        body.scrollspy({
+        $body.scrollspy({
             target: '.headings'
         });
 
@@ -106,7 +106,7 @@
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
-    //Show-Hide
+    // Show-Hide
     $('.show-first').after('<a class="show-more"> Show more...</a>');
     $('.show-hide').on('click', 'a', function (event) {
         if (!$(this).siblings('.show-second').is(":visible")) {
@@ -124,9 +124,9 @@
         }
     });
 
+
     // Back-to-top
     // Code from here: http://www.developerdrive.com/2013/07/using-jquery-to-add-a-dynamic-back-to-top-floating-button-with-smooth-scroll/
-
     if ($backToTop) {
         $(window).scroll(function () {
             if ($(this).scrollTop() > bttoffset) {
@@ -135,11 +135,32 @@
                 $backToTop.fadeOut(bttduration);
             }
         });
-
         $backToTop.click(function (event) {
             event.preventDefault();
             $('html, body').animate({scrollTop: 0}, bttduration);
             return false;
         });
     }
+
+
+    /**
+     * Equal heights for boxes.
+     */
+    $(document).ready(function () {
+        $body.find('.stache-equal-height-row').each(function () {
+            var minHeight = 0;
+            var $items = $(this).find('.stache-equal-height-item');
+            $items.each(function () {
+                var height = $(this).outerHeight();
+                if (height > minHeight) {
+                    minHeight = height;
+                }
+            });
+            $items.each(function () {
+                $(this).css({
+                    'min-height': minHeight + 'px'
+                });
+            });
+        });
+    });
 }(jQuery, window, document));

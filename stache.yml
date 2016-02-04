@@ -117,14 +117,16 @@ sidebar:
   sortBy:
   sortOrder: asc
 
-boxes:
-  containerClass: stache-showcase
-  type: media
+showcase:
+  arrangement: 'float'
+  containerClass: 'showcase'
   numColumnsPhone: 3
   numColumnsTablet: 3
   numColumnsDesktop: 3
   numColumnsLargeDesktop: 3
+  partial: 'partial-media'
   sameHeight: false
+  type: 'media'
 
 # =============================================
 # ANALYTICS

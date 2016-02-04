@@ -15,7 +15,7 @@ module.exports.register = function (Handlebars, options, params) {
         helpers,
         merge,
         minify,
-        Navigation,
+        navigation,
         navLinks,
         slog,
         stache,
@@ -31,7 +31,7 @@ module.exports.register = function (Handlebars, options, params) {
     fs = require('fs');
     minify = require('html-minifier').minify;
     UglifyJS = require('uglify-js');
-    Navigation = require('../../src/helpers/navigation')(Handlebars, params);
+    navigation = require('../../src/helpers/navigation')();
     engine = require('../../src/helpers/engine')();
     slog = require('../../src/helpers/log')(params.assemble.grunt);
 
@@ -53,7 +53,8 @@ module.exports.register = function (Handlebars, options, params) {
 
             // This list should include page-specific variables only.
             frontMatterVariables = [
-                'boxes',
+                'showcase',
+                'markdown',
                 'showBreadcrumbs',
                 'showInFooter',
                 'showInHeader',
@@ -81,7 +82,8 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         withBreadcrumbs: function (options) {
-            options.hash.location = "breadcrumbs";
+            slog.warning("Using deprecated helper: withBreadcrumbs", "Consider using: \n{{# withNav pattern=\"breadcrumbs\" }}\n  {{ include 'partial-nav' class=\"breadcrumb\" }}\n{{/ withNav }}");
+            options.hash.pattern = "breadcrumbs";
             return helpers.withNav.call(this, options);
         },
 
@@ -161,46 +163,94 @@ module.exports.register = function (Handlebars, options, params) {
          */
         withNav: function (options) {
 
-            var location,
-                navLinks,
-                navOptions,
-                nav;
+            var allNavLinks,
+                context,
+                currentUri,
+                customData,
+                nav,
+                pattern,
+                patternOptions;
 
-            navOptions = {};
-            location = (options.hash && options.hash.location) ? options.hash.location : "global";
-            navLinks = utils.getNavLinks(options);
-            nav = new Navigation(this.page.dirname.split(stache.status)[1] + "/");
-            nav.setNavLinks(navLinks);
+            context = this;
 
-            switch (location) {
-                case "boxes":
-                    navOptions = merge(true, navOptions, this.boxes);
-                    this.nav_links = nav.getAnchorsFor(location, navOptions);
+            // No page information, quit.
+            if (context.page === undefined) {
+                return options.inverse(context);
+            }
+
+            // Set some stuff, first.
+            patternOptions = {};
+            pattern = (options.hash && options.hash.pattern) ? options.hash.pattern : false;
+            customData = (options.hash && options.hash.customData) ? options.hash.customData : false;
+            currentUri = context.page.dirname.split(stache.status)[1] + "/";
+
+            // Get all nav links for the entire site.
+            if (customData) {
+                allNavLinks = (customData.pages) ? customData.pages : customData;
+            } else {
+                allNavLinks = utils.getNavLinks(options);
+            }
+
+            // Different patterns have different options.
+            switch (pattern) {
+
+                case "showcase":
+                if (customData) {
+
+                    // Merge data's version of the showcase arguments.
+                    if (customData.showcase) {
+                        context.showcase = merge(true, context.showcase, customData.showcase);
+                    }
+
+                    // We don't want to prune parents for custom data.
+                    context.showcase.doPruneParents = false;
+                }
+                context.showcase.template = 'partial-' + context.showcase.type;
+                patternOptions = merge(true, patternOptions, context.showcase);
                 break;
+
                 case "breadcrumbs":
-                    this.nav_links = nav.getAnchorsFor(location, {
-                        homeLinkName: stache.config.homeLinkName,
-                        homeLinkURI: stache.config.homeLinkURI
-                    });
+                patternOptions = {
+                    homeLinkName: stache.config.homeLinkName,
+                    homeLinkURI: stache.config.homeLinkURI
+                };
                 break;
+
+                case "custom":
+                break;
+
                 case "footer":
-                    this.nav_links = nav.getAnchorsFor(location, {});
                 break;
-                default:
+
                 case "header":
-                    this.nav_links = nav.getAnchorsFor(location, {
-                        showNavDropdown: stache.config.showNavDropdown,
-                        navDropdownDepth: stache.config.navDropdownDepth
-                    });
+                patternOptions = {
+                    showNavDropdown: stache.config.showNavDropdown,
+                    navDropdownDepth: stache.config.navDropdownDepth
+                };
                 break;
+
                 case "sidebar":
-                    navOptions = merge(true, navOptions, this.sidebar);
-                    navOptions.pageMarkdown = this.pages[this.page.index].page;
-                    this.nav_links = nav.getAnchorsFor(location, navOptions);
+                patternOptions = merge(true, patternOptions, context.sidebar);
+                patternOptions.pageHtml = engine.getCached(Handlebars.compile(context.pages[context.page.index].page)(params.assemble.options));
+                break;
+
+                default:
                 break;
             }
 
-            return (this.nav_links !== false) ? options.fn(this) : options.inverse(this);
+            // Get the newly baked nav links.
+            context.nav_links = navigation(currentUri, {})
+                .setNavLinks(allNavLinks)
+                .pattern(pattern, patternOptions)
+                .getNavLinks();
+
+            // Nav links not found, we'll return the inverse.
+            if (context.nav_links === false) {
+                return options.inverse(context);
+            }
+
+            // Success. Let's build this thing!
+            return options.fn(context);
         },
 
         /**
@@ -213,6 +263,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         withNavLinks: function (options) {
+            slog.warning("Using deprecated helper: withNavLinks", "Consider using: \n{{# withNav }}\n{{/ withNav }}");
             return Handlebars.helpers.eachWithMod(utils.getNavLinks(options), options);
         },
 
@@ -245,6 +296,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         withinParentDepth: function (options) {
+            slog.warning("Using deprecated helper: withinParentDepth");
             var a = options.hash.sidebarCurrentDepth || -1,
                 b = options.hash.sidebarParentDepth || -1;
 
@@ -321,6 +373,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         isActiveNav: function (options) {
+            slog.warning("Using deprecated helper: isActiveNav");
             var r = utils.isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '', typeof options.hash.parentCanBeActive !== 'undefined' ? options.hash.parentCanBeActive : true);
             return r ? options.fn(this) : options.inverse(this);
         },
@@ -352,6 +405,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         hasHeadings: function (options) {
+            slog.warning("Using deprecated helper: hasHeadings");
             return Handlebars.helpers.eachHeading(options) !== '' ? options.fn(this) : options.inverse(this);
         },
 
@@ -367,6 +421,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         eachHeading: function (options) {
+            slog.warning("Using deprecated helper: eachHeading");
             var html = engine.getCached(Handlebars.compile(options.hash.page || '')(params.assemble.options)),
                 r = '';
 
@@ -393,6 +448,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         eachChildLink: function (options) {
+            slog.warning("Using deprecated helper: eachChildLink");
             var dest = '',
                 nav_links = '',
                 active;
@@ -423,6 +479,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         eachWithMod: function (context, options) {
+            slog.warning("Using deprecated helper: eachWithMod");
             var r = '',
                 slim = [],
                 counter = 0,
@@ -699,6 +756,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         raw: function (options) {
+            slog.warning("Using deprecated helper: raw");
             return '<raw>' + options.fn(this) + '</raw>';
         },
 
@@ -991,6 +1049,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {array} [arr2] The array to be appended to the first.
          */
         concatArray: function (arr1, arr2) {
+            slog.warning("Using deprecated utility: concatArray");
             var i,
                 len,
                 arr1IsArray,
@@ -1033,6 +1092,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {string} [activeURI] The path of the active page.
          */
         findBreadcrumb: function (navLinks, activeURI) {
+            slog.warning("Using deprecated utility: findBreadcrumb");
             var breadcrumbs,
                 i,
                 navLink,
@@ -1084,6 +1144,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {} []
          */
         forVertical: function (arr, cols) {
+            slog.warning("Using deprecated utility: forVertical");
             var temp,
                 r = [],
                 row = 0,
@@ -1113,6 +1174,7 @@ module.exports.register = function (Handlebars, options, params) {
          * Recursively searches the nav array to find the active link
          */
         getActiveNav: function (dest, nav_links, parentCanBeActive) {
+            slog.warning("Using deprecated utility: getActiveNav");
             var j = nav_links.length,
                 i = 0,
                 r = '';
@@ -1141,6 +1203,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         getBreadcrumbNavLinks: function (navLinks, activeURI) {
+            slog.warning("Using deprecated utility: getBreadcrumbNavLinks");
             var config,
                 items;
 
@@ -1183,6 +1246,7 @@ module.exports.register = function (Handlebars, options, params) {
          * Wrapping the basenames in '/' prevents false matches, ie docs vs docs2 vs 2docs.
          */
         isActiveNav: function (dest, uri, parentCanBeActive) {
+            slog.warning("Using deprecated utility: getActiveNav");
             dest = '/' + utils.basename(dest) + '/';
             uri = '/' + utils.basename(uri) + '/';
             return (parentCanBeActive && uri !== '') ? dest.indexOf(uri) > -1 : uri === dest;

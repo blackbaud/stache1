@@ -2,11 +2,10 @@
     "use strict";
 
     var $,
-        getInstance,
-        Handlebars,
+        getNavigation,
         merge,
-        _params,
         engine;
+
 
     $ = require('cheerio');
     merge = require('merge');
@@ -16,6 +15,7 @@
 
 
     /**
+     *
      *
      * @param {} []
      */
@@ -42,14 +42,22 @@
         anchor = merge(true, defaults, options);
         return this.setClassesForNavLink(anchor);
     }
+
     Anchor.prototype = {
+
+        /**
+         *
+         *
+         * @param {} []
+         */
         setClassesForNavLink: function (navLink) {
             var classes;
-            var addUnique = function (thing) {
+
+            function addUnique(thing) {
                 if (classes.indexOf(thing) === -1) {
                     classes.push(thing);
                 }
-            };
+            }
 
             if (navLink.class) {
                 if (navLink.class.pop && navLink.class.push) {
@@ -102,39 +110,28 @@
 
     /**
      *
+     *
      * @param {} []
      * @param {} []
      */
-    function Navigation(currentURI, options) {
-        this.currentURI = currentURI || '';
-        this.defaults = {
-            headingSelector: 'h2',
-            homeLinkName: '',
-            homeLinkURI: '',
-            isSmoothScroll: true,
-            limit: -1,
-            location: "header",
-            navDropdownDepth: 1,
-            numParents: 0,
-            pageMarkdown: '',
-            showNavDropdown: true,
-            sortOrder: null,
-            sortBy: null
-        };
-        this.breadcrumbPosition = 0;
-        this.numTotalBreadcrumbs = 0;
-        this.currentNavLink = {};
+    function Navigation(currentUri, options) {
+        var instance;
 
-        var instance = this;
+        instance = this;
+        instance.currentUri = currentUri || '';
+        instance.defaults = {};
+        instance.breadcrumbPosition = 0;
+        instance.numTotalBreadcrumbs = 0;
 
         // Expose the instantiated object.
-        getInstance = function () {
+        getNavigation = function () {
             return instance;
         };
 
         // Merge settings.
-        instance.settings = merge.recursive(true, this.defaults, options || {});
+        instance.settings = merge.recursive(true, instance.defaults, options || {});
     }
+
     Navigation.prototype = {
 
         /**
@@ -149,18 +146,84 @@
          * @param {} []
          * @param {} []
          */
-        getAnchorsFor: function (location, options) {
-            var loc = new Pattern(location, options);
-            return loc.getAnchors();
+        pattern: function (pattern, options) {
+            var obj;
+
+            // Share the limit option with the nav object.
+            this.settings.limit = options.limit || -1;
+
+            // Update the nav links array to represent the current URI.
+            this.prepareNavLinksForCurrentUri(this.getNavLinks());
+
+            // Generate the new nav links array for a specific pattern.
+            obj = new Pattern(pattern, options);
+            this.setNavLinks(obj.getAnchors());
+
+            return this;
         },
 
         /**
          *
          * @param {} []
          */
-        setCurrentURI: function (uri) {
-            this.currentURI = uri;
-            prepareNavLinksForCurrentPage(this.navLinks);
+        prepareNavLinksForCurrentUri: function (navLinks) {
+            var currentUri,
+                navigation;
+
+            navigation = this;
+            currentUri = navigation.currentUri;
+
+            if (navLinks) {
+                navLinks.forEach(function (navLink, i) {
+                    var isActive = false;
+
+                    // Active page.
+                    // (This page's URI is a fragment of the active page's URI.)
+                    if (currentUri.indexOf(navLink.uri) > -1) {
+
+                        // Ignore the home page, for now.
+                        if (navLink.uri !== "/") {
+                            isActive = true;
+                            navLink.isActive = true;
+                            navigation.breadcrumbPosition++;
+                            navLink.breadcrumbPosition = navigation.breadcrumbPosition;
+                        }
+
+                        // Current page.
+                        if (currentUri === navLink.uri) {
+                            navLink.isCurrent = true;
+                            navigation.numTotalBreadcrumbs = navigation.breadcrumbPosition;
+
+                            // Make sure the number of children doesn't exceed our limit.
+                            if (navLink.nav_links && navigation.settings.limit > -1) {
+                                navLink.nav_links.forEach(function (n, index) {
+                                    if (index >= navigation.settings.limit) {
+                                        delete navLink.nav_links[index];
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                    // Progress to the next level down.
+                    if (navLink.nav_links) {
+                        navLink.isParent = true;
+                        navigation.prepareNavLinksForCurrentUri(navLink.nav_links);
+                    }
+
+                    // Update the class property.
+                    navLinks[i] = new Anchor(navLink);
+                });
+            }
+        },
+
+        /**
+         *
+         * @param {} []
+         */
+        setCurrentUri: function (uri) {
+            this.currentUri = uri;
+            return this;
         },
 
         /**
@@ -169,7 +232,15 @@
          */
         setNavLinks: function (arr) {
             this.navLinks = arr;
-            prepareNavLinksForCurrentPage(this.navLinks);
+            return this;
+        },
+
+        /**
+         *
+         */
+        update: function () {
+            this.prepareNavLinksForCurrentUri(this.navLinks);
+            return this;
         }
     };
 
@@ -181,10 +252,25 @@
      * @param {} []
      * @param {} []
      */
-    function Pattern(location, options) {
-        var location,
-            settings,
+    function Pattern(pattern, options) {
+        var settings,
             templates;
+
+        pattern = pattern || "header";
+
+        /**
+         *
+         * @param {} []
+         */
+        function cleanArray(arr) {
+            for (var i = 0; i < arr.length; ++i) {
+                if (arr[i] === undefined) {
+                    arr.splice(i, 1);
+                    i--;
+                }
+            }
+            return arr;
+        }
 
         /**
          *
@@ -194,16 +280,12 @@
             var counter,
                 numTotalBreadcrumbs,
                 temp,
-                instance;
+                navigation;
 
             counter = 0;
             temp = [];
-            instance = getInstance();
-            numTotalBreadcrumbs = instance.numTotalBreadcrumbs;
-
-            if (depth === undefined) {
-                depth = _params.assemble.options.stache.config.sidebar.numParents;
-            }
+            navigation = getNavigation();
+            numTotalBreadcrumbs = navigation.numTotalBreadcrumbs;
 
             navLinks.forEach(function (navLink, i) {
 
@@ -248,7 +330,7 @@
 
                     // It has no children.
                     else {
-                        temp = navLinks;
+                        temp = [];
                     }
                 }
 
@@ -260,20 +342,42 @@
                 }
             });
 
-            if (temp === []) {
-                temp = navLinks;
-            }
-
-            return temp;
+            return cleanArray(temp);
         }
 
-        this.anchors = [];
 
-        location = location || "header";
         templates = {
-            boxes: function () {
+            showcase: function () {
                 var defaults,
                     navLinks;
+
+                /**
+                 * Function for arranging an array for vertical display.
+                 *
+                 * @param {} []
+                 * @param {} []
+                 */
+                function stack(arr, numColumns) {
+                    var index,
+                        temp = [],
+                        row = 0,
+                        col = 0,
+                        len = arr.length,
+                        rows = Math.ceil(len / numColumns);
+
+                    while (row < rows) {
+                        index = row + (col * rows);
+                        if (index >= len) {
+                            row++;
+                            col = 0;
+                        } else {
+                            temp.push(arr[index]);
+                            col++;
+                        }
+                    }
+
+                    return temp;
+                }
 
                 /**
                  *
@@ -303,7 +407,12 @@
                         }
                     ];
 
+                    if (settings.arrangement === "stack") {
+                        navLinks = stack(navLinks, settings.numColumnsLargeDesktop);
+                    }
+
                     navLinks.forEach(function (navLink, i) {
+                        var classes = [];
                         breakpoints.forEach(function (breakpoint) {
                             var modulus = i % breakpoint.width;
                             navLink['columnWidth' + breakpoint.name] = maxColumnWidth / breakpoint.width;
@@ -314,29 +423,43 @@
                                 navLink['lastInRow' + breakpoint.name] = true;
                             }
                         });
+                        navLink.class = [
+                            'col-xs-' + navLink.columnWidthPhone,
+                            'col-sm-' + navLink.columnWidthTablet,
+                            'col-md-' + navLink.columnWidthDesktop,
+                            'col-lg-' + navLink.columnWidthLargeDesktop
+                        ].join(' ');
                     });
 
                     return navLinks;
                 }
 
                 defaults = {
+                    arrangement: 'float',
                     containerClass: 'showcase',
-                    sameHeight: false,
+                    doPruneParents: true,
                     numColumnsPhone: 1,
                     numColumnsTablet: 2,
                     numColumnsDesktop: 3,
                     numColumnsLargeDesktop: 4,
+                    sameHeight: false,
+                    type: 'media'
                 };
+
                 settings = merge(true, defaults, options);
-                navLinks = getInstance().navLinks;
-                navLinks = pruneParents(navLinks, 0);
+
+                navLinks = getNavigation().navLinks;
+                if (settings.doPruneParents) {
+                    navLinks = pruneParents(navLinks, 0);
+                }
                 navLinks = columnize(navLinks);
+
                 this.setAnchors(navLinks);
             },
             breadcrumbs: function () {
-                var currentURI,
+                var currentUri,
                     defaults,
-                    instance,
+                    navigation,
                     items,
                     navLinks;
 
@@ -346,20 +469,21 @@
                  * to be checked against the active URI.
                  *
                  * @param {array} [navLinks] Array of objects representing pages.
-                 * @param {string} [currentURI] The path of the active page.
+                 * @param {string} [currentUri] The path of the active page.
                  */
-                function findBreadcrumb(navLinks, currentURI) {
+                function findBreadcrumb(navLinks, currentUri) {
                     var breadcrumbs;
 
                     breadcrumbs = [];
 
                     navLinks.forEach(function (navLink, i) {
+
                         // Don't include the Home page because it cannot have sub-directories.
                         // (We add the Home page manually, in getBreadcrumbNavLinks.)
                         if (navLink.uri !== "/") {
 
                             // Is this page's URI a fragment of the active page's URI?
-                            if (currentURI.indexOf(navLink.uri) > -1) {
+                            if (currentUri.indexOf(navLink.uri) > -1) {
 
                                 breadcrumbs.push(new Anchor({
                                     name: navLink.name,
@@ -368,7 +492,7 @@
 
                                 // Does this page have sub-directories?
                                 if (navLink.hasOwnProperty('nav_links')) {
-                                    breadcrumbs = concatArray(breadcrumbs, findBreadcrumb(navLink.nav_links, currentURI));
+                                    breadcrumbs = concatArray(breadcrumbs, findBreadcrumb(navLink.nav_links, currentUri));
                                 }
 
                                 return;
@@ -390,12 +514,13 @@
                 defaults = {
                     homeLinkName: '',
                     homeLinkURI: ''
-                }
+                };
+
                 settings = merge(true, defaults, options);
-                instance = getInstance();
-                navLinks = instance.getNavLinks();
-                currentURI = instance.currentURI;
-                items = findBreadcrumb(navLinks, currentURI);
+                navigation = getNavigation();
+                navLinks = navigation.getNavLinks();
+                currentUri = navigation.currentUri;
+                items = findBreadcrumb(navLinks, currentUri);
 
                 // Add Home page.
                 if (items !== false) {
@@ -413,7 +538,7 @@
 
                 defaults = {};
                 settings = merge(true, defaults, options);
-                navLinks = getInstance().getNavLinks();
+                navLinks = getNavigation().getNavLinks();
                 navLinks = forAll(navLinks, function (navLink, i) {
                     if (navLink.showInFooter ===  false) {
                         this.omit();
@@ -436,8 +561,9 @@
                     navDropdownDepth: 1,
                     showNavDropdown: true
                 };
+
                 settings = merge(true, defaults, options);
-                navLinks = getInstance().getNavLinks();
+                navLinks = getNavigation().getNavLinks();
                 showNavDropdown = settings.showNavDropdown;
                 navDropdownDepth = settings.navDropdownDepth;
 
@@ -483,6 +609,16 @@
                 var defaults,
                     navLinks;
 
+                defaults = {
+                    headingSelector: 'h2',
+                    isSmoothScroll: true,
+                    limit: -1,
+                    numParents: 0,
+                    pageHtml: '',
+                    sortBy: '',
+                    sortOrder: 'asc'
+                };
+
                 /**
                  *
                  * @param {} []
@@ -497,28 +633,23 @@
                 }
 
                 /**
+                 * 1) Get the active page's HTML.
+                 * 2) For each heading found, add it as a separate navLink.
                  *
+                 * @param {} []
                  */
                 function addHeadings(navLinks) {
-
-                    // 1) Get the active page's HTML
-                    // 2) For each heading found, add it as a separate navLink
-
                     forAll(navLinks, function (navLink, i) {
                         var temp = [];
 
+                        // Only find headings for current page.
                         if (navLink.isCurrent) {
 
                             // The current page contains sub-directories; it can't use headings.
                             if (navLink.isParent === false) {
 
-                                // Build the current page's HTML from Markdown.
-                                var template = Handlebars.compile(settings.pageMarkdown);
-                                var buffer = template(_params.assemble.options);
-                                var html = engine.getCached(buffer);
-
                                 // Find all of the headings.
-                                $(settings.headingSelector, html).each(function () {
+                                $(settings.headingSelector, settings.pageHtml).each(function () {
                                     var el = $(this);
                                     temp.push(new Anchor({
                                         name: el.text(),
@@ -541,13 +672,11 @@
                  * @param {} []
                  */
                 function sortNavLinks(navLinks) {
-                    var instance,
-                        sortA = 1,
+                    var sortA = 1,
                         sortB = -1,
                         sortBy,
                         sortOrder;
 
-                    instance = getInstance();
                     sortBy = settings.sortBy;
                     sortOrder = settings.sortOrder.toLowerCase();
 
@@ -562,17 +691,8 @@
                     }
                 }
 
-                defaults = {
-                    headingSelector: 'h2',
-                    isSmoothScroll: true,
-                    limit: -1,
-                    numParents: 0,
-                    pageMarkdown: '',
-                    sortBy: '',
-                    sortOrder: 'asc'
-                };
                 settings = merge(true, defaults, options);
-                navLinks = getInstance().navLinks;
+                navLinks = getNavigation().navLinks;
                 addHeadings(navLinks);
                 navLinks = pruneParents(navLinks, settings.numParents);
                 sortNavLinks(navLinks);
@@ -582,11 +702,18 @@
         };
 
         // Instantiate a Location.
-        templates[location].call(this);
+        if (templates[pattern]) {
+            templates[pattern].call(this);
+        } else {
+            this.setAnchors(getNavigation().navLinks);
+        }
 
         return this;
     }
+
     Pattern.prototype = {
+
+        anchors: [],
 
         /**
          *
@@ -620,8 +747,8 @@
             arr1IsArray,
             arr2IsArray;
 
-        arr1IsArray = Handlebars.Utils.isArray(arr1);
-        arr2IsArray = Handlebars.Utils.isArray(arr2);
+        arr1IsArray = (arr1.pop && arr1.push);
+        arr2IsArray = (arr2.pop && arr2.push);
 
         if (!arr1IsArray && !arr2IsArray) {
             return [];
@@ -715,66 +842,12 @@
     }
 
 
-    /**
-     *
-     * @param {} []
-     */
-    function prepareNavLinksForCurrentPage(navLinks) {
-        var currentURI,
-            instance;
-
-        instance = getInstance();
-        currentURI = instance.currentURI;
-
-        navLinks.forEach(function (navLink, i) {
-            var isActive = false;
-
-            // Active page.
-            // (This page's URI is a fragment of the active page's URI.)
-            if (currentURI.indexOf(navLink.uri) > -1) {
-
-                // Ignore the home page, for now.
-                if (navLink.uri !== "/") {
-                    isActive = true;
-                    navLink.isActive = true;
-                    instance.breadcrumbPosition++;
-                    navLink.breadcrumbPosition = instance.breadcrumbPosition;
-                }
-
-                // Current page.
-                if (currentURI === navLink.uri) {
-                    navLink.isCurrent = true;
-                    instance.numTotalBreadcrumbs = instance.breadcrumbPosition;
-                    instance.currentNavLink = navLink;
-
-                    // Make sure the number of children doesn't exceed our limit.
-                    if (navLink.nav_links && instance.settings.limit > -1) {
-                        navLink.nav_links.forEach(function (n, k) {
-                            if (k >= instance.settings.limit) {
-                                delete navLink.nav_links[k];
-                            }
-                        });
-                    }
-                }
-            }
-
-            // Progress to the next level down.
-            if (navLink.nav_links) {
-                navLink.isParent = true;
-                prepareNavLinksForCurrentPage(navLink.nav_links);
-            }
-
-            // Update the class property.
-            navLinks[i] = new Anchor(navLink);
-        });
-    }
-
 
     // Return the class with the exports.
-    module.exports = function (handlebars, params) {
-        Handlebars = handlebars;
-        _params = params;
-        return Navigation;
+    module.exports = function () {
+        return function (currentUri, options) {
+            return new Navigation(currentUri, options);
+        };
     };
 
 }());

@@ -1,0 +1,16 @@
+{{# withNav pattern="showcase" customData=customData }}
+    <div class="stache-showcase {{ showcase.containerClass }}">
+        <ul class="row{{# if showcase.sameHeight }} stache-equal-height-row{{/ if }}">
+            {{# each nav_links }}
+                <li class="{{ class }}">
+                    {{# if ../showcase.sameHeight }}
+                        {{{ include ../../showcase.template containerClass="stache-equal-height-item"}}}
+                    {{ else }}
+                        {{{ include ../../showcase.template }}}
+                    {{/ if }}
+                </li>
+                {{ include 'partial-showcase-row-breakpoints' }}
+            {{/ each }}
+        </ul>
+    </div>
+{{/ withNav }}

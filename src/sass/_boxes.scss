@@ -1,6 +1,5 @@
-/** boxes **/
-.stache-boxes {
-    overflow: hidden;
+/** showcase **/
+.stache-showcase {
 
     .media {
         > .media-left {}
@@ -11,5 +10,19 @@
         margin-top: 0;
         margin-bottom: 0;
         padding: 0;
+
+        > li {
+            padding-bottom: 20px;
+
+            .media,
+            .panel {
+                margin: 0;
+            }
+        }
     }
+}
+
+.stache-equal-height-item {
+    min-height: 0px;
+    transition: min-height 100ms;
 }
