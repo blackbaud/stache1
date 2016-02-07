@@ -1,8 +1,3 @@
-/**
- * Stache Helpers
- * Bobby Earl, 2015-02-12
- */
-
 /*jslint node: true, nomen: true, plusplus: true */
 module.exports.register = function (Handlebars, options, params) {
     'use strict';
@@ -31,7 +26,7 @@ module.exports.register = function (Handlebars, options, params) {
     fs = require('fs');
     minify = require('html-minifier').minify;
     UglifyJS = require('uglify-js');
-    navigation = require('../../src/helpers/navigation')();
+    navigation = require('../../src/helpers/navigation');
     engine = require('../../src/helpers/engine')();
     slog = require('../../src/helpers/log')(params.assemble.grunt);
 
@@ -168,26 +163,28 @@ module.exports.register = function (Handlebars, options, params) {
                 currentUri,
                 customData,
                 nav,
+                overrides,
                 pattern,
                 patternOptions;
 
-            context = this;
-
             // No page information, quit.
-            if (context.page === undefined) {
-                return options.inverse(context);
+            if (this.page === undefined) {
+                return options.inverse(this);
             }
 
             // Set some stuff, first.
+            context = {};
             patternOptions = {};
+            overrides = {};
             pattern = (options.hash && options.hash.pattern) ? options.hash.pattern : false;
             customData = (options.hash && options.hash.customData) ? options.hash.customData : false;
-            currentUri = context.page.dirname.split(stache.status)[1] + "/";
+            currentUri = this.page.dirname.split(stache.status)[1] + "/";
 
-            // Get all nav links for the entire site.
             if (customData) {
+                // Nav links have been explicitly set on the helper.
                 allNavLinks = (customData.pages) ? customData.pages : customData;
             } else {
+                // Get all nav links for the entire site.
                 allNavLinks = utils.getNavLinks(options);
             }
 
@@ -195,18 +192,8 @@ module.exports.register = function (Handlebars, options, params) {
             switch (pattern) {
 
                 case "showcase":
-                if (customData) {
-
-                    // Merge data's version of the showcase arguments.
-                    if (customData.showcase) {
-                        context.showcase = merge(true, context.showcase, customData.showcase);
-                    }
-
-                    // We don't want to prune parents for custom data.
-                    context.showcase.doPruneParents = false;
-                }
-                context.showcase.template = 'partial-' + context.showcase.type;
-                patternOptions = merge(true, patternOptions, context.showcase);
+                patternOptions = this.showcase;
+                patternOptions.template = 'partial-' + this.showcase.type;
                 break;
 
                 case "breadcrumbs":
@@ -219,10 +206,10 @@ module.exports.register = function (Handlebars, options, params) {
                 case "custom":
                 break;
 
-                case "footer":
+                case "stack":
                 break;
 
-                case "header":
+                case "dropdown":
                 patternOptions = {
                     showNavDropdown: stache.config.showNavDropdown,
                     navDropdownDepth: stache.config.navDropdownDepth
@@ -230,19 +217,55 @@ module.exports.register = function (Handlebars, options, params) {
                 break;
 
                 case "sidebar":
-                patternOptions = merge(true, patternOptions, context.sidebar);
-                patternOptions.pageHtml = engine.getCached(Handlebars.compile(context.pages[context.page.index].page)(params.assemble.options));
+                patternOptions = this.sidebar;
+                patternOptions.pageHtml = engine.getCached(Handlebars.compile(this.pages[this.page.index].page)(params.assemble.options));
                 break;
 
                 default:
                 break;
             }
 
+            // Allow customData to overwrite page options.
+            if (customData) {
+
+                // Dropdowns
+                if (customData.dropdown) {
+                    overrides = merge(true, overrides, customData.dropdown);
+                }
+
+                // Showcase
+                if (customData.showcase) {
+                    overrides = merge(true, overrides, customData.showcase);
+                }
+
+                // Sidebar
+                if (customData.sidebar) {
+                    overrides = merge(true, overrides, customData.sidebar);
+                }
+
+                // We don't want to prune parents for custom data.
+                patternOptions.doPruneParents = false;
+            }
+
+            // Allow block helper to overwrite page options.
+            if (options.hash.patternOptions) {
+                overrides = merge(true, overrides, options.hash.patternOptions);
+            }
+
+            // Merge any overrides.
+            if (overrides) {
+                patternOptions = merge(true, patternOptions, overrides);
+                if (overrides.type) {
+                    patternOptions.template = 'partial-' + overrides.type;
+                }
+            }
+
             // Get the newly baked nav links.
-            context.nav_links = navigation(currentUri, {})
-                .setNavLinks(allNavLinks)
-                .pattern(pattern, patternOptions)
-                .getNavLinks();
+            nav = navigation(allNavLinks).currentUri(currentUri).pattern(pattern, patternOptions);
+
+            // Create our context.
+            context = patternOptions;
+            context.nav_links = nav.anchors();
 
             // Nav links not found, we'll return the inverse.
             if (context.nav_links === false) {
@@ -263,7 +286,7 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {object} [options] Handlebars' options hash.
          */
         withNavLinks: function (options) {
-            slog.warning("Using deprecated helper: withNavLinks", "Consider using: \n{{# withNav }}\n{{/ withNav }}");
+            slog.warning("Using deprecated helper: withNavLinks");
             return Handlebars.helpers.eachWithMod(utils.getNavLinks(options), options);
         },
 
@@ -480,6 +503,7 @@ module.exports.register = function (Handlebars, options, params) {
          */
         eachWithMod: function (context, options) {
             slog.warning("Using deprecated helper: eachWithMod");
+
             var r = '',
                 slim = [],
                 counter = 0,
@@ -529,7 +553,7 @@ module.exports.register = function (Handlebars, options, params) {
                         // Add any hash values to the context.
                         if (options.hash) {
                             for (h in options.hash) {
-                                if (h !== "nav_links" && options.hash.hasOwnProperty(h)) {
+                                if (h !== "nav_links") {
                                     context[i][h] = options.hash[h];
                                 }
                             }

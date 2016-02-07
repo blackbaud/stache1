@@ -103,7 +103,7 @@ navDropdownDepth: 1
 back_to_top: false
 back_to_top_offset: 220
 showBreadcrumbs: false
-showNavDropdown: false
+showNavDropdown: true
 homeLinkURI: <%= stache.config.base %>
 homeLinkName: <%= stache.config.nav_title_home %>
 
@@ -120,12 +120,13 @@ sidebar:
 showcase:
   arrangement: 'float'
   containerClass: 'showcase'
+  limit: -1
   numColumnsPhone: 3
   numColumnsTablet: 3
   numColumnsDesktop: 3
   numColumnsLargeDesktop: 3
-  partial: 'partial-media'
   sameHeight: false
+  template: 'partial-media'
   type: 'media'
 
 # =============================================

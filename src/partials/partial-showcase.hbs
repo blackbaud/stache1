@@ -1,13 +1,13 @@
 {{# withNav pattern="showcase" customData=customData }}
     {{# minify collapseWhitespace=true }}
-        <div class="stache-showcase {{ showcase.containerClass }}">
-            <ul class="row{{# if showcase.sameHeight }} stache-equal-height-row{{/ if }}">
+        <div class="stache-showcase {{ containerClass }}">
+            <ul class="row{{# if sameHeight }} stache-equal-height-row{{/ if }}">
                 {{# each nav_links }}
                     <li class="{{ class }}">
-                        {{# if ../showcase.sameHeight }}
-                            {{{ include ../../showcase.template containerClass="stache-equal-height-item"}}}
+                        {{# if ../sameHeight }}
+                            {{{ include ../../template containerClass="stache-equal-height-item"}}}
                         {{ else }}
-                            {{{ include ../../showcase.template }}}
+                            {{{ include ../../template }}}
                         {{/ if }}
                     </li>
                     {{ include 'partial-showcase-row-breakpoints' }}

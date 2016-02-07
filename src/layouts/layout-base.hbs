@@ -44,7 +44,7 @@
               <div class="{{ stache.config.bootstrap_container }}">
                 <div class="row">
                   <div class="col-sm-12">
-                    {{# withNav pattern="header" }}
+                    {{# withNav pattern="dropdown" }}
                       {{ include 'partial-nav' class="nav navbar-nav navbar-left" }}
                     {{/ withNav }}
                     {{{ include stache.config.partial_header_admin }}}
@@ -106,7 +106,7 @@
                 <div class="row">
                   <div class="col-xs-6 col-sm-4">
                     {{{ include stache.config.partial_footer_logo }}}
-                    {{# withNav pattern="footer" }}
+                    {{# withNav pattern="stack" }}
                       {{ include 'partial-nav' class="list-unstyled" }}
                     {{/ withNav }}
                   </div>
