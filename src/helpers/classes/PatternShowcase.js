@@ -35,6 +35,18 @@
          *
          * @param {} []
          */
+        function assignTemplate(navLinks) {
+            var template = 'partial-' + _self.setting('type');
+            navLinks.forEach(function (navLink) {
+                navLink.template = template;
+            });
+            return navLinks;
+        }
+
+        /**
+         *
+         * @param {} []
+         */
         function columnize(navLinks) {
             var breakpoints,
                 maxColumnWidth;
@@ -91,8 +103,8 @@
         }
 
         _anchors = _self.navigation().checkLimit(_anchors, _self.setting('limit'));
-
         _anchors = columnize(_anchors);
+        _anchors = assignTemplate(_anchors);
         _self.anchors(_anchors);
 
         return this;

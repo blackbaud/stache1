@@ -32,7 +32,7 @@
         // Public methods.
         this.anchors = function (val) {
             if (val === undefined) {
-                return _anchors;
+                return _anchors || [];
             }
             _anchors = val;
             return this;

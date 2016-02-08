@@ -158,8 +158,8 @@
             });
             $items.each(function () {
                 $(this).css({
-                    'min-height': minHeight + 'px'
-                });
+                    'min-height': minHeight + 'px',
+                }).removeClass('off');
             });
         });
     });

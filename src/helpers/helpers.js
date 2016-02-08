@@ -26,11 +26,71 @@ module.exports.register = function (Handlebars, options, params) {
     fs = require('fs');
     minify = require('html-minifier').minify;
     UglifyJS = require('uglify-js');
-    navigation = require('../../src/helpers/navigation');
-    engine = require('../../src/helpers/engine')();
-    slog = require('../../src/helpers/log')(params.assemble.grunt);
+    navigation = require(__dirname + '/navigation');
+    engine = require(__dirname + '/engine')();
+    slog = require(__dirname + '/log')(params.assemble.grunt);
 
     helpers = {
+
+        /**
+         * Return the current count for the required property
+         */
+        count: function (prop) {
+            if (typeof counts[prop] === 'undefined') {
+                counts[prop] = 0;
+            }
+            return counts[prop];
+        },
+
+        /**
+         * If settings say to render, wrap content in div
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        draft: function (options) {
+            return stache.config.draft ? ('<div class="draft">\r\n\r\n' + engine.getCached(options.fn(this)) + '\r\n\r\n</div>') : '';
+        },
+
+        /**
+         * Consistently generate the edit link for a file in GitHub
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        editInGitHubLink: function (options) {
+            var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
+            return [
+                stache.config.github_protocol,
+                stache.config.github_base,
+                '/',
+                stache.config.github_org,
+                '/',
+                stache.config.github_repo,
+                '/blob/',
+                stache.config.github_branch,
+                '/',
+                src
+            ].join('');
+        },
+
+        /**
+         * Consistently generate the edit link for a file in Prose
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        editInProseLink: function (options) {
+            var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
+            return [
+                stache.config.prose_base,
+                '/#',
+                stache.config.github_org,
+                '/',
+                stache.config.github_repo,
+                '/edit/',
+                stache.config.github_branch,
+                '/',
+                src
+            ].join('');
+        },
 
         /**
          * Returns the preferred value of a YAML option (either root or page).
@@ -48,13 +108,17 @@ module.exports.register = function (Handlebars, options, params) {
 
             // This list should include page-specific variables only.
             frontMatterVariables = [
-                'showcase',
                 'markdown',
+                'patternBreadcrumbs',
+                'patternDropdowns',
+                'patternShowcase',
+                'patternSidebar',
+                'patternStack',
                 'showBreadcrumbs',
                 'showInFooter',
-                'showInHeader',
-                'sidebar'
+                'showInHeader'
             ];
+
             keysLength = frontMatterVariables.length;
 
             for (i = 0; i < keysLength; ++i) {
@@ -62,272 +126,7 @@ module.exports.register = function (Handlebars, options, params) {
                 this[key] = utils.mergeOption(config[key], this[key]);
             }
 
-            //utils.checkDeprecatedFrontMatter.call(this, options);
-
             return options.fn(this);
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Adds breadcrumb nav_links to the scope.
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        withBreadcrumbs: function (options) {
-            slog.warning("Using deprecated helper: withBreadcrumbs", "Consider using: \n{{# withNav pattern=\"breadcrumbs\" }}\n  {{ include 'partial-nav' class=\"breadcrumb\" }}\n{{/ withNav }}");
-            options.hash.pattern = "breadcrumbs";
-            return helpers.withNav.call(this, options);
-        },
-
-        /**
-         * Total all coverage from instanbul report
-         *
-         * @param {} []
-         * @param {} []
-         * @param {object} [options] Handlebars' options hash.
-         */
-        withCoverageTotal: function (collection, property, options) {
-
-            var file,
-                r = {
-                    total: 0,
-                    covered: 0,
-                    skipped: 0,
-                    pct: 0
-                };
-
-            for (file in collection) {
-                if (collection[file].hasOwnProperty(property)) {
-                    r.total += parseInt(collection[file][property].total);
-                    r.covered += parseInt(collection[file][property].covered);
-                    r.skipped += parseInt(collection[file][property].skipped);
-                }
-            }
-
-            if (r.total > 0) {
-                r.pct = (r.covered / r.total) * 100;
-            }
-
-            if (r.pct < 50) {
-                r.cssClass = 'danger';
-            } else if (r.pct < 80) {
-                r.cssClass = 'warning';
-            } else {
-                r.cssClass = 'success';
-            }
-
-            if (options.hash.fixed && r.pct !== 100) {
-                r.pct = utils.toFixed(r.pct, options.hash.fixed);
-            }
-
-            return options.fn(r, options);
-        },
-
-        /**
-         *
-         *
-         * @param {} []
-         * @param {object} [options] Handlebars' options hash.
-         */
-        withFirstProperty: function (collection, options) {
-            var property;
-            for (property in collection) {
-                if (collection.hasOwnProperty(property)) {
-                    return options.fn(collection[property]);
-                }
-            }
-        },
-
-        /**
-         * Allows context against specific item in object
-         *
-         * @param {} []
-         * @param {object} [options] Handlebars' options hash.
-         */
-        withItem: function (object, options) {
-            return typeof object[options.hash.key] !== 'undefined' ? options.fn(object[options.hash.key]) : '';
-        },
-
-        /**
-         *
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        withNav: function (options) {
-
-            var allNavLinks,
-                context,
-                currentUri,
-                customData,
-                nav,
-                overrides,
-                pattern,
-                patternOptions;
-
-            // No page information, quit.
-            if (this.page === undefined) {
-                return options.inverse(this);
-            }
-
-            // Set some stuff, first.
-            context = {};
-            patternOptions = {};
-            overrides = {};
-            pattern = (options.hash && options.hash.pattern) ? options.hash.pattern : false;
-            customData = (options.hash && options.hash.customData) ? options.hash.customData : false;
-            currentUri = this.page.dirname.split(stache.status)[1] + "/";
-
-            if (customData) {
-                // Nav links have been explicitly set on the helper.
-                allNavLinks = (customData.pages) ? customData.pages : customData;
-            } else {
-                // Get all nav links for the entire site.
-                allNavLinks = utils.getNavLinks(options);
-            }
-
-            // Different patterns have different options.
-            switch (pattern) {
-
-                case "showcase":
-                patternOptions = this.showcase;
-                patternOptions.template = 'partial-' + this.showcase.type;
-                break;
-
-                case "breadcrumbs":
-                patternOptions = {
-                    homeLinkName: stache.config.homeLinkName,
-                    homeLinkURI: stache.config.homeLinkURI
-                };
-                break;
-
-                case "custom":
-                break;
-
-                case "stack":
-                break;
-
-                case "dropdown":
-                patternOptions = {
-                    showNavDropdown: stache.config.showNavDropdown,
-                    navDropdownDepth: stache.config.navDropdownDepth
-                };
-                break;
-
-                case "sidebar":
-                patternOptions = this.sidebar;
-                patternOptions.pageHtml = engine.getCached(Handlebars.compile(this.pages[this.page.index].page)(params.assemble.options));
-                break;
-
-                default:
-                break;
-            }
-
-            // Allow customData to overwrite page options.
-            if (customData) {
-
-                // Dropdowns
-                if (customData.dropdown) {
-                    overrides = merge(true, overrides, customData.dropdown);
-                }
-
-                // Showcase
-                if (customData.showcase) {
-                    overrides = merge(true, overrides, customData.showcase);
-                }
-
-                // Sidebar
-                if (customData.sidebar) {
-                    overrides = merge(true, overrides, customData.sidebar);
-                }
-
-                // We don't want to prune parents for custom data.
-                patternOptions.doPruneParents = false;
-            }
-
-            // Allow block helper to overwrite page options.
-            if (options.hash.patternOptions) {
-                overrides = merge(true, overrides, options.hash.patternOptions);
-            }
-
-            // Merge any overrides.
-            if (overrides) {
-                patternOptions = merge(true, patternOptions, overrides);
-                if (overrides.type) {
-                    patternOptions.template = 'partial-' + overrides.type;
-                }
-            }
-
-            // Get the newly baked nav links.
-            nav = navigation(allNavLinks).currentUri(currentUri).pattern(pattern, patternOptions);
-
-            // Create our context.
-            context = patternOptions;
-            context.nav_links = nav.anchors();
-
-            // Nav links not found, we'll return the inverse.
-            if (context.nav_links === false) {
-                return options.inverse(context);
-            }
-
-            // Success. Let's build this thing!
-            return options.fn(context);
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Used instead of us having to pass the nav_links object around in the context.
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        withNavLinks: function (options) {
-            slog.warning("Using deprecated helper: withNavLinks");
-            return Handlebars.helpers.eachWithMod(utils.getNavLinks(options), options);
-        },
-
-        /**
-         * Same as newline method but wraps context
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        withNewline: function (options) {
-            return engine.newline(options.fn(this));
-        },
-
-        /**
-         * Presents a context with the results returned from getOperation
-         *
-         * @param {array} [context.hash] - Optional key/value pairs to pass to @getOperation
-         */
-        withOperation: function (context) {
-            return context.fn(Handlebars.helpers.getOperation(context));
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * If the user specified a maximum parent depth, make sure this is within in.
-         * This is still a WIP.
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        withinParentDepth: function (options) {
-            slog.warning("Using deprecated helper: withinParentDepth");
-            var a = options.hash.sidebarCurrentDepth || -1,
-                b = options.hash.sidebarParentDepth || -1;
-
-            if (a === -1 || b === -1) {
-                return options.fn(this);
-            } else {
-                return options.fn(this);
-            }
         },
 
         /**
@@ -386,246 +185,37 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Compares "uri" in the current context (or the first parameter) to the current URL
-         * http://assemble.io/docs/FAQ.html
-         *
-         * @param {object} [options] Handlebars' options hash.
+         * Helper for converting Sandcastle types to Prism types
          */
-        isActiveNav: function (options) {
-            slog.warning("Using deprecated helper: isActiveNav");
-            var r = utils.isActiveNav(options.hash.dest || this.dest || '', options.hash.uri || this.uri || '', typeof options.hash.parentCanBeActive !== 'undefined' ? options.hash.parentCanBeActive : true);
-            return r ? options.fn(this) : options.inverse(this);
-        },
-
-        /**
-         * Is the current page home
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        isHome: function (options) {
-            var b = utils.basename(options.hash.dest || this.page.dest || 'NOT_HOME', true);
-            return b === '' ? options.fn(this) : options.inverse(this);
-        },
-
-        /**
-         * Debugging JSON content
-         */
-        json: function (context) {
-            return JSON.stringify(context);
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Does the current page have headings?
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        hasHeadings: function (options) {
-            slog.warning("Using deprecated helper: hasHeadings");
-            return Handlebars.helpers.eachHeading(options) !== '' ? options.fn(this) : options.inverse(this);
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * This innocuous looking helper took quite a long time to figure out.
-         * It takes the current pages entire RAW source, crompiles it, and loads it in cheerio (jQuery).
-         * Then it parses for the relevant headers and executes the template for each one.
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        eachHeading: function (options) {
-            slog.warning("Using deprecated helper: eachHeading");
-            var html = engine.getCached(Handlebars.compile(options.hash.page || '')(params.assemble.options)),
-                r = '';
-
-            cheerio(options.hash.selector || 'h2', html).each(function () {
-                var el = cheerio(this);
-                r = r + options.fn({
-                    name: el.text(),
-                    id: el.attr('id'),
-                    isDraft: el.parent().hasClass('draft')
-                });
-            });
-
-            return r;
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Finds the current page in the nav and iterates its child links
-         * Supports optional modulus parameters.
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        eachChildLink: function (options) {
-            slog.warning("Using deprecated helper: eachChildLink");
-            var dest = '',
-                nav_links = '',
-                active;
-
-            if (typeof options.hash.dest !== 'undefined') {
-                dest = options.hash.dest;
-            } else if (typeof this.page !== 'undefined' && typeof this.page.dest !== 'undefined') {
-                dest = this.page.dest;
-            }
-
-            nav_links = utils.getNavLinks(options);
-            active = utils.getActiveNav(dest, nav_links, false);
-
-            if (active && active.nav_links) {
-                active = active.nav_links;
-            }
-
-            return Handlebars.helpers.eachWithMod(active, options);
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         *
-         * @param {} []
-         * @param {object} [options] Handlebars' options hash.
-         */
-        eachWithMod: function (context, options) {
-            slog.warning("Using deprecated helper: eachWithMod");
-
-            var r = '',
-                slim = [],
-                counter = 0,
-                h,
-                i = 0,
-                m = 0,
-                mod = options.hash.mod || 0,
-                limit = options.hash.limit || -1,
-                layout = options.hash.layout || 'horizontal',
-                sortKey = options.hash.sortKey || '',
-                sortDesc = typeof options.hash.sortDesc !== 'undefined' ? options.hash.sortDesc : false,
-                sortA = 1,
-                sortB = -1,
-                j,
-                show;
-
-            if (context && context.length) {
-
-                // Sort differently if Needed
-                if (sortKey !== '') {
-                    if (sortDesc) {
-                        sortA = -1;
-                        sortB = 1;
-                    }
-                    context = context.sort(function (a, b) {
-                        return a[sortKey] > b[sortKey] ? sortA : (a[sortKey] < b[sortKey] ? sortB : 0);
-                    });
-                }
-
-
-
-                j = context.length;
-                for (i; i < j; i++) {
-
-                    // Don't go past our limit
-                    if (limit !== -1 && counter >= limit) {
-                        break;
-                    }
-
-                    // Make sure the page doesn't say ignore
-                    show = true;
-                    if (typeof context[i].showInNav !== 'undefined' && context[i].showInNav === false) {
-                        show = false;
-                    }
-
-                    if (show) {
-                        // Add any hash values to the context.
-                        if (options.hash) {
-                            for (h in options.hash) {
-                                if (h !== "nav_links") {
-                                    context[i][h] = options.hash[h];
-                                }
-                            }
-                        }
-                        slim.push(context[i]);
-                        counter++;
-                    }
-                }
-
-                // Organize vertically
-                if (layout === 'vertical' && mod > 0) {
-                    slim = utils.forVertical(slim, mod);
-                }
-
-                // Display the real items
-                for (i = 0, j = slim.length; i < j; i++) {
-                    m = i % mod;
-                    slim[i].first = i === 0;
-                    slim[i].last = i === j - 1;
-                    slim[i].mod = m;
-                    slim[i].cols = mod;
-                    slim[i].mod0 = m === 0;
-                    slim[i].mod1 = m === mod - 1;
-                    slim[i].index = i;
-                    slim[i].colWidth = mod === 0 ? 0 : (12 / mod);
-                    slim[i].colOffset = slim[i].colWidth * m;
-                    slim[i].firstOrMod0 = slim[i].first || slim[i].mod0;
-                    slim[i].lastOrMod1 = slim[i].last || slim[i].mod1;
-                    r += options.fn(slim[i]);
-                }
+        getPrismType: function (type) {
+            var r = type;
+            switch (type.toUpperCase()) {
+                case 'C#':
+                case 'VB':
+                    r = 'csharp';
+                break;
+                case 'C++':
+                    r = 'cpp';
+                break;
             }
             return r;
         },
 
         /**
-         * Loop through a certain number of times.
+         * Consistently generate the GitHub repo link (for site rebuild)
          */
-        loop: function (options) {
-            var arr = new Array(options.hash.end);
-            return Handlebars.helpers.each(arr, options);
-        },
-
-        /**
-         * Overriding default markdown helper.
-         * See notes within the engine module for more information.
-         */
-        markdown: engine.markdown,
-
-        /**
-         * If settings say to render, wrap content in div
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        draft: function (options) {
-            return stache.config.draft ? ('<div class="draft">\r\n\r\n' + engine.getCached(options.fn(this)) + '\r\n\r\n</div>') : '';
-        },
-
-        /**
-         * Return the current count for the required property
-         */
-        count: function (prop) {
-            if (typeof counts[prop] === 'undefined') {
-                counts[prop] = 0;
-            }
-            return counts[prop];
-        },
-
-        /**
-         * Increment the count for the required property
-         */
-        increment: function (prop) {
-            counts[prop] = typeof counts[prop] === 'undefined' ? 0 : (counts[prop] + 1);
+        gitSourceLink: function () {
+            return [
+                stache.config.github_protocol,
+                stache.config.github_token,
+                '@',
+                stache.config.github_base,
+                '/',
+                stache.config.github_org,
+                '/',
+                stache.config.github_repo,
+                '.git'
+            ].join('');
         },
 
         /**
@@ -752,6 +342,50 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
+         * Increment the count for the required property
+         */
+        increment: function (prop) {
+            counts[prop] = typeof counts[prop] === 'undefined' ? 0 : (counts[prop] + 1);
+        },
+
+        /**
+         * Block helper to emulate the following logic:
+         * If Globally true then
+         *   Unless locally false (blank is true)
+         *     TRUE
+         * Else if globally false then
+         *   If locally true then
+         *     TRUE
+         */
+        inherit: function (global, local, options) {
+            return (utils.mergeOption(global, local)) ? options.fn(this) : options.inverse(this);
+        },
+
+        /**
+         * Is the item an array or object?
+         */
+        isArray: function (item, options) {
+            return Handlebars.Utils.isArray(item) ? options.fn(this) : options.inverse(this);
+        },
+
+        /**
+         * Is the current page home
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        isHome: function (options) {
+            var b = utils.basename(options.hash.dest || this.page.dest || 'NOT_HOME', true);
+            return b === '' ? options.fn(this) : options.inverse(this);
+        },
+
+        /**
+         * Debugging JSON content
+         */
+        json: function (context) {
+            return JSON.stringify(context);
+        },
+
+        /**
          * Supports object + arrays
          */
         length: function (collection) {
@@ -772,16 +406,45 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
+         * Loop through a certain number of times.
+         */
+        loop: function (options) {
+            var arr = new Array(options.hash.end);
+            return Handlebars.helpers.each(arr, options);
+        },
+
+        /**
+         * Overriding default markdown helper.
+         * See notes within the engine module for more information.
+         */
+        markdown: engine.markdown,
+
+        /**
+         * Minify an HTML block
          *
          * @param {object} [options] Handlebars' options hash.
          */
-        raw: function (options) {
-            slog.warning("Using deprecated helper: raw");
-            return '<raw>' + options.fn(this) + '</raw>';
+        minify: function (options) {
+            return minify(options.fn(this), options.hash);
+        },
+
+        /**
+         * Many functions of the site, including grunt-yeomin fails on windows line endings.
+         * This helpers replaces those.
+         */
+        newline: function (text) {
+            return engine.newline(text);
+        },
+
+        /**
+         * Normalizes Sandcastle URL
+         */
+        normalizeSandcastleUrl: function (url) {
+            var u = url || '';
+
+            return u.indexOf('://') > -1 ? u : ('../' + u
+                .replace('.htm', '/')
+                .replace('html/', ''));
         },
 
         /**
@@ -802,93 +465,11 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-         * Many functions of the site, including grunt-yeomin fails on windows line endings.
-         * This helpers replaces those.
-         */
-        newline: function (text) {
-            return engine.newline(text);
-        },
-
-        /**
-         * Block helper to emulate the following logic:
-         * If Globally true then
-         *   Unless locally false (blank is true)
-         *     TRUE
-         * Else if globally false then
-         *   If locally true then
-         *     TRUE
-         */
-        inherit: function (global, local, options) {
-            return (utils.mergeOption(global, local)) ? options.fn(this) : options.inverse(this);
-        },
-
-        /**
-         * Consistently generate the edit link for a file in GitHub
          *
          * @param {object} [options] Handlebars' options hash.
          */
-        editInGitHubLink: function (options) {
-            var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
-            return [
-                stache.config.github_protocol,
-                stache.config.github_base,
-                '/',
-                stache.config.github_org,
-                '/',
-                stache.config.github_repo,
-                '/blob/',
-                stache.config.github_branch,
-                '/',
-                src
-            ].join('');
-        },
-
-        /**
-         * Consistently generate the edit link for a file in Prose
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        editInProseLink: function (options) {
-            var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
-            return [
-                stache.config.prose_base,
-                '/#',
-                stache.config.github_org,
-                '/',
-                stache.config.github_repo,
-                '/edit/',
-                stache.config.github_branch,
-                '/',
-                src
-            ].join('');
-        },
-
-        /**
-         * Consistently generate the trigger link for a site rebuild
-         */
-        triggerSiteRebuildLink: function () {
-            return [
-                stache.config.kudu_protocol,
-                stache.config.kudu_repo,
-                stache.config.kudu_suffix
-            ].join('');
-        },
-
-        /**
-         * Consistently generate the GitHub repo link (for site rebuild)
-         */
-        gitSourceLink: function () {
-            return [
-                stache.config.github_protocol,
-                stache.config.github_token,
-                '@',
-                stache.config.github_base,
-                '/',
-                stache.config.github_org,
-                '/',
-                stache.config.github_repo,
-                '.git'
-            ].join('');
+        raw: function (options) {
+            return '<raw>' + options.fn(this) + '</raw>';
         },
 
         /**
@@ -897,41 +478,6 @@ module.exports.register = function (Handlebars, options, params) {
         removeExt: function (filename) {
             var dot = filename.lastIndexOf('.');
             return dot > -1 ? filename.substr(0, dot) : filename;
-        },
-
-        /**
-         * Is the item an array or object?
-         */
-        isArray: function (item, options) {
-            return Handlebars.Utils.isArray(item) ? options.fn(this) : options.inverse(this);
-        },
-
-        /**
-         * Helper for converting Sandcastle types to Prism types
-         */
-        getPrismType: function (type) {
-            var r = type;
-            switch (type.toUpperCase()) {
-                case 'C#':
-                case 'VB':
-                    r = 'csharp';
-                break;
-                case 'C++':
-                    r = 'cpp';
-                break;
-            }
-            return r;
-        },
-
-        /**
-         * Normalizes Sandcastle URL
-         */
-        normalizeSandcastleUrl: function (url) {
-            var u = url || '';
-
-            return u.indexOf('://') > -1 ? u : ('../' + u
-                .replace('.htm', '/')
-                .replace('html/', ''));
         },
 
         /**
@@ -961,6 +507,17 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
+         * Consistently generate the trigger link for a site rebuild
+         */
+        triggerSiteRebuildLink: function () {
+            return [
+                stache.config.kudu_protocol,
+                stache.config.kudu_repo,
+                stache.config.kudu_suffix
+            ].join('');
+        },
+
+        /**
          * Uglifys a block of JavaScript
          *
          * @param {object} [options] Handlebars' options hash.
@@ -972,12 +529,143 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
-         * Minify an HTML block
+         * Total all coverage from instanbul report
+         *
+         * @param {} []
+         * @param {} []
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withCoverageTotal: function (collection, property, options) {
+            var file,
+                r;
+
+            r  = {
+                total: 0,
+                covered: 0,
+                skipped: 0,
+                pct: 0
+            };
+
+            for (file in collection) {
+                if (collection[file].hasOwnProperty(property)) {
+                    r.total += parseInt(collection[file][property].total);
+                    r.covered += parseInt(collection[file][property].covered);
+                    r.skipped += parseInt(collection[file][property].skipped);
+                }
+            }
+
+            if (r.total > 0) {
+                r.pct = (r.covered / r.total) * 100;
+            }
+
+            if (r.pct < 50) {
+                r.cssClass = 'danger';
+            } else if (r.pct < 80) {
+                r.cssClass = 'warning';
+            } else {
+                r.cssClass = 'success';
+            }
+
+            if (options.hash.fixed && r.pct !== 100) {
+                r.pct = utils.toFixed(r.pct, options.hash.fixed);
+            }
+
+            return options.fn(r, options);
+        },
+
+        /**
+         *
+         *
+         * @param {} []
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withFirstProperty: function (collection, options) {
+            var property;
+            for (property in collection) {
+                if (collection.hasOwnProperty(property)) {
+                    return options.fn(collection[property]);
+                }
+            }
+        },
+
+        /**
+         * Allows context against specific item in object
+         *
+         * @param {} []
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withItem: function (object, options) {
+            return typeof object[options.hash.key] !== 'undefined' ? options.fn(object[options.hash.key]) : '';
+        },
+
+        /**
+         *
          *
          * @param {object} [options] Handlebars' options hash.
          */
-        minify: function (options) {
-            return minify(options.fn(this), options.hash);
+        withNav: function (options) {
+            var context,
+                currentUri,
+                customData,
+                navLinks,
+                pattern,
+                patternOptions,
+                patternOptionsName;
+
+            // No page information, quit.
+            if (this.page === undefined) {
+                return options.inverse(this);
+            }
+
+            context = {};
+            currentUri = this.page.dirname.split(stache.status)[1] + "/";
+            pattern = options.hash.pattern || 'custom';
+            patternOptionsName = 'pattern' + pattern[0].toUpperCase() + pattern.substring(1);
+            navLinks = utils.getNavLinks();
+
+            // Merge pattern options.
+            patternOptions = options.hash.patternOptions || {};
+            patternOptions = merge(true, this[patternOptionsName] || {}, patternOptions);
+
+            // Special setup for some patterns.
+            switch (pattern) {
+                case "sidebar":
+                patternOptions.pageHtml = engine.getCached(Handlebars.compile(this.pages[this.page.index].page)(params.assemble.options));
+                break;
+            }
+
+            // Allow custom data to override pattern options.
+            customData = options.hash.customData || undefined;
+            if (customData) {
+                navLinks = (customData.items) ? customData.items : customData;
+                if (customData.hasOwnProperty(patternOptionsName)) {
+                    patternOptions = merge(true, patternOptions, customData[patternOptionsName]);
+                }
+                patternOptions.doPruneParents = false;
+            }
+
+            // Build the context.
+            context = patternOptions;
+            context.nav_links = navigation(navLinks).currentUri(currentUri).pattern(pattern, patternOptions).anchors();
+            return (context.nav_links === false) ? options.inverse(context) : options.fn(context);
+        },
+
+        /**
+         * Same as newline method but wraps context
+         *
+         * @param {object} [options] Handlebars' options hash.
+         */
+        withNewline: function (options) {
+            return engine.newline(options.fn(this));
+        },
+
+        /**
+         * Presents a context with the results returned from getOperation
+         *
+         * @param {array} [context.hash] - Optional key/value pairs to pass to @getOperation
+         */
+        withOperation: function (context) {
+            return context.fn(Handlebars.helpers.getOperation(context));
         }
 
     };
@@ -1026,32 +714,6 @@ module.exports.register = function (Handlebars, options, params) {
          *
          * @param {} []
          */
-        checkDeprecatedFrontMatter: function (options) {
-            if (this.sidebar_title) {
-                slog.warning("[" + this.page.src + "] The YAML variable `sidebar_title` is no longer supported! Use: \n---\nsidebar:\n  title: " + this.sidebar_title + "\n---");
-                this.sidebar.title = this.sidebar_title;
-            }
-            /*
-            if (this.draft) {
-                slog.warning("[" + this.page.src + "] The YAML variable `draft` is no longer supported! Use: \n---\nisDraft: " + this.draft + "\n---");
-                this.isDraft = this.draft;
-            }
-            */
-            if (this.limit) {
-                slog.warning("[" + this.page.src + "] The YAML variable `limit` is no longer supported! Use: \n---\nsidebar:\n  limit: " + this.limit + "\n---");
-                this.sidebar.limit = this.limit;
-            }
-            if (this.showHeadings) {
-                slog.warning("[" + this.page.src + "] The YAML variable `showHeadings` is no longer supported! Use: \n---\nsidebar:\n  showHeadings: " + this.showHeadings + "\n---");
-                this.sidebar.showHeadings = this.showHeadings;
-            }
-        },
-
-        /**
-         *
-         *
-         * @param {} []
-         */
         clone: function (obj) {
             var cloned;
             try {
@@ -1062,189 +724,6 @@ module.exports.register = function (Handlebars, options, params) {
             return cloned;
         },
 
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Returns a single array, the second appended to the first.
-         *
-         * @param {array} [arr1] The array to be extended.
-         * @param {array} [arr2] The array to be appended to the first.
-         */
-        concatArray: function (arr1, arr2) {
-            slog.warning("Using deprecated utility: concatArray");
-            var i,
-                len,
-                arr1IsArray,
-                arr2IsArray;
-
-            arr1IsArray = Handlebars.Utils.isArray(arr1);
-            arr2IsArray = Handlebars.Utils.isArray(arr2);
-
-            if (!arr1IsArray && !arr2IsArray) {
-                return [];
-            }
-
-            if (!arr2IsArray && arr1IsArray) {
-                return arr1;
-            }
-
-            if (!arr1IsArray && arr2IsArray) {
-                return arr2;
-            }
-
-            len = arr2.length;
-
-            for (i = 0; i < len; ++i) {
-                arr1.push(arr2[i]);
-            }
-
-            return arr1;
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Returns an object representing a page's properties, only if its URI is
-         * a fragment of the active page's URI. The method receives an array of objects,
-         * to be checked against the active URI.
-         *
-         * @param {array} [navLinks] Array of objects representing pages.
-         * @param {string} [activeURI] The path of the active page.
-         */
-        findBreadcrumb: function (navLinks, activeURI) {
-            slog.warning("Using deprecated utility: findBreadcrumb");
-            var breadcrumbs,
-                i,
-                navLink,
-                navLinksLength;
-
-            breadcrumbs = [];
-            navLinksLength = navLinks.length;
-
-            for (i = 0; i < navLinksLength; ++i) {
-
-                navLink = navLinks[i];
-
-                // Don't include the Home page because it cannot have sub-directories.
-                // (We add the Home page manually, in getBreadcrumbNavLinks.)
-                if (navLink.uri !== "/") {
-
-                    // Is this page's URI a fragment of the active page's URI?
-                    if (activeURI.indexOf(navLink.uri) > -1) {
-                        breadcrumbs.push({
-                            name: navLink.name,
-                            uri: navLink.uri,
-                            showInNav: true
-                        });
-
-                        // Does this page have sub-directories?
-                        if (navLink.hasOwnProperty('nav_links')) {
-                            breadcrumbs = utils.concatArray(breadcrumbs, utils.findBreadcrumb(navLink.nav_links, activeURI));
-                        }
-
-                        break;
-                    }
-                }
-            }
-
-            // Set the final navigation link as 'active' and return the array.
-            if (breadcrumbs.length > 0) {
-                breadcrumbs[breadcrumbs.length - 1].active = true;
-                return breadcrumbs;
-            }
-
-            // The navigation links didn't contain a breadcrumb.
-            return false;
-        },
-
-        /**
-         * Function for arranging an array for vertical display.
-         *
-         * @param {} []
-         * @param {} []
-         */
-        forVertical: function (arr, cols) {
-            slog.warning("Using deprecated utility: forVertical");
-            var temp,
-                r = [],
-                row = 0,
-                col = 0,
-                len = arr.length,
-                rows = Math.ceil(len / cols);
-
-            while (row < rows) {
-                temp = row + (col * rows);
-                if (temp >= len) {
-                    row++;
-                    col = 0;
-                } else {
-                    r.push(arr[temp]);
-                    col++;
-                }
-            }
-
-            return r;
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Recursively searches the nav array to find the active link
-         */
-        getActiveNav: function (dest, nav_links, parentCanBeActive) {
-            slog.warning("Using deprecated utility: getActiveNav");
-            var j = nav_links.length,
-                i = 0,
-                r = '';
-
-            for (i; i < j; i++) {
-                if (utils.isActiveNav(dest, nav_links[i].uri, parentCanBeActive)) {
-                    r = nav_links[i];
-                } else if (nav_links[i].nav_links) {
-                    r = utils.getActiveNav(dest, nav_links[i].nav_links, parentCanBeActive);
-                }
-                if (r !== '') {
-                    break;
-                }
-            }
-
-            return r;
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Returns an array representing all breadcrumb nav_links for a given page.
-         *
-         * @param {object} [options] Handlebars' options hash.
-         */
-        getBreadcrumbNavLinks: function (navLinks, activeURI) {
-            slog.warning("Using deprecated utility: getBreadcrumbNavLinks");
-            var config,
-                items;
-
-            config = (typeof stache !== "undefined") ? stache.config : {};
-            items = utils.findBreadcrumb(navLinks, activeURI);
-
-            // Add Home page.
-            if (items !== false) {
-                items.unshift({
-                    name: config.nav_title_home || 'Home',
-                    uri: config.base || '/',
-                    showInNav: true
-                });
-            }
-
-            return items;
-        },
 
         /**
          * Returns an array representing all pages, sorted.
@@ -1258,22 +737,6 @@ module.exports.register = function (Handlebars, options, params) {
                 navLinks = (options && options.hash && options.hash.nav_links) ? options.hash.nav_links : bypassContext.nav_links || [];
             }
             return utils.clone(navLinks);
-        },
-
-        /**
-         * ------------------
-         * (!) DEPRECATED (!)
-         * ------------------
-         *
-         * Determines if two URI's are the same.
-         * Supports thinking parent uri's are active.
-         * Wrapping the basenames in '/' prevents false matches, ie docs vs docs2 vs 2docs.
-         */
-        isActiveNav: function (dest, uri, parentCanBeActive) {
-            slog.warning("Using deprecated utility: getActiveNav");
-            dest = '/' + utils.basename(dest) + '/';
-            uri = '/' + utils.basename(uri) + '/';
-            return (parentCanBeActive && uri !== '') ? dest.indexOf(uri) > -1 : uri === dest;
         },
 
         /**
@@ -1314,5 +777,9 @@ module.exports.register = function (Handlebars, options, params) {
     };
 
     Handlebars.registerHelper(helpers);
+
+    // Deprecated stuff:
+    utils = require(__dirname + '/deprecated')(Handlebars, utils, params);
+
     module.exports.utils = utils;
 };

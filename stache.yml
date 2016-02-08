@@ -107,7 +107,23 @@ showNavDropdown: true
 homeLinkURI: <%= stache.config.base %>
 homeLinkName: <%= stache.config.nav_title_home %>
 
-sidebar:
+patternBreadcrumbs:
+  homeLinkName: <%= stache.config.homeLinkName %>
+  homeLinkUri: <%= stache.config.homeLinkURI %>
+  limit: -1
+
+patternDropdowns:
+  limit: -1
+  depth: 0
+  showNavDropdown: <%= stache.config.showNavDropdown %>
+  navDropdownDepth: <%= stache.config.navDropdownDepth %>
+
+patternStack:
+  limit: -1
+
+patternSidebar:
+  showBackToTop: true
+  backToTopOffset: 220
   headingSelector: h2
   isSmoothScroll: true
   limit: -1
@@ -117,7 +133,7 @@ sidebar:
   sortBy:
   sortOrder: asc
 
-showcase:
+patternShowcase:
   arrangement: 'float'
   containerClass: 'showcase'
   limit: -1

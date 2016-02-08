@@ -5,9 +5,9 @@
                 {{# each nav_links }}
                     <li class="{{ class }}">
                         {{# if ../sameHeight }}
-                            {{{ include ../../template containerClass="stache-equal-height-item"}}}
+                            {{{ include template containerClass="stache-equal-height-item"}}}
                         {{ else }}
-                            {{{ include ../../template }}}
+                            {{{ include template }}}
                         {{/ if }}
                     </li>
                     {{ include 'partial-showcase-row-breakpoints' }}

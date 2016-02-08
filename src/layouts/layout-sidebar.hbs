@@ -4,14 +4,14 @@ showHeadings: true
 ---
 
 <div class="row">
-  <main class="col-sm-9{{# compare sidebar.position "===" "left" }} col-sm-push-3{{/ compare }}">
+  <main class="col-sm-9{{# compare patternSidebar.position "===" "left" }} col-sm-push-3{{/ compare }}">
     {{# if markdown }}
       {{# markdown }}{{ body }}{{/ markdown }}
     {{ else }}
       {{# withNewline }}{{ body }}{{/ withNewline }}
     {{/ if }}
   </main>
-  <aside class="col-sm-3{{# compare sidebar.position "===" "left" }} col-sm-pull-9{{/ compare }}">
+  <aside class="col-sm-3{{# compare patternSidebar.position "===" "left" }} col-sm-pull-9{{/ compare }}">
     <div class="sidebar">
       {{# if sidebar.title }}
         <h3>{{ sidebar.title }}</h3>

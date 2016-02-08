@@ -553,6 +553,7 @@ module.exports = function (grunt) {
                     item.name = grunt.config.process(item.name || (subdir ? utils.createTitle(subdir, separator) : home));
                     item.abspath = el.abspath;
 
+                    // This only checks the page's local front matter.
                     utils.checkDeprecatedFrontMatter(item);
 
                     item = merge(true, navLinkDefaults, item);

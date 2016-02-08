@@ -8,19 +8,20 @@ module.exports = function (grunt) {
      * @param [string] message
      */
     var log = function (message) {
-        grunt.log.writeln('STACHE '['magenta'] + message);
+        console.log('STACHE '['magenta'] + message);
     };
 
     // Allow the log method to recognize grunt's "verbose" mode.
     log.verbose = function (message) {
-        if (grunt.option('verbose') === true) {
-            log(message);
-        }
+        try {
+            if (grunt.option('verbose') === true) {
+                log(message);
+            }
+        } catch (error) {}
     };
 
     log.error = function (message) {
-        message = 'STACHE '['magenta'] + message;
-        grunt.log.error(message['red']);
+        log(message['red']);
     };
 
     log.warning = function (message) {

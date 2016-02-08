@@ -17,7 +17,7 @@
         // Public variables.
         this.defaults = {
             homeLinkName: '',
-            homeLinkURI: ''
+            homeLinkUri: ''
         };
 
         // Class inheritance.
@@ -81,7 +81,7 @@
         if (_anchors !== false) {
             _anchors.unshift(new Anchor({
                 name: _self.setting('homeLinkName'),
-                uri: _self.setting('homeLinkURI')
+                uri: _self.setting('homeLinkUri')
             }));
         }
 

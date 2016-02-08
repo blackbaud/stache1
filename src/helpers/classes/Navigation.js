@@ -56,7 +56,7 @@
         var prepareAnchorsForCurrentUri = function (anchors) {
             var limit = _self.setting('limit');
 
-            if (anchors) {
+            if (anchors.length > 0) {
                 anchors.forEach(function (anchor, i) {
                     var isActive;
 
@@ -104,7 +104,7 @@
         // Public methods.
         this.anchors = function (val) {
             if (val === undefined) {
-                return _anchors;
+                return _anchors || [];
             }
             _anchors = val;
             return this;
@@ -144,6 +144,10 @@
 
             if (depth === undefined) {
                 depth = 99;
+            }
+
+            if (navLinks.length === undefined) {
+                return temp;
             }
 
             navLinks.forEach(function (navLink, i) {
