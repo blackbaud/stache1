@@ -1,8 +1,14 @@
 ---
-layout: layout-showcase
-patternShowcase:
-  sameHeight: true
-  type: panel
+layout: layout-container
+cust:
+  foo: bar
+  bar: baz
+patterns:
+  showcase:
+    arrangement: float
+    containerClass: 'showcase'
+    sameHeight: true
+    type: panel
 ---
 
 {{# if markdown }}
@@ -10,3 +16,5 @@ patternShowcase:
 {{ else }}
   {{# withNewline }}{{ body }}{{/ withNewline }}
 {{/ if }}
+
+{{ include 'partial-showcase' }}

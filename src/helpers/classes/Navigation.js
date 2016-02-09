@@ -127,6 +127,8 @@
             // Update the nav links array to reflect the current page.
             this.anchors(prepareAnchorsForCurrentUri(this.anchors()));
 
+//if (_currentUri.indexOf('panel-patterns') > -1) console.log(this.anchors());
+
             // Generate a pattern.
             myPattern = pattern(name, this, options);
 
@@ -151,11 +153,6 @@
             }
 
             navLinks.forEach(function (navLink, i) {
-
-                if (navLink.showInNav === false) {
-                    delete navLinks[i];
-                    return;
-                }
 
                 if (navLink.isActive) {
 
@@ -196,6 +193,10 @@
 
                 // Remove any children from un-active parents.
                 else {
+                    if (navLink.showInNav === false) {
+                        delete navLinks[i];
+                        return;
+                    }
                     if (navLink.nav_links) {
                         delete navLinks[i].nav_links;
                     }

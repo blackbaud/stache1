@@ -2,9 +2,11 @@
 (function () {
     "use strict";
 
-    var Pattern;
+    var Pattern,
+        utils;
 
     Pattern = require(__dirname + '/Pattern');
+    utils = require('../../../src/helpers/utils');
 
     function PatternShowcase(navigation, options) {
         var _anchors,

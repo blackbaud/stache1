@@ -515,6 +515,21 @@ module.exports = function (grunt) {
                 }
             }
 
+            /*
+            // Check if any of the pages' front matter contains slash notation.
+            sorted.forEach(function (item) {
+                var k,
+                    obj;
+                for (k in item.frontmatter) {
+                    if (k.indexOf('/') > -1) {
+                        obj = utils.objectFromStringReference(k, item.frontmatter[k], '/');
+                        item.frontmatter = merge(true, item.frontmatter, obj);
+                        console.log(item);
+                    }
+                }
+            });
+            */
+
             // Sorting alphabetically ensures that parents are created first.
             // This is crucial to this process.  We can sort by order below.
             utils.sort(sorted, true, 'subdir', '');
@@ -556,7 +571,7 @@ module.exports = function (grunt) {
                     // This only checks the page's local front matter.
                     utils.checkDeprecatedFrontMatter(item);
 
-                    item = merge(true, navLinkDefaults, item);
+                    item = merge.recursive(true, navLinkDefaults, item);
 
                     // User hasn't specifically told us to ignore this page, let's look in the stache.yml array of nav_exclude
                     if (item.showInNav) {
@@ -1127,7 +1142,7 @@ module.exports = function (grunt) {
                         file = file.trim();
                         if (grunt.file.exists(file)) {
                             slog('Importing config file ' + file);
-                            localConfig = merge(localConfig, grunt.file.readYAML(file));
+                            localConfig = merge.recursive(true, localConfig, grunt.file.readYAML(file));
                         } else {
                             slog.warning('Error importing config file ' + file);
                         }
@@ -1160,7 +1175,7 @@ module.exports = function (grunt) {
             }
 
             // Merge global and local Stache config objects.
-            stache.config = merge(stacheConfig, localConfig);
+            stache.config = merge.recursive(true, stacheConfig, localConfig);
             utils.checkDeprecatedYAML(stache.config);
             grunt.config.set('stache.config', stache.config);
 
@@ -1175,6 +1190,40 @@ module.exports = function (grunt) {
         isArray: function (arr) {
             return (arr.pop && arr.push);
         },
+
+        /*
+        objectFromStringReference: function (key, value, notation) {
+            var i,
+                child,
+                keychain,
+                len,
+                parent;
+
+            if (notation === undefined) {
+                notation = '/';
+            }
+
+            keychain = key.split('/');
+            len = keychain.length;
+            parent = {};
+            child = parent;
+
+            function addKeyTo(obj, key) {
+                obj[key] = {};
+                return obj[key];
+            }
+
+            for (i = 0; i < len; ++i) {
+                if (i === len - 1) {
+                    child[keychain[i]] = value;
+                    break;
+                }
+                child = addKeyTo(child, keychain[i]);
+            }
+
+            return parent;
+        },
+        */
 
         /**
          * Validates the format of hooks that were added to defaults.stache, or by third-parties.

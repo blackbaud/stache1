@@ -10,7 +10,7 @@
     Pattern = require(__dirname + '/Pattern');
     utils = require('../../../src/helpers/utils');
 
-    function PatternDropdown(navigation, options) {
+    function PatternDropdowns(navigation, options) {
         var _anchors,
             _self,
             navDropdownDepth,
@@ -74,8 +74,8 @@
         return this;
     }
 
-    PatternDropdown.prototype.inherits = Pattern.prototype;
-    PatternDropdown.prototype.extends = Pattern.prototype.extends;
+    PatternDropdowns.prototype.inherits = Pattern.prototype;
+    PatternDropdowns.prototype.extends = Pattern.prototype.extends;
 
-    module.exports = PatternDropdown;
+    module.exports = PatternDropdowns;
 }());

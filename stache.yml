@@ -107,43 +107,38 @@ showNavDropdown: true
 homeLinkURI: <%= stache.config.base %>
 homeLinkName: <%= stache.config.nav_title_home %>
 
-patternBreadcrumbs:
-  homeLinkName: <%= stache.config.homeLinkName %>
-  homeLinkUri: <%= stache.config.homeLinkURI %>
-  limit: -1
-
-patternDropdowns:
-  limit: -1
-  depth: 0
-  showNavDropdown: <%= stache.config.showNavDropdown %>
-  navDropdownDepth: <%= stache.config.navDropdownDepth %>
-
-patternStack:
-  limit: -1
-
-patternSidebar:
-  showBackToTop: true
-  backToTopOffset: 220
-  headingSelector: h2
-  isSmoothScroll: true
-  limit: -1
-  numParents: 99
-  position: left
-  showHeadings: true
-  sortBy:
-  sortOrder: asc
-
-patternShowcase:
-  arrangement: 'float'
-  containerClass: 'showcase'
-  limit: -1
-  numColumnsPhone: 3
-  numColumnsTablet: 3
-  numColumnsDesktop: 3
-  numColumnsLargeDesktop: 3
-  sameHeight: false
-  template: 'partial-media'
-  type: 'media'
+patterns:
+  breadcrumbs:
+    homeLinkName: <%= stache.config.homeLinkName %>
+    homeLinkUri: <%= stache.config.homeLinkURI %>
+    limit: -1
+  dropdowns:
+    limit: -1
+    showNavDropdown: <%= stache.config.showNavDropdown %>
+    navDropdownDepth: <%= stache.config.navDropdownDepth %>
+  stack:
+    limit: -1
+  sidebar:
+    showBackToTop: true
+    backToTopOffset: 220
+    headingSelector: h2
+    isSmoothScroll: true
+    limit: -1
+    numParents: 99
+    position: left
+    showHeadings: true
+    sortBy:
+    sortOrder: asc
+  showcase:
+    arrangement: 'float'
+    containerClass: 'showcase'
+    limit: -1
+    numColumnsPhone: 3
+    numColumnsTablet: 3
+    numColumnsDesktop: 3
+    numColumnsLargeDesktop: 3
+    sameHeight: false
+    type: 'media'
 
 # =============================================
 # ANALYTICS

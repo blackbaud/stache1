@@ -1,7 +1,15 @@
 ---
-layout: layout-showcase
-patternShowcase:
-  type: panel
+layout: layout-container
+patterns:
+  showcase:
+    arrangement: float
+    containerClass: 'showcase'
+    numColumnsPhone: 1
+    numColumnsTablet: 3
+    numColumnsDesktop: 3
+    numColumnsLargeDesktop: 3
+    sameHeight: false
+    type: panel
 ---
 
 {{# if markdown }}
@@ -9,3 +17,5 @@ patternShowcase:
 {{ else }}
   {{# withNewline }}{{ body }}{{/ withNewline }}
 {{/ if }}
+
+{{ include 'partial-showcase' }}

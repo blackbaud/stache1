@@ -1,8 +1,15 @@
 ---
-layout: layout-showcase
-showcase:
-  arrangement: stack
-  containerClass: 'showcase showcase-stack'
+layout: layout-container
+patterns:
+  showcase:
+    arrangement: stack
+    containerClass: 'showcase showcase-stack'
+    numColumnsPhone: 1
+    numColumnsTablet: 3
+    numColumnsDesktop: 3
+    numColumnsLargeDesktop: 3
+    sameHeight: false
+    type: media
 ---
 
 {{# if markdown }}
@@ -10,3 +17,5 @@ showcase:
 {{ else }}
   {{# withNewline }}{{ body }}{{/ withNewline }}
 {{/ if }}
+
+{{ include 'partial-showcase' }}

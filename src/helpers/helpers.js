@@ -3,7 +3,6 @@ module.exports.register = function (Handlebars, options, params) {
     'use strict';
 
     var bypassContext,
-        cheerio,
         counts,
         engine,
         fs,
@@ -22,7 +21,6 @@ module.exports.register = function (Handlebars, options, params) {
     counts = {};
 
     merge = require('merge');
-    cheerio = require('cheerio');
     fs = require('fs');
     minify = require('html-minifier').minify;
     UglifyJS = require('uglify-js');
@@ -109,12 +107,7 @@ module.exports.register = function (Handlebars, options, params) {
             // This list should include page-specific variables only.
             frontMatterVariables = [
                 'markdown',
-                'patternBreadcrumbs',
-                'patternDropdowns',
-                'patternShowcase',
-                'patternSidebar',
-                'patternStack',
-                'showBreadcrumbs',
+                'patterns',
                 'showInFooter',
                 'showInHeader'
             ];
@@ -609,23 +602,40 @@ module.exports.register = function (Handlebars, options, params) {
                 customData,
                 navLinks,
                 pattern,
-                patternOptions,
-                patternOptionsName;
+                patternOptions;
 
             // No page information, quit.
             if (this.page === undefined) {
                 return options.inverse(this);
             }
 
+            // Get pattern options from page YFM.
+            utils.objectFromStringReference(this);
+
             context = {};
             currentUri = this.page.dirname.split(stache.status)[1] + "/";
+            customData = options.hash.customData || undefined;
             pattern = options.hash.pattern || 'custom';
-            patternOptionsName = 'pattern' + pattern[0].toUpperCase() + pattern.substring(1);
-            navLinks = utils.getNavLinks();
+
+            // Get the appropriate nav links.
+            if (customData) {
+                navLinks = (customData.items) ? customData.items : customData;
+            } else {
+                navLinks = utils.getNavLinks();
+            }
 
             // Merge pattern options.
-            patternOptions = options.hash.patternOptions || {};
-            patternOptions = merge(true, this[patternOptionsName] || {}, patternOptions);
+            patternOptions = merge(true,
+
+                // layout
+                this.patterns[pattern] || {},
+
+                // custom YFM data
+                (customData && customData.patterns && customData.patterns[pattern]) || {},
+
+                // block helper
+                options.hash.patternOptions || {}
+            );
 
             // Special setup for some patterns.
             switch (pattern) {
@@ -635,12 +645,7 @@ module.exports.register = function (Handlebars, options, params) {
             }
 
             // Allow custom data to override pattern options.
-            customData = options.hash.customData || undefined;
             if (customData) {
-                navLinks = (customData.items) ? customData.items : customData;
-                if (customData.hasOwnProperty(patternOptionsName)) {
-                    patternOptions = merge(true, patternOptions, customData[patternOptionsName]);
-                }
                 patternOptions.doPruneParents = false;
             }
 
@@ -749,7 +754,7 @@ module.exports.register = function (Handlebars, options, params) {
         mergeOption: function (global, local) {
             var merged = false;
             if (typeof global === "object") {
-                merged = merge(true, global, local);
+                merged = merge.recursive(true, global, local);
             } else if (typeof local === "undefined") {
                 if (typeof global !== "undefined") {
                     merged = global;
@@ -758,6 +763,46 @@ module.exports.register = function (Handlebars, options, params) {
                 merged = local;
             }
             return merged;
+        },
+
+        objectFromStringReference: function (orig, notation) {
+            var i,
+                child,
+                key,
+                keychain,
+                len,
+                parent;
+
+            if (notation === undefined) {
+                notation = '/';
+            }
+
+            function addKeyTo(obj, key) {
+                obj[key] = {};
+                return obj[key];
+            }
+
+            for (key in orig) {
+                if (key.indexOf('/') > -1) {
+
+                    keychain = key.split('/');
+                    len = keychain.length;
+                    parent = {};
+                    child = parent;
+
+                    for (i = 0; i < len; ++i) {
+                        if (i === len - 1) {
+                            child[keychain[i]] = orig[key];
+                            break;
+                        }
+                        child = addKeyTo(child, keychain[i]);
+                    }
+
+                    orig[keychain[0]] = merge.recursive(true, orig[keychain[0]], parent[keychain[0]]);
+                }
+            }
+
+            return orig;
         },
 
         /**
