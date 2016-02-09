@@ -286,6 +286,7 @@ module.exports = function (grunt) {
             core: {
                 files: [
                     '<%= stache.config.includes %>**/*.*',
+                    '<%= stache.config.data %>*.*',
                     'stache.yml'
                 ],
                 tasks: [
