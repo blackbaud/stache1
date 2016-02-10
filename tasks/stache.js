@@ -214,6 +214,12 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
+                        cwd: '<%= stache.dir %>src/vendor/bb-omnibar-search/',
+                        src: '**',
+                        dest: '<%= stache.config.build %>bb-omnibar-search/'
+                    },
+                    {
+                        expand: true,
                         cwd: '<%= stache.config.content %>assets',
                         src: '**/*.*',
                         dest: '<%= stache.config.build %>assets'
