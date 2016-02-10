@@ -81,9 +81,9 @@
                         }
                         break;
 
-                        // Question mark
+                        // Question mark (disabled for now)
                         case 191:
-                        elemSearchInput.focus();
+                        //elemSearchInput.focus();
                         break;
 
                         // Reposition the search results everytime a user types.
@@ -116,8 +116,8 @@
         function setElements() {
 
             // Set elements.
-            elemSearchResults = angular.element(document.getElementById(bbOmnibarConfig.selectorResults));
-            elemSearchInput = angular.element(document.getElementById(bbOmnibarConfig.selectorInput));
+            elemSearchResults = angular.element(document.getElementById(OmnibarSearchSettings.getSearchResultsId()));
+            elemSearchInput = angular.element(document.getElementById(OmnibarSearchSettings.getSearchInputId()));
             positionElements();
 
             // Watch for Window being resized.
@@ -133,7 +133,7 @@
             elemSearchResults.css({
                 'left': elemSearchInput.position().left + 'px'
             });
-        };
+        }
 
 
         /**
@@ -177,7 +177,7 @@
 
         // Listen to events.
         omnibarScope.$on('searchBoxKeyUp', searchBoxKeyUp);
-        $scope.$on('omnibarLoaded', checkConnection);
+        $scope.$on('omnibarSearchLoaded', checkConnection);
     }
 
 
@@ -185,12 +185,10 @@
      * Merge settings.
      */
     function Run($rootScope, bbOmnibarConfig, OmnibarSearchSettings) {
-        bbOmnibarConfig.selectorInput = OmnibarSearchSettings.getSearchInputId();
-        bbOmnibarConfig.selectorResults = OmnibarSearchSettings.getSearchResultsId();
         bbOmnibarConfig.enableSearch = OmnibarSearchSettings.getEnableSearch();
         bbOmnibarConfig.afterLoad = function () {
             angular.element(document).ready(function () {
-                $rootScope.$broadcast('omnibarLoaded');
+                $rootScope.$broadcast('omnibarSearchLoaded');
             });
         };
     }
@@ -201,13 +199,13 @@
      * This service also searches the object against keywords.
      */
     function SearchService($q, $http, OmnibarSearchSettings) {
-        var baseUri,
+        var resultsBaseUri,
             data,
             service,
             resource;
 
         service = this;
-        baseUri = OmnibarSearchSettings.getBaseUri();
+        resultsBaseUri = OmnibarSearchSettings.getResultsBaseUri();
         resource = OmnibarSearchSettings.getResourceUrl();
 
 
@@ -313,30 +311,62 @@
                 page.match = '';
 
                 fields.forEach(function (field) {
-                    var after,
-                        before,
-                        data,
+                    var data,
+                        finalMatch,
                         match;
 
                     if (page[field.type]) {
 
                         data = page[field.type];
+                        data = data.replace(/\n/g, ' ');
 
                         while ((match = regex.exec(data)) !== null) {
+
+                            // For each match, increase the page's weight.
                             page.weight += field.baseWeight;
 
                             // Should this field be included in the matched text preview?
                             if (field.include) {
-                                before = data.substr(0, match.index);
-                                before = before.substr(before.lastIndexOf('.') + 1);
-
-                                after = data.substr(match.index);
-                                after = after.substr(0, after.indexOf('.'));
-
-                                page.match += before + after;
-                                page.match += '...';
+                                finalMatch = match;
                             }
                         }
+
+                        // Get the strings that surround the keywords.
+                        (function (match) {
+
+                            var after,
+                                afterIndex,
+                                before,
+                                beforeIndex;
+
+                            if (match === undefined) {
+                                page.weight = 0;
+                                return;
+                            }
+
+                            // How many characters to capture before the keywords:
+                            beforeIndex = match.index - 10;
+                            if (beforeIndex < 0) {
+                                beforeIndex = 0;
+                            }
+
+                            // How many characters to capture after the keywords:
+                            afterIndex = match.index + 50;
+                            if (afterIndex > data.length - 1) {
+                                afterIndex = data.length - 1;
+                            }
+
+                            before = data.slice(beforeIndex, match.index);
+                            after = data.slice(match.index, afterIndex);
+
+                            // Prefix the description with an ellipsis.
+                            if (beforeIndex > 0) {
+                                before = '...' + (before.substr(2)).trim();
+                            }
+
+                            page.match = (before + after).trim();
+
+                        }(finalMatch));
                     }
                 });
 
@@ -355,7 +385,7 @@
 
             for (i = 0, len = data.length; i < len; i++) {
                 page = data[i];
-                page.uri = baseUri + page.uri;
+                page.uri = resultsBaseUri + page.uri;
             }
         }
 
@@ -405,7 +435,7 @@
      * Allow other modules to configure the Omnibar Search Results.
      */
     function OmnibarSearchSettingsProvider() {
-        var baseUri,
+        var resultsBaseUri,
             enableSearch,
             resourceUrl,
             searchFormClass,
@@ -414,20 +444,20 @@
             searchResultsTemplateUri;
 
         // Defaults.
-        baseUri = 'https://apidocs.sky.blackbaud.com';
+        resultsBaseUri = 'https://apidocs.sky.blackbaud.com';
         enableSearch = true;
-        resourceUrl = baseUri + '/content.json';
+        resourceUrl = resultsBaseUri + '/content.json';
         searchFormClass = 'bb-omnibar-searchenabled';
         searchInputId = 'omnibar_searchbox';
         searchResultsId = 'bb-omnibar-search-results';
-        searchResultsTemplateUri = 'assets/bb-omnibar-search/templates/bb-omnibar-search.hbs';
+        searchResultsTemplateUri = '/assets/vendor/bb-omnibar-search/templates/bb-omnibar-search.hbs';
 
         // Available methods during config phase:
-        this.setBaseUri = function (value) {
+        this.setResultsBaseUri = function (value) {
             if (value === undefined) {
                 return;
             }
-            baseUri = value;
+            resultsBaseUri = value;
         };
         this.setEnableSearch = function (value) {
             enableSearch = (value === true);
@@ -451,8 +481,8 @@
         // Available after config phase:
         this.$get = function () {
             return {
-                getBaseUri: function () {
-                    return baseUri;
+                getResultsBaseUri: function () {
+                    return resultsBaseUri;
                 },
                 getEnableSearch: function () {
                     return enableSearch;

@@ -1,69 +1,23 @@
 {{# uglify }}
 /*jslint browser: true, es5: true*/
 /*global jQuery */
-(function () {
+(function (window, angular) {
     'use strict';
 
-    function Run($rootScope, bbWait, bbOmnibarConfig) {
-
+    function Run($rootScope, bbWait) {
         $rootScope.$on('bbBeginWait', function (e, opts) {
           e.stopPropagation();
           bbWait.beginPageWait(opts);
         });
-
         $rootScope.$on('bbEndWait', function (e, opts) {
           e.stopPropagation();
           bbWait.endPageWait(opts);
         });
-
-        // Adding custom properties to the omnibar config
-        bbOmnibarConfig.selectorInput = '#omnibar_searchbox';
-        bbOmnibarConfig.selectorResults = '.stache-omnibar-search';
-
-        {{# if stache.config.omnibar_search }}
-          bbOmnibarConfig.enableSearch = {{ stache.config.omnibar_search }};
-        {{/ if }}
-
-        {{# if stache.config.omnibar_help }}
-          bbOmnibarConfig.enableHelp = {{ stache.config.omnibar_help }};
-        {{/ if }}
-
-        {{# if stache.config.omnibar_title }}
-          bbOmnibarConfig.serviceName = '{{ stache.config.omnibar_title }}';
-        {{/ if }}
-
-        {{# if stache.config.omnibar_signin }}
-          bbOmnibarConfig.signInRedirectUrl = '{{ stache.config.omnibar_signin }}';
-        {{/ if }}
-
-        {{# if stache.config.omnibar_signout }}
-          bbOmnibarConfig.signOutRedirectUrl = '{{ stache.config.omnibar_signout }}';
-        {{/ if }}
-
-        bbOmnibarConfig.afterLoad = function () {
-          angular.element(document).ready(function () {
-
-            // Look into making this mirror the Angular Directive
-            $('.productmenucontainer').append($('.navbar .navbar-nav').clone().toggleClass('nav-items bb-omnibar-productmenu'));
-
-            {{# if stache.config.omnibar_link_enabled }}
-              $('.servicename').wrapInner('<a id="omnibar-link" href="{{ stache.config.omnibar_link }}"></a>');
-            {{/ if }}
-
-            {{# if stache.config.omnibar_delegation }}
-              $('a.signin').attr('href', '{{ stache.config.omnibar_delegation }}');
-            {{/ if }}
-
-            // Let others tie into this method
-            $rootScope.$broadcast('stacheOmnibarLoaded');
-          });
-        };
     }
 
     Run.$inject = [
       '$rootScope',
-      'bbWait',
-      'bbOmnibarConfig'
+      'bbWait'
     ];
 
     angular.module('stache').run(Run);
@@ -73,5 +27,5 @@
       ]);
     });
 
-}());
+}(window, window.angular));
 {{/ uglify }}

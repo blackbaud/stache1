@@ -27,8 +27,6 @@ module.exports.register = function (Handlebars, options, params) {
         counts,
         utils;
 
-    console.log(params.assemble);
-
     bypassContext = params.assemble.options.getBypassContext();
     stache = params.assemble.options.stache;
     merge = require('merge');

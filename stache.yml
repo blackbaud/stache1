@@ -1,7 +1,6 @@
 # =============================================
 # STACHE - PATHS
 # =============================================
-
 base: /
 static: static/
 content: content/
@@ -19,9 +18,8 @@ error:
   404: <%= stache.config.build %>404/index.html
 
 # =============================================
-# STACHE - SERVING
+# STACHE - PARTIALS
 # =============================================
-
 partial_omnibar: <%= stache.config.partials %>partial-omnibar.hbs
 partial_header_nav: <%= stache.config.partials %>partial-header-nav.hbs
 partial_header_nav_link: <%= stache.config.partials %>partial-header-nav-link.hbs
@@ -54,21 +52,35 @@ partial_blog_more: <%= stache.config.partials %>partial-blog-more.hbs
 # =============================================
 # STACHE - SERVING
 # =============================================
-
 port: 4000
 livereload: 4100
-omnibar_title: Developer
-omnibar_help: 'false'
-omnibar_search: 'false'
-omnibar_link: <%= stache.config.base %>
-omnibar_link_enabled: true
-video_description_top: false
-watchNewer: true
+
+# =============================================
+# OMNIBAR
+# =============================================
+omnibar:
+  enableHelp: 'false'
+  enableSearch: 'false'
+  serviceName: Developer
+  serviceNameLink: <%= stache.config.base %>
+  enableServiceNameLink: true
+  url: '//bbauth-signin-cdev.blackbaudhosting.com/omnibar.min.js'
+
+# =============================================
+# OMNIBAR - SEARCH
+# =============================================
+omnibarSearch:
+  resultsBaseUri: <%= stache.config.base %>
+  resourceUrl: <%= stache.config.omnibarSearch.resultsBaseUri %>/content.json
+  resultsTemplateUri: '/assets/vendor/bb-omnibar-search/templates/bb-omnibar-search.hbs'
+  searchFormClass: 'bb-omnibar-searchenabled'
+  searchInputId: 'omnibar_searchbox'
+  searchResultsId: 'bb-omnibar-search-results'
+
 
 # =============================================
 # STACHE - LAYOUTS
 # =============================================
-
 latest_sky_release: 1.4.2
 back_to_top: false
 back_to_top_offset: 220
@@ -91,6 +103,8 @@ comments: true
 comments_key: blackbaud
 blog_recent_limit: 10
 bootstrap_container: container
+video_description_top: false
+watchNewer: true
 modules:
   - stache
 
