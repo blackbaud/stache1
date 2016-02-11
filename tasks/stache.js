@@ -241,10 +241,6 @@ module.exports = function (grunt) {
                     {
                         src: '<%= stache.config.src %>js/stache.min.js',
                         dest: '<%= stache.config.build %>js/stache.min.js'
-                    },
-                    {
-                        src: '<%= stache.config.src %>js/azure.js',
-                        dest: '<%= stache.config.build %>js/azure.js'
                     }
                 ]
             }
