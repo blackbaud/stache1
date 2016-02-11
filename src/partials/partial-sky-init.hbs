@@ -4,6 +4,19 @@
 (function (window, angular) {
     'use strict';
 
+    function Constants() {
+        var constants = {
+            omnibar: {},
+            omnibarSearch: {}
+        };
+        try {
+            constants.omnibar = {{{ json stache.config.omnibar }}};
+            constants.omnibarSearch = {{{ json stache.config.omnibarSearch }}};
+        }
+        catch (e) {}
+        return constants;
+    }
+
     function Run($rootScope, bbWait) {
         $rootScope.$on('bbBeginWait', function (e, opts) {
           e.stopPropagation();
@@ -16,15 +29,17 @@
     }
 
     Run.$inject = [
-      '$rootScope',
-      'bbWait'
+        '$rootScope',
+        'bbWait'
     ];
 
-    angular.module('stache').run(Run);
+    angular.module('stache')
+        .constant('stacheConfig', Constants.call())
+        .run(Run);
     angular.element(document).ready(function () {
-      angular.bootstrap(document, [{{# each stache.config.modules  }}
-        '{{ this }}'{{# unless @last }},{{/ unless }}{{/ each }}
-      ]);
+        angular.bootstrap(document, [{{# each stache.config.modules  }}
+            '{{ this }}'{{# unless @last }},{{/ unless }}{{/ each }}
+        ]);
     });
 
 }(window, window.angular));

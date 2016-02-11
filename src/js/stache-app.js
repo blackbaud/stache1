@@ -59,18 +59,6 @@
     }
 
     /**
-     * Injects Window constants into our app.
-     */
-    function Constants() {
-        var constants = {};
-        try {
-            constants = window.STACHE.config;
-        }
-        catch (e) {}
-        return constants;
-    }
-
-    /**
      *
      */
     function SearchController($state, $stateParams, SearchService) {
@@ -167,7 +155,6 @@
     ]);
 
     angular.module('stache')
-        .constant('stacheConfig', Constants.call())
         .config(Config)
         .config(ConfigOmnibar)
         .controller('NavController', angular.noop)

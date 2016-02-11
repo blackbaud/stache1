@@ -137,18 +137,6 @@
         {{ include stache.config.partial_omnibar }}
       {{/ inherit }}
 
-      <!-- STACHE CONFIG -->
-      <script>
-        {{# uglify }}
-        (function (window) {
-          window.STACHE = window.STACHE || {};
-          window.STACHE.config = window.STACHE.config || {};
-          window.STACHE.config.omnibar = {{{ json stache.config.omnibar }}};
-          window.STACHE.config.omnibarSearch = {{{ json stache.config.omnibarSearch }}};
-        }(window));
-        {{/ uglify }}
-      </script>
-
       {{# if stache.config.sky }}
         {{{ include stache.config.partial_sky_js }}}
       {{/ if }}
