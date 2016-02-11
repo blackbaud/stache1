@@ -444,7 +444,7 @@
             searchResultsTemplateUri;
 
         // Defaults.
-        resultsBaseUri = 'https://apidocs.sky.blackbaud.com';
+        resultsBaseUri = '';
         enableSearch = true;
         resourceUrl = resultsBaseUri + '/content.json';
         searchFormClass = 'bb-omnibar-searchenabled';
