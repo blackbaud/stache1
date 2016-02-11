@@ -64,7 +64,7 @@ omnibar:
   serviceName: Developer
   serviceNameLink: <%= stache.config.base %>
   enableServiceNameLink: true
-  url: '//bbauth-signin-cdev.blackbaudhosting.com/omnibar.min.js'
+  url: 'https://signin.blackbaud.com/omnibar.min.js'
 
 # =============================================
 # OMNIBAR - SEARCH
