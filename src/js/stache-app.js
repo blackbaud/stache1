@@ -41,15 +41,15 @@
         $rootScope.$on('omnibarSearchLoaded', function () {
             angular.element(document).ready(function () {
 
-                // Look into making this mirror the Angular Directive
+                // Look into making this mirror the Angular directive:
                 $('.productmenucontainer').append($('.navbar .navbar-nav').clone().toggleClass('nav-items bb-omnibar-productmenu'));
 
                 if (stacheConfig.omnibar.enableServiceNameLink) {
-                    $('.servicename').wrapInner('<a id="omnibar-link" href="' + stacheConfig.omnibar.serviceNameLink + '"></a>');
+                    $('.bb-omnibar-serviceheader-servicename').wrapInner('<a id="omnibar-link" href="' + stacheConfig.omnibar.serviceNameLink + '"></a>');
                 }
 
                 if (stacheConfig.omnibar.delegationUri) {
-                    $('a.signin').attr('href', stacheConfig.omnibar.delegationUri);
+                    $('a.bb-omnibar-signinheader-signin').attr('href', stacheConfig.omnibar.delegationUri);
                 }
 
                 // Let others tie into this method
