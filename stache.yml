@@ -144,3 +144,8 @@ github_org: blackbaud
 github_repo:
 github_branch: master
 kudu_repo: <%= stache.config.github_repo %>
+
+angular:
+  constants:
+    omnibar: <%= stache.config.omnibar %>
+    omnibarSearch: <%= stache.config.omnibarSearch %>

@@ -5,13 +5,11 @@
     'use strict';
 
     function Constants() {
-        var constants = {
-            omnibar: {},
-            omnibarSearch: {}
-        };
+        var constants = {};
         try {
-            constants.omnibar = {{{ json stache.config.omnibar }}};
-            constants.omnibarSearch = {{{ json stache.config.omnibarSearch }}};
+            {{# each stache.config.angular.constants }}
+                constants['{{{ @key }}}'] = {{{ json this }}};
+            {{/ each }}
         }
         catch (e) {}
         return constants;
