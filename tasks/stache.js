@@ -1056,7 +1056,7 @@ module.exports = function (grunt) {
                 },
                 {
                     old: 'omnibar_link',
-                    new: 'omnibar:\n    enableServiceNameLink: ' + config.omnibar_link,
+                    new: 'omnibar:\n    serviceNameLink: ' + config.omnibar_link,
                     assign: function (val) {
                         config.omnibar.serviceNameLink = val;
                     }
