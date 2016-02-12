@@ -24,6 +24,14 @@ module.exports = function (grunt) {
         log(message['red']);
     };
 
+    log.fatal = function (message) {
+        try {
+            grunt.fail.fatal(message);
+        } catch (error) {
+            log.error('[FATAL ERROR] ' + message);
+        }
+    };
+
     log.warning = function (message) {
         log(message['yellow']);
     };

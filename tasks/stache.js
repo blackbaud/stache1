@@ -1309,7 +1309,8 @@ module.exports = function (grunt) {
      */
     (function () {
         var cwd,
-            modules;
+            modules,
+            stacheModulesDirectory;
 
         modules = [
             'assemble',
@@ -1331,23 +1332,31 @@ module.exports = function (grunt) {
         // Merge local and global stache.yml config.
         utils.extendStacheConfig();
 
+        cwd = process.cwd();
+        stacheModulesDirectory = grunt.config.get('stache.dir') + 'node_modules/';
+
         /**
          * Load Dependencies.
          */
-        cwd = process.cwd();
         modules.forEach(function (module) {
 
             // Has the module already been installed by the parent?
             switch (grunt.file.isDir(cwd + '/node_modules/' + module)) {
-
-                // Module wasn't found, so let's install this module in Stache's root.
                 case false:
-                    slog.warning("Module " + module + " not found. Attempting to locate in Stache's root...");
-                    grunt.file.setBase(grunt.config.get('stache.dir'));
-                    grunt.loadNpmTasks(module);
-                    grunt.file.setBase(cwd);
+
+                    // Module wasn't found on the parent, so let's look in Stache's root.
+                    if (grunt.file.isDir(stacheModulesDirectory + module)) {
+                        grunt.file.setBase(grunt.config.get('stache.dir'));
+                        grunt.loadNpmTasks(module);
+                        grunt.file.setBase(cwd);
+                    } else {
+                        slog.fatal("The module \"" + module + "\" was not found!\n============\nAttempt the following:\n1)  Delete the node_modules folder\n2)  Type `npm cache clear`\n3)  Type `npm install`\n4)  Type `stache serve`\n\nIf Stache fails to serve, contact Stache support.");
+                    }
+
                 break;
                 case true:
+
+                    // Module found in the parent directory. Load it!
                     grunt.loadNpmTasks(module);
                 break;
             }
