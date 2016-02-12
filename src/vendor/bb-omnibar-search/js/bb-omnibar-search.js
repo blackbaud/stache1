@@ -361,7 +361,7 @@
 
                             // Prefix the description with an ellipsis.
                             if (beforeIndex > 0) {
-                                before = '...' + (before.substr(2)).trim();
+                                before = '...' + (before.substr(2)).replace(/^ /, '');
                             }
 
                             page.match = (before + after).trim();
