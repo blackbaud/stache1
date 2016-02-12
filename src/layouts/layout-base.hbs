@@ -30,7 +30,7 @@
       {{/ inherit }}
 
     </head>
-    <body class="bb-text-block {{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+    <body class="{{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
 
       {{# inherit stache.config.google_tagmanager_id google_tagmanager_id }}
         {{{ include stache.config.partial_google_tagmanager }}}
