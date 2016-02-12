@@ -42,6 +42,8 @@ module.exports = function (grunt) {
                         'bower_components/holderjs/holder.min.js',
                         'bower_components/stellar/jquery.stellar.js',
                         'bower_components/angular-sanitize/angular-sanitize.min.js',
+                        'src/vendor/bb-omnibar-search/js/bb-omnibar-search.js',
+                        'src/vendor/bb-omnibar-search/js/bb-omnibar-search.templates.js',
                         'src/js/stache-app.js',
                         'src/js/stache-jquery.js',
                         'src/js/libs/jquery.mobile.custom.min.js',

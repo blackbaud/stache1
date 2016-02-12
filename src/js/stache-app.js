@@ -1,64 +1,80 @@
-/*jslint browser: true, es5: true*/
-/*global jQuery */
-(function () {
+/*global window, angular */
+(function (window, angular) {
     'use strict';
 
+    /**
+     *
+     */
     function Config($stateProvider, $urlRouterProvider) {
         // Currently no registered routes
     }
 
-    function OmnibarController($scope, $timeout, $document, bbOmnibarConfig, SearchService) {
-        var vm = this;
+    /**
+     * Configures the Omnibar.
+     */
+    function ConfigOmnibar(OmnibarSearchSettingsProvider, bbOmnibarConfig, stacheConfig) {
+        var host,
+            needle;
 
-        vm.cancel = function () {
-            $scope.searchText = vm.query = '';
-            $scope.searching = false;
-            $timeout(function () {
-                vm.results = '';
+        // Configure Omnibar
+        bbOmnibarConfig.serviceName = stacheConfig.omnibar.serviceName;
+        bbOmnibarConfig.enableSearch = stacheConfig.omnibar.enableSearch;
+        bbOmnibarConfig.enableHelp = stacheConfig.omnibar.enableHelp;
+        bbOmnibarConfig.signInRedirectUrl = stacheConfig.omnibar.signInRedirectUrl;
+        bbOmnibarConfig.signOutRedirectUrl = stacheConfig.omnibar.signOutRedirectUrl;
+
+        host = window.location.hostname;
+        needle = 'blackbaud.com';
+
+        // If the host is not white-listed, load the DEV version of the omnibar library.
+        if (host.indexOf(needle, host.length - needle.length) === -1) {
+            bbOmnibarConfig.url = stacheConfig.omnibar.urlDev;
+            OmnibarSearchSettingsProvider.setSearchFormClass(stacheConfig.omnibarSearch.searchFormClassDev);
+        } else {
+            bbOmnibarConfig.url = stacheConfig.omnibar.url;
+            OmnibarSearchSettingsProvider.setSearchFormClass(stacheConfig.omnibarSearch.searchFormClass);
+        }
+
+        bbOmnibarConfig.appLookupUrl = stacheConfig.omnibar.appLookupUrl;
+
+        // Configure search results.
+        OmnibarSearchSettingsProvider.setSearchInputId(stacheConfig.omnibarSearch.searchInputId);
+        OmnibarSearchSettingsProvider.setSearchResultsId(stacheConfig.omnibarSearch.searchResultsId);
+        OmnibarSearchSettingsProvider.setSearchResultsTemplateUri(stacheConfig.omnibarSearch.resultsTemplateUri);
+        OmnibarSearchSettingsProvider.setResultsBaseUri(stacheConfig.omnibarSearch.resultsBaseUri);
+        OmnibarSearchSettingsProvider.setResourceUrl(stacheConfig.omnibarSearch.resourceUrl);
+        OmnibarSearchSettingsProvider.setSearchFormClass(stacheConfig.omnibarSearch.searchFormClass);
+    }
+
+    /**
+     *
+     */
+    function Run($rootScope, bbOmnibarConfig, stacheConfig) {
+
+        // Do stuff to the omnibar after it's been added to the screen.
+        $rootScope.$on('omnibarSearchLoaded', function () {
+            angular.element(document).ready(function () {
+
+                // Look into making this mirror the Angular directive:
+                $('.productmenucontainer').append($('.navbar .navbar-nav').clone().toggleClass('nav-items bb-omnibar-productmenu'));
+
+                if (stacheConfig.omnibar.enableServiceNameLink) {
+                    $('.bb-omnibar-serviceheader-servicename').wrapInner('<a id="omnibar-link" href="' + stacheConfig.omnibar.serviceNameLink + '"></a>');
+                }
+
+                if (stacheConfig.omnibar.delegationUri) {
+                    $('a.bb-omnibar-signinheader-signin').attr('href', stacheConfig.omnibar.delegationUri);
+                }
+
+                // Let others tie into this method
+                $rootScope.$broadcast('stacheOmnibarLoaded');
             });
-        };
-
-        // Listens to the search box events
-        $scope.$on('searchBoxKeyUp', function (event, keyCode) {
-            vm.query = $scope.searchText;
-
-            if (vm.query === '') {
-                vm.cancel();
-            } else {
-
-                // Positions the search results popup under the search box
-                angular.element(bbOmnibarConfig.selectorResults).css({
-                    'left': angular.element(bbOmnibarConfig.selectorInput).position().left + 'px'
-                });
-
-                $scope.searching = true;
-                SearchService.search(vm.query).then(function (results) {
-                    vm.results = results;
-                    $scope.searching = false;
-                });
-            }
-        });
-
-        // Close our search when click outside or escape key
-        $scope.$on('stacheOmnibarLoaded', function () {
-            var searchResults = angular.element(bbOmnibarConfig.selectorResults),
-                searchInput = angular.element(bbOmnibarConfig.selectorInput);
-            $document
-                .on('click', function (e) {
-                    if (vm.query && !searchResults.is(e.target) && searchResults.has(e.target).length === 0) {
-                        vm.cancel();
-                    }
-                })
-                .on('keyup', function (e) {
-                    if (vm.query && e.keyCode === 27) {
-                        vm.cancel();
-                    } else if (e.keyCode === 191) {
-                        searchInput.focus();
-                    }
-                });
         });
     }
 
+    /**
+     *
+     */
     function SearchController($state, $stateParams, SearchService) {
         var vm = this;
 
@@ -86,90 +102,9 @@
         }
     }
 
-    function SearchService($q, $http) {
-        var searchContent;
-
-        function nittygritty(query, regex, item, key, baseWeight, include) {
-            var context = 35,
-                padding = context / 2,
-                count = 1,
-                match,
-                before,
-                after;
-
-            if (item[key]) {
-                while ((match = regex.exec(item[key])) !== null) {
-                    item.weight += (count * baseWeight);
-                    if (include) {
-                        before = item[key].substr(0, match.index);
-                        before = before.substr(before.lastIndexOf('.') + 1);
-                        after = item[key].substr(match.index);
-                        after = after.substr(0, after.indexOf('.'));
-                        item.match += before + after;
-                        item.match += '...';
-                    }
-                }
-            }
-
-            return item;
-        }
-
-        function search(query) {
-            var results = [],
-                regex,
-                item,
-                i,
-                j;
-
-            if (angular.isArray(searchContent.pages)) {
-                regex = new RegExp(escapeRegEx(query), 'ig');
-                for (i = 0, j = searchContent.pages.length; i < j; i++) {
-                    item = searchContent.pages[i];
-                    item.match = '';
-                    item.weight = 0;
-                    item = nittygritty(query, regex, item, 'text', 1, true);
-                    item = nittygritty(query, regex, item, 'description', 100, true);
-                    item = nittygritty(query, regex, item, 'name', 1000, false);
-                    if (item.weight > 0) {
-                        results.push(item);
-                    }
-                }
-            }
-
-            results.sort(function (a, b) {
-                return a.weight > b.weight ? 1 : (a.weight < b.weight ? -1 : 0);
-            });
-
-            return results;
-        }
-
-        return {
-            search: function (query) {
-                var defer = $q.defer();
-
-                if (searchContent) {
-                    defer.resolve(search(query));
-                } else {
-                    $http.get('/content.json', { cache: false }).then(
-                        function (result) {
-                            searchContent = result.data;
-                            defer.resolve(search(query));
-                        }
-                    );
-                }
-
-                return defer.promise;
-            }
-        };
-    }
-
-    function escapeRegEx(pattern) {
-        return pattern.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
-    }
-
     /**
     * http://stackoverflow.com/questions/15417125/submit-form-on-pressing-enter-with-angularjs
-    **/
+    */
     function DirectiveStacheEnter() {
         return function (scope, element, attrs) {
             element.bind('keydown keypress', function (event) {
@@ -183,16 +118,9 @@
         };
     }
 
-
-    function FilterHighlight($sce) {
-        return function (text, phrase) {
-            if (phrase) {
-                text = text.replace(new RegExp('(' + escapeRegEx(phrase) + ')', 'gi'), '<span class="highlighted">$1</span>');
-            }
-            return $sce.trustAsHtml(text);
-        };
-    }
-
+    /**
+     *
+     */
     function FilterTruncate() {
         return function (text, length, end) {
             if (isNaN(length)) {
@@ -209,28 +137,25 @@
         };
     }
 
+    // Dependencies.
     Config.$inject = [
         '$stateProvider',
         '$urlRouterProvider'
     ];
-    OmnibarController.$inject = [
-        '$scope',
-        '$timeout',
-        '$document',
+    ConfigOmnibar.$inject = [
+        'OmnibarSearchSettingsProvider',
         'bbOmnibarConfig',
-        'SearchService'
+        'stacheConfig'
+    ];
+    Run.$inject = [
+        '$rootScope',
+        'bbOmnibarConfig',
+        'stacheConfig'
     ];
     SearchController.$inject = [
         '$state',
         '$stateParams',
         'SearchService'
-    ];
-    SearchService.$inject = [
-        '$q',
-        '$http'
-    ];
-    FilterHighlight.$inject = [
-        '$sce'
     ];
     angular.module('stache', [
         'sky',
@@ -238,16 +163,17 @@
         'ui.bootstrap',
         'ui.select',
         'ngAnimate',
-        'ngSanitize'
+        'ngSanitize',
+        'OmnibarSearch',
+        'OmnibarSearch.templates'
     ]);
 
     angular.module('stache')
         .config(Config)
+        .config(ConfigOmnibar)
         .controller('NavController', angular.noop)
-        .controller('OmnibarController', OmnibarController)
         .controller('SearchController', SearchController)
-        .service('SearchService', SearchService)
         .directive('stacheEnter', DirectiveStacheEnter)
         .filter('truncate', FilterTruncate)
-        .filter('highlight', FilterHighlight);
-}());
+        .run(Run);
+}(window, window.angular));

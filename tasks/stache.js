@@ -19,6 +19,7 @@ module.exports = function (grunt) {
         header,
         merge,
         navSearchFiles,
+        slog,
         tasks,
         utils,
         yfm;
@@ -27,6 +28,7 @@ module.exports = function (grunt) {
     assemble = require('assemble');
     cheerio = require('cheerio');
     merge = require('merge');
+    slog = require('../src/vendor/stache-log/stache-log')(grunt);
     yfm = require('assemble-yaml');
 
 
@@ -214,6 +216,12 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
+                        cwd: '<%= stache.dir %>src/vendor/bb-omnibar-search/',
+                        src: '**',
+                        dest: '<%= stache.config.build %>/assets/vendor/bb-omnibar-search/'
+                    },
+                    {
+                        expand: true,
                         cwd: '<%= stache.config.content %>assets',
                         src: '**/*.*',
                         dest: '<%= stache.config.build %>assets'
@@ -233,10 +241,6 @@ module.exports = function (grunt) {
                     {
                         src: '<%= stache.config.src %>js/stache.min.js',
                         dest: '<%= stache.config.build %>js/stache.min.js'
-                    },
-                    {
-                        src: '<%= stache.config.src %>js/azure.js',
-                        dest: '<%= stache.config.build %>js/azure.js'
                     }
                 ]
             }
@@ -404,12 +408,12 @@ module.exports = function (grunt) {
                                     }
                                 break;
                                 default:
-                                    utils.log('Unknown custom page datatype.');
+                                    slog.warning('Unknown custom page datatype.');
                                 break;
                             }
                         }
                     } else {
-                        utils.log('tasks.createAutoPages() - "url" is required for each item in "stache.pages."');
+                        slog('tasks.createAutoPages() - "url" is required for each item in "stache.pages."');
                     }
                 });
             }
@@ -447,13 +451,13 @@ module.exports = function (grunt) {
                 sandcastlePath,
                 sorted;
 
-            utils.log("Building navigation links...Please wait.");
+            slog("Building navigation links...Please wait.");
 
             // User has manually specific nav_links in stache.yml. Let's use that.
             if (grunt.config('stache.config.nav_type') !== 'directory') {
                 grunt.config.set('bypassContext', grunt.config.get('stache.config.nav_links'));
-                utils.log("Navigation links set in config.");
-                utils.log("Done.".green);
+                slog("Navigation links set in config.");
+                slog.success("Done.");
                 return;
             }
 
@@ -476,7 +480,7 @@ module.exports = function (grunt) {
                 files.forEach(function (file) {
                     var fm = yfm.extractJSON(contentDir + file);
                     if (typeof fm.published === 'undefined' || fm.published !== false) {
-                        utils.log.verbose("Adding nav_link from content/ " + file);
+                        slog.verbose("Adding nav_link from content/ " + file);
                         sorted.push({
                             abspath: file,
                             rootdir: file.substr(0, file.indexOf('/')),
@@ -611,7 +615,7 @@ module.exports = function (grunt) {
 
                     // Show in nav superceeds showInHeader and showInFooter
                     if (!item.showInNav) {
-                        utils.log.verbose('Ignoring: ' + item.abspath);
+                        slog.verbose('Ignoring: ' + item.abspath);
                         item.showInHeader = item.showInFooter = item.showInNav;
                     }
 
@@ -620,7 +624,7 @@ module.exports = function (grunt) {
                     grunt.config.set(path, item);
                     navSearchFiles.push(item);
 
-                    utils.log.verbose('Creating nav_link ' + item.uri);
+                    slog.verbose('Creating nav_link ' + item.uri);
 
                 });
             }
@@ -628,7 +632,7 @@ module.exports = function (grunt) {
             // Now we can rearrange each item according to order
             utils.sortByOrder(root + navKey, true);
 
-            utils.log("Done.".green);
+            slog.success("Done.");
         },
 
         /**
@@ -648,7 +652,7 @@ module.exports = function (grunt) {
             if (files) {
                 files.forEach(function (file) {
                     var destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
-                    utils.log.verbose("Building file map: " + '<%= stache.config.content %>' + file + " --> " + destinationFile);
+                    slog.verbose("Building file map: " + '<%= stache.config.content %>' + file + " --> " + destinationFile);
                     mappings.push({
                         src: '<%= stache.config.content %>' + file,
                         dest: destinationFile
@@ -731,7 +735,7 @@ module.exports = function (grunt) {
 
             for (i = 0, j = navSearchFiles.length; i < j; i++) {
                 if (!navSearchFiles[i].showInSearch) {
-                    utils.log.verbose('Ignoring from search: ' + navSearchFiles[i].uri);
+                    slog.verbose('Ignoring from search: ' + navSearchFiles[i].uri);
                 } else {
 
                     item = navSearchFiles[i];
@@ -881,12 +885,12 @@ module.exports = function (grunt) {
             // Determine which watch task to execute:
             if (watchNewer) {
                 tasks.push('watch:newer');
-                utils.log("Site set to rebuild only those pages that have been changed.");
-                utils.log("(To rebuild all pages when one is changed, type `stache serve:all`)".grey);
+                slog("Site set to rebuild only those pages that have been changed.");
+                slog.muted("(To rebuild all pages when one is changed, type `stache serve:all`)".grey);
             } else {
                 tasks.push('watch:all');
-                utils.log("Site set to rebuild all pages when one is changed.");
-                utils.log("(To rebuild only those pages that have been changed, type `stache serve:newer`)".grey);
+                slog("Site set to rebuild all pages when one is changed.");
+                slog.muted("(To rebuild only those pages that have been changed, type `stache serve:newer`)".grey);
             }
 
             // Add the postStache hook:
@@ -901,7 +905,7 @@ module.exports = function (grunt) {
          * Prints the current version of Stache in the console.
          */
         stacheVersion: function () {
-            utils.log('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
+            slog('Current stache version: ' + grunt.file.readJSON('node_modules/blackbaud-stache/package.json').version);
         },
 
         /**
@@ -991,7 +995,7 @@ module.exports = function (grunt) {
                 if (deprecatedHook) {
 
                     message = 'You are referencing the deprecated hook, ' + deprecatedName + '. Consider using `hooks.' + hookName + '`.';
-                    utils.log(message['yellow']);
+                    slog.warning(message);
 
                     // The user passed the hooks as an array
                     if (utils.isArray(deprecatedHook)) {
@@ -1011,6 +1015,89 @@ module.exports = function (grunt) {
             grunt.config.set('stache.hooks', hooks);
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
+        checkDeprecatedYAML: function (config) {
+            var i,
+                keys,
+                len;
+
+            keys = [
+                {
+                    old: 'omnibar_delegation',
+                    new: 'omnibar:\n    delegationUri: ' + config.omnibar_delegation,
+                    assign: function (val) {
+                        config.omnibar.delegationUri = val;
+                    }
+                },
+                {
+                    old: 'omnibar_help',
+                    new: 'omnibar:\n    enableHelp: ' + config.omnibar_help,
+                    assign: function (val) {
+                        config.omnibar.enableHelp = val;
+                    }
+                },
+                {
+                    old: 'omnibar_link_enabled',
+                    new: 'omnibar:\n    enableServiceNameLink: ' + config.omnibar_link_enabled,
+                    assign: function (val) {
+                        config.omnibar.enableServiceNameLink = val;
+                    }
+                },
+                {
+                    old: 'omnibar_search',
+                    new: 'omnibar:\n    enableSearch: ' + config.omnibar_search,
+                    assign: function (val) {
+                        config.omnibar.enableSearch = val;
+                    }
+                },
+                {
+                    old: 'omnibar_link',
+                    new: 'omnibar:\n    serviceNameLink: ' + config.omnibar_link,
+                    assign: function (val) {
+                        config.omnibar.serviceNameLink = val;
+                    }
+                },
+                {
+                    old: 'omnibar_signin',
+                    new: 'omnibar:\n    signInRedirectUrl: ' + config.omnibar_signin,
+                    assign: function (val) {
+                        config.omnibar.signInRedirectUrl = val;
+                    }
+                },
+                {
+                    old: 'omnibar_signout',
+                    new: 'omnibar:\n    signOutRedirectUrl: ' + config.omnibar_signout,
+                    assign: function (val) {
+                        config.omnibar.signOutRedirectUrl = val;
+                    }
+                },
+                {
+                    old: 'omnibar_title',
+                    new: 'omnibar:\n    serviceName: ' + config.omnibar_title,
+                    assign: function (val) {
+                        config.omnibar.serviceName = val;
+                    }
+                }
+            ];
+            len = keys.length;
+
+            for (i = 0; i < len; ++i) {
+                if (config[keys[i].old]) {
+                    slog.warning("The YAML variable `" + keys[i].old + "` is no longer supported! Use:\n------\n[stache.yml] \n" + keys[i].new + "\n------\n\n");
+                    keys[i].assign.call(keys[i], config[keys[i].old]);
+                }
+            }
+        },
+
+        /**
+         *
+         *
+         * @param {} []
+         */
         createTitle: function (name, separator, isBreadcrumbs) {
             var output = '',
                 parts = name.indexOf('/') > -1 ? name.split('/') : [name];
@@ -1050,10 +1137,10 @@ module.exports = function (grunt) {
                     configFileString.split(',').forEach(function (file) {
                         file = file.trim();
                         if (grunt.file.exists(file)) {
-                            utils.log('Importing config file ' + file);
-                            localConfig = merge(localConfig, grunt.file.readYAML(file));
+                            slog('Importing config file ' + file);
+                            localConfig = merge.recursive(true, localConfig, grunt.file.readYAML(file));
                         } else {
-                            utils.log('Error importing config file ' + file);
+                            slog.warning('Error importing config file ' + file);
                         }
                     });
 
@@ -1061,7 +1148,7 @@ module.exports = function (grunt) {
 
                 // Only one file specified.
                 else if (grunt.file.exists(configFileString)) {
-                    utils.log('Importing config file ' + configFileString);
+                    slog('Importing config file ' + configFileString);
                     localConfig = grunt.file.readYAML(configFileString);
                 }
 
@@ -1073,7 +1160,7 @@ module.exports = function (grunt) {
 
             // Expand default local Stache YAML file into workable object, if it exists.
             else if (grunt.file.exists(stache.pathConfig)) {
-                utils.log('Defaulting to config file ' + stache.pathConfig);
+                slog('Defaulting to config file ' + stache.pathConfig);
                 localConfig = grunt.file.readYAML(stache.pathConfig);
             }
 
@@ -1083,34 +1170,20 @@ module.exports = function (grunt) {
             }
 
             // Merge global and local Stache config objects.
-            stache.config = merge(stacheConfig, localConfig);
+            stache.config = merge.recursive(true, stacheConfig, localConfig);
+            utils.checkDeprecatedYAML(stache.config);
             grunt.config.set('stache.config', stache.config);
             return stache.config;
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
         isArray: function (arr) {
             return (arr.pop && arr.push);
         },
-
-        /**
-         * Using grunt.log, this method prefixes a message with a "branded" phrase
-         * to allow users to easily spot Stache-specific console messages.
-         *
-         * @param [string] message
-         */
-        log: (function () {
-            var log = function (message) {
-                grunt.log.writeln('STACHE '['magenta'] + message);
-            };
-
-            // Allow the log method to recognize grunt's "verbose" mode.
-            log.verbose = function (message) {
-                if (grunt.option('verbose') === true) {
-                    utils.log(message);
-                }
-            };
-            return log;
-        }()),
 
         /**
          * Validates the format of hooks that were added to defaults.stache, or by third-parties.
@@ -1127,7 +1200,7 @@ module.exports = function (grunt) {
                 for (var hook in hooks) {
                     if (!utils.isArray(hooks[hook])) {
                         message = 'The hooks in "' + hook + '" should be listed in an array format (for example, `[\'task1\', \'task2\', \'task3\']`).';
-                        utils.log(message['yellow']);
+                        slog.warning(message);
                         hooks[hook] = [hooks[hook]];
                     }
                 }
@@ -1138,6 +1211,11 @@ module.exports = function (grunt) {
             utils.checkDeprecatedHooks();
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
         slugify: function (title) {
             if (typeof title === 'string') {
                 title = title
@@ -1148,6 +1226,11 @@ module.exports = function (grunt) {
             return title;
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
         slugifyHeaders: function (html) {
             var $html = cheerio(html);
 
@@ -1187,6 +1270,11 @@ module.exports = function (grunt) {
             });
         },
 
+        /**
+         *
+         *
+         * @param {} []
+         */
         sortInner: function (a, b, sortAscending) {
             if (a < b) {
                 return sortAscending ? -1 : 1;
@@ -1221,7 +1309,8 @@ module.exports = function (grunt) {
      */
     (function () {
         var cwd,
-            modules;
+            modules,
+            stacheModulesDirectory;
 
         modules = [
             'assemble',
@@ -1243,23 +1332,31 @@ module.exports = function (grunt) {
         // Merge local and global stache.yml config.
         utils.extendStacheConfig();
 
+        cwd = process.cwd();
+        stacheModulesDirectory = grunt.config.get('stache.dir') + 'node_modules/';
+
         /**
          * Load Dependencies.
          */
-        cwd = process.cwd();
         modules.forEach(function (module) {
 
             // Has the module already been installed by the parent?
             switch (grunt.file.isDir(cwd + '/node_modules/' + module)) {
-
-                // Module wasn't found, so let's install this module in Stache's root.
                 case false:
-                    utils.log("Module " + module + " not found. Attempting to locate in Stache's root...");
-                    grunt.file.setBase(grunt.config.get('stache.dir'));
-                    grunt.loadNpmTasks(module);
-                    grunt.file.setBase(cwd);
+
+                    // Module wasn't found on the parent, so let's look in Stache's root.
+                    if (grunt.file.isDir(stacheModulesDirectory + module)) {
+                        grunt.file.setBase(grunt.config.get('stache.dir'));
+                        grunt.loadNpmTasks(module);
+                        grunt.file.setBase(cwd);
+                    } else {
+                        slog.fatal("The module \"" + module + "\" was not found!\n============\nAttempt the following:\n1)  Delete the node_modules folder\n2)  Type `npm cache clear`\n3)  Type `npm install`\n4)  Type `stache serve`\n\nIf Stache fails to serve, contact Stache support.");
+                    }
+
                 break;
                 case true:
+
+                    // Module found in the parent directory. Load it!
                     grunt.loadNpmTasks(module);
                 break;
             }
