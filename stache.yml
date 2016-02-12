@@ -65,6 +65,7 @@ omnibar:
   serviceNameLink: <%= stache.config.base %>
   enableServiceNameLink: true
   url: 'https://signin.blackbaud.com/omnibar.min.js'
+  urlDev: 'https://bbauth-signin-cdev.blackbaudhosting.com/omnibar.min.js'
 
 # =============================================
 # OMNIBAR - SEARCH
@@ -73,7 +74,8 @@ omnibarSearch:
   resultsBaseUri: ''
   resourceUrl: /content.json
   resultsTemplateUri: '/assets/vendor/bb-omnibar-search/templates/bb-omnibar-search.hbs'
-  searchFormClass: 'bb-omnibar-searchenabled'
+  searchFormClass: 'searchenabled'
+  searchFormClassDev: 'bb-omnibar-searchenabled'
   searchInputId: 'omnibar_searchbox'
   searchResultsId: 'bb-omnibar-search-results'
 
