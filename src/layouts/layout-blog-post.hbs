@@ -1,6 +1,8 @@
 ---
 layout: layout-sidebar
 limit: <%= stache.config.blog_recent_limit %>
+sortKey: 'uri'
+sortDesc: true
 ---
 
 {{ include 'partial-blog-header' this isSingle=true }}
