@@ -1,11 +1,13 @@
 ---
 layout: layout-sidebar
 limit: <%= stache.config.blog_recent_limit %>
+sortKey: 'uri'
+sortDesc: true
 ---
 
 {{ body }}
 
-{{# eachChildLink sortKey='uri' sortDesc=true }}
+{{# eachChildLink sortKey=sortKey sortDesc=sortDesc }}
   {{# if sticky }}
     <div class="blog-post-summary">
       {{ include 'partial-blog-header' }}
@@ -20,7 +22,7 @@ limit: <%= stache.config.blog_recent_limit %>
   {{/ if }}
 {{/ eachChildLink }}
 
-{{# eachChildLink sortKey='uri' sortDesc=true blogReadMoreLabel=blogReadMoreLabel }}
+{{# eachChildLink sortKey=sortKey sortDesc=sortDesc blogReadMoreLabel=blogReadMoreLabel }}
   {{# unless sticky }}
     <div class="blog-post-summary">
       {{ include 'partial-blog-header' }}

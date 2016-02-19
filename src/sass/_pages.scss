@@ -185,6 +185,9 @@
   margin-bottom: 60px;
 }
 
+// Default profile images ignore size specified in URL, so we must force it
 .author-image {
+  height: 15px;
   vertical-align: text-top;
+  width: 15px;
 }
