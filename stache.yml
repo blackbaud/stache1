@@ -83,7 +83,7 @@ omnibarSearch:
 # =============================================
 # STACHE - LAYOUTS
 # =============================================
-latest_sky_release: 1.4.2
+latest_sky_release: 1.5.9
 back_to_top: false
 back_to_top_offset: 220
 clipboard: true
