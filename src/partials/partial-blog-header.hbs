@@ -25,12 +25,12 @@
         </a>
       </li>
     {{/ if }}
-    {{# is comments false }}{{ else }}
+    {{# inherit stache.config.comments comments }}
       <li>
         <i class="fa fa-comments"></i>
         <a href="{{ uri }}#disqus_thread">Comments</a>
       </li>
-    {{/ is }}
+    {{/ inherit }}
     {{# if sticky }}
       <li>
         <span class="label label-warning">

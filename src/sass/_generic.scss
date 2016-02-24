@@ -22,6 +22,16 @@ hr.small {
   margin-right: auto;
 }
 
+/*
+Same rule as SKY UX bb-text-block
+Not importing for efficiency.
+Not setting on body for consistencies in SKY UX directives.
+ */
+p {
+  font-size: 14px;
+  line-height: 1.6em;
+}
+
 .text-primary {
   color: $bb-brand-alternate;
 }

@@ -1,4 +1,4 @@
-/* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript+aspnet+basic+c+csharp+cpp+git+handlebars+http+markdown+php+scss+sql+yaml */
+/* http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascript+aspnet+basic+c+csharp+cpp+ruby+git+handlebars+http+java+markdown+php+python+scss+sql+yaml */
 /**
  * prism.js default theme for JavaScript, CSS and HTML
  * Based on dabblet (http://dabblet.com)
@@ -8,6 +8,7 @@
 code[class*="language-"],
 pre[class*="language-"] {
 	color: black;
+	background: none;
 	text-shadow: 0 1px white;
 	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 	direction: ltr;
@@ -136,3 +137,4 @@ pre[class*="language-"] {
 .token.entity {
 	cursor: help;
 }
+
