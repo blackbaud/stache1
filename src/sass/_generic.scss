@@ -32,6 +32,15 @@ p {
   line-height: 1.6em;
 }
 
+/* When scrolling to anchor, accomodate the Omnibar */
+h2[id]:before {
+  display: block;
+  content: " ";
+  margin-top: -35px;
+  height: 35px;
+  visibility: hidden;
+}
+
 .text-primary {
   color: $bb-brand-alternate;
 }
