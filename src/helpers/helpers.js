@@ -125,6 +125,7 @@ module.exports.register = function (Handlebars, options, params) {
     /**
     * Light wrapper for our custom markdown processor.
     * Only process a block of Markdown once.
+    * langPrefix set for better integration of prism.js when using ```
     **/
     function getMarked(md) {
 
@@ -135,7 +136,8 @@ module.exports.register = function (Handlebars, options, params) {
             comment,
             marked.parser(lexer.lex(input), {
                 headerPrefix: '',
-                renderer: renderer
+                renderer: renderer,
+                langPrefix: 'language-'
             })
         ].join('');
     }
