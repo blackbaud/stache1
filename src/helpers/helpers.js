@@ -542,9 +542,8 @@ module.exports.register = function (Handlebars, options, params) {
                     });
                 }
 
-
-
                 j = context.length;
+
                 for (i; i < j; i++) {
 
                     // Don't go past our limit
@@ -562,8 +561,12 @@ module.exports.register = function (Handlebars, options, params) {
                         // Add any hash values to the context.
                         if (options.hash) {
                             for (h in options.hash) {
-                                if (h !== "nav_links" && options.hash.hasOwnProperty(h)) {
+                                switch (h) {
+                                    case "nav_links":
+                                    break;
+                                    default:
                                     context[i][h] = options.hash[h];
+                                    break;
                                 }
                             }
                         }
