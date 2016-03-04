@@ -489,6 +489,11 @@ module.exports = function (grunt) {
                     'sortKey',
                     'sortDesc'
                 ];
+
+                if (frontMatter.layout === undefined) {
+                    frontMatter.layout = grunt.config.get('assemble.options.layout');
+                }
+
                 layoutFrontMatter = layoutsFrontMatter[frontMatter.layout];
 
                 fields.forEach(function (field) {
