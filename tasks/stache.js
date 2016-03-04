@@ -490,6 +490,10 @@ module.exports = function (grunt) {
                     'sortDesc'
                 ];
 
+                if (layoutsFrontMatter[0] === undefined) {
+                    return false;
+                }
+
                 if (frontMatter.layout === undefined) {
                     frontMatter.layout = grunt.config.get('assemble.options.layout');
                 }

@@ -75,23 +75,23 @@
      * Stache Utilities
      */
     describe('Stache Utilities', function () {
-        describe('extendStacheConfig()', function () {
+        describe('getMergedStacheYaml()', function () {
             it('should return an object', function () {
-                var config = stache.utils.extendStacheConfig();
+                var config = stache.utils.getMergedStacheYaml();
                 expect(config).toEqual(jasmine.any(Object));
             });
             it('should merge global stache.yml with local stache.yml', function () {
                 var config;
                 grunt.config.set('stache.pathConfig', 'tests/fixtures/stache.yml');
                 grunt.config.set('stache.dir', '../');
-                config = stache.utils.extendStacheConfig();
+                config = stache.utils.getMergedStacheYaml();
                 expect(config.base).toBe('different/base');
             });
             it('should merge global stache.yml with any custom .yml files, if provided', function () {
                 var config;
                 grunt.config.set('stache.dir', '../');
                 grunt.option('config', 'tests/fixtures/custom1.yml,tests/fixtures/custom2.yml');
-                config = stache.utils.extendStacheConfig();
+                config = stache.utils.getMergedStacheYaml();
                 expect(config.base).toBe('yet/another/base');
                 expect(config.foo).toBe('bar');
             });
