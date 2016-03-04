@@ -1,8 +1,6 @@
 ---
 layout: layout-container
 showHeadings: true
-sortKey: ""
-sortDesc: false
 ---
 
 <div class="row">
@@ -14,18 +12,19 @@ sortDesc: false
         {{/ if }}
 
         {{# withNavLinks }}
+
           {{# isActiveNav dest=../page.dest }}
             <ul class="nav nav-stacked nav-sidebar">
 
               {{# if showTitle }}
-                  <li class="title {{# if draft }}draft{{/ if }}">
-                    <a href="{{ uri }}">
-                      {{ name }}
-                    </a>
-                  </li>
+                <li class="title {{# if draft }}draft{{/ if }}">
+                  <a href="{{ uri }}">
+                    {{ name }}
+                  </a>
+                </li>
               {{/ if}}
 
-              {{ include 'partial-sidebar' this sidebarCurrentDepth="0" sidebarParentDepth=../../sidebarParentDepth dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page sortKey=this.sortKey sortDesc=this.sortDesc }}
+              {{ include 'partial-sidebar' this sidebarCurrentDepth="0" sidebarParentDepth=../../sidebarParentDepth dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
 
               <li class="visible-on-affix">
                 <a href="#top" class="smooth-scroll">
