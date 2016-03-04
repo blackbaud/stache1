@@ -20,7 +20,7 @@
         // Affix
         sidebarNav.affix({
             offset: {
-                top: body.css('padding-top').replace('px', ''),
+                top: $('.layout-sidebar-row').offset().top - 30,
                 bottom: $('.affix-stop').outerHeight()
             }
         });
@@ -30,9 +30,10 @@
             sidebarNav.css('width', sidebar.width() + 'px');
         }).trigger('resize');
 
-        // Scrollspy
+        // Scrollspy - Offset accommodates extra CSS, which accommodates Omnibar
         body.scrollspy({
-            target: '.headings'
+            target: '.headings',
+            offset: 10
         });
 
     }
