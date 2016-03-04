@@ -78,6 +78,11 @@ module.exports = function (grunt) {
                         '**/*.hbs',
                         '**/*.html'
                     ]
+                },
+                layouts: {
+                    expand: true,
+                    cwd: 'node_modules/blackbaud-stache/src/layouts/',
+                    src: ['**/*.hbs']
                 }
             },
 
@@ -132,12 +137,16 @@ module.exports = function (grunt) {
                 layoutext: '.hbs',
                 layout: 'layout-container',
                 stache: '<%= stache %>',
+                plugins: [],
 
                 // https://github.com/assemble/assemble/pull/468#issuecomment-38730532
                 initializeEngine: function (engine, options)  {
                     var search = "{{\\s*body\\s*}}";
                     engine.bodyRegex = new RegExp(search, 'ig');
-                    engine.init(options, { grunt: grunt, assemble: assemble });
+                    engine.init(options, {
+                        grunt: grunt,
+                        assemble: assemble
+                    });
                 },
 
                 getBypassContext: function () {
@@ -442,6 +451,7 @@ module.exports = function (grunt) {
             var contentDir,
                 files,
                 filesConfig,
+                layoutsFrontMatter,
                 nav_exclude,
                 navKey,
                 page,
@@ -452,6 +462,54 @@ module.exports = function (grunt) {
                 sorted;
 
             slog("Building navigation links...Please wait.");
+
+            function getLayoutsFrontMatter() {
+                var files,
+                    frontMatter,
+                    layoutsConfig,
+                    stacheYaml;
+
+                stacheYaml = utils.getMergedStacheYaml();
+                layoutsConfig = grunt.config.get('stache.globPatterns.layouts');
+                files = grunt.file.expand(layoutsConfig, layoutsConfig.src);
+                frontMatter = {};
+
+                files.forEach(function (layout) {
+                    frontMatter[layout.replace('.hbs', '')] = merge.recursive(true, stacheYaml, yfm.extractJSON('node_modules/blackbaud-stache/src/layouts/' + layout));
+                });
+
+                return frontMatter;
+            }
+
+            function setPageFrontMatterFields(frontMatter) {
+                var fields,
+                    layoutFrontMatter;
+
+                fields = [
+                    'sortKey',
+                    'sortDesc'
+                ];
+
+                if (layoutsFrontMatter[0] === undefined) {
+                    return false;
+                }
+
+                if (frontMatter.layout === undefined) {
+                    frontMatter.layout = grunt.config.get('assemble.options.layout');
+                }
+
+                layoutFrontMatter = layoutsFrontMatter[frontMatter.layout];
+
+                fields.forEach(function (field) {
+                    if (frontMatter[field]) {
+                        if (layoutFrontMatter && layoutFrontMatter[field]) {
+                            frontMatter[field] = merge(true, layoutFrontMatter[field], frontMatter[field]);
+                        }
+                    } else {
+                        frontMatter[field] = layoutFrontMatter[field];
+                    }
+                });
+            }
 
             // User has manually specific nav_links in stache.yml. Let's use that.
             if (grunt.config('stache.config.nav_type') !== 'directory') {
@@ -471,6 +529,7 @@ module.exports = function (grunt) {
             filesConfig = grunt.config.get('stache.globPatterns.content');
             files = grunt.file.expand(filesConfig, filesConfig.src);
             nav_exclude = grunt.config.get('stache.config.nav_exclude') || [];
+            layoutsFrontMatter = getLayoutsFrontMatter();
 
             // Reset bypassContext
             grunt.config.set(root + navKey, []);
@@ -478,15 +537,22 @@ module.exports = function (grunt) {
             // Add the pages from the content directory
             if (files) {
                 files.forEach(function (file) {
-                    var fm = yfm.extractJSON(contentDir + file);
-                    if (typeof fm.published === 'undefined' || fm.published !== false) {
+                    var frontMatter;
+
+                    frontMatter = yfm.extractJSON(contentDir + file);
+
+                    if (typeof frontMatter.published === 'undefined' || frontMatter.published !== false) {
+
                         slog.verbose("Adding nav_link from content/ " + file);
+
+                        setPageFrontMatterFields(frontMatter);
+
                         sorted.push({
                             abspath: file,
                             rootdir: file.substr(0, file.indexOf('/')),
                             subdir: file.substr(0, file.lastIndexOf('/')),
                             filename: file.substr(file.lastIndexOf('/') + 1),
-                            frontmatter: fm,
+                            frontmatter: frontMatter,
                             type: 'local'
                         });
                     }
@@ -1117,7 +1183,7 @@ module.exports = function (grunt) {
         /**
          * Merges local and global Stache YAML files into stache.config.
          */
-        extendStacheConfig: function () {
+        getMergedStacheYaml: function () {
             var configFileString,
                 localConfig,
                 stache,
@@ -1171,8 +1237,6 @@ module.exports = function (grunt) {
 
             // Merge global and local Stache config objects.
             stache.config = merge.recursive(true, stacheConfig, localConfig);
-            utils.checkDeprecatedYAML(stache.config);
-            grunt.config.set('stache.config', stache.config);
             return stache.config;
         },
 
@@ -1183,6 +1247,14 @@ module.exports = function (grunt) {
          */
         isArray: function (arr) {
             return (arr.pop && arr.push);
+        },
+
+        /**
+         * Sets global Stache config.
+         */
+        setStacheConfig: function (config) {
+            utils.checkDeprecatedYAML(config);
+            grunt.config.set('stache.config', config);
         },
 
         /**
@@ -1330,7 +1402,7 @@ module.exports = function (grunt) {
         grunt.config.merge(defaults);
 
         // Merge local and global stache.yml config.
-        utils.extendStacheConfig();
+        utils.setStacheConfig(utils.getMergedStacheYaml());
 
         cwd = process.cwd();
         stacheModulesDirectory = grunt.config.get('stache.dir') + 'node_modules/';

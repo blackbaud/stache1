@@ -360,6 +360,8 @@ module.exports.register = function (Handlebars, options, params) {
                 this[key] = utils.mergeOption(config[key], this[key]);
             }
 
+
+
             return options.fn(this);
         },
 
@@ -542,9 +544,8 @@ module.exports.register = function (Handlebars, options, params) {
                     });
                 }
 
-
-
                 j = context.length;
+
                 for (i; i < j; i++) {
 
                     // Don't go past our limit
@@ -562,8 +563,18 @@ module.exports.register = function (Handlebars, options, params) {
                         // Add any hash values to the context.
                         if (options.hash) {
                             for (h in options.hash) {
-                                if (h !== "nav_links" && options.hash.hasOwnProperty(h)) {
-                                    context[i][h] = options.hash[h];
+                                if (options.hash.hasOwnProperty(h)) {
+
+                                    // These fields should NOT be propagated into child scopes:
+                                    switch (h) {
+                                        case "nav_links":
+                                        case "sortKey":
+                                        case "sortDesc":
+                                        break;
+                                        default:
+                                            context[i][h] = options.hash[h];
+                                        break;
+                                    }
                                 }
                             }
                         }

@@ -33,7 +33,9 @@
     stache.tasks.createAutoNav();
 
     // Run the register method to retrieve our custom helpers.
-    helpers.register(Handlebars, {}, { assemble: grunt.config.get('assemble') });
+    helpers.register(Handlebars, {}, {
+        assemble: grunt.config.get('assemble')
+    });
 
     /**
      * Returns the first link in 'nav_links' that is not the home page.

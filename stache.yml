@@ -109,6 +109,8 @@ video_description_top: false
 watchNewer: true
 modules:
   - stache
+sortKey: ""
+sortDesc: false
 
 # =============================================
 # STACHE - ANALYTICS
