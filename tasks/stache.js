@@ -482,20 +482,22 @@ module.exports = function (grunt) {
             }
 
             function setPageFrontMatterFields(frontMatter) {
-                var fields,
+                var defaultLayoutName,
+                    fields,
                     layoutFrontMatter;
 
                 fields = [
                     'sortKey',
                     'sortDesc'
                 ];
+                defaultLayoutName = grunt.config.get('assemble.options.layout');
 
-                if (layoutsFrontMatter[0] === undefined) {
+                if (layoutsFrontMatter[defaultLayoutName] === undefined) {
                     return false;
                 }
 
                 if (frontMatter.layout === undefined) {
-                    frontMatter.layout = grunt.config.get('assemble.options.layout');
+                    frontMatter.layout = defaultLayoutName;
                 }
 
                 layoutFrontMatter = layoutsFrontMatter[frontMatter.layout];
