@@ -563,16 +563,18 @@ module.exports.register = function (Handlebars, options, params) {
                         // Add any hash values to the context.
                         if (options.hash) {
                             for (h in options.hash) {
+                                if (options.hash.hasOwnProperty(h)) {
 
-                                // These fields should NOT be propagated into child scopes:
-                                switch (h) {
-                                    case "nav_links":
-                                    case "sortKey":
-                                    case "sortDesc":
-                                    break;
-                                    default:
-                                    context[i][h] = options.hash[h];
-                                    break;
+                                    // These fields should NOT be propagated into child scopes:
+                                    switch (h) {
+                                        case "nav_links":
+                                        case "sortKey":
+                                        case "sortDesc":
+                                        break;
+                                        default:
+                                            context[i][h] = options.hash[h];
+                                        break;
+                                    }
                                 }
                             }
                         }
