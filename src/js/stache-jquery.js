@@ -110,11 +110,10 @@
         if ($sidebarHeadings.length > 0) {
 
             $window = $(window);
+            top = getHeaderHeight();
 
             // The sidebar must be taller than the page.
-            if ($window.height() > $sidebar.height()) {
-
-                top = getHeaderHeight();
+            if ($window.height() > ($sidebar.height() + getBreadcrumbsHeight() + top)) {
 
                 // Affix
                 $sidebarNav.affix({
