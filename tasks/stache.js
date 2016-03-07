@@ -463,6 +463,7 @@ module.exports = function (grunt) {
 
             slog("Building navigation links...Please wait.");
 
+            // Returns an object representing a layout's front matter properties.
             function getLayoutsFrontMatter() {
                 var files,
                     frontMatter,
@@ -481,14 +482,15 @@ module.exports = function (grunt) {
                 return frontMatter;
             }
 
-            function setPageFrontMatterFields(frontMatter) {
+            // Merges specific fields from a page's front matter with its respective layout front matter.
+            function mergePageFrontMatterWithLayout(frontMatter) {
                 var defaultLayoutName,
                     fields,
                     layoutFrontMatter;
 
                 fields = [
                     'sortKey',
-                    'sortDesc'
+                    'sortDirection'
                 ];
                 defaultLayoutName = grunt.config.get('assemble.options.layout');
 
@@ -511,6 +513,8 @@ module.exports = function (grunt) {
                         frontMatter[field] = layoutFrontMatter[field];
                     }
                 });
+
+                return frontMatter;
             }
 
             // User has manually specific nav_links in stache.yml. Let's use that.
@@ -544,17 +548,13 @@ module.exports = function (grunt) {
                     frontMatter = yfm.extractJSON(contentDir + file);
 
                     if (typeof frontMatter.published === 'undefined' || frontMatter.published !== false) {
-
                         slog.verbose("Adding nav_link from content/ " + file);
-
-                        setPageFrontMatterFields(frontMatter);
-
                         sorted.push({
                             abspath: file,
                             rootdir: file.substr(0, file.indexOf('/')),
                             subdir: file.substr(0, file.lastIndexOf('/')),
                             filename: file.substr(file.lastIndexOf('/') + 1),
-                            frontmatter: frontMatter,
+                            frontmatter: mergePageFrontMatterWithLayout(frontMatter),
                             type: 'local'
                         });
                     }
@@ -571,7 +571,7 @@ module.exports = function (grunt) {
                             rootdir: page.substr(0, page.indexOf('/')),
                             subdir: page.substr(0, page.lastIndexOf('/')),
                             filename: page.substr(page.lastIndexOf('/') + 1),
-                            frontmatter: pages[page].data,
+                            frontmatter: mergePageFrontMatterWithLayout(pages[page].data),
                             type: pages[page].type
                         });
                     }
@@ -580,7 +580,9 @@ module.exports = function (grunt) {
 
             // Sorting alphabetically ensures that parents are created first.
             // This is crucial to this process.  We can sort by order below.
-            utils.sort(sorted, true, 'subdir', '');
+            utils.sort(sorted, [{
+                key: 'subdir'
+            }]);
 
             // Create the nav_links array.
             if (sorted) {
@@ -698,7 +700,8 @@ module.exports = function (grunt) {
             }
 
             // Now we can rearrange each item according to order
-            utils.sortByOrder(root + navKey, true);
+            //utils.sortByOrder(root + navKey, true);
+            utils.sortNavLinks();
 
             slog.success("Done.");
         },
@@ -1325,55 +1328,111 @@ module.exports = function (grunt) {
          * Sorts an array of objects.
          *
          * @param [array] arr - The array to sort
-         * @param [boolean] sortAscending - Sort asc or dec
-         * @param [string] prop - The field to sort by
-         * @param [string] propDefault - The field to sort by if prop doesn't exist
-         * @param [string] propIfEqual - The field to sort by if the compared values are equal (e.g., if 1 === 1, compare against another field)
+         * @param [array] rules - An array of objects to define the 'key' to sort the array by, the 'defaultValue' if the key doesn't exist, and the 'direction' to sort by ('asc' is default).
          */
-        sort: function (arr, sortAscending, prop, propDefault, propIfEqual) {
+        sort: function (arr, rules) {
+            var ruleDefault;
+
+            ruleDefault = {
+                key: 'order',
+                defaultValue: '',
+                direction: 'asc'
+            };
+
             arr.sort(function (a, b) {
-                var ap = a[prop] || propDefault,
-                    bp = b[prop] || propDefault;
+                var i,
+                    len,
+                    rule,
+                    valueA,
+                    valueB;
 
-                if (ap === bp && typeof propIfEqual !== 'undefined' && propIfEqual !== '') {
-                    ap = a[propIfEqual];
-                    bp = b[propIfEqual];
+                len = rules.length;
+
+                for (i = 0; i < len; ++i) {
+
+                    rule = merge(true, ruleDefault, rules[i]);
+
+                    valueA = a[rule.key] || rule.defaultValue;
+                    valueB = b[rule.key] || rule.defaultValue;
+
+                    if (valueA !== valueB) {
+                        break;
+                    }
                 }
 
-                return utils.sortInner(ap, bp, sortAscending);
+                if (valueA < valueB) {
+                    return (rule.direction === 'asc') ? -1 : 1;
+                } else if (valueA > valueB) {
+                    return (rule.direction === 'asc') ? 1 : -1;
+                } else {
+                    return 0;
+                }
             });
         },
 
         /**
-         *
-         *
-         * @param {} []
+         * Sorts nav_links by the YFM properties 'sortKey' and 'sortDirection'.
          */
-        sortInner: function (a, b, sortAscending) {
-            if (a < b) {
-                return sortAscending ? -1 : 1;
-            } else if (a > b) {
-                return sortAscending ? 1 : -1;
-            } else {
-                return 0;
+        sortNavLinks: function () {
+
+            var navLinks;
+
+            navLinks = grunt.config.get('bypassContext.nav_links');
+
+            function doSort(links, rules) {
+
+                utils.sort(links, rules);
+
+                links.forEach(function (link, i) {
+
+                    if (link.sortKey && link.nav_links) {
+                        switch (link.sortKey) {
+
+                            case 'order':
+                            rules = [{
+                                key: 'order',
+                                defaultValue: 100
+                            }, {
+                                key: 'name'
+                            }];
+                            break;
+
+                            case 'uri':
+                            rules = [{
+                                key: link.sortKey,
+                                direction: 'desc'
+                            }, {
+                                key: 'order',
+                                defaultValue: 100
+                            }];
+                            break;
+
+                            default:
+                            rules = [{
+                                key: link.sortKey
+                            }, {
+                                key: 'order',
+                                defaultValue: 100
+                            }];
+                            break;
+                        }
+
+                        doSort(link.nav_links, rules);
+                    }
+                });
             }
-        },
 
-        /**
-         * Sorts nav_links by the YFM property 'order'.
-         *
-         * @param [string] key - The grunt config key that references an array of nav_links
-         * @param [boolean] sortAscending - Sort asc or desc
-         */
-        sortByOrder: function (key, sortAscending) {
-            var nav_links = grunt.config.get(key);
-            utils.sort(nav_links, sortAscending, (sortAscending ? 'order' : 'uri'), 100, 'name');
-            grunt.config.set(key, nav_links);
-            nav_links.forEach(function (el, idx) {
-                if (el.nav_links) {
-                    utils.sortByOrder(key + '.' + idx + '.nav_links', sortAscending);
-                }
-            });
+            // Top-level is always sorted by order, then by name.
+            doSort(navLinks, [{
+                key: 'order',
+                defaultValue: 100
+            }, {
+                key: 'name'
+            }]);
+
+            // Save the results.
+            grunt.config.set('bypassContext.nav_links', navLinks);
+
         }
     };
 

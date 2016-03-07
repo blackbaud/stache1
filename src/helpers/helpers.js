@@ -352,15 +352,16 @@ module.exports.register = function (Handlebars, options, params) {
                 keysLength;
 
             config = stache.config;
-            keys = ['showBreadcrumbs', 'blogReadMoreLabel'];
+            keys = [
+                'showBreadcrumbs',
+                'blogReadMoreLabel'
+            ];
             keysLength = keys.length;
 
             for (i = 0; i < keysLength; ++i) {
                 key = keys[i];
                 this[key] = utils.mergeOption(config[key], this[key]);
             }
-
-
 
             return options.fn(this);
         },
@@ -524,25 +525,10 @@ module.exports.register = function (Handlebars, options, params) {
                 mod = options.hash.mod || 0,
                 limit = options.hash.limit || -1,
                 layout = options.hash.layout || 'horizontal',
-                sortKey = options.hash.sortKey || '',
-                sortDesc = typeof options.hash.sortDesc !== 'undefined' ? options.hash.sortDesc : false,
-                sortA = 1,
-                sortB = -1,
                 j,
                 show;
 
             if (context && context.length) {
-
-                // Sort differently if Needed
-                if (sortKey !== '') {
-                    if (sortDesc) {
-                        sortA = -1;
-                        sortB = 1;
-                    }
-                    context = context.sort(function (a, b) {
-                        return a[sortKey] > b[sortKey] ? sortA : (a[sortKey] < b[sortKey] ? sortB : 0);
-                    });
-                }
 
                 j = context.length;
 
@@ -568,8 +554,6 @@ module.exports.register = function (Handlebars, options, params) {
                                     // These fields should NOT be propagated into child scopes:
                                     switch (h) {
                                         case "nav_links":
-                                        case "sortKey":
-                                        case "sortDesc":
                                         break;
                                         default:
                                             context[i][h] = options.hash[h];
