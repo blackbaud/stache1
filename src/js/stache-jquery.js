@@ -1,134 +1,261 @@
 /*jslint browser: true, es5: true*/
 /*global jQuery */
-(function ($, window, document, undefined) {
+
+
+(function ($, window) {
     'use strict';
 
-    var body = $('body'),
-        sidebar = $('.sidebar'),
-        sidebarNav = $('.nav-sidebar'),
-        sidebarHeading = sidebar.find('li.heading'),
-        height = 0,
-        q,
-        $backToTop = $('.back-to-top'),
-        bttoffset = $backToTop.data('offset'),
-        bttduration = 500;
+    var $body;
 
-    // Scrollspy + affix only run if there are li.heading's on the page
-    // And the sidebar isn't taller than the page
-    if (sidebarHeading.length && $(window).height() > sidebar.height()) {
+    /**
+     * Adds a back-to-top Link
+     * http://www.developerdrive.com/2013/07/using-jquery-to-add-a-dynamic-back-to-top-floating-button-with-smooth-scroll/
+     */
+    function backToTop() {
+        var $backToTop,
+            duration,
+            offset;
 
-        // Affix
-        sidebarNav.affix({
-            offset: {
-                top: body.css('padding-top').replace('px', ''),
-                bottom: $('.affix-stop').outerHeight()
-            }
-        });
+        $backToTop = $body.find('.back-to-top');
+        duration = 500;
 
-        // Catch our window resizing
-        $(window).resize(function () {
-            sidebarNav.css('width', sidebar.width() + 'px');
-        }).trigger('resize');
+        if ($backToTop.length > 0) {
 
-        // Scrollspy
-        body.scrollspy({
-            target: '.headings'
-        });
+            offset = $backToTop.data('offset');
+
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > offset) {
+                    $backToTop.fadeIn(duration);
+                } else {
+                    $backToTop.fadeOut(duration);
+                }
+            });
+
+            $backToTop.on('click', function (event) {
+                event.preventDefault();
+                $('html, body').animate({
+                    scrollTop: 0
+                }, duration);
+                return false;
+            });
+        }
+    }
+
+    function equalHeights() {
+        var height;
+
+        height = 0;
+
+        $body.find('.equal-height')
+            .each(function () {
+                var h;
+
+                h = $(this).outerHeight();
+
+                height = (h > height) ? h : height;
+
+            })
+            .css('min-height', height + 'px');
+    }
+
+    function getBreadcrumbsHeight() {
+        var $breadcrumbs;
+
+        $breadcrumbs = $('#wrap-breadcrumbs');
+
+        if ($breadcrumbs.length > 0) {
+            return $breadcrumbs.outerHeight() + window.parseInt($breadcrumbs.css('margin-top').replace('px', ''));
+        }
+
+        return 0;
+    }
+
+    function getOmnibarHeight() {
+        return $body.find('.bb-omnibar-bar').outerHeight();
+    }
+
+    function getHeaderHeight() {
+        var total;
+
+        total = 0;
+
+        // Height of the omnibar.
+        total += getOmnibarHeight();
+
+        // Height of the global navigation.
+        total += $body.find('.bb-navbar').outerHeight();
+
+        return total;
 
     }
 
-    // Parallax background
-    $.stellar({
-        horizontalScrolling: false
-    });
-
-    // Equal Height
-    $('.equal-height').each(function () {
-        var h = $(this).outerHeight();
-        height = h > height ? h : height;
-    }).css('min-height', height + 'px');
-
-    // Show on Hover
-    $('.has-hover').each(function () {
-        $(this).hover(function () {
-            $(this).toggleClass('is-hover');
+    function parallax() {
+        $.stellar({
+            horizontalScrolling: false
         });
-    });
+    }
 
-    // Smooth scroll
-    $('a.smooth-scroll').click(function (e) {
-        var href = $(this).attr('href'),
-            el = $(href),
-            top = 0;
+    function scrollspy() {
+        var $sidebar,
+            $sidebarHeadings,
+            $sidebarNav,
+            $window,
+            top;
 
-        e.preventDefault();
+        $sidebar = $body.find('.sidebar');
+        $sidebarNav = $sidebar.find('.nav-sidebar');
+        $sidebarHeadings = $sidebarNav.find('li.heading');
 
-        // Forcing #top = 0, Verifying element exists
-        if (href !== "#top" && el.length) {
-            top = el.offset().top;
+        // There must be li.heading's on the page.
+        if ($sidebarHeadings.length > 0) {
+
+            $window = $(window);
+
+            // The sidebar must be taller than the page.
+            if ($window.height() > $sidebar.height()) {
+
+                top = getHeaderHeight();
+
+                // Affix
+                $sidebarNav.affix({
+                    offset: {
+                        top: top + window.parseInt($sidebar.css('margin-top').replace('px', '')) + getBreadcrumbsHeight(),
+                        bottom: $body.find('.affix-stop').outerHeight()
+                    }
+                });
+
+                // Catch our window resizing
+                $window.resize(function () {
+                    $sidebarNav.css('width', $sidebar.width() + 'px');
+                }).trigger('resize');
+
+                // Scrollspy
+                $body.scrollspy({
+                    target: '.headings',
+                    offset: top + 20
+                });
+            }
+        }
+    }
+
+    function searchQuery() {
+        var q;
+
+        q = getParameterByName('q');
+
+        if (q !== '') {
+            $('#q').val(q);
         }
 
-        $('html, body').animate({
-            scrollTop: top
-        }, 1000);
-    });
+        function getParameterByName(name) {
+            var regex,
+                results;
 
-    // Tooltips
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+
+            return (results === null) ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+    }
+
+    function showHide() {
+
+        $body.find('.show-hide').each(function () {
+            var $container,
+                $contentHidden,
+                $contentPreview,
+                $showLess,
+                $showMore;
+
+            $container = $(this);
+
+            $contentPreview = $container.find('.show-first');
+            $contentHidden = $container.find('.show-second');
+
+            $showMore = $('<span class="show-hide-button"><a href>Show more...</a></span>').appendTo($contentPreview);
+            $showLess = $('<span class="show-hide-button"><a href>Show less...</a></span>').appendTo($contentHidden);
+
+            $showLess.on('click', function (event) {
+                event.preventDefault();
+                $contentHidden.removeClass('on');
+                $showMore.removeClass('off');
+                return false;
+            });
+
+            $showMore.on('click', function (event) {
+                event.preventDefault();
+                $contentHidden.addClass('on');
+                $showMore.addClass('off');
+                return false;
+            });
+        });
+    }
+
+    function showOnHover() {
+        $body.find('.has-hover').each(function () {
+            var $elem;
+
+            $elem = $(this);
+
+            $elem.hover(function () {
+                $elem.toggleClass('is-hover');
+            });
+        });
+    }
+
+    function smoothScroll() {
+        $body.find('.smooth-scroll')
+            .on('click', function (event) {
+                var $link,
+                    $target,
+                    href,
+                    offset,
+                    top;
+
+                if (event.target.nodeName === "A") {
+                    $link = $(event.target);
+                } else {
+                    $link = $(this).find('>a');
+                }
+
+                top = 0;
+                offset = 20;
+                href = $link.attr('href');
+                $target = $(href);
+
+                event.preventDefault();
+
+                // Forcing #top = 0, Verifying element exists
+                if (href !== "#top" && $target.length > 0) {
+                    top = $target.offset().top - getOmnibarHeight() - offset;
+                }
+
+                $('html, body').animate({
+                    scrollTop: top
+                }, 800);
+            });
+    }
+
+    function tooltips() {
+        $body.find('[data-toggle="tooltip"]').tooltip();
+    }
+
+    /**
+     * Initialize.
+     */
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
+        $body = $('body');
+
+        backToTop();
+        equalHeights();
+        parallax();
+        scrollspy();
+        searchQuery();
+        showHide();
+        showOnHover();
+        smoothScroll();
+        tooltips();
     });
 
-    // Searching
-    q = getParameterByName('q');
-    if (q !== '') {
-        $('#q').val(q);
-    }
-
-    function getParameterByName(name) {
-        var regex,
-            results;
-
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
-
-    //Show-Hide
-    $('.show-first').after('<a class="show-more"> Show more...</a>');
-    $('.show-hide').on('click', 'a', function (event) {
-        if (!$(this).siblings('.show-second').is(":visible")) {
-            event.preventDefault();
-            $(this).siblings('.show-second').show();
-            $(this).hide();
-            $(this).siblings('.show-second').after('<a class="show-less"> Show less...</a>');
-        } else {
-            event.preventDefault();
-            if ($(this).siblings('.show-second').is(":visible")) {
-                $(this).siblings('.show-second').hide();
-                $(this).hide();
-                $(this).siblings('.show-first').after('<a class="show-more"> Show more...</a>');
-            }
-        }
-    });
-
-    // Back-to-top
-    // Code from here: http://www.developerdrive.com/2013/07/using-jquery-to-add-a-dynamic-back-to-top-floating-button-with-smooth-scroll/
-
-    if ($backToTop) {
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > bttoffset) {
-                $backToTop.fadeIn(bttduration);
-            } else {
-                $backToTop.fadeOut(bttduration);
-            }
-        });
-
-        $backToTop.click(function (event) {
-            event.preventDefault();
-            $('html, body').animate({scrollTop: 0}, bttduration);
-            return false;
-        });
-    }
-}(jQuery, window, document));
+}(window.jQuery, window));
