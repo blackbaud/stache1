@@ -4,7 +4,7 @@ showHeadings: true
 ---
 
 <div class="row">
-  <div class="col-sm-3">
+  <div class="col-sm-3 content-secondary">
     <div class="sidebar">
       {{# minify collapseWhitespace=true removeEmptyElements=true }}
         {{# if sidebar_title }}
@@ -38,7 +38,7 @@ showHeadings: true
       {{/ minify }}
     </div>
   </div>
-  <div class="col-sm-9">
+  <div class="col-sm-9 content-primary">
     {{# inherit stache.config.markdown markdown }}
       {{# markdown }}{{ body }}{{/ markdown }}
     {{ else }}

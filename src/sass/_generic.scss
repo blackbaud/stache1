@@ -12,7 +12,7 @@
 }
 
 body {
-  background: #FFF;
+  background: #EFEFEF;
   position: relative;
 }
 
@@ -202,10 +202,38 @@ pre.has-copy-code {
   text-align: center;
   font-size: 2em;
   display: none;
+  line-height: 1;
 }
 
 .back-to-top:hover,
 .back-to-top:focus {
   background: #1a7bb9;
   cursor: pointer;
+}
+
+.show-hide {
+    .show-first {}
+    .show-second {
+        display: none;
+    }
+
+    div .show-hide-button {
+        display: block;
+    }
+
+    span .show-hide-button:before {
+        content: " ";
+    }
+
+    .off {
+        display: none !important;
+    }
+
+    div.on {
+        display: block !important;
+    }
+
+    span.on {
+        display: inline !important;
+    }
 }
