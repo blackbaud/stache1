@@ -133,16 +133,24 @@
                     affixTop = sidebarDocumentTop;
                 }
 
+                function updateSidebarNavCSS() {
+                    // Set the sidebar's CSS 'top' property.
+                    $sidebarNav.css({ 'top': affixTop + 'px' });
+                }
+
                 // Affix the sidebar.
                 $sidebarNav.affix({
                     offset: {
-                        top: sidebarDocumentTop - affixTop,
-                        bottom: $body.find('.affix-stop').outerHeight()
+                        top: function () {
+                            updateSidebarNavCSS();
+                            return sidebarDocumentTop - affixTop;
+                        },
+                        bottom: function () {
+                            updateSidebarNavCSS();
+                            return $body.find('.affix-stop').outerHeight();
+                        }
                     }
                 });
-
-                // Set the sidebar's CSS 'top' property.
-                $sidebarNav.css({ 'top': affixTop + 'px' });
 
                 // Scrollspy
                 $body.scrollspy({
