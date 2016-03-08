@@ -1,7 +1,5 @@
 /*jslint browser: true, es5: true*/
 /*global jQuery */
-
-
 (function ($, window) {
     'use strict';
 
@@ -41,6 +39,9 @@
         }
     }
 
+    /**
+     *
+     */
     function equalHeights() {
         var height;
 
@@ -58,86 +59,103 @@
             .css('min-height', height + 'px');
     }
 
+    /**
+     *
+     */
     function getBreadcrumbsHeight() {
         var $breadcrumbs;
 
         $breadcrumbs = $('#wrap-breadcrumbs');
 
         if ($breadcrumbs.length > 0) {
-            return $breadcrumbs.outerHeight() + window.parseInt($breadcrumbs.css('margin-top').replace('px', ''));
+            return $breadcrumbs.outerHeight(true);
         }
 
         return 0;
     }
 
-    function getOmnibarHeight() {
-        return $body.find('.bb-omnibar-bar').outerHeight();
-    }
-
+    /**
+     *
+     */
     function getHeaderHeight() {
-        var total;
+      var $header;
 
-        total = 0;
+      $header = $body.find('.bb-navbar');
 
-        // Height of the omnibar.
-        total += getOmnibarHeight();
-
-        // Height of the global navigation.
-        total += $body.find('.bb-navbar').outerHeight();
-
-        return total;
-
+      return ($header.length > 0) ? $header.outerHeight(true) : 0;
     }
 
+    /**
+     *
+     */
+    function getOmnibarHeight() {
+        var $omnibar;
+
+        $omnibar = $body.find('.bb-omnibar-bar');
+
+        return ($omnibar.length > 0) ? $omnibar.outerHeight(true) : 0;
+    }
+
+    /**
+     *
+     */
     function parallax() {
         $.stellar({
             horizontalScrolling: false
         });
     }
 
+    /**
+     *
+     */
     function scrollspy() {
-        var $sidebar,
-            $sidebarHeadings,
+        var $contentPrimary,
+            $contentSecondary,
             $sidebarNav,
-            $window,
-            top;
+            affixTop,
+            sidebarDocumentTop;
 
-        $sidebar = $body.find('.sidebar');
-        $sidebarNav = $sidebar.find('.nav-sidebar');
-        $sidebarHeadings = $sidebarNav.find('li.heading');
+        $contentSecondary = $body.find('.content-secondary');
+        $sidebarNav = $contentSecondary.find('.nav-sidebar');
 
         // There must be li.heading's on the page.
-        if ($sidebarHeadings.length > 0) {
+        if ($sidebarNav.find('li.heading').length > 0) {
 
-            $window = $(window);
+            $contentPrimary = $body.find('.content-primary');
 
-            // The sidebar must be taller than the page.
-            if ($window.height() > ($sidebar.height() + $sidebar.offset().top)) {
+            // The window must be taller than the sidebar for affix to register.
+            if ($contentPrimary.outerHeight(true) > $contentSecondary.outerHeight(true)) {
 
-                top = getHeaderHeight();
+                affixTop = 50;
+                sidebarDocumentTop = $sidebarNav.offset().top;
 
-                // Affix
+                if (sidebarDocumentTop < affixTop) {
+                    affixTop = sidebarDocumentTop;
+                }
+
+                // Affix the sidebar.
                 $sidebarNav.affix({
                     offset: {
-                        top: top + window.parseInt($sidebar.css('margin-top').replace('px', '')) + getBreadcrumbsHeight(),
+                        top: sidebarDocumentTop - affixTop,
                         bottom: $body.find('.affix-stop').outerHeight()
                     }
                 });
 
-                // Catch our window resizing
-                $window.resize(function () {
-                    $sidebarNav.css('width', $sidebar.width() + 'px');
-                }).trigger('resize');
+                // Set the sidebar's CSS 'top' property.
+                $sidebarNav.css({ 'top': affixTop + 'px' });
 
                 // Scrollspy
                 $body.scrollspy({
                     target: '.headings',
-                    offset: top + 20
+                    offset: $contentPrimary.offset().top + getOmnibarHeight() + 20
                 });
             }
         }
     }
 
+    /**
+     *
+     */
     function searchQuery() {
         var q;
 
@@ -152,13 +170,16 @@
                 results;
 
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
+            regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+            results = regex.exec(window.location.search);
 
             return (results === null) ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
         }
     }
 
+    /**
+     *
+     */
     function showHide() {
 
         $body.find('.show-hide').each(function () {
@@ -192,6 +213,9 @@
         });
     }
 
+    /**
+     *
+     */
     function showOnHover() {
         $body.find('.has-hover').each(function () {
             var $elem;
@@ -204,6 +228,9 @@
         });
     }
 
+    /**
+     *
+     */
     function smoothScroll() {
         $body.find('.smooth-scroll')
             .on('click', function (event) {
@@ -237,6 +264,9 @@
             });
     }
 
+    /**
+     *
+     */
     function tooltips() {
         $body.find('[data-toggle="tooltip"]').tooltip();
     }
