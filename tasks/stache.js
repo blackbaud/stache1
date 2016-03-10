@@ -498,7 +498,7 @@ module.exports = function (grunt) {
                     return false;
                 }
 
-                if (frontMatter.layout === undefined) {
+                if (!frontMatter.layout) {
                     frontMatter.layout = defaultLayoutName;
                 }
 
