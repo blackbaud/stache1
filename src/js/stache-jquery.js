@@ -152,6 +152,11 @@
                     }
                 });
 
+                // Catch our window resizing
+                $(window).resize(function () {
+                    $sidebarNav.css('width', $contentSecondary.width() + 'px');
+                }).trigger('resize');
+
                 // Scrollspy
                 $body.scrollspy({
                     target: '.headings',
