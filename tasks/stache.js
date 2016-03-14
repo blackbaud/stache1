@@ -1437,7 +1437,8 @@ module.exports = function (grunt) {
         // Get the default layout name.
         defaultLayoutName = grunt.config.get('assemble.options.layout');
         if (layoutsFrontMatter[defaultLayoutName] === undefined) {
-            throw new Error("You must specify a default layout in `assemble.options.layout`!");
+            slog.warning("A default layout was not found. It is recommended that you specify a default layout in `assemble.options.layout`.");
+            return;
         }
 
         // These fields should be merged from the page-level into the layout-level.
