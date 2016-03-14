@@ -4,6 +4,7 @@
 base: /
 static: static/
 content: content/
+customContent: custom-content/
 includes: includes/
 data: data/
 blog: blog/
