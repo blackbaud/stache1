@@ -51,7 +51,9 @@ module.exports = function (grunt) {
         stache: {
 
             // Stores all YAML configuration properties (extends global Stache YAML).
-            config: {},
+            config: {
+                paths: {}
+            },
 
             // The relative path to the Stache NPM package.
             // (Necessary since we are actually running in the root project folder.)
@@ -86,7 +88,7 @@ module.exports = function (grunt) {
                 },
                 layoutsCustom: {
                     expand: true,
-                    cwd: '<%= stache.config.customContent %>layouts/',
+                    cwd: '<%= stache.config.paths.custom %>layouts/',
                     src: ['**/*.hbs']
                 }
             },
@@ -338,7 +340,7 @@ module.exports = function (grunt) {
             processStacheCastleMultipleNodes = function (page, node, parents) {
                 if (node) {
                     if (node.length > 0) {
-                        node.forEach(function (v, idx) {
+                        node.forEach(function (v) {
                             processStacheCastleSingleNode(page, v, parents, node);
                         });
                     } else {
@@ -535,10 +537,9 @@ module.exports = function (grunt) {
 
             // Create the nav_links array.
             if (sorted) {
-                sorted.forEach(function (el, idx) {
+                sorted.forEach(function (el) {
 
                     var path = root,
-                        rootdir = el.rootdir,
                         subdir = el.subdir,
                         filename = el.filename,
                         separator = grunt.config.get('stache.config.nav_title_separator') || ' ',
@@ -743,7 +744,6 @@ module.exports = function (grunt) {
                 search = [],
                 item,
                 file,
-                html,
                 content,
                 i,
                 j,
@@ -1126,7 +1126,7 @@ module.exports = function (grunt) {
                 parts = parts.slice(-1);
             }
 
-            parts.forEach(function (el, idx) {
+            parts.forEach(function (el) {
                 output += el[0].toUpperCase() + el.slice(1) + separator;
             });
             output = output.slice(0, 0 - separator.length);
@@ -1216,18 +1216,21 @@ module.exports = function (grunt) {
          * This method also catches deprecated hooks from previous versions.
          */
         setupHooks: function () {
-            var hooks,
+            var hook,
+                hooks,
                 message;
 
             hooks = grunt.config.get('stache.hooks');
 
             // Make sure the task list is an array.
             if (hooks) {
-                for (var hook in hooks) {
-                    if (!utils.isArray(hooks[hook])) {
-                        message = 'The hooks in "' + hook + '" should be listed in an array format (for example, `[\'task1\', \'task2\', \'task3\']`).';
-                        slog.warning(message);
-                        hooks[hook] = [hooks[hook]];
+                for (hook in hooks) {
+                    if (hooks.hasOwnProperty(hook)) {
+                        if (!utils.isArray(hooks[hook])) {
+                            message = 'The hooks in "' + hook + '" should be listed in an array format (for example, `[\'task1\', \'task2\', \'task3\']`).';
+                            slog.warning(message);
+                            hooks[hook] = [hooks[hook]];
+                        }
                     }
                 }
                 grunt.config.set('stache.hooks', hooks);
@@ -1263,8 +1266,7 @@ module.exports = function (grunt) {
             // Require all heading tags to have id attribute
             cheerio('h1, h2, h3, h4, h5, h6', $html).each(function () {
                 var el = cheerio(this),
-                    id = el.attr('id'),
-                    after;
+                    id = el.attr('id');
                 if (typeof id === 'undefined' || id === '') {
                     el.attr('id', utils.slugify(el.text()));
                 }
@@ -1332,7 +1334,7 @@ module.exports = function (grunt) {
 
                 utils.sort(links, rules);
 
-                links.forEach(function (link, i) {
+                links.forEach(function (link) {
 
                     if (link.sortKey && link.nav_links) {
                         switch (link.sortKey) {
