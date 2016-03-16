@@ -14,6 +14,8 @@ css: <%= stache.config.src %>css/
 helpers: <%= stache.config.src %>helpers/
 partials: <%= stache.config.src %>partials/
 layouts: <%= stache.config.src %>layouts/
+paths:
+  custom: custom-content/
 error:
   404: <%= stache.config.build %>404/index.html
 
