@@ -7,7 +7,7 @@
 
 // Necessary since we want this menu regardless of being logged in.
 // Also has to be more specific in order to override async omnibar css.
-.bb-omnibar .mobile .bar .menuheader {
+.bb-omnibar.bb-omnibar-signedout .bb-omnibar-mobile-menuheader {
   display: block;
 }
 
