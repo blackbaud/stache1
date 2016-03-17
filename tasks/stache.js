@@ -51,7 +51,9 @@ module.exports = function (grunt) {
         stache: {
 
             // Stores all YAML configuration properties (extends global Stache YAML).
-            config: {},
+            config: {
+                paths: {}
+            },
 
             // The relative path to the Stache NPM package.
             // (Necessary since we are actually running in the root project folder.)
@@ -81,7 +83,12 @@ module.exports = function (grunt) {
                 },
                 layouts: {
                     expand: true,
-                    cwd: 'node_modules/blackbaud-stache/src/layouts/',
+                    cwd: '<%= stache.config.layouts %>',
+                    src: ['**/*.hbs']
+                },
+                layoutsCustom: {
+                    expand: true,
+                    cwd: '<%= stache.config.paths.custom %>layouts/',
                     src: ['**/*.hbs']
                 }
             },
@@ -333,7 +340,7 @@ module.exports = function (grunt) {
             processStacheCastleMultipleNodes = function (page, node, parents) {
                 if (node) {
                     if (node.length > 0) {
-                        node.forEach(function (v, idx) {
+                        node.forEach(function (v) {
                             processStacheCastleSingleNode(page, v, parents, node);
                         });
                     } else {
@@ -451,7 +458,6 @@ module.exports = function (grunt) {
             var contentDir,
                 files,
                 filesConfig,
-                layoutsFrontMatter,
                 nav_exclude,
                 navKey,
                 page,
@@ -462,60 +468,6 @@ module.exports = function (grunt) {
                 sorted;
 
             slog("Building navigation links...Please wait.");
-
-            // Returns an object representing a layout's front matter properties.
-            function getLayoutsFrontMatter() {
-                var files,
-                    frontMatter,
-                    layoutsConfig,
-                    stacheYaml;
-
-                stacheYaml = utils.getMergedStacheYaml();
-                layoutsConfig = grunt.config.get('stache.globPatterns.layouts');
-                files = grunt.file.expand(layoutsConfig, layoutsConfig.src);
-                frontMatter = {};
-
-                files.forEach(function (layout) {
-                    frontMatter[layout.replace('.hbs', '')] = merge.recursive(true, stacheYaml, yfm.extractJSON('node_modules/blackbaud-stache/src/layouts/' + layout));
-                });
-
-                return frontMatter;
-            }
-
-            // Merges specific fields from a page's front matter with its respective layout front matter.
-            function mergePageFrontMatterWithLayout(frontMatter) {
-                var defaultLayoutName,
-                    fields,
-                    layoutFrontMatter;
-
-                fields = [
-                    'sortKey',
-                    'sortDirection'
-                ];
-                defaultLayoutName = grunt.config.get('assemble.options.layout');
-
-                if (layoutsFrontMatter[defaultLayoutName] === undefined) {
-                    return false;
-                }
-
-                if (!frontMatter.layout) {
-                    frontMatter.layout = defaultLayoutName;
-                }
-
-                layoutFrontMatter = layoutsFrontMatter[frontMatter.layout];
-
-                fields.forEach(function (field) {
-                    if (frontMatter[field]) {
-                        if (layoutFrontMatter && layoutFrontMatter[field]) {
-                            frontMatter[field] = merge(true, layoutFrontMatter[field], frontMatter[field]);
-                        }
-                    } else {
-                        frontMatter[field] = layoutFrontMatter[field];
-                    }
-                });
-
-                return frontMatter;
-            }
 
             // User has manually specific nav_links in stache.yml. Let's use that.
             if (grunt.config('stache.config.nav_type') !== 'directory') {
@@ -535,7 +487,6 @@ module.exports = function (grunt) {
             filesConfig = grunt.config.get('stache.globPatterns.content');
             files = grunt.file.expand(filesConfig, filesConfig.src);
             nav_exclude = grunt.config.get('stache.config.nav_exclude') || [];
-            layoutsFrontMatter = getLayoutsFrontMatter();
 
             // Reset bypassContext
             grunt.config.set(root + navKey, []);
@@ -554,7 +505,7 @@ module.exports = function (grunt) {
                             rootdir: file.substr(0, file.indexOf('/')),
                             subdir: file.substr(0, file.lastIndexOf('/')),
                             filename: file.substr(file.lastIndexOf('/') + 1),
-                            frontmatter: mergePageFrontMatterWithLayout(frontMatter),
+                            frontmatter: utils.fm.mergePageConfigWithLayout(frontMatter, file),
                             type: 'local'
                         });
                     }
@@ -571,7 +522,7 @@ module.exports = function (grunt) {
                             rootdir: page.substr(0, page.indexOf('/')),
                             subdir: page.substr(0, page.lastIndexOf('/')),
                             filename: page.substr(page.lastIndexOf('/') + 1),
-                            frontmatter: mergePageFrontMatterWithLayout(pages[page].data),
+                            frontmatter: utils.fm.mergePageConfigWithLayout(pages[page].data, page),
                             type: pages[page].type
                         });
                     }
@@ -586,10 +537,9 @@ module.exports = function (grunt) {
 
             // Create the nav_links array.
             if (sorted) {
-                sorted.forEach(function (el, idx) {
+                sorted.forEach(function (el) {
 
                     var path = root,
-                        rootdir = el.rootdir,
                         subdir = el.subdir,
                         filename = el.filename,
                         separator = grunt.config.get('stache.config.nav_title_separator') || ' ',
@@ -794,7 +744,6 @@ module.exports = function (grunt) {
                 search = [],
                 item,
                 file,
-                html,
                 content,
                 i,
                 j,
@@ -1177,7 +1126,7 @@ module.exports = function (grunt) {
                 parts = parts.slice(-1);
             }
 
-            parts.forEach(function (el, idx) {
+            parts.forEach(function (el) {
                 output += el[0].toUpperCase() + el.slice(1) + separator;
             });
             output = output.slice(0, 0 - separator.length);
@@ -1267,18 +1216,21 @@ module.exports = function (grunt) {
          * This method also catches deprecated hooks from previous versions.
          */
         setupHooks: function () {
-            var hooks,
+            var hook,
+                hooks,
                 message;
 
             hooks = grunt.config.get('stache.hooks');
 
             // Make sure the task list is an array.
             if (hooks) {
-                for (var hook in hooks) {
-                    if (!utils.isArray(hooks[hook])) {
-                        message = 'The hooks in "' + hook + '" should be listed in an array format (for example, `[\'task1\', \'task2\', \'task3\']`).';
-                        slog.warning(message);
-                        hooks[hook] = [hooks[hook]];
+                for (hook in hooks) {
+                    if (hooks.hasOwnProperty(hook)) {
+                        if (!utils.isArray(hooks[hook])) {
+                            message = 'The hooks in "' + hook + '" should be listed in an array format (for example, `[\'task1\', \'task2\', \'task3\']`).';
+                            slog.warning(message);
+                            hooks[hook] = [hooks[hook]];
+                        }
                     }
                 }
                 grunt.config.set('stache.hooks', hooks);
@@ -1314,8 +1266,7 @@ module.exports = function (grunt) {
             // Require all heading tags to have id attribute
             cheerio('h1, h2, h3, h4, h5, h6', $html).each(function () {
                 var el = cheerio(this),
-                    id = el.attr('id'),
-                    after;
+                    id = el.attr('id');
                 if (typeof id === 'undefined' || id === '') {
                     el.attr('id', utils.slugify(el.text()));
                 }
@@ -1383,7 +1334,7 @@ module.exports = function (grunt) {
 
                 utils.sort(links, rules);
 
-                links.forEach(function (link, i) {
+                links.forEach(function (link) {
 
                     if (link.sortKey && link.nav_links) {
                         switch (link.sortKey) {
@@ -1438,6 +1389,100 @@ module.exports = function (grunt) {
 
 
     /**
+     *
+     */
+    function FrontMatterService() {
+        var defaultLayoutName,
+            frontMatterFields,
+            layoutsConfig,
+            layoutsConfigCustom,
+            layoutsFrontMatter,
+            stacheYaml;
+
+        /**
+         * Returns an object representing all layouts' front matter properties.
+         */
+        function getLayoutsFrontMatter() {
+            var frontMatter,
+                layoutFiles,
+                layoutFilesCustom;
+
+            frontMatter = {};
+
+            // Get files for layouts.
+            layoutFiles = grunt.file.expand(layoutsConfig, layoutsConfig.src);
+            layoutFilesCustom = grunt.file.expand(layoutsConfigCustom, layoutsConfigCustom.src);
+
+            // Merge front matter from default layouts.
+            layoutFiles.forEach(function (layout) {
+                frontMatter[layout.replace('.hbs', '')] = merge.recursive(true, stacheYaml, yfm.extractJSON(layoutsConfig.cwd + layout));
+            });
+
+            // Merge front matter from custom layouts.
+            layoutFilesCustom.forEach(function (layout) {
+                frontMatter[layout.replace('.hbs', '')] = merge.recursive(true, stacheYaml, yfm.extractJSON(layoutsConfigCustom.cwd + layout));
+            });
+
+            return frontMatter;
+        }
+
+        // The file stache.yml stores the default, global properties for the project.
+        stacheYaml = utils.getMergedStacheYaml();
+
+        // Get file configurations for layouts.
+        layoutsConfig = grunt.config.get('stache.globPatterns.layouts');
+        layoutsConfigCustom = grunt.config.get('stache.globPatterns.layoutsCustom');
+
+        // Get an array of objects representing all layouts' front matter.
+        layoutsFrontMatter = getLayoutsFrontMatter();
+
+        // Get the default layout name.
+        defaultLayoutName = grunt.config.get('assemble.options.layout');
+        if (layoutsFrontMatter[defaultLayoutName] === undefined) {
+            slog.warning("A default layout was not found. It is recommended that you specify a default layout in `assemble.options.layout`.");
+            return;
+        }
+
+        // These fields should be merged from the page-level into the layout-level.
+        frontMatterFields = [
+            'sortKey',
+            'sortDirection'
+        ];
+
+        return {
+
+            /**
+             * Merges specific fields from a page's front matter with its respective layout front matter.
+             */
+            mergePageConfigWithLayout: function (frontMatter, identifier) {
+                var layoutFrontMatter;
+
+                if (!frontMatter.layout) {
+                    slog.warning("[createAutoPages][" + identifier + "] Failed to find page's layout from front matter: " + JSON.stringify(frontMatter));
+                    frontMatter.layout = defaultLayoutName;
+                }
+
+                // If this layout is custom, we need to strip out a few things.
+                frontMatter.layout = frontMatter.layout.split('../').join('').replace(layoutsConfigCustom.cwd, '');
+                layoutFrontMatter = layoutsFrontMatter[frontMatter.layout];
+
+                frontMatterFields.forEach(function (field) {
+                    if (frontMatter[field]) {
+                        if (layoutFrontMatter && layoutFrontMatter[field]) {
+                            frontMatter[field] = merge(true, layoutFrontMatter[field], frontMatter[field]);
+                        }
+                    } else {
+                        frontMatter[field] = layoutFrontMatter[field];
+                    }
+                });
+
+                return frontMatter;
+            }
+        };
+    }
+
+
+    /**
      * Initializer
      */
     (function () {
@@ -1464,6 +1509,7 @@ module.exports = function (grunt) {
 
         // Merge local and global stache.yml config.
         utils.setStacheConfig(utils.getMergedStacheYaml());
+        utils.fm = new FrontMatterService();
 
         cwd = process.cwd();
         stacheModulesDirectory = grunt.config.get('stache.dir') + 'node_modules/';
