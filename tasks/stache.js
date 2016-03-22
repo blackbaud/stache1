@@ -310,6 +310,7 @@ module.exports = function (grunt) {
                     'stache.yml'
                 ],
                 tasks: [
+                    'hook:preStache',
                     'status:serve',
                     'expandFileMappings',
                     'createAutoPages',
@@ -317,7 +318,8 @@ module.exports = function (grunt) {
                     'hook:preAssemble',
                     'assemble',
                     'hook:postAssemble',
-                    'copy:build'
+                    'copy:build',
+                    'hook:postStache'
                 ]
             }
         }
@@ -968,11 +970,13 @@ module.exports = function (grunt) {
                         },
                         files: defaults.watch.options.newerFiles,
                         tasks: [
+                            'hook:preStache',
                             'status:serve',
                             'hook:preAssemble',
                             'newer:assemble',
                             'hook:postAssemble',
-                            'newer:copy:build'
+                            'newer:copy:build',
+                            'hook:postStache',
                         ]
                     }
                 }
