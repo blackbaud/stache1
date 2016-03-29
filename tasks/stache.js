@@ -194,7 +194,7 @@ module.exports = function (grunt) {
 
         // Creates a local server.
         connect: {
-            dev: {
+            stache: {
                 options: {
                     base: [
                         '<%= stache.config.build %>',
@@ -898,7 +898,7 @@ module.exports = function (grunt) {
                 'assemble',
                 'hook:postAssemble',
                 'prepareSearch',
-                'connect'
+                'connect:stache'
             ];
 
             // Set the variable in the config
