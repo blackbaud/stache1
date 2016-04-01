@@ -94,10 +94,20 @@ module.exports = function (grunt) {
     grunt.task.loadNpmTasks('grunt-jscs');
     grunt.task.loadNpmTasks('grunt-sass');
 
+    grunt.task.registerTask('createselectscss', function () {
+        grunt.file.copy('bower_components/angular-ui-select/dist/select.min.css', 'bower_components/angular-ui-select/dist/select.min.scss');
+    });
+
+    grunt.task.registerTask('cleanselectscss', function () {
+        grunt.file.delete('bower_components/angular-ui-select/dist/select.min.scss');
+    });
+
     grunt.task.registerTask('build', [
+        'createselectscss',
         'sass',
         'copy:build',
-        'uglify:build'
+        'uglify:build',
+        'cleanselectscss'
     ]);
     grunt.task.registerTask('test', [
         'jscs',
