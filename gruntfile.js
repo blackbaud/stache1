@@ -50,7 +50,8 @@ module.exports = function (grunt) {
                         'src/js/video.js',
                         'bower_components/zeroclipboard/dist/ZeroClipboard.min.js',
                         'src/js/stache-clipboard.js',
-                        'src/js/prism.js'
+                        'src/js/prism.js',
+                        'bower_components/angular-ui-select/dist/select.js'
                     ]
                 }
             }
