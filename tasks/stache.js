@@ -427,7 +427,7 @@ module.exports = function (grunt) {
                                 break;
                                 case 'swagger':
                                   json.layout = 'layout-' + page.type;
-                                  pages[page.dest + json.title + '/index.md'] = {
+                                  pages[page.dest + json.info.title + '/index.md'] = {
                                     data: json
                                   };
                                   break;
