@@ -1,14 +1,1 @@
-<div swagger-ui
-  input-type=
-  {{# if swagger_json }}
-    "json"
-  {{ else if swagger_yaml }}
-    "yaml"
-  {{ else if swagger_url }}
-    "url"
-  {{/ if }}
-  input="{{swagger_input}}"
-  {{# if swagger_template}}
-    template-url="{{swagger_template_url}}"
-  {{/ if }}
-></div>
+<div swagger-ui input-type="json" input={{data}}></div>
