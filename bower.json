@@ -12,7 +12,8 @@
     "responsive-tabs": "~1.4.3",
     "stellar": "~0.6.2",
     "zeroclipboard": "~2.2.0",
-    "angular-ui-select": "0.11.2"
+    "angular-ui-select": "0.11.2",
+    "angular-swagger-ui": "^0.3.1"
   },
   "resolutions": {
     "angular": "1.4.8"
