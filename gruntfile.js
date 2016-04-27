@@ -37,6 +37,9 @@ module.exports = function (grunt) {
         uglify: {
             build: {
                 files: {
+                    'src/js/swagger-ui.js': [
+                        'bower_components/angular-swagger-ui/dist/scripts/swagger-ui.js'
+                    ],
                     'src/js/stache.min.js': [
                         'src/js/libs/easyXDM.min.js',
                         'bower_components/holderjs/holder.min.js',
@@ -51,8 +54,7 @@ module.exports = function (grunt) {
                         'bower_components/zeroclipboard/dist/ZeroClipboard.min.js',
                         'src/js/stache-clipboard.js',
                         'src/js/prism.js',
-                        'bower_components/angular-ui-select/dist/select.js',
-                        'bower_components/angular-swagger-ui/dist/swagger-ui.min.js'
+                        'bower_components/angular-ui-select/dist/select.js'
                     ]
                 }
             }

@@ -425,12 +425,6 @@ module.exports = function (grunt) {
                                         };
                                     }
                                 break;
-                                case 'swagger':
-                                  json.layout = 'layout-' + page.type;
-                                  pages[page.dest + json.info.title + '/index.md'] = {
-                                    data: json
-                                  };
-                                  break;
                                 default:
                                     slog.warning('Unknown custom page datatype.');
                                 break;
