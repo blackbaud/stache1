@@ -5,6 +5,21 @@ module.exports = function (grunt) {
     var jsHintFiles = ['gruntfile.js', 'src/helpers/**/*.js'];
 
     grunt.config.init({
+        concat: {
+            options: {
+              separator: ';',
+              process: function (src, filepath) {
+                  if (filepath === 'bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js') {
+                      src = '(function (angular) {' + src + '}(window.angular));';
+                  }
+                  return src;
+              }
+            },
+            dist: {
+              src: ['bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js', 'src/js/stache.min.js'],
+              dest: 'src/js/stache.min.js',
+            },
+        },
         sass: {
             options: {
                 outputStyle: 'compressed',
@@ -37,9 +52,6 @@ module.exports = function (grunt) {
         uglify: {
             build: {
                 files: {
-                    'src/js/swagger-ui.js': [
-                        'bower_components/angular-swagger-ui/dist/scripts/swagger-ui.js'
-                    ],
                     'src/js/stache.min.js': [
                         'src/js/libs/easyXDM.min.js',
                         'bower_components/holderjs/holder.min.js',
@@ -101,6 +113,7 @@ module.exports = function (grunt) {
     });
 
     grunt.task.loadNpmTasks('grunt-contrib-copy');
+    grunt.task.loadNpmTasks('grunt-contrib-concat');
     grunt.task.loadNpmTasks('grunt-contrib-jshint');
     grunt.task.loadNpmTasks('grunt-contrib-uglify');
     grunt.task.loadNpmTasks('grunt-contrib-watch');
@@ -123,6 +136,7 @@ module.exports = function (grunt) {
         'sass',
         'copy:build',
         'uglify:build',
+        'concat',
         'cleanselectscss'
     ]);
     grunt.task.registerTask('test', [
