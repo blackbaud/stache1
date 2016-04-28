@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-@mixin swagger-ui-operation($method-color; $border-color; $hide-color; $bg-color){
+@mixin swagger-ui-operation($method-color, $border-color, $hide-color, $bg-color){
 
     .heading,
     .content{

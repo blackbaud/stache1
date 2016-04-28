@@ -107,7 +107,20 @@ module.exports = function (grunt) {
               src: ['*.less'],
               ext: '.scss',
               dest: 'src/vendor/swagger-ui'
-            }]
+            }],
+            options: {
+              excludes: ['@mixin'],
+              replacements: [{
+                pattern: /\.([\w\-]*)\s*\((.*)\)\s*\{/gi,
+                replacement: '@mixin $1($2){',
+                order: 1
+              },
+              {
+                pattern: /\b(\;(?=.*\)\{*))/gi,
+                replacement: ',',
+                order: 2
+              }]
+            }
           }
         }
     });
