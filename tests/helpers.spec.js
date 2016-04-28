@@ -319,6 +319,58 @@
             });
 
         });
+
+        describe('isActiveNav()', function () {
+            var active = 'ACTIVE',
+                child = '/home/test1/child1/',
+                parent = '/home/test1/';
+
+            function getTemplate(parentCanBeActive) {
+                return Handlebars.compile([
+                    '{{# isActiveNav parentCanBeActive=' + parentCanBeActive + ' }}',
+                    active,
+                    '{{/ isActiveNav }}'
+                ].join(''));
+            }
+
+            it('should make sure the current page is active', function () {
+                var context = {
+                        dest: child,
+                        uri: child
+                    },
+                    template = getTemplate();
+
+                expect(template(context)).toBe(active);
+            });
+
+            it('should handle dest and uri missing', function () {
+                var context = {},
+                    template = getTemplate();
+
+                expect(template(context)).toBe(active);
+            });
+
+            it('should make sure parent are active if parentCanBeActive is true', function () {
+                var context = {
+                        dest: child,
+                        uri: parent
+                    },
+                    template = getTemplate(true);
+
+                expect(template(context)).toBe(active);
+            });
+
+            it('should make sure parent are not active if parentCanBeActive is false', function () {
+                var context = {
+                        dest: child,
+                        uri: parent
+                    },
+                    template = getTemplate(false);
+
+                expect(template(context)).toBe('');
+            });
+        });
+
     });
 
     /**
@@ -356,6 +408,7 @@
                 expect(result).toEqual([]);
             });
         });
+
         describe('getNavLinks()', function () {
 
             it('should return an array', function () {
