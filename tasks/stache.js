@@ -1403,14 +1403,14 @@ module.exports = function (grunt) {
          * Remove leading slash
          */
         trimLeadingSlash: function (str) {
-            return str.replace(/^\//, '');
+            return str ? str.replace(/^\//, '') : str;
         },
 
         /**
          * Remove trailing Slash
          */
         trimTrailingSlash: function (str) {
-            return str.replace(/\/$/, '');
+            return str ? str.replace(/\/$/, '') : str;
         }
     };
 
