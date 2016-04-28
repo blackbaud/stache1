@@ -86,6 +86,17 @@ module.exports = function (grunt) {
                 files: ['src/helpers/**/*.js'],
                 tasks: ['jasmine_node', 'jshint', 'jscs']
             }
+        },
+        lessToSass: {
+          convert: {
+            files: [{
+              expand: true,
+              cwd: 'bower_components/angular-swagger-ui/dist/less',
+              src: ['*.less'],
+              ext: '.scss',
+              dest: 'src/vendor/swagger-ui'
+            }]
+          }
         }
     });
 
@@ -95,6 +106,7 @@ module.exports = function (grunt) {
     grunt.task.loadNpmTasks('grunt-contrib-watch');
     grunt.task.loadNpmTasks('grunt-jasmine-node-coverage');
     grunt.task.loadNpmTasks('grunt-jscs');
+    grunt.task.loadNpmTasks('grunt-less-to-sass');
     grunt.task.loadNpmTasks('grunt-sass');
 
     grunt.task.registerTask('createselectscss', function () {
@@ -107,6 +119,7 @@ module.exports = function (grunt) {
 
     grunt.task.registerTask('build', [
         'createselectscss',
+        'lessToSass',
         'sass',
         'copy:build',
         'uglify:build',
