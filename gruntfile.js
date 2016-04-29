@@ -18,7 +18,7 @@ module.exports = function (grunt) {
             dist: {
                 src: ['bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js', 'src/js/stache.min.js'],
                 dest: 'src/js/stache.min.js'
-            },
+            }
         },
         sass: {
             options: {
