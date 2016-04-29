@@ -261,38 +261,6 @@ module.exports = function (grunt) {
             }
         },
 
-        // Mangling causes AngularJS issues. (Please be careful turning this back on.)
-        uglify: {
-            options: {
-                mangle: false
-            }
-        },
-
-        // Replaces un-optimized references to assets with their optimized versions.
-        useminPrepare: {
-            html: '<%= stache.config.build %><%= stache.config.base %>index.html',
-            options: {
-                assetsDirs: [
-                    '<%= stache.config.src %>'
-                ],
-                dest: '<%= stache.config.build %><%= stache.config.base %>',
-                root: [
-                    '<%= stache.config.src %>',
-                    '<%= stache.config.static %>'
-                ],
-                flow: {
-                    steps: {
-                        js: ['concat', 'uglify'],
-                        css: ['concat']
-                    },
-                    post: {}
-                }
-            }
-        },
-        usemin: {
-            html: '<%= stache.config.build %>**/*.html'
-        },
-
         // Watch certain files and perform tasks when they change.
         watch: {
             options: {
@@ -840,10 +808,6 @@ module.exports = function (grunt) {
                         'assemble',
                         'hook:postAssemble',
                         'prepareSearch',
-                        'useminPrepare',
-                        'concat:generated',
-                        'uglify:generated',
-                        'usemin',
                         'copy:build',
                         'hook:postStache',
                     ];
@@ -1523,13 +1487,10 @@ module.exports = function (grunt) {
             'grunt-asciify',
             'grunt-available-tasks',
             'grunt-contrib-clean',
-            'grunt-contrib-concat',
             'grunt-contrib-connect',
             'grunt-contrib-copy',
-            'grunt-contrib-uglify',
             'grunt-contrib-watch',
             'grunt-newer',
-            'grunt-usemin'
         ];
 
         // Merge options and defaults for the entire project.

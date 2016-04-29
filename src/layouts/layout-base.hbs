@@ -149,13 +149,6 @@
         {{/ contains }}
       {{/ each }}
 
-      {{# each files.js }}
-        {{# contains this "//" }}
-          <script src="{{ this }}"></script>
-        {{/ contains }}
-      {{/ each }}
-
-      <!-- build:js {{ assets }}{{ stache.config.base }}js/app.min.js -->
       {{# each stache.config.files.js }}
         {{# contains this "//" }}{{ else }}
           <script src="{{ this }}"></script>
@@ -163,11 +156,8 @@
       {{/ each }}
 
       {{# each files.js }}
-        {{# contains this "//" }}{{ else }}
-          <script src="{{ this }}"></script>
-        {{/ contains }}
+        <script src="{{ this }}"></script>
       {{/ each }}
-      <!-- endbuild -->
 
       {{# if example-js }}
         <script>
