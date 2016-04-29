@@ -270,12 +270,12 @@ module.exports = function (grunt) {
 
         // Replaces un-optimized references to assets with their optimized versions.
         useminPrepare: {
-            html: '<%= stache.config.build %>index.html',
+            html: '<%= stache.config.build %><%= stache.config.base %>index.html',
             options: {
                 assetsDirs: [
                     '<%= stache.config.src %>'
                 ],
-                dest: '<%= stache.config.build %>',
+                dest: '<%= stache.config.build %><%= stache.config.base %>',
                 root: [
                     '<%= stache.config.src %>',
                     '<%= stache.config.static %>'

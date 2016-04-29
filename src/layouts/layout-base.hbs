@@ -6,7 +6,8 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
-      <link rel="icon" href="{{ assets }}img/favicon.ico" type="image/ico">
+      <link rel="icon" href="{{ stache.config.base }}img/favicon.ico" type="image/ico">
+      <base href="{{ stache.config.base }}">
 
       {{# if stache.config.sky }}
         {{{ include stache.config.partial_sky_css }}}
@@ -141,7 +142,7 @@
         {{{ include stache.config.partial_sky_js }}}
       {{/ if }}
 
-      <script src="{{ assets }}js/stache.min.js"></script>
+      <script src="{{ stache.config.base }}js/stache.min.js"></script>
 
       {{# each stache.config.files.js }}
         {{# contains this "//" }}
@@ -155,7 +156,7 @@
         {{/ contains }}
       {{/ each }}
 
-      <!-- build:js {{ assets }}js/app.min.js -->
+      <!-- build:js {{ stache.config.base }}js/app.min.js -->
       {{# each stache.config.files.js }}
         {{# contains this "//" }}{{ else }}
           <script src="{{ this }}"></script>
