@@ -95,9 +95,10 @@ module.exports.register = function (Handlebars, options, params) {
     * Wrapping the basenames in '/' prevents false matches, ie docs vs docs2 vs 2docs.
     **/
     function isActiveNav(dest, uri, parentCanBeActive) {
+        var base = stache.config.base;
         dest = '/' + basename(dest) + '/';
         uri = '/' + basename(uri) + '/';
-        return (parentCanBeActive && uri !== '') ? dest.indexOf(uri) > -1 : uri === dest;
+        return (parentCanBeActive && uri !== base) ? dest.indexOf(uri) > -1 : uri === dest;
     }
 
     /**
@@ -451,8 +452,9 @@ module.exports.register = function (Handlebars, options, params) {
         * Is the current page home
         **/
         isHome: function (options) {
-            var b = basename(options.hash.dest || this.page.dest || 'NOT_HOME', true);
-            return b === '' ? options.fn(this) : options.inverse(this);
+            var b = basename(options.hash.dest || this.page.dest || 'NOT_HOME', true),
+                base = basename(stache.config.base);
+            return (b === '' || b === base) ? options.fn(this) : options.inverse(this);
         },
 
         /**

@@ -197,10 +197,9 @@ module.exports = function (grunt) {
             stache: {
                 options: {
                     base: [
-                        '<%= stache.config.build %>',
+                        '<%= stache.config.static %>',
                         '<%= stache.config.src %>',
-                        '<%= stache.config.content %>',
-                        '<%= stache.config.static %>'
+                        '<%= stache.config.build %>'
                     ],
                     livereload: grunt.option('livereload') || '<%= stache.config.livereload %>',
                     port: grunt.option('port') || '<%= stache.config.port %>'
@@ -443,7 +442,7 @@ module.exports = function (grunt) {
                         pages: pages
                     },
                     files: [{
-                        dest: '<%= stache.config.build %>',
+                        dest: '<%= stache.config.build %><%= stache.config.base %>',
                         src: 'noop'
                     }]
                 });
@@ -457,7 +456,8 @@ module.exports = function (grunt) {
          */
         createAutoNav: function () {
 
-            var contentDir,
+            var base,
+                contentDir,
                 files,
                 filesConfig,
                 nav_exclude,
@@ -485,10 +485,14 @@ module.exports = function (grunt) {
             navKey = '.nav_links';
             sandcastlePath = '';
             sandcastleCounter = 1;
+            base = grunt.config.get('stache.config.base');
             contentDir = grunt.config.get('stache.config.content');
             filesConfig = grunt.config.get('stache.globPatterns.content');
             files = grunt.file.expand(filesConfig, filesConfig.src);
             nav_exclude = grunt.config.get('stache.config.nav_exclude') || [];
+
+            // Accommodate custom base
+            base = utils.trimTrailingSlash(base);
 
             // Reset bypassContext
             grunt.config.set(root + navKey, []);
@@ -642,7 +646,7 @@ module.exports = function (grunt) {
                     }
 
                     // Record this url
-                    item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
+                    item.uri = base + (item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file)));
                     grunt.config.set(path, item);
                     navSearchFiles.push(item);
 
@@ -664,17 +668,22 @@ module.exports = function (grunt) {
          * is a requirement to watch for recently changed files.
          */
         expandFileMappings: function () {
-            var mappings,
+            var base,
+                mappings,
                 files,
                 filesConfig;
 
             mappings = [];
+            base = grunt.config.get('stache.config.base');
             filesConfig = grunt.config.get('stache.globPatterns.content');
             files = grunt.file.expand(filesConfig, filesConfig.src);
 
+            // Build has trailing slash so remove leading slash from base
+            base = utils.trimLeadingSlash(base);
+
             if (files) {
                 files.forEach(function (file) {
-                    var destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
+                    var destinationFile = '<%= stache.config.build %>' + base + file.substring(0, file.lastIndexOf(".")) + '.html';
                     slog.verbose("Building file map: " + '<%= stache.config.content %>' + file + " --> " + destinationFile);
                     mappings.push({
                         src: '<%= stache.config.content %>' + file,
@@ -1388,6 +1397,20 @@ module.exports = function (grunt) {
             // Save the results.
             grunt.config.set('bypassContext.nav_links', navLinks);
 
+        },
+
+        /**
+         * Remove leading slash
+         */
+        trimLeadingSlash: function (str) {
+            return str ? str.replace(/^\//, '') : str;
+        },
+
+        /**
+         * Remove trailing Slash
+         */
+        trimTrailingSlash: function (str) {
+            return str ? str.replace(/\/$/, '') : str;
         }
     };
 
