@@ -156,7 +156,7 @@
         {{/ contains }}
       {{/ each }}
 
-      <!-- build:js {{ stache.config.base }}js/app.min.js -->
+      <!-- build:js {{ assets }}{{ stache.config.base }}js/app.min.js -->
       {{# each stache.config.files.js }}
         {{# contains this "//" }}{{ else }}
           <script src="{{ this }}"></script>
