@@ -7,7 +7,6 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
       <link rel="icon" href="{{ stache.config.base }}img/favicon.ico" type="image/ico">
-      <base href="{{ stache.config.base }}">
 
       {{# if stache.config.sky }}
         {{{ include stache.config.partial_sky_css }}}
@@ -31,7 +30,7 @@
       {{/ inherit }}
 
     </head>
-    <body class="{{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+    <body data-base="{{ stache.config.base }}" class="{{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
 
       {{# inherit stache.config.google_tagmanager_id google_tagmanager_id }}
         {{{ include stache.config.partial_google_tagmanager }}}

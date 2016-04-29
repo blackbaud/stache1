@@ -20,7 +20,7 @@
     if (btnCopy.length) {
 
         // Initialize the clipboard
-        ZeroClipboard.config({ swfPath: $('base').attr('href') + "img/ZeroClipboard.swf" });
+        ZeroClipboard.config({ swfPath: $('body').data('base') + "img/ZeroClipboard.swf" });
         client = new ZeroClipboard(btnCopy);
 
         // Show the tooltip
