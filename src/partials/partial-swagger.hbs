@@ -1,1 +1,7 @@
-<div swagger-ui input-type="{{ swagger.inputType }}" input="'{{ swagger.input }}'"></div>
+<div swagger-ui
+  input-type="{{ swagger.inputType }}"
+  input="'{{ swagger.input }}'"
+  {{# if swagger.template}}
+    template-url="{{ swagger.template }}"
+  {{/ if}}
+></div>
