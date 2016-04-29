@@ -7,17 +7,17 @@ module.exports = function (grunt) {
     grunt.config.init({
         concat: {
             options: {
-              separator: ';',
-              process: function (src, filepath) {
-                  if (filepath === 'bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js') {
-                      src = '(function (angular) {' + src + '}(window.angular));';
-                  }
-                  return src;
-              }
+                separator: ';',
+                process: function (src, filepath) {
+                    if (filepath === 'bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js') {
+                        src = '(function (angular) {' + src + '}(window.angular));';
+                    }
+                    return src;
+                }
             },
             dist: {
-              src: ['bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js', 'src/js/stache.min.js'],
-              dest: 'src/js/stache.min.js',
+                src: ['bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js', 'src/js/stache.min.js'],
+                dest: 'src/js/stache.min.js'
             },
         },
         sass: {
@@ -100,28 +100,28 @@ module.exports = function (grunt) {
             }
         },
         lessToSass: {
-          convert: {
-            files: [{
-              expand: true,
-              cwd: 'bower_components/angular-swagger-ui/dist/less',
-              src: ['*.less'],
-              ext: '.scss',
-              dest: 'src/vendor/swagger-ui'
-            }],
-            options: {
-              excludes: ['@mixin'],
-              replacements: [{
-                pattern: /\.([\w\-]*)\s*\((.*)\)\s*\{/gi,
-                replacement: '@mixin $1($2){',
-                order: 1
-              },
-              {
-                pattern: /\b(\;(?=.*\)\{*))/gi,
-                replacement: ',',
-                order: 2
-              }]
+            convert: {
+                files: [{
+                    expand: true,
+                    cwd: 'bower_components/angular-swagger-ui/dist/less',
+                    src: ['*.less'],
+                    ext: '.scss',
+                    dest: 'src/vendor/swagger-ui'
+                }],
+                options: {
+                    excludes: ['@mixin'],
+                    replacements: [{
+                        pattern: /\.([\w\-]*)\s*\((.*)\)\s*\{/gi,
+                        replacement: '@mixin $1($2){',
+                        order: 1
+                    },
+                    {
+                        pattern: /\b(\;(?=.*\)\{*))/gi,
+                        replacement: ',',
+                        order: 2
+                    }]
+                }
             }
-          }
         }
     });
 
