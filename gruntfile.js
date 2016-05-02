@@ -52,7 +52,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: 'bower_components/zeroclipboard/dist/',
                         dest: 'src/img/',
-                        src: 'ZeroClipboard.swf',
+                        src: 'ZeroClipboard.swf'
                     }
                 ]
             }
