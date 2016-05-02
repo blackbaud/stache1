@@ -6,7 +6,7 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>{{ stache.config.title }}{{# if title }} | {{ title }}{{/ if }}</title>
-      <link rel="icon" href="{{ assets }}img/favicon.ico" type="image/ico">
+      <link rel="icon" href="{{ stache.config.base }}img/favicon.ico" type="image/ico">
 
       {{# if stache.config.sky }}
         {{{ include stache.config.partial_sky_css }}}
@@ -30,7 +30,7 @@
       {{/ inherit }}
 
     </head>
-    <body class="{{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
+    <body data-base="{{ stache.config.base }}" class="{{# if stache.config.showOmnibar }}bb-omnibar-height-padding{{/ if }} {{# isHome dest=page.dest }}full-height-width{{/ isHome }}">
 
       {{# inherit stache.config.google_tagmanager_id google_tagmanager_id }}
         {{{ include stache.config.partial_google_tagmanager }}}
@@ -141,7 +141,7 @@
         {{{ include stache.config.partial_sky_js }}}
       {{/ if }}
 
-      <script src="{{ assets }}js/stache.min.js"></script>
+      <script src="{{ stache.config.base }}js/stache.min.js"></script>
 
       {{# each stache.config.files.js }}
         {{# contains this "//" }}
@@ -149,13 +149,6 @@
         {{/ contains }}
       {{/ each }}
 
-      {{# each files.js }}
-        {{# contains this "//" }}
-          <script src="{{ this }}"></script>
-        {{/ contains }}
-      {{/ each }}
-
-      <!-- build:js {{ assets }}js/app.min.js -->
       {{# each stache.config.files.js }}
         {{# contains this "//" }}{{ else }}
           <script src="{{ this }}"></script>
@@ -163,11 +156,8 @@
       {{/ each }}
 
       {{# each files.js }}
-        {{# contains this "//" }}{{ else }}
-          <script src="{{ this }}"></script>
-        {{/ contains }}
+        <script src="{{ this }}"></script>
       {{/ each }}
-      <!-- endbuild -->
 
       {{# if example-js }}
         <script>
