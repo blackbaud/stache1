@@ -112,6 +112,7 @@ video_description_top: false
 watchNewer: true
 modules:
   - stache
+  - swagger
 sortKey: order
 sortDirection: asc
 
