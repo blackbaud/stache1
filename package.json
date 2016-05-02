@@ -3,7 +3,7 @@
     "name": "Blackbaud - Bobby Earl"
   },
   "name": "blackbaud-stache",
-  "version": "0.7.18",
+  "version": "0.7.19",
   "description": "Blackbaud Stache",
   "repository": {
     "type": "git",
@@ -23,11 +23,8 @@
     "grunt-contrib-concat": "^0.5.0",
     "grunt-contrib-connect": "^0.9.0",
     "grunt-contrib-copy": "^0.7.0",
-    "grunt-contrib-cssmin": "^0.11.0",
-    "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-newer": "^1.1.1",
-    "grunt-usemin": "^3.0.0",
     "helper-moment": "^0.1.0",
     "html-minifier": "^1.0.0",
     "blackbaud-marked": "git://github.com/blackbaud-community/marked.git",
@@ -36,6 +33,7 @@
   },
   "devDependencies": {
     "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-jshint": "^0.11.3",
     "grunt-jasmine-node-coverage": "^0.4.1",
     "grunt-jscs": "^2.3.0",

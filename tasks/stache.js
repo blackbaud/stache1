@@ -215,82 +215,50 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: '<%= stache.config.src %>',
                         src: 'views/*.*',
-                        dest: '<%= stache.config.build %>'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.config.src %>img/',
                         src: '**',
-                        dest: '<%= stache.config.build %>img/'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>img/'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.dir %>src/vendor/bb-sky-sass/dist/css/fonts/',
                         src: '*',
-                        dest: '<%= stache.config.build %>css/fonts/'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>css/fonts/'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.dir %>src/vendor/bb-omnibar-search/',
                         src: '**',
-                        dest: '<%= stache.config.build %>/assets/vendor/bb-omnibar-search/'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>/assets/vendor/bb-omnibar-search/'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.config.content %>assets',
                         src: '**/*.*',
-                        dest: '<%= stache.config.build %>assets'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>assets'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.config.static %>',
                         src: '**/*.*',
-                        dest: '<%= stache.config.build %>'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.config.src %>css/',
                         src: '*.*',
-                        dest: '<%= stache.config.build %>css/'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>css/'
                     },
                     {
                         src: '<%= stache.config.src %>js/stache.min.js',
-                        dest: '<%= stache.config.build %>js/stache.min.js'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>js/stache.min.js'
                     }
                 ]
             }
-        },
-
-        // Mangling causes AngularJS issues. (Please be careful turning this back on.)
-        uglify: {
-            options: {
-                mangle: false
-            }
-        },
-
-        // Replaces un-optimized references to assets with their optimized versions.
-        useminPrepare: {
-            html: '<%= stache.config.build %>index.html',
-            options: {
-                assetsDirs: [
-                    '<%= stache.config.src %>'
-                ],
-                dest: '<%= stache.config.build %>',
-                root: [
-                    '<%= stache.config.src %>',
-                    '<%= stache.config.static %>'
-                ],
-                flow: {
-                    steps: {
-                        js: ['concat', 'uglify'],
-                        css: ['concat']
-                    },
-                    post: {}
-                }
-            }
-        },
-        usemin: {
-            html: '<%= stache.config.build %>**/*.html'
         },
 
         // Watch certain files and perform tasks when they change.
@@ -751,6 +719,7 @@ module.exports = function (grunt) {
          */
         prepareSearch: function () {
             var status = grunt.config.get('stache.status'),
+                resourceUrl = grunt.config.get('stache.config.omnibarSearch.resourceUrl'),
                 searchContentToRemove = grunt.config.get('stache.searchContentToRemove'),
                 search = [],
                 item,
@@ -798,7 +767,7 @@ module.exports = function (grunt) {
                 }
             }
 
-            grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }, null, ' '));
+            grunt.file.write(status + resourceUrl, JSON.stringify({ pages: search }, null, ' '));
         },
 
         /**
@@ -839,10 +808,6 @@ module.exports = function (grunt) {
                         'assemble',
                         'hook:postAssemble',
                         'prepareSearch',
-                        'useminPrepare',
-                        'concat:generated',
-                        'uglify:generated',
-                        'usemin',
                         'copy:build',
                         'hook:postStache',
                     ];
@@ -1522,13 +1487,10 @@ module.exports = function (grunt) {
             'grunt-asciify',
             'grunt-available-tasks',
             'grunt-contrib-clean',
-            'grunt-contrib-concat',
             'grunt-contrib-connect',
             'grunt-contrib-copy',
-            'grunt-contrib-uglify',
             'grunt-contrib-watch',
             'grunt-newer',
-            'grunt-usemin'
         ];
 
         // Merge options and defaults for the entire project.
