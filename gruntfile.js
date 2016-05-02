@@ -16,8 +16,8 @@ module.exports = function (grunt) {
                 }
             },
             dist: {
-                src: ['bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js', 'src/js/stache.min.js'],
-                dest: 'src/js/stache.min.js'
+                src: ['bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js', 'src/js/swagger.min.js'],
+                dest: 'src/js/swagger.min.js'
             }
         },
         sass: {
@@ -34,7 +34,15 @@ module.exports = function (grunt) {
                     src: ['*.scss'],
                     dest: 'src/css',
                     ext: '.css'
-                }]
+                },
+                {
+                    expand: true,
+                    cwd: 'src/vendor/swagger-ui/',
+                    src: 'swagger.scss',
+                    dest: 'src/css/',
+                    ext: '.css'
+                }
+                ]
             }
         },
         copy: {
@@ -44,7 +52,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: 'bower_components/zeroclipboard/dist/',
                         dest: 'src/img/',
-                        src: 'ZeroClipboard.swf'
+                        src: 'ZeroClipboard.swf',
                     }
                 ]
             }
@@ -67,6 +75,9 @@ module.exports = function (grunt) {
                         'src/js/stache-clipboard.js',
                         'src/js/prism.js',
                         'bower_components/angular-ui-select/dist/select.js'
+                    ],
+                    'src/js/swagger.min.js': [
+                        'src/js/swagger-app.js'
                     ]
                 }
             }

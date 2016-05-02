@@ -165,8 +165,7 @@
         'ngAnimate',
         'ngSanitize',
         'OmnibarSearch',
-        'OmnibarSearch.templates',
-        'swaggerUi'
+        'OmnibarSearch.templates'
     ]);
 
     angular.module('stache')
