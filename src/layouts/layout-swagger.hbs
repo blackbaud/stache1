@@ -1,5 +1,10 @@
 ---
 layout: layout-container
 ---
+{{# inherit stache.config.markdown markdown }}
+  {{# markdown }}{{ body }}{{/ markdown }}
+{{ else }}
+  {{# withNewline }}{{ body }}{{/ withNewline }}
+{{/ inherit }}
 
 {{{ include stache.config.partial_swagger }}}
