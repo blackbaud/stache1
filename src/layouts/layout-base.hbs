@@ -12,7 +12,7 @@
         {{{ include stache.config.partial_sky_css }}}
       {{/ if }}
       {{# contains stache.config.modules "swagger" }}
-        <link rel="stylesheet" href="../css/swagger.css">
+        <link rel="stylesheet" href="/css/swagger.css">
       {{/ contains }}
 
       {{# each stache.config.files.css }}
@@ -146,7 +146,7 @@
       {{/ if }}
 
       {{# contains stache.config.modules "swagger" }}
-        <script src="{{ assets }}js/swagger.min.js"></script>
+        <script src="/js/swagger.min.js"></script>
       {{/ contains }}
 
       <script src="{{ stache.config.base }}js/stache.min.js"></script>
