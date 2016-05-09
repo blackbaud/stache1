@@ -256,6 +256,10 @@ module.exports = function (grunt) {
                     {
                         src: '<%= stache.config.src %>js/stache.min.js',
                         dest: '<%= stache.config.build %><%= stache.config.base %>js/stache.min.js'
+                    },
+                    {
+                        src: '<%= stache.config.src %>js/swagger.min.js',
+                        dest: '<%= stache.config.build %><%= stache.config.base %>js/swagger.min.js'
                     }
                 ]
             }
