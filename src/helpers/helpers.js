@@ -240,11 +240,13 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {string} [activeURI] The path of the active page.
          */
         findBreadcrumb: function (navLinks, activeURI) {
-            var breadcrumbs,
+            var base,
+                breadcrumbs,
                 i,
                 navLink,
                 navLinksLength;
 
+            base = stache.config.base;
             breadcrumbs = [];
             navLinksLength = navLinks.length;
 
@@ -254,7 +256,7 @@ module.exports.register = function (Handlebars, options, params) {
 
                 // Don't include the Home page because it cannot have sub-directories.
                 // (We add the Home page manually, in getBreadcrumbNavLinks.)
-                if (navLink.uri !== "/") {
+                if (navLink.uri !== base) {
 
                     // Is this page's URI a fragment of the active page's URI?
                     if (activeURI.indexOf(navLink.uri) > -1) {
