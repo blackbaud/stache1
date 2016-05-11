@@ -185,7 +185,6 @@
      * Merge settings.
      */
     function Run($rootScope, bbOmnibarConfig, OmnibarSearchSettings) {
-        bbOmnibarConfig.enableSearch = OmnibarSearchSettings.getEnableSearch();
         bbOmnibarConfig.afterLoad = function () {
             angular.element(document).ready(function () {
                 $rootScope.$broadcast('omnibarSearchLoaded');
@@ -436,7 +435,6 @@
      */
     function OmnibarSearchSettingsProvider() {
         var resultsBaseUri,
-            enableSearch,
             resourceUrl,
             searchFormClass,
             searchInputId,
@@ -445,7 +443,6 @@
 
         // Defaults.
         resultsBaseUri = '';
-        enableSearch = true;
         resourceUrl = resultsBaseUri + '/content.json';
         searchFormClass = 'bb-omnibar-searchenabled';
         searchInputId = 'omnibar_searchbox';
@@ -458,9 +455,6 @@
                 return;
             }
             resultsBaseUri = value;
-        };
-        this.setEnableSearch = function (value) {
-            enableSearch = (value === true);
         };
         this.setResourceUrl = function (value) {
             resourceUrl = value;
@@ -483,9 +477,6 @@
             return {
                 getResultsBaseUri: function () {
                     return resultsBaseUri;
-                },
-                getEnableSearch: function () {
-                    return enableSearch;
                 },
                 getResourceUrl: function () {
                     return resourceUrl;
