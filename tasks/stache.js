@@ -244,8 +244,15 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: '<%= stache.config.static %>',
-                        src: '**/*.*',
+                        src: [
+                            '**/*.*',
+                            '!web.config'
+                        ],
                         dest: '<%= stache.config.build %><%= stache.config.base %>'
+                    },
+                    {
+                        src: '<%= stache.config.static %>web.config',
+                        dest: '<%= stache.config.build %>web.config'
                     },
                     {
                         expand: true,
