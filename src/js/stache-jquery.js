@@ -58,6 +58,48 @@
             })
             .css('min-height', height + 'px');
     }
+    /**
+     *
+     */
+    function equalHeightPanels() {
+        var items,
+            len;
+
+        items = document.querySelectorAll('.equal-height-item');
+        len = items.length;
+
+        function setHeight(){
+            var h,
+                height,
+                i;
+
+            height = 0;
+
+            // First, make sure no explicit heights are set.
+            for (i = 0; i < len; ++i) {
+                items[i].style.height = 'auto';
+            }
+
+            // Second, determine the max height of the children.
+            for (i = 0; i < len; ++i) {
+                h = items[i].offsetHeight;
+                height = (h > height) ? h : height;
+            }
+
+            // Finally, set all children's height to the max height.
+            for (i = 0; i < len; ++i) {
+                items[i].style.height = height + 'px';
+            }
+        }
+
+        setHeight();
+
+        //Event listener to adjust sizes on window resize
+        $(window).resize(function(){
+            setHeight();
+        });
+
+    }
 
     /**
      *
@@ -299,6 +341,7 @@
         showOnHover();
         smoothScroll();
         tooltips();
+        equalHeightPanels();
     });
 
 }(window.jQuery, window));
