@@ -8,28 +8,6 @@
 @import "blackbaud-skyux/scss/_mixins.scss";
 @import "_variables.scss";
 
-// Temporary Fixes
-// https://github.com/blackbaud/skyux/issues/13
-.text-primary {
-  color: inherit;
-}
-
-.text-success {
-  color: #1c84c6;
-}
-
-.text-info {
-  color: #23c6c8
-}
-
-.text-warning {
-  color: #f8ac59
-}
-
-.text-danger {
-  color: #ed5565
-}
-
 /*
 * ==========================================================================
 * DOCUMENTATION
