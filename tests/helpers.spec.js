@@ -29,6 +29,9 @@
     // Overriding the location of the content directory, since it's relative.
     grunt.config.set('stache.config.content', '../../content/');
 
+    // Setting the base
+    grunt.config.set('stache.config.base', '/');
+
     // Execute createAutoNav task to build the 'nav_links' array.
     stache.tasks.createAutoNav();
 
@@ -369,6 +372,64 @@
 
                 expect(template(context)).toBe('');
             });
+        });
+
+        describe('isHome()', function () {
+
+            it('should use options.hash.dest to determine if the current page is home', function () {
+                var dest = '/',
+                    home = Handlebars.compile([
+                        '{{# isHome dest="' + dest + '"}}',
+                          'Test',
+                        '{{/ isHome }}'
+                    ].join(''));
+
+                expect(home()).toBe('Test');
+            });
+
+            it('should use this.page.dest to determine if the current page is home', function () {
+                var home = Handlebars.compile([
+                    '{{# isHome }}',
+                      'Test',
+                    '{{/ isHome }}'
+                ].join('')),
+                  context = {
+                      page: {
+                        dest: '/'
+                      }
+                  };
+
+                expect(home(context)).toBe('Test');
+            });
+
+            it('should use "NOT_HOME" to determine if the current page is home', function () {
+                var home = Handlebars.compile([
+                    '{{# isHome }}',
+                      'Test',
+                    '{{/ isHome }}'
+                ].join('')),
+                  context = {
+                      page: {
+                        dest: undefined
+                      }
+                  };
+
+                expect(home(context)).toBe('');
+
+            });
+
+            it('should return false if the current page is not home', function () {
+                var dest = '/test',
+                    home = Handlebars.compile([
+                        '{{# isHome dest="' + dest + '"}}',
+                          'Test',
+                        '{{/ isHome }}'
+                    ].join(''));
+
+                expect(home()).toBe('');
+            });
+
+
         });
 
     });
