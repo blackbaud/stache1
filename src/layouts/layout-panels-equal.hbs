@@ -2,17 +2,18 @@
 layout: layout-container
 ---
 {{# inherit stache.config.markdown markdown }}
-		{{# markdown }}
-			{{ body }}
-		{{/ markdown }}
-		{{ else }}
-		{{# withNewline }}
-			{{ body }}
-		{{/ withNewline }}
+	{{# markdown }}
+		{{ body }}
+	{{/ markdown }}
+	{{ else }}
+	{{# withNewline }}
+		{{ body }}
+	{{/ withNewline }}
 {{/ inherit }}
 
-<div class="showcase row equal">{{# eachChildLink mod=3 }}
-	<div class="col-lg-4 col-md-6 panel-col">
+<div class="showcase row" stache-equal-height>
+	{{# eachChildLink mod=3 }}
+	<div class="col-lg-4 col-md-6">
 		<a href="{{ uri }}" class="panel-wrapper">
 			<div class="panel panel-default equal-height-item">
 				<div class="panel-heading">
@@ -25,5 +26,6 @@ layout: layout-container
 				</div>
 			</div>
 		</a>
-	</div>{{/ eachChildLink }}
+	</div>
+	{{/ eachChildLink }}
 </div>

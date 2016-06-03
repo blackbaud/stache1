@@ -1,5 +1,4 @@
 /*jslint browser: true, es5: true*/
-/*global jQuery */
 (function ($, window) {
     'use strict';
 
@@ -42,94 +41,6 @@
     /**
      *
      */
-    function equalHeights() {
-        var height;
-
-        height = 0;
-
-        $body.find('.equal-height')
-            .each(function () {
-                var h;
-
-                h = $(this).outerHeight();
-
-                height = (h > height) ? h : height;
-
-            })
-            .css('min-height', height + 'px');
-    }
-    /**
-     *
-     */
-    function equalHeightPanels() {
-        var items,
-            len;
-
-        items = document.querySelectorAll('.equal-height-item');
-        len = items.length;
-
-        function setHeight(){
-            var h,
-                height,
-                i;
-
-            height = 0;
-
-            // First, make sure no explicit heights are set.
-            for (i = 0; i < len; ++i) {
-                items[i].style.height = 'auto';
-            }
-
-            // Second, determine the max height of the children.
-            for (i = 0; i < len; ++i) {
-                h = items[i].offsetHeight;
-                height = (h > height) ? h : height;
-            }
-
-            // Finally, set all children's height to the max height.
-            for (i = 0; i < len; ++i) {
-                items[i].style.height = height + 'px';
-            }
-        }
-
-        setHeight();
-
-        //Event listener to adjust sizes on window resize
-        $(window).resize(function(){
-            setHeight();
-        });
-
-    }
-
-    /**
-     *
-     */
-    function getBreadcrumbsHeight() {
-        var $breadcrumbs;
-
-        $breadcrumbs = $('#wrap-breadcrumbs');
-
-        if ($breadcrumbs.length > 0) {
-            return $breadcrumbs.outerHeight(true);
-        }
-
-        return 0;
-    }
-
-    /**
-     *
-     */
-    function getHeaderHeight() {
-      var $header;
-
-      $header = $body.find('.bb-navbar');
-
-      return ($header.length > 0) ? $header.outerHeight(true) : 0;
-    }
-
-    /**
-     *
-     */
     function getOmnibarHeight() {
         var $omnibar;
 
@@ -160,6 +71,11 @@
         $contentSecondary = $body.find('.content-secondary');
         $sidebarNav = $contentSecondary.find('.nav-sidebar');
 
+        function updateSidebarNavCSS() {
+            // Set the sidebar's CSS 'top' property.
+            $sidebarNav.css({ 'top': affixTop + 'px' });
+        }
+
         // There must be li.heading's on the page.
         if ($sidebarNav.find('li.heading').length > 0) {
 
@@ -173,11 +89,6 @@
 
                 if (sidebarDocumentTop < affixTop) {
                     affixTop = sidebarDocumentTop;
-                }
-
-                function updateSidebarNavCSS() {
-                    // Set the sidebar's CSS 'top' property.
-                    $sidebarNav.css({ 'top': affixTop + 'px' });
                 }
 
                 // Affix the sidebar.
@@ -333,7 +244,6 @@
         $body = $('body');
 
         backToTop();
-        equalHeights();
         parallax();
         scrollspy();
         searchQuery();
@@ -341,7 +251,11 @@
         showOnHover();
         smoothScroll();
         tooltips();
-        equalHeightPanels();
     });
+
+    // Make sure github callback exists.
+    if (!window.githubCallback) {
+        window.githubCallback = function () {};
+    }
 
 }(window.jQuery, window));
