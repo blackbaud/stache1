@@ -38,7 +38,7 @@
     });
 
     /**
-     * Returns the first link in 'nav_links' that is not the home page.
+     * Returns the first link in 'nav_links' that is not the Home Page.
      *
      * @param {string} [navLinks] Array of objects.
      **/
@@ -52,7 +52,7 @@
         navLinksLength = navLinks.length;
         sampleLink = false;
 
-        // Find the first link in 'nav_links' that isn't the home page.
+        // Find the first link in 'nav_links' that isn't the Home Page.
         for (i = 0; i < navLinksLength; ++i) {
             if (navLinks[i].uri !== homeURI) {
                 sampleLink = navLinks[i];
@@ -284,7 +284,7 @@
                 expect(result).toBe('');
             });
 
-            it('should contain a link to the home page', function () {
+            it('should contain a link to the Home Page', function () {
                 var result,
                     navLinks,
                     sampleLink;
