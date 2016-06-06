@@ -22,8 +22,11 @@ a.panel-wrapper.highlight .panel {
 	border-bottom: solid 1px #EFEFEF;
 }
 
-@media (min-width: 1200px) {
-	.row.equal .panel {
-		min-height: 188px;
+[stache-equal-height] {
+  opacity: 0;
+	transition: opacity 200ms;
+
+	&.on {
+	  opacity: 1;
 	}
 }
