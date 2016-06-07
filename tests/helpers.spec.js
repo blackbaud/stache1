@@ -466,6 +466,69 @@
                 expect(home()).toBe('');
             });
         });
+
+        describe('eachWithMod()', function () {
+
+            it('should return nothing if no context is provided', function () {
+                var context,
+                    template;
+
+                context = {};
+                template = Handlebars.compile([
+                    '{{# eachWithMod ' + context + '}}',
+                      'Test',
+                    '{{/ eachWithMod }}'
+                ].join(''));
+
+                expect(template()).toBe('');
+            });
+
+            it('should return nothing if the limit is surpassed', function () {
+                var context,
+                    template;
+
+                context = [{
+                    page: {
+                        dest: 'test'
+                    }
+                }];
+                template = Handlebars.compile([
+                    '{{# eachWithMod ' + context + ' limit="0"}}',
+                      'Test',
+                    '{{/ eachWithMod }}'
+                ].join(''));
+
+                expect(template()).toBe('');
+            });
+        });
+
+        it('should not render any ignored items', function () {
+            var context,
+                template;
+
+            context = {
+                items: [
+                    {
+                      item: 'test1',
+                      showInNav: false
+                    },
+                    {
+                      item: 'test2',
+                      showInNav: true
+                    }
+                ]
+            };
+            template = Handlebars.compile([
+                '{{# eachWithMod ' + context + ' }}',
+                    '{{ item }}',
+                '{{/ eachWithMod }}'
+            ].join(''));
+
+            expect(template()).toEqual('test2');
+
+        });
+
+
     });
 
     /**
