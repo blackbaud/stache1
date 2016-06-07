@@ -55,6 +55,23 @@ module.exports.register = function (Handlebars, options, params) {
         return out;
     };
 
+    // apply SKY UX styles to headers following example at https://github.com/chjj/marked#overriding-renderer-methods
+    renderer.heading = function (text, level) {
+        var cssClass = "";
+        switch (level) {
+        case 1:
+            cssClass = "bb-page-heading";
+            break;
+        case 2:
+            cssClass = "bb-section-heading";
+            break;
+        case 3:
+            cssClass = "bb-subsection-heading";
+            break;
+        }
+        return '<h' + level + ' class="' + cssClass + '">' + text + '</h' + level + '>';
+    };
+    
     /**
     * Utility function to get the basename
     **/
