@@ -575,10 +575,10 @@ module.exports.register = function (Handlebars, options, params) {
                                     // These fields should NOT be propagated into child scopes:
                                     switch (h) {
                                         case "nav_links":
-                                        break;
+                                            break;
                                         default:
                                             context[i][h] = options.hash[h];
-                                        break;
+                                            break;
                                     }
                                 }
                             }
@@ -990,10 +990,10 @@ module.exports.register = function (Handlebars, options, params) {
                 case 'C#':
                 case 'VB':
                     r = 'csharp';
-                break;
+                    break;
                 case 'C++':
                     r = 'cpp';
-                break;
+                    break;
             }
             return r;
         },
