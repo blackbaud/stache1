@@ -1,7 +1,12 @@
 <div swagger-ui
-  input-type="url"
+  input-type="{{ swagger.inputType }}"
+  {{# compare swagger.inputType '===' 'json' }}
+  input="{{ getDataByName swagger.input }}"
+  {{/ compare }}
+  {{# compare swagger.inputType '===' 'url' }}
   input="'{{ swagger.input }}'"
-  {{# if swagger.template}}
+  {{/ compare }}
+  {{# if swagger.template }}
     template-url="{{ swagger.template }}"
-  {{/ if}}
+  {{/ if }}
 ></div>

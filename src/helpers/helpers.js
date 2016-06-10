@@ -467,6 +467,16 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
+        * Fetches JSON data by key and returns it.
+        **/
+
+        getDataByName: function (name) {
+            if (this.hasOwnProperty(name)) {
+                return JSON.stringify(this[name]);
+            }
+        },
+
+        /**
         * Does the current page have headings?
         **/
         hasHeadings: function (options) {
