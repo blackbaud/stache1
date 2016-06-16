@@ -357,15 +357,18 @@ module.exports.register = function (Handlebars, options, params) {
             config = stache.config;
             keys = [
                 'showBreadcrumbs',
-                'blogReadMoreLabel'
+                'blogReadMoreLabel',
+                'swagger'
             ];
             keysLength = keys.length;
 
             for (i = 0; i < keysLength; ++i) {
                 key = keys[i];
+                if (typeof this[key] === 'object') {
+                    this[key] = merge(true, config[key], this[key]);
+                }
                 this[key] = utils.mergeOption(config[key], this[key]);
             }
-
             return options.fn(this);
         },
 

@@ -1,9 +1,9 @@
 <div swagger-ui
   input-type="{{ swagger.inputType }}"
   {{# compare swagger.inputType '===' 'url' }}
-  input="'{{ swagger.input }}'"
+    input="'{{ swagger.input }}'"
   {{ else }}
-  input="{{ getDataByName swagger.input }}"
+    input="{{ getDataByName swagger.input }}"
   {{/ compare }}
   {{# if swagger.template }}
     template-url="{{ swagger.template }}"
