@@ -557,11 +557,11 @@ module.exports.register = function (Handlebars, options, params) {
 
                                     // These fields should NOT be propagated into child scopes:
                                     switch (h) {
-                                        case "nav_links":
-                                            break;
-                                        default:
-                                            context[i][h] = options.hash[h];
-                                            break;
+                                    case "nav_links":
+                                        break;
+                                    default:
+                                        context[i][h] = options.hash[h];
+                                        break;
                                     }
                                 }
                             }
@@ -970,13 +970,13 @@ module.exports.register = function (Handlebars, options, params) {
         getPrismType: function (type) {
             var r = type;
             switch (type.toUpperCase()) {
-                case 'C#':
-                case 'VB':
-                    r = 'csharp';
-                    break;
-                case 'C++':
-                    r = 'cpp';
-                    break;
+            case 'C#':
+            case 'VB':
+                r = 'csharp';
+                break;
+            case 'C++':
+                r = 'cpp';
+                break;
             }
             return r;
         },
