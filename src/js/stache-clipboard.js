@@ -1,5 +1,5 @@
 /*jslint browser: true, es5: true*/
-/*global jQuery */
+/*global jQuery, ZeroClipboard */
 (function ($, window, document, undefined) {
     'use strict';
 
@@ -8,11 +8,16 @@
         client;
 
     $('pre > code:not(.no-copy)').each(function () {
-        $(this).closest('pre').append([
+        var html = [
             '<div class="copy-code" title="Copy to Clipboard" data-trigger="manual" data-placement="left" data-container="body">',
             '<i class="fa fa-files-o"></i>',
             '</div>'
-        ].join('')).addClass('has-copy-code');
+        ].join('');
+
+        $(this)
+          .closest('pre')
+          .wrap('<div class="has-copy-code"></div>')
+          .before(html);
     });
 
     // Initialize Clipboard Copy
