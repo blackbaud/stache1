@@ -375,15 +375,18 @@ module.exports.register = function (Handlebars, options, params) {
             config = stache.config;
             keys = [
                 'showBreadcrumbs',
-                'blogReadMoreLabel'
+                'blogReadMoreLabel',
+                'swagger'
             ];
             keysLength = keys.length;
 
             for (i = 0; i < keysLength; ++i) {
                 key = keys[i];
+                if (typeof this[key] === 'object') {
+                    this[key] = merge(true, config[key], this[key]);
+                }
                 this[key] = utils.mergeOption(config[key], this[key]);
             }
-
             return options.fn(this);
         },
 
@@ -482,6 +485,16 @@ module.exports.register = function (Handlebars, options, params) {
         **/
         json: function (context) {
             return JSON.stringify(context);
+        },
+
+        /**
+        * Fetches JSON data by key and returns it.
+        **/
+
+        getDataByName: function (name) {
+            if (this.hasOwnProperty(name)) {
+                return JSON.stringify(this[name]);
+            }
         },
 
         /**
