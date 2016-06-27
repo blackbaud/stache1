@@ -64,7 +64,7 @@ module.exports = function (grunt) {
                 preHandlebars: [],
                 postHandlebars: [
                     function (data) {
-                        return utils.prepareHeaders(data);
+                        return utils.slugifyHeaders(data);
                     }
                 ]
             },
@@ -1246,41 +1246,24 @@ module.exports = function (grunt) {
 
         /**
          * Adds unique ID's to headings.
-         * Adds SKY UX class names to headings.
          *
          * @param {} []
          */
-        prepareHeaders: function (html) {
-            var $html = cheerio(html);
+        slugifyHeaders: function (html) {
+            var $html;
+
+            $html = cheerio(html);
 
             // Require all heading tags to have id attribute
             cheerio('h1, h2, h3, h4, h5, h6', $html).each(function () {
-                var className,
-                    el,
+                var $elem,
                     id;
 
-                // Set the appropriate SKY UX class name.
-                switch (this.name) {
-                case 'h1':
-                    className = 'bb-page-heading';
-                    break;
-                case 'h2':
-                    className = 'bb-section-heading';
-                    break;
-                case 'h3':
-                    className = 'bb-subsection-heading';
-                    break;
-                }
-
-                el = cheerio(this);
-                id = el.attr('id');
+                $elem = cheerio(this);
+                id = $elem.attr('id');
 
                 if (typeof id === 'undefined' || id === '') {
-                    el.attr('id', utils.slugify(el.text()));
-                }
-
-                if (className) {
-                    el.addClass(className);
+                    $elem.attr('id', utils.slugify($elem.text()));
                 }
             });
 
