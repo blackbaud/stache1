@@ -383,28 +383,28 @@ module.exports = function (grunt) {
                             found = true;
                             json = grunt.file.readJSON(page.url);
                             switch (page.type) {
-                                case 'jsdoc':
-                                    for (i = 0, j = json.length; i < j; i++) {
-                                        json[i].layout = 'layout-' + page.type;
-                                        pages[page.dest + json[i].key + '/index.md'] = {
-                                            data: json[i]
-                                        };
-                                    }
+                            case 'jsdoc':
+                                for (i = 0, j = json.length; i < j; i++) {
+                                    json[i].layout = 'layout-' + page.type;
+                                    pages[page.dest + json[i].key + '/index.md'] = {
+                                        data: json[i]
+                                    };
+                                }
                                 break;
-                                case 'sandcastle':
-                                    processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
+                            case 'sandcastle':
+                                processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
                                 break;
-                                case 'powershell':
-                                    json = json.cmdlet;
-                                    for (i = 0, j = json.length; i < j; i++) {
-                                        json[i].layout = 'layout-' + page.type;
-                                        pages[page.dest + json[i].name + '/index.md'] = {
-                                            data: json[i]
-                                        };
-                                    }
+                            case 'powershell':
+                                json = json.cmdlet;
+                                for (i = 0, j = json.length; i < j; i++) {
+                                    json[i].layout = 'layout-' + page.type;
+                                    pages[page.dest + json[i].name + '/index.md'] = {
+                                        data: json[i]
+                                    };
+                                }
                                 break;
-                                default:
-                                    slog.warning('Unknown custom page datatype.');
+                            default:
+                                slog.warning('Unknown custom page datatype.');
                                 break;
                             }
                         }
@@ -807,21 +807,21 @@ module.exports = function (grunt) {
             utils.setupHooks();
 
             switch (context) {
-                default:
-                    tasks = [
-                        'hook:preStache',
-                        'status:build',
-                        'expandFileMappings',
-                        'clean:build',
-                        'createAutoPages',
-                        'createAutoNav',
-                        'hook:preAssemble',
-                        'assemble',
-                        'hook:postAssemble',
-                        'prepareSearch',
-                        'copy:build',
-                        'hook:postStache',
-                    ];
+            default:
+                tasks = [
+                    'hook:preStache',
+                    'status:build',
+                    'expandFileMappings',
+                    'clean:build',
+                    'createAutoPages',
+                    'createAutoNav',
+                    'hook:preAssemble',
+                    'assemble',
+                    'hook:postAssemble',
+                    'prepareSearch',
+                    'copy:build',
+                    'hook:postStache',
+                ];
                 break;
             }
             grunt.task.run(tasks);
@@ -859,14 +859,14 @@ module.exports = function (grunt) {
             // Only update the watchNewer property if it is explicitly set in bash.
             // Otherwise, we'll use the value set in the stache.yml config (see default, below).
             switch (context) {
-                case 'newer':
-                    watchNewer = true;
+            case 'newer':
+                watchNewer = true;
                 break;
-                case 'all':
-                    watchNewer = false;
+            case 'all':
+                watchNewer = false;
                 break;
-                default:
-                    watchNewer = grunt.config.get('stache.config.watchNewer');
+            default:
+                watchNewer = grunt.config.get('stache.config.watchNewer');
                 break;
             }
 
@@ -1245,19 +1245,25 @@ module.exports = function (grunt) {
         },
 
         /**
-         *
+         * Adds unique ID's to headings.
          *
          * @param {} []
          */
         slugifyHeaders: function (html) {
-            var $html = cheerio(html);
+            var $html;
+
+            $html = cheerio(html);
 
             // Require all heading tags to have id attribute
             cheerio('h1, h2, h3, h4, h5, h6', $html).each(function () {
-                var el = cheerio(this),
-                    id = el.attr('id');
+                var $elem,
+                    id;
+
+                $elem = cheerio(this);
+                id = $elem.attr('id');
+
                 if (typeof id === 'undefined' || id === '') {
-                    el.attr('id', utils.slugify(el.text()));
+                    $elem.attr('id', utils.slugify($elem.text()));
                 }
             });
 
@@ -1328,7 +1334,7 @@ module.exports = function (grunt) {
                     if (link.sortKey && link.nav_links) {
                         switch (link.sortKey) {
 
-                            case 'order':
+                        case 'order':
                             rules = [{
                                 key: 'order',
                                 defaultValue: 100
@@ -1337,7 +1343,7 @@ module.exports = function (grunt) {
                             }];
                             break;
 
-                            case 'uri':
+                        case 'uri':
                             rules = [{
                                 key: link.sortKey,
                                 direction: 'desc'
@@ -1347,7 +1353,7 @@ module.exports = function (grunt) {
                             }];
                             break;
 
-                            default:
+                        default:
                             rules = [{
                                 key: link.sortKey
                             }, {
@@ -1521,22 +1527,21 @@ module.exports = function (grunt) {
 
             // Has the module already been installed by the parent?
             switch (grunt.file.isDir(cwd + '/node_modules/' + module)) {
-                case false:
+            case false:
 
-                    // Module wasn't found on the parent, so let's look in Stache's root.
-                    if (grunt.file.isDir(stacheModulesDirectory + module)) {
-                        grunt.file.setBase(grunt.config.get('stache.dir'));
-                        grunt.loadNpmTasks(module);
-                        grunt.file.setBase(cwd);
-                    } else {
-                        slog.fatal("The module \"" + module + "\" was not found!\n============\nAttempt the following:\n1)  Delete the node_modules folder\n2)  Type `npm cache clear`\n3)  Type `npm install`\n4)  Type `stache serve`\n\nIf Stache fails to serve, contact Stache support.");
-                    }
-
-                break;
-                case true:
-
-                    // Module found in the parent directory. Load it!
+                // Module wasn't found on the parent, so let's look in Stache's root.
+                if (grunt.file.isDir(stacheModulesDirectory + module)) {
+                    grunt.file.setBase(grunt.config.get('stache.dir'));
                     grunt.loadNpmTasks(module);
+                    grunt.file.setBase(cwd);
+                } else {
+                    slog.fatal("The module \"" + module + "\" was not found!\n============\nAttempt the following:\n1)  Delete the node_modules folder\n2)  Type `npm cache clear`\n3)  Type `npm install`\n4)  Type `stache serve`\n\nIf Stache fails to serve, contact Stache support.");
+                }
+                break;
+
+            case true:
+                // Module found in the parent directory. Load it!
+                grunt.loadNpmTasks(module);
                 break;
             }
         });
