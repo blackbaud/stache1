@@ -56,22 +56,23 @@ module.exports.register = function (Handlebars, options, params) {
     };
 
     // Apply SKY UX classnames to headers following the example at https://github.com/chjj/marked#overriding-renderer-methods
-    renderer.heading = function (text, level) {
-        var classname;
-        classname = "";
-        switch (level) {
-        case 1:
-            classname = "bb-page-heading";
-            break;
-        case 2:
-            classname = "bb-section-heading";
-            break;
-        case 3:
-            classname = "bb-subsection-heading";
-            break;
-        }
-        return '<h' + level + ' class="' + classname + '">' + text + '</h' + level + '>';
-    };
+    // Disabling to fix immediate bug.  - Bobby, 2016-06-29
+    // renderer.heading = function (text, level) {
+    //     var classname;
+    //     classname = "";
+    //     switch (level) {
+    //     case 1:
+    //         classname = "bb-page-heading";
+    //         break;
+    //     case 2:
+    //         classname = "bb-section-heading";
+    //         break;
+    //     case 3:
+    //         classname = "bb-subsection-heading";
+    //         break;
+    //     }
+    //     return '<h' + level + ' class="' + classname + '">' + text + '</h' + level + '>';
+    // };
 
     /**
     * Utility function to get the basename
