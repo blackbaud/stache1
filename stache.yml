@@ -51,6 +51,7 @@ partial_powershell: <%= stache.config.partials %>partial-layout-powershell.hbs
 partial_back_to_top: <%= stache.config.partials %>partial-back-to-top.hbs
 partial_blog_more: <%= stache.config.partials %>partial-blog-more.hbs
 partial_swagger: <%= stache.config.partials %>partial-swagger.hbs
+partial_carousel: <%= stache.config.partials %>partial-carousel.hbs
 
 # =============================================
 # STACHE - SERVING

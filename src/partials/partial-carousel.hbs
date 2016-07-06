@@ -1,0 +1,42 @@
+<div id="{{ carousel.id }}" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    {{# eachIndex carousel.slides }}
+    <li data-target="#{{ ../carousel.id }}" data-slide-to="{{ index }}" {{# if @first }} class="active" {{/ if }}></li>
+    {{/ eachIndex }}
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+    {{# each carousel.slides }}
+    <div class="item {{# if @first }} active {{/ if }}">
+      {{# compare this.type '===' 'video' }}
+      <div class="video-display embed-responsive embed-responsive-16by9">
+        <iframe
+          id="video-{{ this.title }}"
+          src="{{ this.url }}?rel=0&showinfo=0&autohide=1"
+          frameborder="0">
+        </iframe>
+      </div>
+      {{ else }}
+      <img src="{{ this.url }}">
+      {{/ compare }}
+      <div class="carousel-caption">
+        <h4>{{ this.title }}</h4>
+        <p>{{ this.caption }}</p>
+      </div>
+    </div>
+    {{/ each }}
+  </div>
+
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#{{ carousel.id }}" role="button" data-slide="prev">
+    <span class="fa fa-lg fa-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#{{ carousel.id }}" role="button" data-slide="next">
+    <span class="fa fa-lg fa-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
