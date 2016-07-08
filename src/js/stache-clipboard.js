@@ -53,7 +53,7 @@
 
         // Copy the related content to the clipboard
         client.on('copy', function (e) {
-            e.clipboardData.setData('text/plain', $(e.target).siblings('code').text());
+            e.clipboardData.setData('text/plain', $(e.target).siblings('pre').children('code').text());
         });
 
         // Show the copied tooltip
