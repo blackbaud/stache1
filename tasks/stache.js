@@ -729,7 +729,8 @@ module.exports = function (grunt) {
          * Prepares the JSON for our search implementation.
          */
         prepareSearch: function () {
-            var status = grunt.config.get('stache.status'),
+            var destinationDir,
+                status = grunt.config.get('stache.status'),
                 resourceUrl = grunt.config.get('stache.config.omnibarSearch.resourceUrl'),
                 searchContentToRemove = grunt.config.get('stache.searchContentToRemove'),
                 search = [],
@@ -744,13 +745,19 @@ module.exports = function (grunt) {
                 $$(selector).remove();
             }
 
+            if (status === 'build') {
+                destinationDir = grunt.config.get('stache.config.build');
+            } else {
+                destinationDir = status;
+            }
+
             for (i = 0, j = navSearchFiles.length; i < j; i++) {
                 if (!navSearchFiles[i].showInSearch) {
                     slog.verbose('Ignoring from search: ' + navSearchFiles[i].uri);
                 } else {
 
                     item = navSearchFiles[i];
-                    file = status + item.uri;
+                    file = destinationDir + item.uri;
 
                     if (grunt.file.isDir(file)) {
                         file += 'index.html';
@@ -778,7 +785,7 @@ module.exports = function (grunt) {
                 }
             }
 
-            grunt.file.write(status + resourceUrl, JSON.stringify({ pages: search }, null, ' '));
+            grunt.file.write(destinationDir + resourceUrl, JSON.stringify({ pages: search }, null, ' '));
         },
 
         /**
