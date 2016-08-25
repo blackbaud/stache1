@@ -832,10 +832,6 @@ module.exports = function (grunt) {
 
             utils.setupHooks();
 
-            console.log("stacheBuild");
-            console.log(context);
-            console.log("ENV:", process.env);
-
             switch (context) {
             default:
                 tasks = [
