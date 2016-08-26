@@ -939,6 +939,12 @@ module.exports = function (grunt) {
             grunt.task.run(tasks);
         },
 
+        // stacheConfig: function (name, val) {
+        //     grunt.config.set(name, val);
+        //     console.log(name + " set to: " + grunt.config(name));
+        //     console.log(grunt.config('stache.config'));
+        // },
+
         /**
          * Bash command: stache version
          * Prints the current version of Stache in the console.
@@ -1177,14 +1183,29 @@ module.exports = function (grunt) {
                 if (configFileString.indexOf(',') > -1) {
                     configFileString.split(',').forEach(function (file) {
                         file = file.trim();
-                        if (grunt.file.exists(file)) {
+
+                        // Setting a stache.config property:
+                        if (file.indexOf(':') > -1) {
+                            localConfig = merge.recursive(true, localConfig, utils.parseOptionString(configFileString));
+                        }
+
+                        // Merge a YAML file:
+                        else if (grunt.file.exists(file)) {
                             slog('Importing config file ' + file);
                             localConfig = merge.recursive(true, localConfig, grunt.file.readYAML(file));
-                        } else {
+                        }
+
+                        // Command not recognized:
+                        else {
                             slog.warning('Error importing config file ' + file);
                         }
                     });
 
+                }
+
+                // Setting a stache.config property:
+                else if (configFileString.indexOf(':') > -1) {
+                    localConfig = merge.recursive(true, localConfig, utils.parseOptionString(configFileString));
                 }
 
                 // Only one file specified.
@@ -1222,6 +1243,18 @@ module.exports = function (grunt) {
          */
         isArray: function (arr) {
             return (arr.pop && arr.push);
+        },
+
+        /**
+         * Takes a given option string, `foo:bar`, and converts it into an object.
+         */
+        parseOptionString: function (str) {
+            var arr,
+                option;
+            arr = str.split(':');
+            option = {};
+            option[arr[0].trim()] = arr[1].trim();
+            return option;
         },
 
         /**
@@ -1604,6 +1637,7 @@ module.exports = function (grunt) {
         grunt.registerTask('release', 'Bump the version number in package.json; commit to origin.', tasks.stacheRelease);
         grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
         grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
+        //grunt.registerTask('config', 'Set a config property.', tasks.stacheConfig);
     }());
 
 
