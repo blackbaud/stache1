@@ -1186,7 +1186,8 @@ module.exports = function (grunt) {
 
                         // Setting a stache.config property:
                         if (file.indexOf(':') > -1) {
-                            localConfig = merge.recursive(true, localConfig, utils.parseOptionString(configFileString));
+                            slog('Setting config variable `' + file + '`.');
+                            localConfig = merge.recursive(true, localConfig, utils.parseOptionString(file));
                         }
 
                         // Merge a YAML file:
@@ -1254,6 +1255,7 @@ module.exports = function (grunt) {
             arr = str.split(':');
             option = {};
             option[arr[0].trim()] = arr[1].trim();
+            slog.success("Option created..." + JSON.stringify(option));
             return option;
         },
 
@@ -1637,7 +1639,6 @@ module.exports = function (grunt) {
         grunt.registerTask('release', 'Bump the version number in package.json; commit to origin.', tasks.stacheRelease);
         grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
         grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
-        //grunt.registerTask('config', 'Set a config property.', tasks.stacheConfig);
     }());
 
 
