@@ -1203,7 +1203,7 @@ module.exports = function (grunt) {
         },
 
         /**
-         * Adds unique ID's to headings.
+         * Adds rel="noopener noreferrer" to all anchor tags with a target="_blank" attribute.
          *
          */
         secureBlankTargets: function (html) {
