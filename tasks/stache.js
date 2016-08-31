@@ -65,6 +65,9 @@ module.exports = function (grunt) {
                 postHandlebars: [
                     function (data) {
                         return utils.slugifyHeaders(data);
+                    },
+                    function (data) {
+                        return utils.secureBlankTargets(data);
                     }
                 ]
             },
@@ -1247,6 +1250,29 @@ module.exports = function (grunt) {
         },
 
         /**
+         * Adds rel="noopener noreferrer" to all anchor tags with a target="_blank" attribute.
+         *
+         */
+        secureBlankTargets: function (html) {
+            var $html;
+
+            $html = cheerio(html);
+
+            // Require all anchor tags with target="_blank" to have rel="noopener noreferrer" attribute
+            cheerio('a', $html).each(function () {
+                var $elem;
+
+                $elem = cheerio(this);
+
+                if ($elem.attr('target') === "_blank") {
+                    $elem.attr('rel', 'noopener noreferrer');
+                }
+            });
+
+            return cheerio.html($html);
+        },
+
+        /**
          * Takes a given option string, `foo:bar`, and converts it into an object.
          */
         parseOptionString: function (str) {
@@ -1255,7 +1281,6 @@ module.exports = function (grunt) {
             arr = str.split(':');
             option = {};
             option[arr[0].trim()] = arr[1].trim();
-            slog.success("Option created..." + JSON.stringify(option));
             return option;
         },
 
