@@ -179,12 +179,31 @@ module.exports = function (grunt) {
                         'build',
                         'help',
                         'new',
-                        'prepare',
-                        'publish',
+                        'release',
                         'serve',
                         'version'
                     ]
                 }
+            }
+        },
+
+        bump: {
+            options: {
+                files: ['package.json'],
+                updateConfigs: [],
+                commit: true,
+                commitMessage: 'Release v%VERSION%',
+                commitFiles: ['package.json'],
+                createTag: false,
+                tagName: 'v%VERSION%',
+                tagMessage: 'Version %VERSION%',
+                push: true,
+                pushTo: 'origin',
+                gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+                globalReplace: false,
+                prereleaseName: false,
+                metadata: '',
+                regExp: false
             }
         },
 
@@ -855,6 +874,12 @@ module.exports = function (grunt) {
          */
         stacheNew: function () {},
 
+        stacheRelease: function (type) {
+            type = type || 'patch';
+            slog.muted("Running `stache release " + type + "`...");
+            grunt.task.run('bump:' + type);
+        },
+
         /**
          * Bash command: stache serve
          * Runs a series of tasks, issues a local server, and watches for newer
@@ -916,6 +941,12 @@ module.exports = function (grunt) {
             // Run the tasks
             grunt.task.run(tasks);
         },
+
+        // stacheConfig: function (name, val) {
+        //     grunt.config.set(name, val);
+        //     console.log(name + " set to: " + grunt.config(name));
+        //     console.log(grunt.config('stache.config'));
+        // },
 
         /**
          * Bash command: stache version
@@ -1155,14 +1186,30 @@ module.exports = function (grunt) {
                 if (configFileString.indexOf(',') > -1) {
                     configFileString.split(',').forEach(function (file) {
                         file = file.trim();
-                        if (grunt.file.exists(file)) {
+
+                        // Setting a stache.config property:
+                        if (file.indexOf(':') > -1) {
+                            slog('Setting config variable `' + file + '`.');
+                            localConfig = merge.recursive(true, localConfig, utils.parseOptionString(file));
+                        }
+
+                        // Merge a YAML file:
+                        else if (grunt.file.exists(file)) {
                             slog('Importing config file ' + file);
                             localConfig = merge.recursive(true, localConfig, grunt.file.readYAML(file));
-                        } else {
+                        }
+
+                        // Command not recognized:
+                        else {
                             slog.warning('Error importing config file ' + file);
                         }
                     });
 
+                }
+
+                // Setting a stache.config property:
+                else if (configFileString.indexOf(':') > -1) {
+                    localConfig = merge.recursive(true, localConfig, utils.parseOptionString(configFileString));
                 }
 
                 // Only one file specified.
@@ -1179,7 +1226,7 @@ module.exports = function (grunt) {
 
             // Expand default local Stache YAML file into workable object, if it exists.
             else if (grunt.file.exists(stache.pathConfig)) {
-                slog('Defaulting to config file ' + stache.pathConfig);
+                slog.muted('Defaulting to config file ' + stache.pathConfig);
                 localConfig = grunt.file.readYAML(stache.pathConfig);
             }
 
@@ -1223,6 +1270,18 @@ module.exports = function (grunt) {
             });
 
             return cheerio.html($html);
+        },
+
+        /**
+         * Takes a given option string, `foo:bar`, and converts it into an object.
+         */
+        parseOptionString: function (str) {
+            var arr,
+                option;
+            arr = str.split(':');
+            option = {};
+            option[arr[0].trim()] = arr[1].trim();
+            return option;
         },
 
         /**
@@ -1536,11 +1595,12 @@ module.exports = function (grunt) {
             'assemble',
             'grunt-asciify',
             'grunt-available-tasks',
+            'grunt-bump',
             'grunt-contrib-clean',
             'grunt-contrib-connect',
             'grunt-contrib-copy',
             'grunt-contrib-watch',
-            'grunt-newer',
+            'grunt-newer'
         ];
 
         // Merge options and defaults for the entire project.
@@ -1601,6 +1661,7 @@ module.exports = function (grunt) {
         grunt.registerTask('build', 'Build the documentation', tasks.stacheBuild);
         grunt.registerTask('help', 'Display available Stache commands', tasks.stacheHelp);
         grunt.registerTask('new', 'Create a new site using the Stache boilerplate', tasks.stacheNew);
+        grunt.registerTask('release', 'Bump the version number in package.json; commit to origin.', tasks.stacheRelease);
         grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
         grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
     }());
