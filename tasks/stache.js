@@ -65,6 +65,9 @@ module.exports = function (grunt) {
                 postHandlebars: [
                     function (data) {
                         return utils.slugifyHeaders(data);
+                    },
+                    function (data) {
+                        return utils.secureBlankTargets(data);
                     }
                 ]
             },
@@ -1197,6 +1200,29 @@ module.exports = function (grunt) {
          */
         isArray: function (arr) {
             return (arr.pop && arr.push);
+        },
+
+        /**
+         * Adds unique ID's to headings.
+         *
+         */
+        secureBlankTargets: function (html) {
+            var $html;
+
+            $html = cheerio(html);
+
+            // Require all anchor tags with target="_blank" to have rel="noopener noreferrer" attribute
+            cheerio('a', $html).each(function () {
+                var $elem;
+
+                $elem = cheerio(this);
+
+                if ($elem.attr('target') === "_blank") {
+                    $elem.attr('rel', 'noopener noreferrer');
+                }
+            });
+
+            return cheerio.html($html);
         },
 
         /**
