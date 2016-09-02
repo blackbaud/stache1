@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- Web.Config Configuration File -->
+<configuration>
+  {{#if BBAUTH.isEnabled }}
+  <appSettings>
+    <add key="AuthAddress" value="{{ BBAUTH.authAddress }}" />
+    <add key="RootUrl" value="{{ BBAUTH.rootUrl }}" />
+    <add key="ClientId" value="{{ BBAUTH.clientId }}" />
+    <add key="ForbiddenContent" value="This site is restricted to Blackbaud staff members." />
+  </appSettings>
+  <system.web>
+    <customErrors mode="Off" />
+  </system.web>
+  {{/if}}
+  <system.webServer>
+    <caching enabled="false" />
+    <modules runAllManagedModulesForAllRequests="true"/>
+    <staticContent>
+      <remove fileExtension=".svg" />
+      <remove fileExtension=".eot" />
+      <remove fileExtension=".woff" />
+      <remove fileExtension=".woff2" />
+      <mimeMap fileExtension=".svg" mimeType="image/svg+xml"  />
+      <mimeMap fileExtension=".eot" mimeType="application/vnd.ms-fontobject" />
+      <mimeMap fileExtension=".woff" mimeType="application/x-woff" />
+      <mimeMap fileExtension=".woff2" mimeType="application/x-woff2" />
+    </staticContent>
+  </system.webServer>
+</configuration>

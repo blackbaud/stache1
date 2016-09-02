@@ -663,6 +663,10 @@ module.exports = function (grunt) {
             slog.success("Done.");
         },
 
+        createWebConfig: function () {
+          console.log(grunt.config.get('stache.config'));
+        },
+
         /**
          * Creates and returns an array of static src->dest mappings for files,
          * based on a glob pattern. Grunt Newer cannot use glob patterns, so this
@@ -844,6 +848,7 @@ module.exports = function (grunt) {
                     'clean:build',
                     'createAutoPages',
                     'createAutoNav',
+                    'createWebConfig',
                     'hook:preAssemble',
                     'assemble',
                     'hook:postAssemble',
@@ -1645,6 +1650,7 @@ module.exports = function (grunt) {
          */
         grunt.registerTask('createAutoPages', tasks.createAutoPages);
         grunt.registerTask('createAutoNav', tasks.createAutoNav);
+        grunt.registerTask('createWebConfig', tasks.createWebConfig);
         grunt.registerTask('expandFileMappings', tasks.expandFileMappings);
         grunt.registerTask('header', tasks.header);
         grunt.registerTask('hook', tasks.hook);
