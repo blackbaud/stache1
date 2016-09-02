@@ -156,3 +156,8 @@ angular:
   constants:
     omnibar: <%= stache.config.omnibar %>
     omnibarSearch: <%= stache.config.omnibarSearch %>
+bbauth:
+  authAddress: 'https://signin.blackbaud.com/'
+  clientId: 'travis.developer.blackbaud.com'
+  isEnabled: true
+  rootUrl: 'https://travis.developer.blackbaud.com'

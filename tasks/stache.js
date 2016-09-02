@@ -1,14 +1,3 @@
-/**
-* Grunt configuration file.
-* Bobby Earl, 2015-01-27
-*
-* TODO
-*   - Implement grunt-filerev when performing blackbaud:build.
-*   - Work on error codes when serving.  Maybe not even necessary since it's just local.
-*       If we do it, it needs to handle relative asset linking outside of Assemble.
-*       Inspiration: https://github.com/gruntjs/grunt-contrib-connect/issues/30
-**/
-
 /*jslint node: true, nomen: true, plusplus: true */
 module.exports = function (grunt) {
     'use strict';
@@ -665,6 +654,8 @@ module.exports = function (grunt) {
 
         createWebConfig: function () {
           console.log(grunt.config.get('stache.config'));
+          // Check if file/folder exists already. if it does, alert the consumer but do nothing.
+          
         },
 
         /**
