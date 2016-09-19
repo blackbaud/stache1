@@ -1,5 +1,4 @@
 /*jslint browser: true, es5: true*/
-/*global jQuery */
 (function ($, window) {
     'use strict';
 
@@ -42,52 +41,6 @@
     /**
      *
      */
-    function equalHeights() {
-        var height;
-
-        height = 0;
-
-        $body.find('.equal-height')
-            .each(function () {
-                var h;
-
-                h = $(this).outerHeight();
-
-                height = (h > height) ? h : height;
-
-            })
-            .css('min-height', height + 'px');
-    }
-
-    /**
-     *
-     */
-    function getBreadcrumbsHeight() {
-        var $breadcrumbs;
-
-        $breadcrumbs = $('#wrap-breadcrumbs');
-
-        if ($breadcrumbs.length > 0) {
-            return $breadcrumbs.outerHeight(true);
-        }
-
-        return 0;
-    }
-
-    /**
-     *
-     */
-    function getHeaderHeight() {
-      var $header;
-
-      $header = $body.find('.bb-navbar');
-
-      return ($header.length > 0) ? $header.outerHeight(true) : 0;
-    }
-
-    /**
-     *
-     */
     function getOmnibarHeight() {
         var $omnibar;
 
@@ -118,6 +71,11 @@
         $contentSecondary = $body.find('.content-secondary');
         $sidebarNav = $contentSecondary.find('.nav-sidebar');
 
+        function updateSidebarNavCSS() {
+            // Set the sidebar's CSS 'top' property.
+            $sidebarNav.css({ 'top': affixTop + 'px' });
+        }
+
         // There must be li.heading's on the page.
         if ($sidebarNav.find('li.heading').length > 0) {
 
@@ -131,11 +89,6 @@
 
                 if (sidebarDocumentTop < affixTop) {
                     affixTop = sidebarDocumentTop;
-                }
-
-                function updateSidebarNavCSS() {
-                    // Set the sidebar's CSS 'top' property.
-                    $sidebarNav.css({ 'top': affixTop + 'px' });
                 }
 
                 // Affix the sidebar.
@@ -291,7 +244,6 @@
         $body = $('body');
 
         backToTop();
-        equalHeights();
         parallax();
         scrollspy();
         searchQuery();
@@ -300,5 +252,10 @@
         smoothScroll();
         tooltips();
     });
+
+    // Make sure github callback exists.
+    if (!window.githubCallback) {
+        window.githubCallback = function () {};
+    }
 
 }(window.jQuery, window));

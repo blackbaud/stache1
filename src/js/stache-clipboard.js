@@ -1,5 +1,5 @@
 /*jslint browser: true, es5: true*/
-/*global jQuery */
+/*global jQuery, ZeroClipboard */
 (function ($, window, document, undefined) {
     'use strict';
 
@@ -8,11 +8,16 @@
         client;
 
     $('pre > code:not(.no-copy)').each(function () {
-        $(this).closest('pre').append([
+        var html = [
             '<div class="copy-code" title="Copy to Clipboard" data-trigger="manual" data-placement="left" data-container="body">',
             '<i class="fa fa-files-o"></i>',
             '</div>'
-        ].join('')).addClass('has-copy-code');
+        ].join('');
+
+        $(this)
+          .closest('pre')
+          .wrap('<div class="has-copy-code"></div>')
+          .before(html);
     });
 
     // Initialize Clipboard Copy
@@ -20,7 +25,7 @@
     if (btnCopy.length) {
 
         // Initialize the clipboard
-        ZeroClipboard.config({ swfPath: "/img/ZeroClipboard.swf" });
+        ZeroClipboard.config({ swfPath: $('body').data('base') + "img/ZeroClipboard.swf" });
         client = new ZeroClipboard(btnCopy);
 
         // Show the tooltip
@@ -48,7 +53,7 @@
 
         // Copy the related content to the clipboard
         client.on('copy', function (e) {
-            e.clipboardData.setData('text/plain', $(e.target).siblings('code').text());
+            e.clipboardData.setData('text/plain', $(e.target).siblings('pre').children('code').text());
         });
 
         // Show the copied tooltip

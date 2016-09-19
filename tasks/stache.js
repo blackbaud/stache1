@@ -65,6 +65,9 @@ module.exports = function (grunt) {
                 postHandlebars: [
                     function (data) {
                         return utils.slugifyHeaders(data);
+                    },
+                    function (data) {
+                        return utils.secureBlankTargets(data);
                     }
                 ]
             },
@@ -176,12 +179,31 @@ module.exports = function (grunt) {
                         'build',
                         'help',
                         'new',
-                        'prepare',
-                        'publish',
+                        'release',
                         'serve',
                         'version'
                     ]
                 }
+            }
+        },
+
+        bump: {
+            options: {
+                files: ['package.json'],
+                updateConfigs: [],
+                commit: true,
+                commitMessage: 'Release v%VERSION%',
+                commitFiles: ['package.json'],
+                createTag: false,
+                tagName: 'v%VERSION%',
+                tagMessage: 'Version %VERSION%',
+                push: true,
+                pushTo: 'origin',
+                gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+                globalReplace: false,
+                prereleaseName: false,
+                metadata: '',
+                regExp: false
             }
         },
 
@@ -197,10 +219,9 @@ module.exports = function (grunt) {
             stache: {
                 options: {
                     base: [
-                        '<%= stache.config.build %>',
+                        '<%= stache.config.static %>',
                         '<%= stache.config.src %>',
-                        '<%= stache.config.content %>',
-                        '<%= stache.config.static %>'
+                        '<%= stache.config.build %>'
                     ],
                     livereload: grunt.option('livereload') || '<%= stache.config.livereload %>',
                     port: grunt.option('port') || '<%= stache.config.port %>'
@@ -216,82 +237,61 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: '<%= stache.config.src %>',
                         src: 'views/*.*',
-                        dest: '<%= stache.config.build %>'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.config.src %>img/',
                         src: '**',
-                        dest: '<%= stache.config.build %>img/'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>img/'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.dir %>src/vendor/bb-sky-sass/dist/css/fonts/',
                         src: '*',
-                        dest: '<%= stache.config.build %>css/fonts/'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>css/fonts/'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.dir %>src/vendor/bb-omnibar-search/',
                         src: '**',
-                        dest: '<%= stache.config.build %>/assets/vendor/bb-omnibar-search/'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>/assets/vendor/bb-omnibar-search/'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.config.content %>assets',
                         src: '**/*.*',
-                        dest: '<%= stache.config.build %>assets'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>assets'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.config.static %>',
-                        src: '**/*.*',
-                        dest: '<%= stache.config.build %>'
+                        src: [
+                            '**/*.*',
+                            '!web.config'
+                        ],
+                        dest: '<%= stache.config.build %><%= stache.config.base %>'
+                    },
+                    {
+                        src: '<%= stache.config.static %>web.config',
+                        dest: '<%= stache.config.build %>web.config'
                     },
                     {
                         expand: true,
                         cwd: '<%= stache.config.src %>css/',
                         src: '*.*',
-                        dest: '<%= stache.config.build %>css/'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>css/'
                     },
                     {
                         src: '<%= stache.config.src %>js/stache.min.js',
-                        dest: '<%= stache.config.build %>js/stache.min.js'
+                        dest: '<%= stache.config.build %><%= stache.config.base %>js/stache.min.js'
+                    },
+                    {
+                        src: '<%= stache.config.src %>js/swagger.min.js',
+                        dest: '<%= stache.config.build %><%= stache.config.base %>js/swagger.min.js'
                     }
                 ]
             }
-        },
-
-        // Mangling causes AngularJS issues. (Please be careful turning this back on.)
-        uglify: {
-            options: {
-                mangle: false
-            }
-        },
-
-        // Replaces un-optimized references to assets with their optimized versions.
-        useminPrepare: {
-            html: '<%= stache.config.build %>index.html',
-            options: {
-                assetsDirs: [
-                    '<%= stache.config.src %>'
-                ],
-                dest: '<%= stache.config.build %>',
-                root: [
-                    '<%= stache.config.src %>',
-                    '<%= stache.config.static %>'
-                ],
-                flow: {
-                    steps: {
-                        js: ['concat', 'uglify'],
-                        css: ['concat']
-                    },
-                    post: {}
-                }
-            }
-        },
-        usemin: {
-            html: '<%= stache.config.build %>**/*.html'
         },
 
         // Watch certain files and perform tasks when they change.
@@ -405,28 +405,28 @@ module.exports = function (grunt) {
                             found = true;
                             json = grunt.file.readJSON(page.url);
                             switch (page.type) {
-                                case 'jsdoc':
-                                    for (i = 0, j = json.length; i < j; i++) {
-                                        json[i].layout = 'layout-' + page.type;
-                                        pages[page.dest + json[i].key + '/index.md'] = {
-                                            data: json[i]
-                                        };
-                                    }
+                            case 'jsdoc':
+                                for (i = 0, j = json.length; i < j; i++) {
+                                    json[i].layout = 'layout-' + page.type;
+                                    pages[page.dest + json[i].key + '/index.md'] = {
+                                        data: json[i]
+                                    };
+                                }
                                 break;
-                                case 'sandcastle':
-                                    processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
+                            case 'sandcastle':
+                                processStacheCastleMultipleNodes(page, json.HelpTOC.HelpTOCNode, []);
                                 break;
-                                case 'powershell':
-                                    json = json.cmdlet;
-                                    for (i = 0, j = json.length; i < j; i++) {
-                                        json[i].layout = 'layout-' + page.type;
-                                        pages[page.dest + json[i].name + '/index.md'] = {
-                                            data: json[i]
-                                        };
-                                    }
+                            case 'powershell':
+                                json = json.cmdlet;
+                                for (i = 0, j = json.length; i < j; i++) {
+                                    json[i].layout = 'layout-' + page.type;
+                                    pages[page.dest + json[i].name + '/index.md'] = {
+                                        data: json[i]
+                                    };
+                                }
                                 break;
-                                default:
-                                    slog.warning('Unknown custom page datatype.');
+                            default:
+                                slog.warning('Unknown custom page datatype.');
                                 break;
                             }
                         }
@@ -443,7 +443,7 @@ module.exports = function (grunt) {
                         pages: pages
                     },
                     files: [{
-                        dest: '<%= stache.config.build %>',
+                        dest: '<%= stache.config.build %><%= stache.config.base %>',
                         src: 'noop'
                     }]
                 });
@@ -457,7 +457,8 @@ module.exports = function (grunt) {
          */
         createAutoNav: function () {
 
-            var contentDir,
+            var base,
+                contentDir,
                 files,
                 filesConfig,
                 nav_exclude,
@@ -485,10 +486,14 @@ module.exports = function (grunt) {
             navKey = '.nav_links';
             sandcastlePath = '';
             sandcastleCounter = 1;
+            base = grunt.config.get('stache.config.base');
             contentDir = grunt.config.get('stache.config.content');
             filesConfig = grunt.config.get('stache.globPatterns.content');
             files = grunt.file.expand(filesConfig, filesConfig.src);
             nav_exclude = grunt.config.get('stache.config.nav_exclude') || [];
+
+            // Accommodate custom base
+            base = utils.trimTrailingSlash(base);
 
             // Reset bypassContext
             grunt.config.set(root + navKey, []);
@@ -642,7 +647,7 @@ module.exports = function (grunt) {
                     }
 
                     // Record this url
-                    item.uri = item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file));
+                    item.uri = base + (item.uri || (subdir ? ('/' + subdir) : '') + (file === 'index.html' ? '/' : ('/' + file)));
                     grunt.config.set(path, item);
                     navSearchFiles.push(item);
 
@@ -664,17 +669,22 @@ module.exports = function (grunt) {
          * is a requirement to watch for recently changed files.
          */
         expandFileMappings: function () {
-            var mappings,
+            var base,
+                mappings,
                 files,
                 filesConfig;
 
             mappings = [];
+            base = grunt.config.get('stache.config.base');
             filesConfig = grunt.config.get('stache.globPatterns.content');
             files = grunt.file.expand(filesConfig, filesConfig.src);
 
+            // Build has trailing slash so remove leading slash from base
+            base = utils.trimLeadingSlash(base);
+
             if (files) {
                 files.forEach(function (file) {
-                    var destinationFile = '<%= stache.config.build %>' + file.substring(0, file.lastIndexOf(".")) + '.html';
+                    var destinationFile = '<%= stache.config.build %>' + base + file.substring(0, file.lastIndexOf(".")) + '.html';
                     slog.verbose("Building file map: " + '<%= stache.config.content %>' + file + " --> " + destinationFile);
                     mappings.push({
                         src: '<%= stache.config.content %>' + file,
@@ -741,7 +751,9 @@ module.exports = function (grunt) {
          * Prepares the JSON for our search implementation.
          */
         prepareSearch: function () {
-            var status = grunt.config.get('stache.status'),
+            var destinationDir,
+                status = grunt.config.get('stache.status'),
+                resourceUrl = grunt.config.get('stache.config.omnibarSearch.resourceUrl'),
                 searchContentToRemove = grunt.config.get('stache.searchContentToRemove'),
                 search = [],
                 item,
@@ -755,13 +767,19 @@ module.exports = function (grunt) {
                 $$(selector).remove();
             }
 
+            if (status === 'build') {
+                destinationDir = grunt.config.get('stache.config.build');
+            } else {
+                destinationDir = status;
+            }
+
             for (i = 0, j = navSearchFiles.length; i < j; i++) {
                 if (!navSearchFiles[i].showInSearch) {
                     slog.verbose('Ignoring from search: ' + navSearchFiles[i].uri);
                 } else {
 
                     item = navSearchFiles[i];
-                    file = status + item.uri;
+                    file = destinationDir + item.uri;
 
                     if (grunt.file.isDir(file)) {
                         file += 'index.html';
@@ -789,7 +807,7 @@ module.exports = function (grunt) {
                 }
             }
 
-            grunt.file.write(status + '/content.json', JSON.stringify({ pages: search }, null, ' '));
+            grunt.file.write(destinationDir + resourceUrl, JSON.stringify({ pages: search }, null, ' '));
         },
 
         /**
@@ -818,25 +836,21 @@ module.exports = function (grunt) {
             utils.setupHooks();
 
             switch (context) {
-                default:
-                    tasks = [
-                        'hook:preStache',
-                        'status:build',
-                        'expandFileMappings',
-                        'clean:build',
-                        'createAutoPages',
-                        'createAutoNav',
-                        'hook:preAssemble',
-                        'assemble',
-                        'hook:postAssemble',
-                        'prepareSearch',
-                        'useminPrepare',
-                        'concat:generated',
-                        'uglify:generated',
-                        'usemin',
-                        'copy:build',
-                        'hook:postStache',
-                    ];
+            default:
+                tasks = [
+                    'hook:preStache',
+                    'status:build',
+                    'expandFileMappings',
+                    'clean:build',
+                    'createAutoPages',
+                    'createAutoNav',
+                    'hook:preAssemble',
+                    'assemble',
+                    'hook:postAssemble',
+                    'prepareSearch',
+                    'copy:build',
+                    'hook:postStache',
+                ];
                 break;
             }
             grunt.task.run(tasks);
@@ -860,6 +874,12 @@ module.exports = function (grunt) {
          */
         stacheNew: function () {},
 
+        stacheRelease: function (type) {
+            type = type || 'patch';
+            slog.muted("Running `stache release " + type + "`...");
+            grunt.task.run('bump:' + type);
+        },
+
         /**
          * Bash command: stache serve
          * Runs a series of tasks, issues a local server, and watches for newer
@@ -874,14 +894,14 @@ module.exports = function (grunt) {
             // Only update the watchNewer property if it is explicitly set in bash.
             // Otherwise, we'll use the value set in the stache.yml config (see default, below).
             switch (context) {
-                case 'newer':
-                    watchNewer = true;
+            case 'newer':
+                watchNewer = true;
                 break;
-                case 'all':
-                    watchNewer = false;
+            case 'all':
+                watchNewer = false;
                 break;
-                default:
-                    watchNewer = grunt.config.get('stache.config.watchNewer');
+            default:
+                watchNewer = grunt.config.get('stache.config.watchNewer');
                 break;
             }
 
@@ -921,6 +941,12 @@ module.exports = function (grunt) {
             // Run the tasks
             grunt.task.run(tasks);
         },
+
+        // stacheConfig: function (name, val) {
+        //     grunt.config.set(name, val);
+        //     console.log(name + " set to: " + grunt.config(name));
+        //     console.log(grunt.config('stache.config'));
+        // },
 
         /**
          * Bash command: stache version
@@ -1160,14 +1186,30 @@ module.exports = function (grunt) {
                 if (configFileString.indexOf(',') > -1) {
                     configFileString.split(',').forEach(function (file) {
                         file = file.trim();
-                        if (grunt.file.exists(file)) {
+
+                        // Setting a stache.config property:
+                        if (file.indexOf(':') > -1) {
+                            slog('Setting config variable `' + file + '`.');
+                            localConfig = merge.recursive(true, localConfig, utils.parseOptionString(file));
+                        }
+
+                        // Merge a YAML file:
+                        else if (grunt.file.exists(file)) {
                             slog('Importing config file ' + file);
                             localConfig = merge.recursive(true, localConfig, grunt.file.readYAML(file));
-                        } else {
+                        }
+
+                        // Command not recognized:
+                        else {
                             slog.warning('Error importing config file ' + file);
                         }
                     });
 
+                }
+
+                // Setting a stache.config property:
+                else if (configFileString.indexOf(':') > -1) {
+                    localConfig = merge.recursive(true, localConfig, utils.parseOptionString(configFileString));
                 }
 
                 // Only one file specified.
@@ -1184,7 +1226,7 @@ module.exports = function (grunt) {
 
             // Expand default local Stache YAML file into workable object, if it exists.
             else if (grunt.file.exists(stache.pathConfig)) {
-                slog('Defaulting to config file ' + stache.pathConfig);
+                slog.muted('Defaulting to config file ' + stache.pathConfig);
                 localConfig = grunt.file.readYAML(stache.pathConfig);
             }
 
@@ -1205,6 +1247,41 @@ module.exports = function (grunt) {
          */
         isArray: function (arr) {
             return (arr.pop && arr.push);
+        },
+
+        /**
+         * Adds rel="noopener noreferrer" to all anchor tags with a target="_blank" attribute.
+         *
+         */
+        secureBlankTargets: function (html) {
+            var $html;
+
+            $html = cheerio(html);
+
+            // Require all anchor tags with target="_blank" to have rel="noopener noreferrer" attribute
+            cheerio('a', $html).each(function () {
+                var $elem;
+
+                $elem = cheerio(this);
+
+                if ($elem.attr('target') === "_blank") {
+                    $elem.attr('rel', 'noopener noreferrer');
+                }
+            });
+
+            return cheerio.html($html);
+        },
+
+        /**
+         * Takes a given option string, `foo:bar`, and converts it into an object.
+         */
+        parseOptionString: function (str) {
+            var arr,
+                option;
+            arr = str.split(':');
+            option = {};
+            option[arr[0].trim()] = arr[1].trim();
+            return option;
         },
 
         /**
@@ -1260,19 +1337,25 @@ module.exports = function (grunt) {
         },
 
         /**
-         *
+         * Adds unique ID's to headings.
          *
          * @param {} []
          */
         slugifyHeaders: function (html) {
-            var $html = cheerio(html);
+            var $html;
+
+            $html = cheerio(html);
 
             // Require all heading tags to have id attribute
             cheerio('h1, h2, h3, h4, h5, h6', $html).each(function () {
-                var el = cheerio(this),
-                    id = el.attr('id');
+                var $elem,
+                    id;
+
+                $elem = cheerio(this);
+                id = $elem.attr('id');
+
                 if (typeof id === 'undefined' || id === '') {
-                    el.attr('id', utils.slugify(el.text()));
+                    $elem.attr('id', utils.slugify($elem.text()));
                 }
             });
 
@@ -1343,7 +1426,7 @@ module.exports = function (grunt) {
                     if (link.sortKey && link.nav_links) {
                         switch (link.sortKey) {
 
-                            case 'order':
+                        case 'order':
                             rules = [{
                                 key: 'order',
                                 defaultValue: 100
@@ -1352,7 +1435,7 @@ module.exports = function (grunt) {
                             }];
                             break;
 
-                            case 'uri':
+                        case 'uri':
                             rules = [{
                                 key: link.sortKey,
                                 direction: 'desc'
@@ -1362,7 +1445,7 @@ module.exports = function (grunt) {
                             }];
                             break;
 
-                            default:
+                        default:
                             rules = [{
                                 key: link.sortKey
                             }, {
@@ -1388,6 +1471,20 @@ module.exports = function (grunt) {
             // Save the results.
             grunt.config.set('bypassContext.nav_links', navLinks);
 
+        },
+
+        /**
+         * Remove leading slash
+         */
+        trimLeadingSlash: function (str) {
+            return str ? str.replace(/^\//, '') : str;
+        },
+
+        /**
+         * Remove trailing Slash
+         */
+        trimTrailingSlash: function (str) {
+            return str ? str.replace(/\/$/, '') : str;
         }
     };
 
@@ -1498,14 +1595,12 @@ module.exports = function (grunt) {
             'assemble',
             'grunt-asciify',
             'grunt-available-tasks',
+            'grunt-bump',
             'grunt-contrib-clean',
-            'grunt-contrib-concat',
             'grunt-contrib-connect',
             'grunt-contrib-copy',
-            'grunt-contrib-uglify',
             'grunt-contrib-watch',
-            'grunt-newer',
-            'grunt-usemin'
+            'grunt-newer'
         ];
 
         // Merge options and defaults for the entire project.
@@ -1525,22 +1620,21 @@ module.exports = function (grunt) {
 
             // Has the module already been installed by the parent?
             switch (grunt.file.isDir(cwd + '/node_modules/' + module)) {
-                case false:
+            case false:
 
-                    // Module wasn't found on the parent, so let's look in Stache's root.
-                    if (grunt.file.isDir(stacheModulesDirectory + module)) {
-                        grunt.file.setBase(grunt.config.get('stache.dir'));
-                        grunt.loadNpmTasks(module);
-                        grunt.file.setBase(cwd);
-                    } else {
-                        slog.fatal("The module \"" + module + "\" was not found!\n============\nAttempt the following:\n1)  Delete the node_modules folder\n2)  Type `npm cache clear`\n3)  Type `npm install`\n4)  Type `stache serve`\n\nIf Stache fails to serve, contact Stache support.");
-                    }
-
-                break;
-                case true:
-
-                    // Module found in the parent directory. Load it!
+                // Module wasn't found on the parent, so let's look in Stache's root.
+                if (grunt.file.isDir(stacheModulesDirectory + module)) {
+                    grunt.file.setBase(grunt.config.get('stache.dir'));
                     grunt.loadNpmTasks(module);
+                    grunt.file.setBase(cwd);
+                } else {
+                    slog.fatal("The module \"" + module + "\" was not found!\n============\nAttempt the following:\n1)  Delete the node_modules folder\n2)  Type `npm cache clear`\n3)  Type `npm install`\n4)  Type `stache serve`\n\nIf Stache fails to serve, contact Stache support.");
+                }
+                break;
+
+            case true:
+                // Module found in the parent directory. Load it!
+                grunt.loadNpmTasks(module);
                 break;
             }
         });
@@ -1567,6 +1661,7 @@ module.exports = function (grunt) {
         grunt.registerTask('build', 'Build the documentation', tasks.stacheBuild);
         grunt.registerTask('help', 'Display available Stache commands', tasks.stacheHelp);
         grunt.registerTask('new', 'Create a new site using the Stache boilerplate', tasks.stacheNew);
+        grunt.registerTask('release', 'Bump the version number in package.json; commit to origin.', tasks.stacheRelease);
         grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
         grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
     }());

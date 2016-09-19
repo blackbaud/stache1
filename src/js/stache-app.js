@@ -1,13 +1,6 @@
-/*global window, angular */
-(function (window, angular) {
+/*global window, document */
+(function (window, angular, $) {
     'use strict';
-
-    /**
-     *
-     */
-    function Config($stateProvider, $urlRouterProvider) {
-        // Currently no registered routes
-    }
 
     /**
      * Configures the Omnibar.
@@ -121,6 +114,66 @@
     /**
      *
      */
+    function DirectiveStacheEqualHeight($timeout) {
+        return {
+            restrict: 'A',
+            link: function (scope, element) {
+
+                // Add a timeout so that this executes at the end of a digest.
+                $timeout(function () {
+                    var items,
+                        len;
+
+                    items = element[0].querySelectorAll('.equal-height-item');
+                    len = items.length;
+
+                    function addClass(name, element) {
+                        var classesString;
+                        classesString = element.className || "";
+                        if (classesString.indexOf(name) === -1) {
+                            element.className += " " + name;
+                        }
+                    }
+
+                    function setHeight() {
+                        var h,
+                            height,
+                            i;
+
+                        height = 0;
+
+                        // First, make sure no explicit heights are set.
+                        for (i = 0; i < len; ++i) {
+                            items[i].style.height = 'auto';
+                        }
+
+                        // Second, determine the max height of the children.
+                        for (i = 0; i < len; ++i) {
+                            h = items[i].offsetHeight;
+                            height = (h > height) ? h : height;
+                        }
+
+                        // Finally, set all children's height to the max height.
+                        for (i = 0; i < len; ++i) {
+                            items[i].style.height = height + 'px';
+                        }
+
+                        addClass("on", element[0]);
+                    }
+
+                    // Set the heights when the page loads.
+                    setHeight();
+
+                    // Set the heights when the page is resized.
+                    angular.element(window).bind('resize', setHeight);
+                });
+            }
+        };
+    }
+
+    /**
+     *
+     */
     function FilterTruncate() {
         return function (text, length, end) {
             if (isNaN(length)) {
@@ -138,14 +191,13 @@
     }
 
     // Dependencies.
-    Config.$inject = [
-        '$stateProvider',
-        '$urlRouterProvider'
-    ];
     ConfigOmnibar.$inject = [
         'OmnibarSearchSettingsProvider',
         'bbOmnibarConfig',
         'stacheConfig'
+    ];
+    DirectiveStacheEqualHeight.$inject = [
+        '$timeout'
     ];
     Run.$inject = [
         '$rootScope',
@@ -169,11 +221,11 @@
     ]);
 
     angular.module('stache')
-        .config(Config)
         .config(ConfigOmnibar)
         .controller('NavController', angular.noop)
         .controller('SearchController', SearchController)
         .directive('stacheEnter', DirectiveStacheEnter)
+        .directive('stacheEqualHeight', DirectiveStacheEqualHeight)
         .filter('truncate', FilterTruncate)
         .run(Run);
-}(window, window.angular));
+}(window, window.angular, window.jQuery));

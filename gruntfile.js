@@ -5,6 +5,21 @@ module.exports = function (grunt) {
     var jsHintFiles = ['gruntfile.js', 'src/helpers/**/*.js'];
 
     grunt.config.init({
+        concat: {
+            options: {
+                separator: ';',
+                process: function (src, filepath) {
+                    if (filepath === 'bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js') {
+                        src = '(function (angular) {' + src + '}(window.angular));';
+                    }
+                    return src;
+                }
+            },
+            dist: {
+                src: ['bower_components/angular-swagger-ui/dist/scripts/swagger-ui.min.js', 'src/js/swagger.min.js'],
+                dest: 'src/js/swagger.min.js'
+            }
+        },
         sass: {
             options: {
                 outputStyle: 'compressed',
@@ -19,7 +34,15 @@ module.exports = function (grunt) {
                     src: ['*.scss'],
                     dest: 'src/css',
                     ext: '.css'
-                }]
+                },
+                {
+                    expand: true,
+                    cwd: 'src/vendor/swagger-ui/',
+                    src: 'swagger.scss',
+                    dest: 'src/css/',
+                    ext: '.css'
+                }
+                ]
             }
         },
         copy: {
@@ -52,6 +75,9 @@ module.exports = function (grunt) {
                         'src/js/stache-clipboard.js',
                         'src/js/prism.js',
                         'bower_components/angular-ui-select/dist/select.js'
+                    ],
+                    'src/js/swagger.min.js': [
+                        'src/js/swagger-app.js'
                     ]
                 }
             }
@@ -83,15 +109,41 @@ module.exports = function (grunt) {
                 files: ['src/helpers/**/*.js'],
                 tasks: ['jasmine_node', 'jshint', 'jscs']
             }
+        },
+        lessToSass: {
+            convert: {
+                files: [{
+                    expand: true,
+                    cwd: 'bower_components/angular-swagger-ui/dist/less',
+                    src: ['*.less'],
+                    ext: '.scss',
+                    dest: 'src/vendor/swagger-ui'
+                }],
+                options: {
+                    excludes: ['@mixin'],
+                    replacements: [{
+                        pattern: /\.([\w\-]*)\s*\((.*)\)\s*\{/gi,
+                        replacement: '@mixin $1($2){',
+                        order: 1
+                    },
+                    {
+                        pattern: /\b(\;(?=.*\)\{*))/gi,
+                        replacement: ',',
+                        order: 2
+                    }]
+                }
+            }
         }
     });
 
     grunt.task.loadNpmTasks('grunt-contrib-copy');
+    grunt.task.loadNpmTasks('grunt-contrib-concat');
     grunt.task.loadNpmTasks('grunt-contrib-jshint');
     grunt.task.loadNpmTasks('grunt-contrib-uglify');
     grunt.task.loadNpmTasks('grunt-contrib-watch');
     grunt.task.loadNpmTasks('grunt-jasmine-node-coverage');
     grunt.task.loadNpmTasks('grunt-jscs');
+    grunt.task.loadNpmTasks('grunt-less-to-sass');
     grunt.task.loadNpmTasks('grunt-sass');
 
     grunt.task.registerTask('createselectscss', function () {
@@ -104,9 +156,11 @@ module.exports = function (grunt) {
 
     grunt.task.registerTask('build', [
         'createselectscss',
+        'lessToSass',
         'sass',
         'copy:build',
         'uglify:build',
+        'concat',
         'cleanselectscss'
     ]);
     grunt.task.registerTask('test', [

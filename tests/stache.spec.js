@@ -96,6 +96,30 @@
                 expect(config.foo).toBe('bar');
             });
         });
+
+        describe('trimLeadingSlash()', function () {
+            it('should handle null input', function () {
+                expect(stache.utils.trimLeadingSlash()).toEqual();
+            });
+            it('should handle empty string', function () {
+                expect(stache.utils.trimLeadingSlash('')).toEqual('');
+            });
+            it('should handle string with multiple leading slashes', function () {
+                expect(stache.utils.trimLeadingSlash('///test/')).toEqual('//test/');
+            });
+        });
+
+        describe('trimTrailingSlash()', function () {
+            it('should handle null input', function () {
+                expect(stache.utils.trimTrailingSlash()).toEqual();
+            });
+            it('should handle empty string', function () {
+                expect(stache.utils.trimTrailingSlash('')).toEqual('');
+            });
+            it('should handle string with multiple ending slashes', function () {
+                expect(stache.utils.trimTrailingSlash('/test///')).toEqual('/test//');
+            });
+        });
     });
 
 }());

@@ -55,6 +55,25 @@ module.exports.register = function (Handlebars, options, params) {
         return out;
     };
 
+    // Apply SKY UX classnames to headers following the example at https://github.com/chjj/marked#overriding-renderer-methods
+    // Disabling to fix immediate bug.  - Bobby, 2016-06-29
+    // renderer.heading = function (text, level) {
+    //     var classname;
+    //     classname = "";
+    //     switch (level) {
+    //     case 1:
+    //         classname = "bb-page-heading";
+    //         break;
+    //     case 2:
+    //         classname = "bb-section-heading";
+    //         break;
+    //     case 3:
+    //         classname = "bb-subsection-heading";
+    //         break;
+    //     }
+    //     return '<h' + level + ' class="' + classname + '">' + text + '</h' + level + '>';
+    // };
+
     /**
     * Utility function to get the basename
     **/
@@ -95,9 +114,10 @@ module.exports.register = function (Handlebars, options, params) {
     * Wrapping the basenames in '/' prevents false matches, ie docs vs docs2 vs 2docs.
     **/
     function isActiveNav(dest, uri, parentCanBeActive) {
+        var base = stache.config.base;
         dest = '/' + basename(dest) + '/';
         uri = '/' + basename(uri) + '/';
-        return (parentCanBeActive && uri !== '') ? dest.indexOf(uri) > -1 : uri === dest;
+        return (parentCanBeActive && uri !== base) ? dest.indexOf(uri) > -1 : uri === dest;
     }
 
     /**
@@ -239,11 +259,13 @@ module.exports.register = function (Handlebars, options, params) {
          * @param {string} [activeURI] The path of the active page.
          */
         findBreadcrumb: function (navLinks, activeURI) {
-            var breadcrumbs,
+            var base,
+                breadcrumbs,
                 i,
                 navLink,
                 navLinksLength;
 
+            base = stache.config.base;
             breadcrumbs = [];
             navLinksLength = navLinks.length;
 
@@ -253,7 +275,7 @@ module.exports.register = function (Handlebars, options, params) {
 
                 // Don't include the Home page because it cannot have sub-directories.
                 // (We add the Home page manually, in getBreadcrumbNavLinks.)
-                if (navLink.uri !== "/") {
+                if (navLink.uri !== base) {
 
                     // Is this page's URI a fragment of the active page's URI?
                     if (activeURI.indexOf(navLink.uri) > -1) {
@@ -354,15 +376,18 @@ module.exports.register = function (Handlebars, options, params) {
             config = stache.config;
             keys = [
                 'showBreadcrumbs',
-                'blogReadMoreLabel'
+                'blogReadMoreLabel',
+                'swagger'
             ];
             keysLength = keys.length;
 
             for (i = 0; i < keysLength; ++i) {
                 key = keys[i];
+                if (typeof this[key] === 'object') {
+                    this[key] = merge(true, config[key], this[key]);
+                }
                 this[key] = utils.mergeOption(config[key], this[key]);
             }
-
             return options.fn(this);
         },
 
@@ -451,8 +476,9 @@ module.exports.register = function (Handlebars, options, params) {
         * Is the current page home
         **/
         isHome: function (options) {
-            var b = basename(options.hash.dest || this.page.dest || 'NOT_HOME', true);
-            return b === '' ? options.fn(this) : options.inverse(this);
+            var b = basename(options.hash.dest || this.page.dest || 'NOT_HOME', true),
+                base = basename(stache.config.base);
+            return (b === '' || b === base) ? options.fn(this) : options.inverse(this);
         },
 
         /**
@@ -460,6 +486,16 @@ module.exports.register = function (Handlebars, options, params) {
         **/
         json: function (context) {
             return JSON.stringify(context);
+        },
+
+        /**
+        * Fetches JSON data by key and returns it.
+        **/
+
+        getDataByName: function (name) {
+            if (this.hasOwnProperty(name)) {
+                return JSON.stringify(this[name]);
+            }
         },
 
         /**
@@ -553,10 +589,10 @@ module.exports.register = function (Handlebars, options, params) {
 
                                     // These fields should NOT be propagated into child scopes:
                                     switch (h) {
-                                        case "nav_links":
+                                    case "nav_links":
                                         break;
-                                        default:
-                                            context[i][h] = options.hash[h];
+                                    default:
+                                        context[i][h] = options.hash[h];
                                         break;
                                     }
                                 }
@@ -966,12 +1002,12 @@ module.exports.register = function (Handlebars, options, params) {
         getPrismType: function (type) {
             var r = type;
             switch (type.toUpperCase()) {
-                case 'C#':
-                case 'VB':
-                    r = 'csharp';
+            case 'C#':
+            case 'VB':
+                r = 'csharp';
                 break;
-                case 'C++':
-                    r = 'cpp';
+            case 'C++':
+                r = 'cpp';
                 break;
             }
             return r;
