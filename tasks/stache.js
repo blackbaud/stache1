@@ -664,7 +664,10 @@ module.exports = function (grunt) {
         },
 
         createWebConfig: function () {
-          console.log(grunt.config.get('stache.config'));
+            console.log("CONFIG:", grunt.config.get('stache.config'));
+            // Check if web.config exists already.
+            // If it does, alert the user but do nothing.
+
         },
 
         /**
