@@ -671,6 +671,8 @@ module.exports = function (grunt) {
                 destinationDir;
 
             bbauth = grunt.config.get('stache.config.bbauth');
+            console.log("BBAUTH", bbauth);
+
             destinationDir = grunt.config.get('stache.config.build') + grunt.config.get('stache.config.base');
 
             var stacheDir = grunt.config.get('stache.dir');
@@ -678,9 +680,13 @@ module.exports = function (grunt) {
             var compiled = Handlebars.compile(template);
             var content = compiled(bbauth);
             var fileName = destinationDir + 'web.config';
+
             console.log(fileName, content);
+
             grunt.file.write(fileName, content);
+
             if (bbauth.isEnabled === true) {
+                console.log("COPYING DLL FILES...");
                 grunt.task.run('copy:dll');
             }
             //grunt.file.copy(stacheDir + 'src/vendor/bbauth/bin', destinationDir);
