@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!-- Web.Config Configuration File -->
 <configuration>
-  {{#if bbauth.isEnabled }}
+  {{#if isEnabled }}
   <appSettings>
-    <add key="AuthAddress" value="{{ bbauth.authAddress }}" />
-    <add key="RootUrl" value="{{ bbauth.rootUrl }}" />
-    <add key="ClientId" value="{{ bbauth.clientId }}" />
+    <add key="AuthAddress" value="{{ authAddress }}" />
+    <add key="RootUrl" value="{{ rootUrl }}" />
+    <add key="ClientId" value="{{ clientId }}" />
     <add key="ForbiddenContent" value="This site is restricted to Blackbaud staff members." />
   </appSettings>
   <system.web>

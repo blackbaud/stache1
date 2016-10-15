@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     var assemble,
         cheerio,
         defaults,
+        Handlebars,
         header,
         merge,
         navSearchFiles,
@@ -13,7 +14,7 @@ module.exports = function (grunt) {
         utils,
         yfm;
 
-
+    Handlebars = require('handlebars');
     assemble = require('assemble');
     cheerio = require('cheerio');
     merge = require('merge');
@@ -222,6 +223,12 @@ module.exports = function (grunt) {
         copy: {
             build: {
                 files: [
+                    {
+                        expand: true,
+                        cwd: '<%= stache.config.src %>vendor/bbauth/',
+                        src: 'bin/**.dll',
+                        dest: '<%= stache.config.build %><%= stache.config.base %>'
+                    },
                     {
                         expand: true,
                         cwd: '<%= stache.config.src %>',
@@ -652,10 +659,31 @@ module.exports = function (grunt) {
             slog.success("Done.");
         },
 
+        // Check if bbauth is set in stache.yml
+        // If so, convert the web.config.hbs file into a web.config file
+        // Move web.config and all DLL files to site's build folder
         createWebConfig: function () {
-            console.log("CONFIG:", grunt.config.get('stache.config'));
-            // Check if web.config exists already.
-            // If it does, alert the user but do nothing.
+            var bbauth,
+                destinationDir;
+
+            bbauth = grunt.config.get('stache.config.bbauth');
+            destinationDir = grunt.config.get('stache.config.build') + grunt.config.get('stache.config.base');
+
+            var stacheDir = grunt.config.get('stache.dir');
+            var template = grunt.file.read(stacheDir + 'src/vendor/bbauth/web.config.hbs', 'utf8');
+            var compiled = Handlebars.compile(template);
+            var content = compiled(bbauth);
+            var fileName = destinationDir + 'web.config';
+            console.log(fileName, content);
+            grunt.file.write(fileName, content);
+            //grunt.file.copy(stacheDir + 'src/vendor/bbauth/bin', destinationDir);
+
+            // if (bbauth.isEnabled === true) {
+            //     // Copy the remaining dll files
+            //     //grunt.file.copy(libCss, '.tmp/' + destFile);
+            // } else {
+            //     // Delete any existing DLL files
+            // }
         },
 
         /**
@@ -839,13 +867,13 @@ module.exports = function (grunt) {
                     'clean:build',
                     'createAutoPages',
                     'createAutoNav',
-                    'createWebConfig',
                     'hook:preAssemble',
                     'assemble',
                     'hook:postAssemble',
                     'prepareSearch',
                     'copy:build',
-                    'hook:postStache',
+                    'createWebConfig',
+                    'hook:postStache'
                 ];
                 break;
             }
@@ -937,12 +965,6 @@ module.exports = function (grunt) {
             // Run the tasks
             grunt.task.run(tasks);
         },
-
-        // stacheConfig: function (name, val) {
-        //     grunt.config.set(name, val);
-        //     console.log(name + " set to: " + grunt.config(name));
-        //     console.log(grunt.config('stache.config'));
-        // },
 
         /**
          * Bash command: stache version
