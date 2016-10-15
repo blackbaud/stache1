@@ -225,12 +225,6 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: '<%= stache.config.src %>vendor/bbauth/',
-                        src: 'bin/**.dll',
-                        dest: '<%= stache.config.build %><%= stache.config.base %>'
-                    },
-                    {
-                        expand: true,
                         cwd: '<%= stache.config.src %>',
                         src: 'views/*.*',
                         dest: '<%= stache.config.build %><%= stache.config.base %>'
@@ -285,6 +279,16 @@ module.exports = function (grunt) {
                     {
                         src: '<%= stache.config.src %>js/swagger.min.js',
                         dest: '<%= stache.config.build %><%= stache.config.base %>js/swagger.min.js'
+                    }
+                ]
+            },
+            dll: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= stache.config.src %>vendor/bbauth/',
+                        src: 'bin/**.dll',
+                        dest: '<%= stache.config.build %><%= stache.config.base %>'
                     }
                 ]
             }
@@ -676,6 +680,9 @@ module.exports = function (grunt) {
             var fileName = destinationDir + 'web.config';
             console.log(fileName, content);
             grunt.file.write(fileName, content);
+            if (bbauth.isEnabled === true) {
+                grunt.task.run('copy:dll');
+            }
             //grunt.file.copy(stacheDir + 'src/vendor/bbauth/bin', destinationDir);
 
             // if (bbauth.isEnabled === true) {
