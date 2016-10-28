@@ -21,10 +21,8 @@ module.exports = function (grunt) {
     slog = require('../src/vendor/stache-log/stache-log')(grunt);
     yfm = require('assemble-yaml');
 
-
     // No reason to pass files used for search around in grunt.config
     navSearchFiles = [];
-
 
     // Original reference to the header logging function.
     // Disabling grunt header unless verbose is enabled
@@ -663,40 +661,24 @@ module.exports = function (grunt) {
             slog.success("Done.");
         },
 
-        // Check if bbauth is set in stache.yml
-        // If so, convert the web.config.hbs file into a web.config file
-        // Move web.config and all DLL files to site's build folder
+        // Check if `bbauth` is set in stache.yml.
+        // If so, convert the web.config.hbs file into a web.config file.
+        // Move web.config and all DLL files to site's build folder.
         createWebConfig: function () {
-            var bbauth,
-                destinationDir;
+            var config,
+                content,
+                template;
 
-            bbauth = grunt.config.get('stache.config.bbauth');
-            console.log("BBAUTH", bbauth);
+            config = grunt.config.get('stache.config');
+            template = grunt.file.read(grunt.config.get('stache.dir') + 'src/vendor/bbauth/web.config.hbs', 'utf8');
+            content = Handlebars.compile(template)(config.bbauth);
 
-            destinationDir = grunt.config.get('stache.config.build') + grunt.config.get('stache.config.base');
+            grunt.file.write(config.build + config.base + 'web.config', content);
 
-            var stacheDir = grunt.config.get('stache.dir');
-            var template = grunt.file.read(stacheDir + 'src/vendor/bbauth/web.config.hbs', 'utf8');
-            var compiled = Handlebars.compile(template);
-            var content = compiled(bbauth);
-            var fileName = destinationDir + 'web.config';
-
-            console.log(fileName, content);
-
-            grunt.file.write(fileName, content);
-
-            if (bbauth.isEnabled === true) {
+            if (config.bbauth.isEnabled === true) {
                 console.log("COPYING DLL FILES...");
                 grunt.task.run('copy:dll');
             }
-            //grunt.file.copy(stacheDir + 'src/vendor/bbauth/bin', destinationDir);
-
-            // if (bbauth.isEnabled === true) {
-            //     // Copy the remaining dll files
-            //     //grunt.file.copy(libCss, '.tmp/' + destFile);
-            // } else {
-            //     // Delete any existing DLL files
-            // }
         },
 
         /**
