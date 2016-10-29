@@ -1,14 +1,3 @@
-/**
-* Grunt configuration file.
-* Bobby Earl, 2015-01-27
-*
-* TODO
-*   - Implement grunt-filerev when performing blackbaud:build.
-*   - Work on error codes when serving.  Maybe not even necessary since it's just local.
-*       If we do it, it needs to handle relative asset linking outside of Assemble.
-*       Inspiration: https://github.com/gruntjs/grunt-contrib-connect/issues/30
-**/
-
 /*jslint node: true, nomen: true, plusplus: true */
 module.exports = function (grunt) {
     'use strict';
@@ -16,6 +5,7 @@ module.exports = function (grunt) {
     var assemble,
         cheerio,
         defaults,
+        Handlebars,
         header,
         merge,
         navSearchFiles,
@@ -24,17 +14,15 @@ module.exports = function (grunt) {
         utils,
         yfm;
 
-
+    Handlebars = require('handlebars');
     assemble = require('assemble');
     cheerio = require('cheerio');
     merge = require('merge');
     slog = require('../src/vendor/stache-log/stache-log')(grunt);
     yfm = require('assemble-yaml');
 
-
     // No reason to pass files used for search around in grunt.config
     navSearchFiles = [];
-
 
     // Original reference to the header logging function.
     // Disabling grunt header unless verbose is enabled
@@ -289,6 +277,16 @@ module.exports = function (grunt) {
                     {
                         src: '<%= stache.config.src %>js/swagger.min.js',
                         dest: '<%= stache.config.build %><%= stache.config.base %>js/swagger.min.js'
+                    }
+                ]
+            },
+            dll: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%= stache.config.src %>vendor/bbauth/',
+                        src: 'bin/**.dll',
+                        dest: '<%= stache.config.build %><%= stache.config.base %>'
                     }
                 ]
             }
@@ -663,6 +661,26 @@ module.exports = function (grunt) {
             slog.success("Done.");
         },
 
+        // Check if `bbauth` is set in stache.yml.
+        // If so, convert the web.config.hbs file into a web.config file.
+        // Move web.config and all DLL files to site's build folder.
+        createWebConfig: function () {
+            var config,
+                content,
+                template;
+
+            config = grunt.config.get('stache.config');
+            template = grunt.file.read(grunt.config.get('stache.dir') + 'src/vendor/bbauth/web.config.hbs', 'utf8');
+            content = Handlebars.compile(template)(config.bbauth);
+
+            grunt.file.write(config.build + config.base + 'web.config', content);
+
+            if (config.bbauth.isEnabled === true) {
+                console.log("COPYING DLL FILES...");
+                grunt.task.run('copy:dll');
+            }
+        },
+
         /**
          * Creates and returns an array of static src->dest mappings for files,
          * based on a glob pattern. Grunt Newer cannot use glob patterns, so this
@@ -849,7 +867,8 @@ module.exports = function (grunt) {
                     'hook:postAssemble',
                     'prepareSearch',
                     'copy:build',
-                    'hook:postStache',
+                    'createWebConfig',
+                    'hook:postStache'
                 ];
                 break;
             }
@@ -941,12 +960,6 @@ module.exports = function (grunt) {
             // Run the tasks
             grunt.task.run(tasks);
         },
-
-        // stacheConfig: function (name, val) {
-        //     grunt.config.set(name, val);
-        //     console.log(name + " set to: " + grunt.config(name));
-        //     console.log(grunt.config('stache.config'));
-        // },
 
         /**
          * Bash command: stache version
@@ -1645,6 +1658,7 @@ module.exports = function (grunt) {
          */
         grunt.registerTask('createAutoPages', tasks.createAutoPages);
         grunt.registerTask('createAutoNav', tasks.createAutoNav);
+        grunt.registerTask('createWebConfig', tasks.createWebConfig);
         grunt.registerTask('expandFileMappings', tasks.expandFileMappings);
         grunt.registerTask('header', tasks.header);
         grunt.registerTask('hook', tasks.hook);
