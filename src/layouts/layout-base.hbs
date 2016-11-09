@@ -122,20 +122,27 @@
           {{/ if }}
         {{/ if }}
 
-        <div class="copyright">
-          <div class="{{ stache.config.bootstrap_container }}">
-            <div class="row">
+        {{# if stache.config.showCopyright }}
+          {{# if stache.config.copyright }}
+            {{ include stache.config.copyright }}
+          {{ else }}
 
-              <div class="col-sm-6">
-                <p>&copy; Blackbaud, Inc.  All rights reserved.</p>
-              </div>  <!-- .col-sm-6 -->
+            <div class="copyright">
+              <div class="{{ stache.config.bootstrap_container }}">
+                <div class="row">
 
-              <div class="col-sm-6">
-              </div>  <!-- .col-sm-6 -->
+                  <div class="col-sm-6">
+                    <p>&copy; Blackbaud, Inc.  All rights reserved.</p>
+                  </div>  <!-- .col-sm-6 -->
 
-            </div>  <!-- .row -->
-          </div>  <!-- .container -->
-        </div>  <!-- .copyright -->
+                  <div class="col-sm-6">
+                  </div>  <!-- .col-sm-6 -->
+
+                </div>  <!-- .row -->
+              </div>  <!-- .container -->
+            </div>  <!-- .copyright -->
+          {{/ if }}
+        {{/ if }}
       </div>
 
       {{# inherit stache.config.showOmnibar showOmnibar }}
