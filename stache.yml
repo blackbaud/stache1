@@ -93,6 +93,7 @@ clipboard: true
 prism: true
 sky: true
 draft: true
+showCopyright: true
 showHeader: true
 showFooter: true
 showOmnibar: true
@@ -162,4 +163,3 @@ bbauth:
   clientId: <unique>.developer.blackbaud.com
   authAddress: https://signin.blackbaud.com/
   rootUrl: https://<unique>.developer.blackbaud.com
-  
