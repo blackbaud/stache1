@@ -671,9 +671,11 @@ module.exports = function (grunt) {
 
             config = grunt.config.get('stache.config');
             template = grunt.file.read(grunt.config.get('stache.dir') + 'src/vendor/bbauth/web.config.hbs', 'utf8');
-            content = Handlebars.compile(template)(config.bbauth);
 
-            grunt.file.write(config.build + config.base + 'web.config', content);
+            if (!grunt.file.exists(config.build + config.base + 'web.config')) {
+                content = Handlebars.compile(template)(config.bbauth);
+                grunt.file.write(config.build + config.base + 'web.config', content);
+            }
 
             if (config.bbauth.isEnabled === true) {
                 console.log("COPYING DLL FILES...");
