@@ -667,14 +667,16 @@ module.exports = function (grunt) {
         createWebConfig: function () {
             var config,
                 content,
-                template;
+                template,
+                webConfigPath;
 
+            webConfigPath = config.build + config.base + 'web.config';
             config = grunt.config.get('stache.config');
             template = grunt.file.read(grunt.config.get('stache.dir') + 'src/vendor/bbauth/web.config.hbs', 'utf8');
 
-            if (!grunt.file.exists(config.build + config.base + 'web.config')) {
+            if (!grunt.file.exists(webConfigPath)) {
                 content = Handlebars.compile(template)(config.bbauth);
-                grunt.file.write(config.build + config.base + 'web.config', content);
+                grunt.file.write(webConfigPath, content);
             }
 
             if (config.bbauth.isEnabled === true) {
