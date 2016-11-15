@@ -661,31 +661,56 @@ module.exports = function (grunt) {
             slog.success("Done.");
         },
 
+        // Converts the web.config.hbs file into a web.config file.
         // Check if `bbauth` is set in stache.yml.
-        // If so, convert the web.config.hbs file into a web.config file.
-        // Move web.config and all DLL files to site's build folder.
+        // If so, move all DLL files to site's build folder.
         createWebConfig: function () {
             var config,
                 content,
+                files,
+                filesLength,
+                i,
                 template,
                 webConfigPath;
 
-            webConfigPath = config.build + config.base + 'web.config.hbs';
-            config = grunt.config.get('stache.config');
+            /**
+             * 1. Check for `./static/web.config.hbs`
+             * 2. Check for `./static/web.config`
+             * 3. None found? Use source version.
+             */
 
-            if (grunt.file.exists(webConfigPath)) {
-                template = grunt.file.read(webConfigPath, 'utf8');
-            } else {
-                template = grunt.file.read(grunt.config.get('stache.dir') + 'src/vendor/bbauth/web.config.hbs', 'utf8');
+            config = grunt.config.get('stache.config');
+            webConfigPath = config.build + config.base + 'web.config';
+            files = [
+                config.build + config.base + 'web.config.hbs',
+                config.build + config.base + 'web.config',
+                grunt.config.get('stache.dir') + 'src/vendor/bbauth/web.config.hbs'
+            ];
+            filesLength = files.length;
+
+            for (i = 0; i < filesLength; ++i) {
+                if (grunt.file.exists(files[i])) {
+
+                    // If the config is a Handlebars file, compile it into a web.config file.
+                    if (files[i].indexOf('.hbs') > -1) {
+                        slog.muted("Generating web.config from Handlebars template...");
+                        template = grunt.file.read(files[i], 'utf8');
+                        content = Handlebars.compile(template)({
+                            bbauth: config.bbauth
+                        });
+                        grunt.file.write(webConfigPath, content);
+                        slog.success("Done.");
+                    }
+
+                    // If a file is found, stop.
+                    break;
+                }
             }
 
-            content = Handlebars.compile(template)({
-                bbauth: config.bbauth
-            });
-            grunt.file.write(webConfigPath, content);
-
             if (config.bbauth.isEnabled === true) {
-                console.log("COPYING DLL FILES...");
+                if (!template) {
+                    slog.warning("BBAUTH is enabled, but a custom web.config was found. Please convert your custom web.config to a Handlebars template (`/static/web.config.hbs`) so that the appropriate application settings can be implemented.");
+                }
                 grunt.task.run('copy:dll');
             }
         },
