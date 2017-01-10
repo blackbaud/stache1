@@ -1,3 +1,10 @@
+{{# inherit stache.config.showAdminEdit showAdminEdit }}
+  <ul class="nav navbar-nav navbar-right">   
+    {{# inherit stache.config.editInGitHub editInGitHub }}
+      <li>{{{ include stache.config.partial_edit_github }}}</li>
+    {{/ inherit }}
+  </ul>
+{{/ inherit }}
 {{# inherit stache.config.showAdminToolbar showAdminToolbar }}
   <ul class="nav navbar-nav navbar-right">
     <li>
