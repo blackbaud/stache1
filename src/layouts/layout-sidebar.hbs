@@ -45,16 +45,7 @@ showHeadings: true
       {{# withNewline }}{{ body }}{{/ withNewline }}
     {{/ inherit }}
     {{# inherit stache.config.comments comments }}
-      <div class="blog-comments">
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-          (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = '//{{ stache.config.comments_key }}.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-          })();
-        </script>
-      </div>
+      {{ include 'partial-disqus'}}
     {{/ inherit }}
   </div>
 </div>
