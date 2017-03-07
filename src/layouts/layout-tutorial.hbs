@@ -1,0 +1,48 @@
+---
+layout: layout-base
+showHeadings: true
+---
+
+<div class="row">
+  <div class="col-sm-3 content-secondary">
+    <div class="sidebar">
+      {{# minify collapseWhitespace=true removeEmptyElements=true }}
+        {{# if sidebar_title }}
+          <h3>{{ sidebar_title }}</h3>
+        {{/ if }}
+
+        {{# withNavLinks }}
+
+          {{# isActiveNav dest=../page.dest }}
+            <ul class="nav nav-stacked nav-sidebar">
+
+              {{# if showTitle }}
+                <li class="title {{# if draft }}draft{{/ if }}">
+                  <a href="{{ uri }}">
+                    {{ name }}
+                  </a>
+                </li>
+              {{/ if}}
+
+              {{ include 'partial-sidebar' this sidebarCurrentDepth="0" sidebarParentDepth=../../sidebarParentDepth dest=../../page.dest showHeadings=../../../showHeadings page=../../../pagination.index.page }}
+
+              <li class="visible-on-affix">
+                <a href="#top" class="smooth-scroll">
+                  <i class="fa fa-caret-square-o-up"></i>
+                </a>
+              </li>
+
+            </ul>
+          {{/ isActiveNav }}
+        {{/ withNavLinks }}
+      {{/ minify }}
+    </div>
+  </div>
+  <div class="col-sm-9 content-primary">
+    {{# inherit stache.config.markdown markdown }}
+      {{# markdown }}{{ body }}{{/ markdown }}
+    {{ else }}
+      {{# withNewline }}{{ body }}{{/ withNewline }}
+    {{/ inherit }}
+  </div>
+</div>
