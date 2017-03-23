@@ -1,0 +1,10 @@
+---
+layout: layout-sidebar
+bootstrap_container: container-fluid
+---
+
+{{# inherit stache.config.markdown markdown }}
+  {{# markdown }}{{ body }}{{/ markdown }}
+{{ else }}
+  {{# withNewline }}{{ body }}{{/ withNewline }}
+{{/ inherit }}
