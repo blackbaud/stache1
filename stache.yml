@@ -109,8 +109,8 @@ comments: true
 comments_key: blackbaud
 blog_recent_limit: 10
 bootstrap_container: container
-sidebarColumn: col-sm-3
-sidebarContentColumn: col-sm-9
+sidebarLayoutSecondaryColumn: col-sm-3
+sidebarLayoutPrimaryColumn: col-sm-9
 video_description_top: false
 watchNewer: true
 modules:

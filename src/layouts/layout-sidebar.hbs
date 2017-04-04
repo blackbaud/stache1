@@ -1,12 +1,12 @@
 ---
 layout: layout-container
 showHeadings: true
-sidebarColumn: <%= stache.config.sidebarColumn %>
-sidebarContentColumn: <%= stache.config.sidebarContentColumn %>
+sidebarLayoutSecondaryColumn: <%= stache.config.sidebarLayoutSecondaryColumn %>
+sidebarLayoutPrimaryColumn: <%= stache.config.sidebarLayoutPrimaryColumn %>
 ---
 
 <div class="row">
-  <div class="{{ sidebarColumn }} content-secondary">
+  <div class="{{ sidebarSecondaryColumn }} content-secondary">
     <div class="sidebar">
       {{# minify collapseWhitespace=true removeEmptyElements=true }}
         {{# if sidebar_title }}
@@ -40,7 +40,7 @@ sidebarContentColumn: <%= stache.config.sidebarContentColumn %>
       {{/ minify }}
     </div>
   </div>
-  <div class="{{ sidebarContentColumn }} content-primary">
+  <div class="{{ sidebarLayoutPrimaryColumn }} content-primary">
     {{# inherit stache.config.markdown markdown }}
       {{# markdown }}{{ body }}{{/ markdown }}
     {{ else }}
