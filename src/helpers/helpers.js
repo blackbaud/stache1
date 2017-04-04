@@ -378,7 +378,9 @@ module.exports.register = function (Handlebars, options, params) {
                 'showBreadcrumbs',
                 'blogReadMoreLabel',
                 'swagger',
-                'bootstrap_container'
+                'bootstrap_container',
+                'sidebarLayoutSecondaryColumn',
+                'sidebarLayoutPrimaryColumn'
             ];
             keysLength = keys.length;
 
