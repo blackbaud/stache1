@@ -19,15 +19,8 @@
         host = window.location.hostname;
         needle = 'blackbaud.com';
 
-        // If the host is not white-listed, load the DEV version of the omnibar library.
-        if (host.indexOf(needle, host.length - needle.length) === -1) {
-            bbOmnibarConfig.url = stacheConfig.omnibar.urlDev;
-            OmnibarSearchSettingsProvider.setSearchFormClass(stacheConfig.omnibarSearch.searchFormClassDev);
-        } else {
-            bbOmnibarConfig.url = stacheConfig.omnibar.url;
-            OmnibarSearchSettingsProvider.setSearchFormClass(stacheConfig.omnibarSearch.searchFormClass);
-        }
-
+        bbOmnibarConfig.url = stacheConfig.omnibar.url;
+        OmnibarSearchSettingsProvider.setSearchFormClass(stacheConfig.omnibarSearch.searchFormClass);
         bbOmnibarConfig.appLookupUrl = stacheConfig.omnibar.appLookupUrl;
 
         // Configure search results.
