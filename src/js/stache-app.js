@@ -13,7 +13,6 @@
         bbOmnibarConfig.signInRedirectUrl = stacheConfig.omnibar.signInRedirectUrl;
         bbOmnibarConfig.signOutRedirectUrl = stacheConfig.omnibar.signOutRedirectUrl;
         bbOmnibarConfig.url = stacheConfig.omnibar.url;
-        OmnibarSearchSettingsProvider.setSearchFormClass(stacheConfig.omnibarSearch.searchFormClass);
         bbOmnibarConfig.appLookupUrl = stacheConfig.omnibar.appLookupUrl;
 
         // Configure search results.
