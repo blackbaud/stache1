@@ -6,28 +6,13 @@
      * Configures the Omnibar.
      */
     function ConfigOmnibar(OmnibarSearchSettingsProvider, bbOmnibarConfig, stacheConfig) {
-        var host,
-            needle;
-
         // Configure Omnibar
         bbOmnibarConfig.serviceName = stacheConfig.omnibar.serviceName;
         bbOmnibarConfig.enableSearch = stacheConfig.omnibar.enableSearch;
         bbOmnibarConfig.enableHelp = stacheConfig.omnibar.enableHelp;
         bbOmnibarConfig.signInRedirectUrl = stacheConfig.omnibar.signInRedirectUrl;
         bbOmnibarConfig.signOutRedirectUrl = stacheConfig.omnibar.signOutRedirectUrl;
-
-        host = window.location.hostname;
-        needle = 'blackbaud.com';
-
-        // If the host is not white-listed, load the DEV version of the omnibar library.
-        if (host.indexOf(needle, host.length - needle.length) === -1) {
-            bbOmnibarConfig.url = stacheConfig.omnibar.urlDev;
-            OmnibarSearchSettingsProvider.setSearchFormClass(stacheConfig.omnibarSearch.searchFormClassDev);
-        } else {
-            bbOmnibarConfig.url = stacheConfig.omnibar.url;
-            OmnibarSearchSettingsProvider.setSearchFormClass(stacheConfig.omnibarSearch.searchFormClass);
-        }
-
+        bbOmnibarConfig.url = stacheConfig.omnibar.url;
         bbOmnibarConfig.appLookupUrl = stacheConfig.omnibar.appLookupUrl;
 
         // Configure search results.
