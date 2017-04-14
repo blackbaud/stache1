@@ -76,8 +76,7 @@ omnibarSearch:
   resultsBaseUri: ''
   resourceUrl: <%= stache.config.base %>content.json
   resultsTemplateUri: '/assets/vendor/bb-omnibar-search/templates/bb-omnibar-search.hbs'
-  searchFormClass: 'searchenabled'
-  searchFormClassDev: 'bb-omnibar-searchenabled'
+  searchFormClass: 'bb-omnibar-searchenabled'
   searchInputId: 'omnibar_searchbox'
   searchResultsId: 'bb-omnibar-search-results'
 
