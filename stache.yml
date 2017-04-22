@@ -98,6 +98,7 @@ showHeader: true
 showFooter: true
 showOmnibar: true
 showNavDropdown: false
+showAdminEdit: false
 showAdminToolbar: false
 showAdminTrigger: false
 showBreadcrumbs: false
