@@ -12,6 +12,9 @@ bootstrap_container: <%= stache.config.bootstrap_container %>
         {{ else }}
           {{# withNewline }}{{ body }}{{/ withNewline }}
         {{/ inherit }}
+        {{# inherit stache.config.comments comments }}
+          {{ include 'partial-disqus' }}
+        {{/ inherit }}
       </div>
     </div>
   </div>
