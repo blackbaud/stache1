@@ -159,6 +159,7 @@ vsts_protocol: https://
 vsts_base: blackbaud.visualstudio.com
 vsts_token:
 vsts_project:
+vsts_repo: 
 vsts_branch: master
 kudu_repo: <%= stache.config.github_repo %>
 

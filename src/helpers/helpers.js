@@ -954,6 +954,7 @@ module.exports.register = function (Handlebars, options, params) {
         **/
         editInVSTSLink: function (options) {
             var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
+            encodeURIComponent(src)
             return [
                 stache.config.vsts_protocol,
                 stache.config.vsts_base,
@@ -961,7 +962,7 @@ module.exports.register = function (Handlebars, options, params) {
                 stache.config.vsts_project,
                 '/_git/',
                 stache.config.vsts_repo,
-                '?path=%2F',
+                '?path=',
                 src,
                 '&version=GB',
                 stache.config.vsts_branch,
