@@ -17,13 +17,19 @@
             </ul>
           {{/ inherit }}
           <ul class="list-inline pull-right">
-            {{# inherit stache.config.editInGitHub editInGitHub }}
-              <li>{{{ include stache.config.partial_edit_github }}}</li>
-            {{/ inherit }}
+            {{# if stache.config.editInVSTS }}
+              {{# inherit stache.config.editInVSTS editInVSTS }}
+                <li>{{{ include stache.config.partial_edit_vsts }}}</li>
+              {{/ inherit }}
+            {{ else }}
+              {{# inherit stache.config.editInGitHub editInGitHub }}
+                <li>{{{ include stache.config.partial_edit_github }}}</li>
+              {{/ inherit }}
 
-            {{# inherit stache.config.editInProse editInProse }}
-              <li>{{{ include stache.config.partial_edit_prose }}}</li>
-            {{/ inherit }}
+              {{# inherit stache.config.editInProse editInProse }}
+                <li>{{{ include stache.config.partial_edit_prose }}}</li>
+              {{/ inherit }}
+            {{/ if }}
           </ul>
         </div>
       </div>
