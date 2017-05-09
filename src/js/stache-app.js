@@ -3,6 +3,13 @@
     'use strict';
 
     /**
+     * Configures Stache.
+     */
+    function ConfigStache($locationProvider) {
+        $locationProvider.hashPrefix('');
+    }
+
+    /**
      * Configures the Omnibar.
      */
     function ConfigOmnibar(OmnibarSearchSettingsProvider, bbOmnibarConfig, stacheConfig) {
@@ -176,6 +183,10 @@
     }
 
     // Dependencies.
+    ConfigStache.$inject = [
+        '$locationProvider'
+    ];
+
     ConfigOmnibar.$inject = [
         'OmnibarSearchSettingsProvider',
         'bbOmnibarConfig',
@@ -207,6 +218,7 @@
 
     angular.module('stache')
         .config(ConfigOmnibar)
+        .config(ConfigStache)
         .controller('NavController', angular.noop)
         .controller('SearchController', SearchController)
         .directive('stacheEnter', DirectiveStacheEnter)
