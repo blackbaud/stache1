@@ -950,6 +950,26 @@ module.exports.register = function (Handlebars, options, params) {
         },
 
         /**
+        * Consistently generate the edit link for a file in VSTS
+        **/
+        editInVSTSLink: function (options) {
+            var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
+            return [
+                stache.config.vsts_protocol,
+                stache.config.vsts_base,
+                '/',
+                stache.config.vsts_project,
+                '/_git/',
+                stache.config.vsts_repo,
+                '?path=%2F',
+                src,
+                '&version=GB',
+                stache.config.vsts_branch,
+                '&_a=contents&editMode=true'
+            ].join('');
+        },
+
+        /**
         * Consistently generate the trigger link for a site rebuild
         **/
         triggerSiteRebuildLink: function () {
@@ -964,6 +984,19 @@ module.exports.register = function (Handlebars, options, params) {
         * Consistently generate the GitHub repo link (for site rebuild)
         **/
         gitSourceLink: function () {
+            if (stache.config.editInVSTS) {
+                return [
+                    stache.config.vsts_protocol,
+                    stache.config.vsts_token,
+                    '@',
+                    stache.config.vsts_base,
+                    '/',
+                    stache.config.vsts_project,
+                    '/_git/',
+                    stache.config.vsts_repo
+                ].join('');
+            }
+
             return [
                 stache.config.github_protocol,
                 stache.config.github_token,

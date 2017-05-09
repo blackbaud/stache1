@@ -31,6 +31,7 @@ partial_header_admin: <%= stache.config.partials %>partial-header-admin.hbs
 partial_admin_toolbar: <%= stache.config.partials %>partial-admin-toolbar.hbs
 partial_admin_script: <%= stache.config.partials %>partial-admin-script.hbs
 partial_edit_github: <%= stache.config.partials %>partial-edit-github.hbs
+partial_edit_vsts: <%= stache.config.partials %>partial-edit-vsts.hbs
 partial_edit_prose: <%= stache.config.partials %>partial-edit-prose.hbs
 partial_footer_logo: <%= stache.config.partials %>partial-footer-logo.hbs
 partial_footer_navigation: <%= stache.config.partials %>partial-footer-navigation.hbs
@@ -102,6 +103,7 @@ showAdminToolbar: false
 showAdminTrigger: false
 showBreadcrumbs: false
 editInGitHub: true
+editInVSTS: false
 editInProse: true
 markdown: true
 contribute: false
@@ -153,6 +155,11 @@ github_token:
 github_org: blackbaud
 github_repo:
 github_branch: master
+vsts_protocol: https://
+vsts_base: blackbaud.visualstudio.com
+vsts_token:
+vsts_project:
+vsts_branch: master
 kudu_repo: <%= stache.config.github_repo %>
 
 angular:
