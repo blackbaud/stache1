@@ -962,7 +962,7 @@ module.exports.register = function (Handlebars, options, params) {
                 '/_git/',
                 stache.config.vsts_repo,
                 '?path=',
-                src,
+                encodeURIComponent(src),
                 '&version=GB',
                 stache.config.vsts_branch,
                 '&_a=contents&editMode=true'
