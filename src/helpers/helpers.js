@@ -954,7 +954,7 @@ module.exports.register = function (Handlebars, options, params) {
         **/
         editInVSTSLink: function (options) {
             var src = options.hash.src || (typeof this.page !== 'undefined' ? this.page.src : '');
-            encodeURIComponent(src)
+            encodeURIComponent(src);
             return [
                 stache.config.vsts_protocol,
                 stache.config.vsts_base,
