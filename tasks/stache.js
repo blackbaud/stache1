@@ -15,7 +15,7 @@ module.exports = function (grunt) {
         yfm;
 
     Handlebars = require('handlebars');
-    assemble = require('assemble');
+    assemble = require('grunt-assemble');
     cheerio = require('cheerio');
     merge = require('merge');
     slog = require('../src/vendor/stache-log/stache-log')(grunt);
