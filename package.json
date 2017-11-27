@@ -14,6 +14,7 @@
     "url": "https://github.com/blackbaud/stache/issues"
   },
   "dependencies": {
+    "assemble": "^0.24.3",
     "assemble-yaml": "^0.2.1",
     "blackbaud-marked": "git://github.com/blackbaud-community/marked.git",
     "cheerio": "^0.18.0",
