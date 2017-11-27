@@ -15,7 +15,7 @@ module.exports = function (grunt) {
         yfm;
 
     Handlebars = require('handlebars');
-    assemble = require('assemble');
+    assemble = require('grunt-assemble');
     cheerio = require('cheerio');
     merge = require('merge');
     slog = require('../src/vendor/stache-log/stache-log')(grunt);
@@ -1712,6 +1712,11 @@ module.exports = function (grunt) {
         grunt.registerTask('release', 'Bump the version number in package.json; commit to origin.', tasks.stacheRelease);
         grunt.registerTask('serve', 'Serve the documentation', tasks.stacheServe);
         grunt.registerTask('version', 'Display the currently installed version of Stache', tasks.stacheVersion);
+
+        /**
+         * Add the grunt-assemble task
+         */
+        grunt.loadNpmTasks('grunt-assemble');
     }());
 
 
