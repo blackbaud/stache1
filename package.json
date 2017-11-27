@@ -32,7 +32,6 @@
     "helper-moment": "^0.2.0",
     "html-minifier": "^1.0.0",
     "merge": "^1.2.0",
-    "request": "2.81.0",
     "uglify-js": "^2.5.0"
   },
   "devDependencies": {
