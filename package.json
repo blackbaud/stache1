@@ -32,6 +32,7 @@
     "html-minifier": "^1.0.0",
     "marked": "0.3.4",
     "merge": "^1.2.0",
+    "request": "2.81.0",
     "uglify-js": "^2.5.0"
   },
   "devDependencies": {
